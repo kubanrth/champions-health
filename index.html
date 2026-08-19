@@ -1,0 +1,1522 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Champions Health — opieka medyczna na poziomie pierwszej drużyny</title>
+<meta name="description" content="Kompleksowa opieka medyczna i rehabilitacja wywodząca się z doświadczeń pierwszej drużyny i Akademii Legii Warszawa.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ==========================================================================
+   Champions Health — prototyp
+   Odwzorowanie szablonu Framer "Aura Healthtech App" (INSAIM DESIGN).
+   Wymiary zmierzone z DOM-u dema przy szerokości 1440 px:
+   gifted-condor-376466--create-button-component-zxbh2ltp3.framer.app
+
+   Siatka     1440 → padding 12 → karta 1416 → sekcja padding 60 → treść 1320
+   Krój       Manrope, waga 500 na wszystkim (600/700 tylko na drobnicy)
+   Skala      h1 60/66 · h2 40/48 · h3 32/38.4 · h4 28/36.4 · h5+cytat 20/28 · body 15/21
+              tracking −1px na h1/h2/h3
+   Promienie  karta 32 · kafel 24 · nagłówek pakietu 20 · nawigacja 20 · przycisk 16
+   Ruch       translateY(40px) + opacity 0 → 0/1
+   ========================================================================== */
+:root{
+  /* --- role kolorów wg Aury, wartości Legii (wariant 2) ------------------
+     Aby wrócić do oryginalnej palety Aury wystarczy podmienić dwie linie:
+       --accent:#E4C166 (złoty)   --accent-2:#E49396 (łososiowy)          */
+  --paper:#F8F3EE;      /* tło strony           — jak w Aurze */
+  --beige:#E9E2DD;      /* sekcja pakietów      — jak w Aurze */
+  --ink:#1E1D1B;        /* tekst / ciemne bloki — jak w Aurze */
+  --muted:#6E6E6C;      /* opisy — Aura ma #8E8E8E, podbite do progu AA */
+  --meta:#6B6B6B;       /* drobny tekst */
+  --accent:#0B6B36;     /* zieleń Legii   ← w Aurze złoty */
+  --accent-2:#C1121F;   /* czerwień Legii ← w Aurze łososiowy */
+  --accent-2-soft:#F2DCDC;
+  --sage:#6C7B5A;       /* szałwia — Aura ma #8E9F7B, przyciemniona: biały tekst
+                           na oryginale daje 2,84:1, czyli poniżej progu WCAG */
+  --white:#fff;
+  --line:rgba(30,29,27,.10);
+  --ease:cubic-bezier(.44,0,.22,1);
+  /* Rytm pionowy. Aura ma 80 px góra/dół, czyli 160 px między sekcjami — przy
+     naszej krótszej treści czytało się to jako dziura, stąd 56 (=112 między). */
+  --sec-y:56px;
+  --accent-deep:#084A26;
+  /* sprężyna z komponentu Team Member Carousel: krytycznie tłumiona, ω=18,5 rad/s.
+     linear() to próbki krzywej 1−(1+ωt)e^(−ωt) co 20 ms — odwzorowanie 1:1,
+     bo cubic-bezier nie potrafi oddać ogona sprężyny. */
+  --spring-t:500ms;
+  --spring-ease:linear(0, .0537, .1698, .3046, .4355, .5519, .6503, .7307, .7948, .845, .8838, .9134, .9358, .9527, .9652, .9745, .9814, .9865, .9902, .9929, .9949, .9963, .9973, .9981, .9986, .999);
+  --star:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 1.5v21M1.5 12h21M4.6 4.6l14.8 14.8M19.4 4.6L4.6 19.4' stroke='%23000' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E");
+  --tick:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M4 12.5l5.2 5.2L20 7' fill='none' stroke='%23000' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+section[id],header[id]{scroll-margin-top:100px}
+body{margin:0;padding:0;background:var(--paper);
+  font-family:Manrope,system-ui,sans-serif;font-size:15px;line-height:21px;font-weight:500;
+  color:var(--ink);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+h1,h2,h3,h4,h5{margin:0;font-weight:500}
+h1{font-size:60px;line-height:66px;letter-spacing:-1px}
+h2{font-size:40px;line-height:48px;letter-spacing:-1px}
+h3{font-size:32px;line-height:38.4px;letter-spacing:-1px}
+h4{font-size:28px;line-height:36.4px}
+h5{font-size:20px;line-height:28px}
+p{margin:0}
+::selection{background:var(--accent);color:#fff}
+
+.wrap{max-width:1320px;margin:0 auto}
+.sec{padding:var(--sec-y) 60px}
+.sec-lg{padding:var(--sec-y) 60px}
+
+/* --- nagłówek sekcji: blok 442 px wyśrodkowany, gap 20 ------------------ */
+/* Nagłówek sekcji jak w module zespołu: wyrównany do lewej, eyebrow → h2 → opis. */
+.sec-head{width:auto;max-width:640px;margin:0 0 40px;text-align:left;
+  display:flex;flex-direction:column;align-items:flex-start;gap:20px}
+.sec-head h2{max-width:none}
+.sec-head p{margin:0;max-width:560px;font-size:15px;line-height:21px;color:var(--muted)}
+.eyebrow{display:inline-flex;align-items:center;gap:10px;height:25px;
+  font-size:15px;line-height:21px;font-weight:500;color:var(--muted)}
+.eyebrow::before{content:"";width:13px;height:13px;flex:none;background:var(--accent);
+  -webkit-mask:var(--star) center/contain no-repeat;mask:var(--star) center/contain no-repeat}
+
+/* --- przycisk: 44 wys., padding 2/24, promień 16, etykieta 15/21 -------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;height:44px;padding:2px 24px;
+  border-radius:16px;font-size:15px;line-height:21px;font-weight:500;white-space:nowrap;
+  border:1px solid transparent;cursor:pointer;
+  transition:transform .4s var(--ease),background-color .4s var(--ease),color .4s var(--ease),border-color .4s var(--ease)}
+.btn:hover{transform:translateY(-2px)}
+.btn:active{transform:translateY(0)}
+.btn:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.btn-dark{background:var(--ink);color:var(--paper)}
+.btn-dark:hover{background:var(--accent)}
+.btn-accent{background:var(--accent);color:#fff}
+.btn-accent:hover{background:var(--accent-deep)}
+.btn-white{background:var(--white);color:var(--ink)}
+.btn-white:hover{background:var(--beige)}
+.btn-line{border-color:rgba(255,255,255,.45);color:#fff}
+.btn-line:hover{background:#fff;color:var(--ink);border-color:#fff}
+.btn-line-dark{border-color:var(--line);color:var(--ink)}
+.btn-line-dark:hover{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+
+/* --- nawigacja: pełna szerokość na górze → pigułka 760×52 po scrollu ------
+   Wskaźnik pod aktywnym linkiem wg komponentu Framer "Floating Pill Nav"
+   (Omer Mirza): pigułka dopasowuje się do pudełka aktywnej pozycji
+   (w oryginale 136×44, promień 22, tło #1D1D1F), a etykieta zmienia kolor.
+   Krzywa ruchu jak w pozostałych komponentach Framera, ζ≈0,78.            */
+.nav{--nav-t:450ms;
+  --nav-ease:linear(0, .0421, .1425, .2706, .4058, .5347, .6498, .7474, .8268, .8888, .9354,
+    .9689, .9918, 1.0065, 1.0149, 1.0189, 1.0199, 1.019, 1.0169, 1.0143, 1.0116, 1.0091,
+    1.0068, 1.0049, 1.0033, 1.0021, 1.0012, 1.0006, 1.0001, .9999, .9997);
+  position:fixed;top:0;left:50%;transform:translateX(-50%);z-index:50;height:64px;width:100%;max-width:100%;
+  transition:width var(--nav-t) var(--nav-ease),top var(--nav-t) var(--nav-ease),
+             height var(--nav-t) var(--nav-ease)}
+.nav.is-pill{top:28px;height:52px;width:min(760px,calc(100% - 24px))}
+.nav-inner{display:flex;align-items:center;gap:4px;height:100%;min-width:0;border-radius:0;
+  padding:0 12px 0 60px;background:rgba(255,255,255,.72);backdrop-filter:blur(14px) saturate(1.4);
+  box-shadow:0 1px 0 rgba(30,29,27,.06);
+  transition:background-color var(--nav-t) var(--nav-ease),box-shadow var(--nav-t) var(--nav-ease),
+             border-radius var(--nav-t) var(--nav-ease),padding var(--nav-t) var(--nav-ease)}
+.nav.is-pill .nav-inner{border-radius:20px;padding:4px 4px 4px 16px;background:var(--white);
+  box-shadow:0 1px 2px rgba(30,29,27,.06),0 10px 30px -18px rgba(30,29,27,.45)}
+.brand{display:flex;align-items:center;margin-right:auto;flex:none}
+.brand img{height:34px;width:auto;display:block;transition:height var(--nav-t) var(--nav-ease)}
+.nav.is-pill .brand img{height:26px}
+.nav-links{position:relative;min-width:0;display:flex;align-items:center;gap:2px;overflow-x:auto;scrollbar-width:none}
+.nav-links::-webkit-scrollbar{display:none}
+.nav-ind{position:absolute;left:0;top:50%;height:36px;border-radius:18px;background:var(--ink);
+  transform:translate3d(0,-50%,0);pointer-events:none;opacity:0;
+  transition:transform var(--nav-t) var(--nav-ease),width var(--nav-t) var(--nav-ease),
+             opacity .3s var(--ease)}
+.nav-ind.on{opacity:1}
+.nav-links a{position:relative;z-index:1;padding:0 14px;height:36px;display:inline-flex;align-items:center;
+  border-radius:18px;font-size:15px;line-height:21px;font-weight:500;color:var(--muted);white-space:nowrap;
+  transition:color .3s var(--ease)}
+.nav-links a:hover{color:var(--ink)}
+.nav-links a.current{color:var(--paper)}
+.nav-links a:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.nav .btn{flex:none}
+
+/* --- hero: karta 1416×876, promień 32, padding 48, dolny rząd gap 120 --- */
+/* Wysokość hero w Aurze to 100vh − 24 px (przy 900 px viewportu wychodzi 876).
+   Miałem to zaszyte na sztywno, więc na niższym oknie nagłówek spadał pod zgięcie. */
+.hero{margin:12px;position:relative;border-radius:32px;overflow:hidden;
+  height:calc(100vh - 24px);min-height:560px;padding:48px;
+  display:flex;align-items:flex-end;isolation:isolate}
+/* Obraz jest o 80 px wyższy od karty i jedzie parallaxem 0,4× — dokładnie tak
+   robi to Aura (zmierzone: przesunięcie względne rośnie o 40 px na 100 px scrolla). */
+.hero>img{position:absolute;left:0;right:0;top:-40px;height:calc(100% + 80px);width:100%;
+  object-fit:cover;object-position:center 30%;z-index:-3;will-change:transform}
+.hero::before{content:"";position:absolute;inset:0;z-index:-2;background:var(--accent);mix-blend-mode:multiply;opacity:.28}
+.hero::after{content:"";position:absolute;inset:0;z-index:-1;
+  background:linear-gradient(to top,rgba(12,20,15,.86) 0%,rgba(12,20,15,.36) 32%,rgba(12,20,15,.12) 58%,rgba(12,20,15,.40) 100%)}
+.hero-row{position:relative;z-index:1;width:100%;display:flex;align-items:flex-end;gap:120px;color:#fff}
+.hero-row h1{color:#fff;flex:1}
+.hero-row h1 em{font-style:normal;color:#8FD9A8}
+.hero-side{width:304px;flex:none;display:flex;flex-direction:column;gap:20px}
+.hero-side h5{color:#fff}
+.hero-side .row{display:flex;gap:8px;flex-wrap:wrap}
+.hero-note{position:absolute;top:84px;left:48px;z-index:2;font-size:12px;line-height:16.8px;font-weight:600;
+  letter-spacing:-.12px;text-transform:uppercase;color:rgba(255,255,255,.8);background:rgba(12,20,15,.45);
+  border:1px solid rgba(255,255,255,.22);padding:6px 14px;border-radius:16px}
+
+/* --- pasek zaufania ---------------------------------------------------- */
+.trust{padding:calc(var(--sec-y) + 24px) 60px var(--sec-y);display:flex;align-items:center;gap:60px}
+.trust h2{width:380px;flex:none}
+.trust h2 span{color:var(--sage)}
+.trust-strip{flex:1;min-width:0;display:flex;gap:12px;overflow-x:auto;scrollbar-width:none;padding:2px;margin-right:-60px}
+.trust-strip::-webkit-scrollbar{display:none}
+.logo{flex:none;width:176px;height:98px;border-radius:10px;background:var(--white);border:1px solid var(--line);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;text-align:center;padding:8px;
+  transition:transform .4s var(--ease),border-color .4s var(--ease)}
+.logo:hover{transform:translateY(-3px);border-color:rgba(11,107,54,.35)}
+.logo b{font-size:15px;line-height:21px;font-weight:700;letter-spacing:-.3px}
+.logo span{font-size:12px;line-height:16.8px;font-weight:600;letter-spacing:-.12px;color:var(--meta);text-transform:uppercase}
+
+/* --- ścieżka pacjenta: komponent Framer "Workflow cards" (Nirmiti Kale) ---
+   Zmierzone z workflowcards.framer.website przy 1440 px:
+   karta nieaktywna 240×240 · aktywna 264×264 · odstęp 10 · promień 20 · padding 30/30/30/25
+   karty wyrównane do dolnej krawędzi · tytuł 18/21.6 w600 · opis 12/14.4 w500
+   pigułka numeru 60×45 promień 18, krok 75, aktywna czarna
+   Pigułki przed aktywną pakują się do lewej, po aktywnej do prawej,
+   a aktywna stoi dokładnie pod lewą krawędzią swojej karty.
+   Ruch: sprężyna ζ=0,78, ω=21 rad/s (stiffness≈442, damping≈33), przestrzela o 1,7%,
+   ustala się w ~420 ms → linear() poniżej (błąd dopasowania 0,19 pp).          */
+.wf{--wf-t:450ms;
+  --wf-ease:linear(0, .0421, .1425, .2706, .4058, .5347, .6498, .7474, .8268, .8888, .9354,
+    .9689, .9918, 1.0065, 1.0149, 1.0189, 1.0199, 1.019, 1.0169, 1.0143, 1.0116, 1.0091,
+    1.0068, 1.0049, 1.0033, 1.0021, 1.0012, 1.0006, 1.0001, .9999, .9997);
+  --wf-card:240px; --wf-card-on:264px; --wf-gap:10px; --wf-pill:60px; --wf-step:75px}
+.wf-stage{margin:0 -60px;overflow:hidden;padding:8px 0}
+/* Karty stoją absolutnie i jadą własnym transformem. W układzie przepływowym
+   zmiana szerokości aktywnej karty przepychała sąsiadów w trakcie animacji,
+   co nakładało się na przesuw rzędu — stąd wrażenie, że „wszystko skacze". */
+.wf-row{position:relative;height:var(--wf-card-on)}
+.wf-card{position:absolute;left:0;bottom:0;width:var(--wf-card);height:var(--wf-card);
+  background:var(--white);border-radius:20px;
+  padding:30px 30px 30px 25px;display:flex;flex-direction:column;cursor:pointer;text-align:left;
+  border:0;font:inherit;color:inherit;
+  will-change:transform;
+  transition:transform var(--wf-t) var(--wf-ease),width var(--wf-t) var(--wf-ease),
+             height var(--wf-t) var(--wf-ease),box-shadow .4s var(--ease),
+             opacity var(--wf-t) var(--wf-ease)}
+.wf-card:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
+.wf-card.on{width:var(--wf-card-on);height:var(--wf-card-on);cursor:default;
+  box-shadow:0 1px 2px rgba(30,29,27,.05),0 14px 34px -20px rgba(30,29,27,.45)}
+.wf-card:not(.on){opacity:.72}
+.wf-card:not(.on):hover{opacity:1}
+.wf-card h3{font-size:18px;line-height:21.6px;font-weight:600;letter-spacing:-.2px}
+.wf-card p{margin:10px 0 0;font-size:12px;line-height:14.4px;font-weight:500;color:var(--muted)}
+.wf-ico{margin-top:auto;width:48px;height:48px;border-radius:14px;background:var(--paper);
+  display:flex;align-items:center;justify-content:center;color:var(--accent);flex:none}
+.wf-track{position:relative;height:45px;margin-top:28px}
+.wf-track::before{content:"";position:absolute;left:0;right:0;top:50%;height:1px;background:var(--line)}
+.wf-pill{position:absolute;left:0;top:0;width:var(--wf-pill);height:45px;border-radius:18px;
+  background:var(--white);border:1px solid var(--line);color:var(--ink);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;font:inherit;font-size:16px;font-weight:600;
+  font-variant-numeric:tabular-nums;
+  transition:transform var(--wf-t) var(--wf-ease),background-color .4s var(--ease),
+             color .4s var(--ease),border-color .4s var(--ease)}
+.wf-pill:hover{border-color:rgba(11,107,54,.4)}
+.wf-pill:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.wf-pill.on{background:var(--ink);color:var(--paper);border-color:var(--ink);cursor:default}
+
+/* --- zakres opieki: mozaika wg komponentu Framer "Fluid Mosaic" (DariStudio)
+   Zmierzone z functional-employees-718656.framer.app przy 1440×900:
+   siatka 4×3, odstęp 10, promień 18.
+   Soczewka: wagi kolumn i wierszy to krzywa Gaussa wokół pozycji kursora.
+   Dopasowanie do stanu spoczynku dema (soczewka w środku) dało σ = 0,46 dla
+   kolumn i 0,44 dla wierszy — błąd poniżej 1 px.
+   Kolumny w spoczynku: 247 / 448 / 448 / 247 · wiersze: 228 / 404 / 228.   */
+.mo{--mo-gap:10px;--mo-r:18px;--mo-h:720px}
+.mo-grid{display:grid;gap:var(--mo-gap);height:var(--mo-h);margin:0 -50px;
+  grid-template-columns:1fr 1fr 1fr 1fr;grid-template-rows:1fr 1fr 1fr}
+.mo-tile{position:relative;overflow:hidden;border-radius:var(--mo-r);display:flex;flex-direction:column;
+  justify-content:flex-end;padding:24px;text-align:left;border:0;font:inherit;color:inherit;cursor:pointer;
+  background:var(--white);min-width:0;min-height:0}
+.mo-tile{transition:box-shadow .35s var(--ease)}
+.mo-tile:hover{box-shadow:0 1px 2px rgba(30,29,27,.06),0 14px 34px -22px rgba(30,29,27,.55)}
+.mo-tile:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+/* Zapytania kontenerowe tylko przy siatce 4×3 — `container-type:size` zawiera
+   rozmiar w obu osiach, więc w układzie stosowym kafel przestawałby rosnąć
+   pod treść. W niskim albo wąskim kaflu ikona i numer nie mają się gdzie zmieścić. */
+@media(min-width:1101px){
+  .mo-tile{container-type:size}
+  @container (max-height:210px){.mo-ico{display:none}}
+  @container (max-width:230px){.mo-num{display:none}}
+}
+.mo-a{grid-column:1/3;grid-row:1/3}
+.mo-b{grid-column:3;grid-row:1}
+.mo-c{grid-column:4;grid-row:1}
+.mo-d{grid-column:3/5;grid-row:2}
+.mo-e{grid-column:1/3;grid-row:3}
+.mo-f{grid-column:3/5;grid-row:3}
+.mo-tile>img{position:absolute;inset:-6%;width:112%;height:112%;object-fit:cover;z-index:0;will-change:transform}
+.mo-tile.photo::after{content:"";position:absolute;inset:0;z-index:1;
+  background:linear-gradient(to top,rgba(12,20,15,.88) 0%,rgba(12,20,15,.28) 46%,rgba(12,20,15,.1) 100%)}
+.mo-body{position:relative;z-index:2;flex:none;display:flex;flex-direction:column;gap:8px;min-width:0}
+.mo-num{font-size:12px;line-height:16.8px;font-weight:600;letter-spacing:-.12px;opacity:.62}
+.mo-tile h3{font-size:24px;line-height:28px;font-weight:600;letter-spacing:-.4px;text-wrap:balance}
+.mo-desc{flex:none;display:grid;grid-template-rows:0fr;
+  transition:grid-template-rows var(--spring-t) var(--spring-ease)}
+.mo-tile.on .mo-desc{grid-template-rows:1fr}
+.mo-desc>div{overflow:hidden;min-height:0}
+.mo-desc p{margin:0;padding:10px 0 5px;font-size:14px;line-height:19.6px;font-weight:500;max-width:44ch;
+  opacity:0;transform:translateY(8px);
+  transition:opacity var(--spring-t) var(--spring-ease),transform var(--spring-t) var(--spring-ease)}
+.mo-tile.on .mo-desc p{opacity:1;transform:none}
+.mo-more{flex:none;margin-top:2px;font-size:13px;line-height:18px;font-weight:600;display:inline-flex;align-items:center;gap:6px;
+  opacity:0;transform:translateY(6px);
+  transition:opacity var(--spring-t) var(--spring-ease),transform var(--spring-t) var(--spring-ease)}
+.mo-tile.on .mo-more{opacity:1;transform:none}
+.mo-more svg{transition:transform .35s var(--ease)}
+.mo-tile:hover .mo-more svg{transform:translateX(4px)}
+.mo-ico{position:relative;z-index:2;margin-bottom:auto;flex:none;width:44px;height:44px;border-radius:13px;
+  display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.9);color:var(--accent)}
+.mo-tile.t-photo{color:#fff}
+.mo-tile.t-green{background:var(--accent);color:#fff}
+.mo-tile.t-green .mo-ico{background:rgba(255,255,255,.16);color:#fff}
+.mo-tile.t-sage{background:var(--sage);color:#fff}
+.mo-tile.t-sage .mo-ico{background:rgba(255,255,255,.18);color:#fff}
+.mo-tile.t-rose{background:var(--accent-2-soft);color:var(--ink)}
+.mo-tile.t-rose .mo-ico{background:rgba(255,255,255,.75);color:var(--accent-2)}
+.mo-tile.t-beige{background:var(--beige);color:var(--ink)}
+.mo-tile.t-white{background:var(--white);color:var(--ink)}
+.mo-tile.t-white .mo-desc p,.mo-tile.t-beige .mo-desc p,.mo-tile.t-rose .mo-desc p{color:var(--muted)}
+.mo-tile.t-green .mo-desc p,.mo-tile.t-sage .mo-desc p,.mo-tile.t-photo .mo-desc p{color:rgba(255,255,255,.88)}
+
+/* --- zespół: karuzela wg komponentu Framer "Team Member Carousel" -------
+   Zmierzone z teammembercarousel.framer.website (1440 px):
+   karta 340×500 r20 · aktywna 360×520 r32 (rośnie o 10 px na stronę)
+   krok 394 (karta 340 + odstęp 54) · zdjęcie w aktywnej 340×271 r20
+   blok opisu padding 20/22/22, promień 0 0 32 32
+   nazwisko 24/25.2 w600 ls−0.48 · opis 14/18.9 w500 · tag 12/12 · przycisk 13/13 w600 h35
+   strzałki 48×48, cień 0 8px 24px rgba(0,0,0,.1)
+   Ruch: sprężyna krytycznie tłumiona ω=18,5 rad/s (stiffness≈342, damping≈37),
+   ustala się w ~420 ms, bez przestrzelenia → odwzorowana przez linear() poniżej.
+   Mając dwie osoby karta nie jedzie w bok (obie się mieszczą) — zamiast tego
+   przechodzi między stanem zwiniętym i rozwiniętym tą samą krzywą.        */
+/* nagłówek na całą szerokość, pas kart pełnym kadrem pod nim */
+.tm{--fade-l:40px;--fade-r:56px;--rail-l:60px;--rail-r:96px;
+  --tm-card:340px;--tm-card-on:360px;--tm-h:500px;--tm-h-on:520px;--tm-gap:54px}
+.tm-head{display:flex;justify-content:space-between;align-items:flex-start;gap:60px;margin-bottom:40px}
+.tm-head-l{max-width:640px;display:flex;flex-direction:column;gap:20px}
+.tm-head-l p.lead{font-size:15px;line-height:21px;color:var(--muted);max-width:560px}
+.tm-foot{display:flex;justify-content:flex-end;margin-top:24px}
+.tm-count{font-size:20px;line-height:28px;font-weight:500;letter-spacing:-.3px;color:var(--muted);
+  font-variant-numeric:tabular-nums}
+/* strzałki nałożone na pas kart, przy krawędziach kadru — jak w komponencie */
+.tm-stage{position:relative;margin:0 -60px}
+.tm-arrow{position:absolute;top:50%;z-index:3;width:48px;height:48px;border-radius:999px;
+  border:1px solid var(--line);background:rgba(255,255,255,.75);backdrop-filter:blur(6px);
+  box-shadow:0 8px 24px rgba(0,0,0,.1);display:flex;align-items:center;justify-content:center;cursor:pointer;
+  color:var(--ink);transform:translateY(-50%);
+  transition:transform .35s var(--ease),background-color .35s var(--ease)}
+.tm-arrow:hover{background:#fff;transform:translateY(calc(-50% - 2px))}
+.tm-arrow:active{transform:translateY(-50%)}
+.tm-arrow:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.tm-arrow[data-tm="prev"]{left:24px}
+.tm-arrow[data-tm="next"]{right:24px}
+
+.tm-view{width:auto;overflow:hidden;padding:12px 0;
+  /* miękkie krawędzie zamiast twardej linii cięcia po obu stronach */
+  -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 var(--fade-l),#000 calc(100% - var(--fade-r)),transparent 100%);
+          mask-image:linear-gradient(90deg,transparent 0,#000 var(--fade-l),#000 calc(100% - var(--fade-r)),transparent 100%)}
+/* --fade-l musi być mniejsze niż wcięcie toru (--rail-l), inaczej wygaszanie
+   zjadłoby lewą krawędź aktywnej karty, która wystaje o 10 px */
+.tm{--fade-l:32px;--fade-r:56px;--rail-l:48px;--rail-r:96px}
+/* Karty stoją absolutnie i jadą własnym transformem. W układzie flex rosnąca
+   karta przepychała sąsiadów w trakcie animacji szerokości, a to nakładało się
+   na przesuw toru — stąd wrażenie, że przy kliknięciu wszystko skacze. */
+.tm-track{position:relative;height:var(--tm-h-on);touch-action:pan-y;
+  transition:transform var(--spring-t) var(--spring-ease)}
+.tm-card{position:absolute;left:0;top:50%;width:var(--tm-card);height:var(--tm-h);
+  border-radius:20px;background:var(--beige);overflow:hidden;cursor:pointer;border:0;padding:0;
+  text-align:left;font:inherit;color:inherit;will-change:transform;
+  transform:translate3d(0,-50%,0);
+  transition:transform var(--spring-t) var(--spring-ease),width var(--spring-t) var(--spring-ease),
+             height var(--spring-t) var(--spring-ease),border-radius var(--spring-t) var(--spring-ease),
+             background-color var(--spring-t) var(--spring-ease),box-shadow var(--spring-t) var(--spring-ease)}
+.tm-card:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
+.tm-photo{position:absolute;top:0;left:0;width:var(--tm-card);height:var(--tm-h);overflow:hidden;border-radius:20px;
+  transition:height var(--spring-t) var(--spring-ease),top var(--spring-t) var(--spring-ease),
+             left var(--spring-t) var(--spring-ease)}
+.tm-photo img{width:100%;height:100%;object-fit:cover;object-position:center 18%}
+.tm-photo.empty{display:flex;align-items:center;justify-content:center;
+  background-image:repeating-linear-gradient(45deg,rgba(30,29,27,.05) 0 12px,transparent 12px 24px)}
+.tm-photo.empty span{font-size:40px;line-height:48px;font-weight:500;letter-spacing:-1px;color:var(--muted)}
+.tm-photo.empty[data-tone="1"]{background:#E4E7DF}
+.tm-photo.empty[data-tone="2"]{background:#EDE6E0}
+.tm-flag{position:absolute;top:14px;left:14px;z-index:3;font-size:12px;line-height:16.8px;font-weight:600;
+  letter-spacing:-.12px;text-transform:uppercase;color:var(--ink);background:rgba(255,255,255,.88);
+  padding:4px 9px;border-radius:8px;transition:top var(--spring-t) var(--spring-ease),left var(--spring-t) var(--spring-ease)}
+.tm-flag.warn{color:var(--accent-2);background:var(--accent-2-soft)}
+.tm-card.on .tm-flag{top:24px;left:24px}
+/* stan zwinięty: nazwisko na zdjęciu, opis schowany */
+.tm-strip{position:absolute;left:0;right:0;bottom:0;padding:20px 22px;color:#fff;z-index:2;
+  background:linear-gradient(to top,rgba(12,20,15,.85),rgba(12,20,15,0));
+  transition:opacity var(--spring-t) var(--spring-ease)}
+.tm-strip b{display:block;font-size:20px;line-height:26px;font-weight:600;letter-spacing:-.4px}
+.tm-strip span{font-size:14px;line-height:18.9px;color:rgba(255,255,255,.82)}
+.tm-info{position:absolute;left:0;right:0;bottom:0;height:239px;background:var(--white);
+  border-radius:0 0 32px 32px;padding:20px 22px 22px;display:flex;flex-direction:column;gap:12px;
+  opacity:0;pointer-events:none;transition:opacity var(--spring-t) var(--spring-ease)}
+.tm-info h3{font-size:24px;line-height:25.2px;font-weight:600;letter-spacing:-.48px}
+.tm-info .role{font-size:14px;line-height:18.9px;font-weight:500;color:var(--muted);margin-top:-4px}
+.tm-info .bio{font-size:14px;line-height:18.9px;font-weight:500;color:var(--ink)}
+.tm-info .foot{margin-top:auto;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.tm-tag{font-size:12px;line-height:12px;font-weight:500;letter-spacing:-.12px;background:var(--beige);
+  color:var(--ink);padding:11px 14px;border-radius:999px}
+.tm-cta{height:35px;padding:0 18px;border-radius:999px;background:var(--accent);color:#fff;
+  font-size:13px;line-height:13px;font-weight:600;letter-spacing:-.13px;display:inline-flex;align-items:center;
+  transition:transform .35s var(--ease),background-color .35s var(--ease)}
+.tm-cta:hover{background:var(--accent-deep);transform:translateY(-2px)}
+.tm-cta:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+/* stan aktywny */
+.tm-card.on{width:var(--tm-card-on);height:var(--tm-h-on);border-radius:32px;background:var(--white);
+  box-shadow:0 10px 30px rgba(0,0,0,.06);cursor:default}
+.tm-card.on .tm-photo{top:10px;left:10px;height:271px}
+.tm-card.on .tm-strip{opacity:0;pointer-events:none}
+.tm-card.on .tm-info{opacity:1;pointer-events:auto;transition-delay:120ms}
+.tm-card:not(.on):hover .tm-photo img{transform:none}
+
+/* --- pakiety: powłoka r32 pad 60/0, rząd 1303 gap 12, karta 426×500 ---- */
+.pricing{background:var(--beige);border-radius:32px;padding:40px}
+.plans{width:1303px;max-width:100%;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.plan{background:var(--white);border-radius:24px;padding:8px;min-height:500px;display:flex;flex-direction:column;
+  transition:transform .45s var(--ease)}
+.plan:hover{transform:translateY(-4px)}
+.plan .head{border-radius:20px;padding:24px;display:flex;flex-direction:column;gap:40px;min-height:172px;
+  background:var(--white);position:relative}
+.plan.mid .head{background:var(--sage);color:#fff}
+.plan.alt .head{background:var(--accent-2-soft);color:var(--ink)}
+.plan.alt .head .price{color:var(--accent-2)}
+.plan .head h4{font-size:20px;line-height:28px;font-weight:500}
+.plan .head .price{font-size:40px;line-height:48px;font-weight:500;letter-spacing:-1px}
+.plan .head .price small{font-size:15px;line-height:21px;font-weight:500;letter-spacing:0;opacity:.72}
+.plan .head .tag{position:absolute;top:24px;right:24px;font-size:12px;line-height:16.8px;font-weight:600;
+  letter-spacing:-.12px;text-transform:uppercase;background:rgba(255,255,255,.92);color:var(--ink);
+  padding:4px 10px;border-radius:8px}
+.plan ul{list-style:none;margin:0;padding:24px 16px;display:grid;gap:12px;flex:1;align-content:start}
+.plan li{display:flex;gap:10px;align-items:flex-start;font-size:15px;line-height:21px;font-weight:500}
+.plan li::before{content:"";width:16px;height:16px;flex:none;margin-top:3px;background:var(--accent);
+  -webkit-mask:var(--tick) center/contain no-repeat;mask:var(--tick) center/contain no-repeat}
+.plan .btn{margin:0 8px 8px;width:calc(100% - 16px)}
+
+/* --- FAQ: odwzorowanie komponentu Framer "FAQ Flow" (Darius Pasecinic) ---
+   Zmierzone z faqflow.framer.website przy 1440 px:
+   lista 900 wyśrodkowana · pozycja 80 px zwinięta, promień 24, padding 20, odstęp 16
+   rząd nagłówka 40 · pytanie 28/33.6 w400 · przerwa do odpowiedzi 16 · odpowiedź 22/35
+   ikona „+" obraca się o 135° w „×"
+   Ruch: sprężyna lekko niedotłumiona ζ=0,79, ω=7,14 rad/s (stiffness≈51, damping≈11),
+   przestrzeliwuje o 1,7% i ustala się w ~560 ms → odwzorowana przez linear() poniżej.
+   Powierzchnia pozycji jest ledwie ciemniejsza od tła, dokładnie jak w oryginale.     */
+.faq{--faq-t:700ms;
+  --faq-ease:linear(0, .0112, .0413, .0855, .1398, .2008, .2656, .3322, .3985, .4634, .5256, .5845,
+    .6394, .6902, .7365, .7783, .8158, .8491, .8783, .9038, .9258, .9446, .9604, .9737, .9846,
+    .9935, 1.0005, 1.006, 1.0102, 1.0133, 1.0153, 1.0167, 1.0173);
+  --faq-surface:#F3EBE1}
+.faq-list{width:900px;max-width:100%;margin:0;display:grid;gap:16px}
+.faq-item{background:var(--faq-surface);border-radius:24px;padding:20px}
+.faq-q{width:100%;min-height:40px;display:flex;align-items:center;justify-content:space-between;gap:24px;
+  background:none;border:0;padding:0;margin:0;cursor:pointer;text-align:left;color:var(--ink);
+  font-family:inherit;font-size:28px;line-height:33.6px;font-weight:400;letter-spacing:normal}
+.faq-q:focus-visible{outline:2px solid var(--accent);outline-offset:6px;border-radius:8px}
+/* ikona: dwie belki 20x3 w kadrze 40x40 (jak w oryginale, nie SVG)
+   spoczynek 0° · hover 90° · otwarte 135° — wszystko tą samą sprężyną */
+.faq-ico{flex:none;position:relative;width:40px;height:40px;
+  transition:transform var(--faq-t) var(--faq-ease)}
+.faq-ico i{position:absolute;top:50%;left:50%;background:var(--ink);border-radius:2px;
+  transition:background-color .45s var(--ease)}
+.faq-ico i:first-child{width:20px;height:3px;margin:-1.5px 0 0 -10px}
+.faq-ico i:last-child{width:3px;height:20px;margin:-10px 0 0 -1.5px}
+.faq-item:not(.on) .faq-q:hover .faq-ico{transform:rotate(90deg)}
+.faq-q:hover .faq-ico i{background:var(--accent)}
+.faq-item.on .faq-ico{transform:rotate(135deg)}
+.faq-item.on .faq-ico i{background:var(--accent)}
+.faq-item.on .faq-q:hover .faq-ico i{background:var(--accent-deep)}
+.faq-a{display:grid;grid-template-rows:0fr;transition:grid-template-rows var(--faq-t) var(--faq-ease)}
+.faq-item.on .faq-a{grid-template-rows:1fr}
+.faq-a>div{overflow:hidden}
+/* tylko do pomiaru linii — rozwija blok bez animacji i bez migotania */
+.faq-item.faq-measure .faq-a{grid-template-rows:1fr;transition:none}
+.faq-item.faq-measure .faq-a .w{transition:none}
+.faq-a p{margin:0;padding-top:16px;font-size:22px;line-height:35.2px;font-weight:300;color:var(--ink);max-width:62ch}
+/* Tekst wchodzi linia po linii: opacity 0 + translateY(20px), kaskada 73 ms na linię.
+   Podział na linie liczy JS po ułożeniu tekstu (i przelicza przy zmianie szerokości) —
+   w oryginale robi to Framer, rozbijając akapit na osobne elementy. */
+.faq-a .w{display:inline-block;opacity:0;transform:translateY(20px);
+  transition:opacity var(--faq-t) var(--faq-ease),transform var(--faq-t) var(--faq-ease);
+  transition-delay:calc(var(--l,0) * 73ms)}
+.faq-item.on .faq-a .w{opacity:1;transform:none}
+
+/* --- CTA: karta 1416×500, promień 32 ---------------------------------- */
+.cta{border-radius:32px;overflow:hidden;height:500px;display:grid;grid-template-columns:1fr 566px}
+.cta-copy{background:var(--ink);color:var(--paper);padding:60px;display:flex;flex-direction:column;
+  justify-content:center;gap:28px}
+.cta-copy .block{display:flex;flex-direction:column;gap:16px}
+.cta-copy h2{color:#fff}
+.cta-copy h2 em{font-style:normal;color:#8FD9A8}
+.cta-copy p{font-size:15px;line-height:21px;color:rgba(248,243,238,.74);max-width:420px}
+.cta-copy .row{display:flex;gap:8px;flex-wrap:wrap}
+.cta-copy .eyebrow{color:rgba(248,243,238,.62)}
+.cta-photo{position:relative;overflow:hidden}
+.cta-photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.cta-photo::after{content:"";position:absolute;inset:0;background:var(--accent);mix-blend-mode:multiply;opacity:.2}
+
+/* --- stopka: padding 56/60/24 ----------------------------------------- */
+footer.site{padding:48px 60px 24px}
+.foot-grid{display:flex;gap:60px;justify-content:space-between;padding-bottom:32px;border-bottom:1px solid var(--line)}
+.foot-brand{width:431px}
+.foot-brand p{margin-top:16px;font-size:15px;line-height:21px;color:var(--muted);max-width:340px}
+.foot-col h6{margin:0 0 14px;font-size:12px;line-height:16.8px;font-weight:600;letter-spacing:-.12px;
+  text-transform:uppercase;color:var(--meta)}
+.foot-col ul{list-style:none;margin:0;padding:0;display:grid;gap:8px;font-size:15px;line-height:21px;color:var(--muted)}
+.foot-col a{transition:color .3s var(--ease)}
+.foot-col a:hover{color:var(--accent)}
+.foot-col a:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+.foot-bottom{display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;padding-top:24px;
+  font-size:12px;line-height:16.8px;font-weight:600;letter-spacing:-.12px;color:var(--meta)}
+
+/* --- ruch: translateY(40px) → 0, jak w Aurze --------------------------- */
+.rv{opacity:0;transform:translateY(40px);
+  transition:opacity .8s var(--ease),transform .8s var(--ease);transition-delay:var(--d,0ms)}
+.rv.in{opacity:1;transform:none}
+
+/* --- adaptacja poniżej 1440 ------------------------------------------- */
+@media(max-width:1439px){
+  .tm-head-l{max-width:520px}
+  .bento{grid-template-columns:1fr 1fr 2fr}
+  .cta{grid-template-columns:1fr .8fr}
+}
+@media(max-width:1100px){
+  :root{--sec-y:48px}
+  .mo{--mo-h:auto}
+  .mo-grid{margin:0 -22px;grid-template-columns:1fr 1fr!important;grid-template-rows:none!important;
+    grid-auto-rows:minmax(220px,auto)}
+  .mo-tile{gap:14px}
+  .mo-ico{margin-bottom:0}
+  .mo-a,.mo-d,.mo-e,.mo-f{grid-column:auto;grid-row:auto}
+  .mo-b,.mo-c{grid-column:auto;grid-row:auto}
+  .mo-a{grid-column:1/-1;grid-row:auto}
+  h1{font-size:44px;line-height:50px}
+  h2{font-size:32px;line-height:39px}
+  h3{font-size:26px;line-height:32px}
+  h4{font-size:24px;line-height:31px}
+  .hero{min-height:640px;padding:32px}
+  .hero-row{flex-direction:column;align-items:flex-start;gap:28px}
+  .hero-side{width:100%}
+  .hero-note{top:88px;left:32px;right:32px;text-align:center}
+  .trust{flex-direction:column;align-items:flex-start;gap:28px;padding:calc(var(--sec-y) + 16px) 32px var(--sec-y)}
+  .trust h2{width:auto}
+  .trust-strip{width:100%;margin-right:-32px}
+  .sec,.sec-lg{padding:var(--sec-y) 32px}
+  #pakiety>.wrap{padding:0 20px}
+  .wf-stage{margin:0 -32px}
+  .wf{--wf-step:66px}
+  .pricing{padding:24px}
+  .plans{grid-template-columns:1fr;width:100%;max-width:520px}
+  .faq-q{font-size:22px;line-height:28px}
+  .faq-item{padding:16px;border-radius:20px}
+  .faq-a p{font-size:18px;line-height:29px;padding-top:12px}
+  .tm{--fade-l:24px;--fade-r:32px;--rail-l:40px;--rail-r:64px}
+  .tm-head{gap:32px}
+  .tm-stage{margin:0 -32px}
+  .tm-arrow[data-tm="prev"]{left:12px}
+  .tm-arrow[data-tm="next"]{right:12px}
+  .cta{grid-template-columns:1fr;height:auto}
+  .cta-copy{padding:36px 32px}
+  .cta-photo{height:320px}
+  .foot-grid{flex-wrap:wrap;gap:32px}
+  .foot-brand{width:100%}
+  footer.site{padding:48px 32px 24px}
+}
+@media(max-width:700px){
+  :root{--sec-y:40px}
+  .mo-grid{margin:0 -10px;grid-template-columns:1fr!important;grid-auto-rows:minmax(200px,auto)}
+  .mo-tile{min-height:200px;padding:20px}
+  .mo-tile h3{font-size:20px;line-height:24px}
+  h1{font-size:36px;line-height:42px}
+  h2{font-size:28px;line-height:34px}
+  .hero{margin:8px;height:calc(100vh - 16px);min-height:560px;border-radius:24px;padding:24px}
+  .bento{grid-template-columns:1fr}
+  .t-466,.t-638{height:auto;min-height:300px}
+  .t-160{height:auto;min-height:132px}
+  .sec,.sec-lg{padding:var(--sec-y) 20px}
+  #pakiety>.wrap{padding:0 8px}
+  .trust{padding:calc(var(--sec-y) + 12px) 20px var(--sec-y)}
+  .nav-inner{padding-left:20px;padding-right:8px}
+  .nav{height:56px}
+  .nav.is-pill .nav-inner{padding-left:12px}
+  .brand img{height:24px}
+  .nav.is-pill .brand img{height:22px}
+  .brand .name{display:none}
+  .nav-links{-webkit-mask-image:linear-gradient(90deg,#000 0,#000 84%,transparent);mask-image:linear-gradient(90deg,#000 0,#000 84%,transparent)}
+  footer.site{margin-inline:0;padding-inline:20px}
+  .quote{width:280px;height:auto;min-height:380px}
+  .wf{--wf-card:200px;--wf-card-on:224px;--wf-pill:46px;--wf-step:54px}
+  .wf-stage{margin:0 -20px}
+  .wf-card{padding:22px 20px}
+  .wf-card h3{font-size:16px;line-height:20px}
+  .wf-pill{font-size:14px;height:38px}
+  .wf-track{height:38px;margin-top:22px}
+  .faq-q{font-size:18px;line-height:24px;gap:16px}
+  .faq-a p{font-size:16px;line-height:26px}
+  .faq-list{gap:12px}
+  .tm{--fade-l:16px;--fade-r:24px;--rail-l:26px;--rail-r:48px}
+  .tm-stage{margin:0 -20px}
+  .tm{--tm-card:260px;--tm-card-on:280px;--tm-h:440px;--tm-h-on:460px;--tm-gap:24px}
+  .tm-card.on .tm-photo{height:200px}
+  /* 250 px, bo najdluzsze biogramy potrzebuja 240 - przy 220 tekst wychodzil poza karte */
+  .tm-info{height:250px;padding:16px 18px 18px}
+  .tm-info h3{font-size:20px;line-height:22px}
+}
+@media(prefers-reduced-motion:reduce){
+  .rv{opacity:1;transform:none;transition:none}
+  *{animation:none!important;transition-duration:.01ms!important}
+  html{scroll-behavior:auto}
+}
+</style>
+</head>
+<body id="top">
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="#top"><img src="img/logo_LCH.svg" alt="Champions Health" width="240" height="66"></a>
+    <div class="nav-links">
+      <span class="nav-ind" aria-hidden="true"></span>
+      <a href="#opieka">Opieka</a>
+      <a href="#sciezka">Jak to działa</a>
+      <a href="#zespol">Zespół</a>
+      <a href="#pakiety">Pakiety</a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <a class="btn btn-dark" href="#kontakt">Umów wizytę</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <img src="img/photo_01.png" alt="Zespół medyczny Champions Health w gabinecie">
+  <span class="hero-note">Zdjęcie tymczasowe</span>
+  <div class="hero-row">
+    <h1 class="rv">Zdrowie na poziomie<br><em>pierwszej drużyny</em></h1>
+    <div class="hero-side rv" style="--d:120ms">
+      <h5>Ortopedia, medycyna sportowa i rehabilitacja prowadzone przez sztab medyczny Legii Warszawa.</h5>
+      <div class="row">
+        <a class="btn btn-accent" href="#kontakt">Umów konsultację</a>
+        <a class="btn btn-line" href="#sciezka">Jak pracujemy</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="trust rv">
+  <h2>Opiekujemy się<br><span>tymi, którzy grają</span></h2>
+  <div class="trust-strip">
+    <div class="logo"><b>Legia Warszawa</b><span>Pierwsza drużyna</span></div>
+    <div class="logo"><b>Akademia Legii</b><span>U9–U19</span></div>
+    <div class="logo"><b>Legia Ladies</b><span>Drużyna kobiet</span></div>
+    <div class="logo"><b>Partner klubu</b><span>Miejsce na logo</span></div>
+    <div class="logo"><b>Partner klubu</b><span>Miejsce na logo</span></div>
+  </div>
+</section>
+
+<section class="sec mo" id="opieka">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="eyebrow">Zakres opieki</span>
+      <h2>Wszystko w jednym miejscu</h2>
+      <p>Sześć obszarów, jeden zespół i jedna dokumentacja. Kliknij kafel, żeby go rozwinąć.</p>
+    </div>
+    <div class="mo-grid rv" data-mo="grid" style="--d:80ms">
+      <button class="mo-tile mo-a t-photo photo" data-mo="tile" aria-expanded="false">
+        <img src="img/photo_04.png" alt="Zawodnicy Legii Warszawa" loading="lazy">
+        <span class="mo-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3v6a6 6 0 0012 0V3M9 3H4M15 3h5M12 15v3a3 3 0 006 0v-2"/><circle cx="19" cy="10" r="2"/></svg></span>
+        <span class="mo-body">
+          <span class="mo-num">01 / Diagnostyka</span>
+          <h3>Ortopedia</h3>
+          <span class="mo-desc"><div><p>Diagnostyka oraz leczenie schorzeń i urazów układu kostno-szkieletowego, a także narządów ruchu.</p></div></span>
+          <span class="mo-more">Zobacz więcej <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h13M12 5l7 7-7 7"/></svg></span>
+        </span>
+      </button>
+      <button class="mo-tile mo-b t-green" data-mo="tile" aria-expanded="false">
+        <span class="mo-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-4.4-7-9.5A4.5 4.5 0 0112 8a4.5 4.5 0 017 3.5C19 16.6 12 21 12 21z"/><path d="M12 11v4M10 13h4"/></svg></span>
+        <span class="mo-body">
+          <span class="mo-num">02 / Prowadzenie</span>
+          <h3>Medycyna sportowa</h3>
+          <span class="mo-desc"><div><p>Kompleksowa opieka lekarzy sportowych, diagnostyka i prowadzenie zawodników oraz osób aktywnych na każdym etapie.</p></div></span>
+          <span class="mo-more">Zobacz więcej <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h13M12 5l7 7-7 7"/></svg></span>
+        </span>
+      </button>
+      <button class="mo-tile mo-c t-white" data-mo="tile" aria-expanded="false">
+        <span class="mo-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h3l2-5 3 10 2.5-7 1.8 4H21"/></svg></span>
+        <span class="mo-body">
+          <span class="mo-num">03 / Powrót do sprawności</span>
+          <h3>Fizjoterapia i rehabilitacja</h3>
+          <span class="mo-desc"><div><p>Indywidualna terapia, powrót do sprawności, profilaktyka urazów i pełna ścieżka rehabilitacji w oparciu o nowoczesne metody.</p></div></span>
+          <span class="mo-more">Zobacz więcej <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h13M12 5l7 7-7 7"/></svg></span>
+        </span>
+      </button>
+      <button class="mo-tile mo-d t-rose" data-mo="tile" aria-expanded="false">
+        <span class="mo-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21c-4 0-7-3-7-7 0-4 3-8 7-11 4 3 7 7 7 11 0 4-3 7-7 7z"/><path d="M12 21V9"/></svg></span>
+        <span class="mo-body">
+          <span class="mo-num">04 / Żywienie</span>
+          <h3>Dietetyka i suplementacja</h3>
+          <span class="mo-desc"><div><p>Precyzyjne plany żywieniowe, analiza składu ciała, suplementacja dopasowana do celów zdrowotnych i sportowych.</p></div></span>
+          <span class="mo-more">Zobacz więcej <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h13M12 5l7 7-7 7"/></svg></span>
+        </span>
+      </button>
+      <button class="mo-tile mo-e t-beige" data-mo="tile" aria-expanded="false">
+        <span class="mo-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6M8 6v12M16 6v12M20 9v6M8 12h8"/></svg></span>
+        <span class="mo-body">
+          <span class="mo-num">05 / Motoryka</span>
+          <h3>Trening merytoryczny</h3>
+          <span class="mo-desc"><div><p>Trening funkcjonalny, motoryczny i siłowy oparty na danych, poprawiający wyniki, zdrowie i codzienną sprawność.</p></div></span>
+          <span class="mo-more">Zobacz więcej <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h13M12 5l7 7-7 7"/></svg></span>
+        </span>
+      </button>
+      <button class="mo-tile mo-f t-sage" data-mo="tile" aria-expanded="false">
+        <span class="mo-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8l9-4 9 4-9 4-9-4z"/><path d="M7 10.5V16c0 1.7 2.2 3 5 3s5-1.3 5-3v-5.5"/></svg></span>
+        <span class="mo-body">
+          <span class="mo-num">06 / Wiedza</span>
+          <h3>Edukacja i szkolenie</h3>
+          <span class="mo-desc"><div><p>Warsztaty, wykłady i praktyczne szkolenia rozwijające wiedzę o zdrowiu, treningu i nowoczesnym podejściu do sportu.</p></div></span>
+          <span class="mo-more">Zobacz więcej <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h13M12 5l7 7-7 7"/></svg></span>
+        </span>
+      </button>
+    </div>
+  </div>
+</section>
+
+<section class="sec wf" id="sciezka">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="eyebrow">Jak to działa</span>
+      <h2>Pięć kroków, jeden opiekun</h2>
+      <p>Od pierwszego telefonu do powrotu na boisko prowadzi Cię ta sama osoba.</p>
+    </div>
+
+    <div class="rv" style="--d:80ms">
+      <div class="wf-stage">
+        <div class="wf-row" data-wf="row">
+        <button class="wf-card on" data-wf="card" aria-pressed="true">
+          <h3>Koordynator</h3>
+          <p>Jeden opiekun pacjenta planuje, umawia i pilnuje terminów.</p>
+          <span class="wf-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 12a4 4 0 100-8 4 4 0 000 8zM4.5 20a7.5 7.5 0 0115 0"/></svg></span>
+        </button>
+        <button class="wf-card" data-wf="card" aria-pressed="false">
+          <h3>Diagnoza</h3>
+          <p>Wywiad, badanie, diagnostyka obrazowa i funkcjonalna, decyzja o ścieżce leczenia.</p>
+          <span class="wf-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M11 19a8 8 0 100-16 8 8 0 000 16zM21 21l-4.3-4.3"/></svg></span>
+        </button>
+        <button class="wf-card" data-wf="card" aria-pressed="false">
+          <h3>Realizacja</h3>
+          <p>Leczenie i rehabilitacja u nas, zabiegi u partnerów. Informacja idzie za Tobą.</p>
+          <span class="wf-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l2.5-7 5 14L17 12h4"/></svg></span>
+        </button>
+        <button class="wf-card" data-wf="card" aria-pressed="false">
+          <h3>Testy kontrolne</h3>
+          <p>Obiektywne kryteria progresu i gotowości do powrotu.</p>
+          <span class="wf-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V9M10 20V4M16 20v-7M22 20H2"/></svg></span>
+        </button>
+        <button class="wf-card" data-wf="card" aria-pressed="false">
+          <h3>Profilaktyka</h3>
+          <p>Zalecenia treningowe, praca nad motoryką i kontrole okresowe.</p>
+          <span class="wf-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z"/></svg></span>
+        </button>
+        </div>
+      </div>
+      <div class="wf-track" data-wf="track">
+        <button class="wf-pill on" data-wf="pill" aria-label="Krok 1: Koordynator" aria-pressed="true">01</button>
+        <button class="wf-pill" data-wf="pill" aria-label="Krok 2: Diagnoza" aria-pressed="false">02</button>
+        <button class="wf-pill" data-wf="pill" aria-label="Krok 3: Realizacja" aria-pressed="false">03</button>
+        <button class="wf-pill" data-wf="pill" aria-label="Krok 4: Testy kontrolne" aria-pressed="false">04</button>
+        <button class="wf-pill" data-wf="pill" aria-label="Krok 5: Profilaktyka" aria-pressed="false">05</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec tm" id="zespol">
+  <div class="wrap tm-head rv">
+    <div class="tm-head-l">
+      <span class="eyebrow">Zespół</span>
+      <h2>Wiesz, kto się Tobą zajmie</h2>
+      <p class="lead">Czternastu specjalistów — pięciu lekarzy i dziewięciu fizjoterapeutów — którzy na co dzień prowadzą pierwszą drużynę, Legia Ladies i Akademię. Kliknij kartę, przeciągnij albo użyj strzałek.</p>
+    </div>
+  </div>
+
+  <div class="tm-stage rv" style="--d:100ms">
+    <button class="tm-arrow" data-tm="prev" aria-label="Poprzednia osoba">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
+    </button>
+    <button class="tm-arrow" data-tm="next" aria-label="Następna osoba">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>
+    </button>
+    <div class="tm-view">
+    <div class="tm-track" data-tm="track" role="group" aria-label="Zespół Champions Health" tabindex="0">
+        <button class="tm-card on" data-tm="card" aria-pressed="true">
+          <div class="tm-photo"><img src="img/foto_bibrowicz.png" alt="Filip Latawiec" loading="lazy"></div>
+          <span class="tm-flag">zdjęcie poglądowe</span>
+          <div class="tm-strip"><b>Filip Latawiec</b><span>Ortopeda, medycyna sportowa</span></div>
+          <div class="tm-info">
+            <h3>Filip Latawiec</h3>
+            <p class="role">Ortopeda, medycyna sportowa</p>
+            <p class="bio">Były kierownik medyczny Legii Warszawa i Al Jazira FC. Certyfikowany lekarz PZPN. Techniki małoinwazyjne, PRP, USG.</p>
+            <div class="foot">
+              <span class="tm-tag">Lekarz</span>
+              <a class="tm-cta" href="#kontakt">Umów wizytę</a>
+            </div>
+          </div>
+        </button>
+
+        <button class="tm-card" data-tm="card" aria-pressed="false">
+          <div class="tm-photo"><img src="img/foto_wszolek.png" alt="Mateusz Dłutowski" loading="lazy"></div>
+          <span class="tm-flag">zdjęcie poglądowe</span>
+          <div class="tm-strip"><b>Mateusz Dłutowski</b><span>Ortopedia i traumatologia</span></div>
+          <div class="tm-info">
+            <h3>Mateusz Dłutowski</h3>
+            <p class="role">Ortopedia i traumatologia</p>
+            <p class="bio">Lekarz I zespołu Legii od 2024, wcześniej szef sztabu reprezentacji U19. Artroskopia i rekonstrukcje ACL.</p>
+            <div class="foot">
+              <span class="tm-tag">Lekarz</span>
+              <a class="tm-cta" href="#kontakt">Umów wizytę</a>
+            </div>
+          </div>
+        </button>
+
+        <button class="tm-card" data-tm="card" aria-pressed="false">
+          <div class="tm-photo empty" data-tone="2"><span>SG</span></div>
+          <span class="tm-flag warn">zdjęcie w drodze</span>
+          <div class="tm-strip"><b>Szymon Gałczyński</b><span>Medycyna sportowa i rodzinna</span></div>
+          <div class="tm-info">
+            <h3>Szymon Gałczyński</h3>
+            <p class="role">Medycyna sportowa i rodzinna</p>
+            <p class="bio">Lekarz Tour de Pologne, konsultant Akademii Legii. Badania wydolnościowe i kwalifikacje do sportu.</p>
+            <div class="foot">
+              <span class="tm-tag">Lekarz</span>
+              <a class="tm-cta" href="#kontakt">Umów wizytę</a>
+            </div>
+          </div>
+        </button>
+
+        <button class="tm-card" data-tm="card" aria-pressed="false">
+          <div class="tm-photo empty" data-tone="0"><span>PM</span></div>
+          <span class="tm-flag warn">zdjęcie w drodze</span>
+          <div class="tm-strip"><b>Piotr Modzelewski</b><span>Ortopedia i traumatologia</span></div>
+          <div class="tm-info">
+            <h3>Piotr Modzelewski</h3>
+            <p class="role">Ortopedia i traumatologia</p>
+            <p class="bio">Lekarz Akademii Legii i Legia Ladies. Urazy kolana, barku i stawu skokowego, ortobiologia.</p>
+            <div class="foot">
+              <span class="tm-tag">Lekarz</span>
+              <a class="tm-cta" href="#kontakt">Umów wizytę</a>
+            </div>
+          </div>
+        </button>
+
+        <button class="tm-card" data-tm="card" aria-pressed="false">
+          <div class="tm-photo empty" data-tone="1"><span>MT</span></div>
+          <span class="tm-flag warn">zdjęcie w drodze</span>
+          <div class="tm-strip"><b>Marcin Tusiński</b><span>Ortopedia i traumatologia</span></div>
+          <div class="tm-info">
+            <h3>Marcin Tusiński</h3>
+            <p class="role">Ortopedia i traumatologia</p>
+            <p class="bio">Lekarz Legii Warszawa od 2025, członek PTArtro. Artroskopia i rekonstrukcje więzadłowe. Triathlonista.</p>
+            <div class="foot">
+              <span class="tm-tag">Lekarz</span>
+              <a class="tm-cta" href="#kontakt">Umów wizytę</a>
+            </div>
+          </div>
+        </button>
+
+        <button class="tm-card" data-tm="card" aria-pressed="false">
+          <div class="tm-photo empty" data-tone="2"><span>DD</span></div>
+          <span class="tm-flag warn">zdjęcie w drodze</span>
+          <div class="tm-strip"><b>Dominika Daros</b><span>Fizjoterapia ortopedyczna i sportowa</span></div>
+          <div class="tm-info">
+            <h3>Dominika Daros</h3>
+            <p class="role">Fizjoterapia ortopedyczna i sportowa</p>
+            <p class="bio">Legia Warszawa i Legia Ladies od 2024. Igłoterapia, terapia manualna, powrót do sportu po rekonstrukcji ACL.</p>
+            <div class="foot">
+              <span class="tm-tag">Fizjoterapia</span>
+              <a class="tm-cta" href="#kontakt">Umów wizytę</a>
+            </div>
+          </div>
+        </button>
+
+        <button class="tm-card" data-tm="card" aria-pressed="false">
+          <div class="tm-photo empty" data-tone="0"><span>PD</span></div>
+          <span class="tm-flag warn">zdjęcie w drodze</span>
+          <div class="tm-strip"><b>Przemysław Domański</b><span>Fizjoterapia sportowa</span></div>
+          <div class="tm-info">
+            <h3>Przemysław Domański</h3>
+            <p class="role">Fizjoterapia sportowa</p>
+            <p class="bio">Reprezentacja Polski U20 od 2025, Legia Warszawa od 2022. „Najlepsza terapia to ta, która czyni Cię silniejszym niż przed urazem.”</p>
+            <div class="foot">
+              <span class="tm-tag">Fizjoterapia</span>
+              <a class="tm-cta" href="#kontakt">Umów wizytę</a>
+            </div>
+          </div>
+        </button>
+
+        <button class="tm-card" data-tm="card" aria-pressed="false">
+          <div class="tm-photo empty" data-tone="1"><span>ŁG</span></div>
+          <span class="tm-flag warn">zdjęcie w drodze</span>
+          <div class="tm-strip"><b>Łukasz Gembarzewski</b><span>Fizjoterapia sportowa</span></div>
+          <div class="tm-info">
+            <h3>Łukasz Gembarzewski</h3>
+            <p class="role">Fizjoterapia sportowa</p>
+            <p class="bio">Hutnik Warszawa od 2025, staż w Legii od 2023. Tendinopatie, powroty po operacjach, przygotowanie motoryczne.</p>
+            <div class="foot">
+              <span class="tm-tag">Fizjoterapia</span>
+              <a class="tm-cta" href="#kontakt">Umów wizytę</a>
+            </div>
+          </div>
+        </button>
+
+        <button class="tm-card" data-tm="card" aria-pressed="false">
+          <div class="tm-photo empty" data-tone="2"><span>JG</span></div>
+          <span class="tm-flag warn">zdjęcie w drodze</span>
+          <div class="tm-strip"><b>Jakub Grodzki</b><span>Ortopedia, fizjoterapia sportowa</span></div>
+          <div class="tm-info">
+            <h3>Jakub Grodzki</h3>
+            <p class="role">Ortopedia, fizjoterapia sportowa</p>
+            <p class="bio">Reha Artis, staż w Legii Warszawa, MIRAI Clinic. Terapia manualna, powięziowa i pooperacyjna.</p>
+            <div class="foot">
+              <span class="tm-tag">Fizjoterapia</span>
+              <a class="tm-cta" href="#kontakt">Umów wizytę</a>
+            </div>
+          </div>
+        </button>
+
+        <button class="tm-card" data-tm="card" aria-pressed="false">
+          <div class="tm-photo empty" data-tone="0"><span>SH</span></div>
+          <span class="tm-flag warn">zdjęcie w drodze</span>
+          <div class="tm-strip"><b>Sandra Heronimek</b><span>Fizjoterapia sportowa</span></div>
+          <div class="tm-info">
+            <h3>Sandra Heronimek</h3>
+            <p class="role">Fizjoterapia sportowa</p>
+            <p class="bio">Akademia Legii Warszawa od 2024. Terapia tkanek miękkich, trening medyczny, dzieci uprawiające sport.</p>
+            <div class="foot">
+              <span class="tm-tag">Fizjoterapia</span>
+              <a class="tm-cta" href="#kontakt">Umów wizytę</a>
+            </div>
+          </div>
+        </button>
+
+        <button class="tm-card" data-tm="card" aria-pressed="false">
+          <div class="tm-photo empty" data-tone="1"><span>DK</span></div>
+          <span class="tm-flag warn">zdjęcie w drodze</span>
+          <div class="tm-strip"><b>Daniel Komar</b><span>Ortopedia, fizjoterapia sportowa</span></div>
+          <div class="tm-info">
+            <h3>Daniel Komar</h3>
+            <p class="role">Ortopedia, fizjoterapia sportowa</p>
+            <p class="bio">Terapia manualna, igłoterapia i rehabilitacja pooperacyjna. „Pracuj w ciszy, niech sukces zrobi hałas.”</p>
+            <div class="foot">
+              <span class="tm-tag">Fizjoterapia</span>
+              <a class="tm-cta" href="#kontakt">Umów wizytę</a>
+            </div>
+          </div>
+        </button>
+
+        <button class="tm-card" data-tm="card" aria-pressed="false">
+          <div class="tm-photo empty" data-tone="2"><span>GM</span></div>
+          <span class="tm-flag warn">zdjęcie w drodze</span>
+          <div class="tm-strip"><b>Giovanni Mangano</b><span>Ortopedia, sport, hydrokinezyterapia</span></div>
+          <div class="tm-info">
+            <h3>Giovanni Mangano</h3>
+            <p class="role">Ortopedia, sport, hydrokinezyterapia</p>
+            <p class="bio">12 lat praktyki, kluby we Włoszech i w Polsce, Villa Stuart. Terapia powięziowa metodą Stecco, FIFA Diploma.</p>
+            <div class="foot">
+              <span class="tm-tag">Fizjoterapia</span>
+              <a class="tm-cta" href="#kontakt">Umów wizytę</a>
+            </div>
+          </div>
+        </button>
+
+        <button class="tm-card" data-tm="card" aria-pressed="false">
+          <div class="tm-photo empty" data-tone="0"><span>DO</span></div>
+          <span class="tm-flag warn">zdjęcie w drodze</span>
+          <div class="tm-strip"><b>Dominik Ofat</b><span>Ortopedyczna terapia manualna (OMT)</span></div>
+          <div class="tm-info">
+            <h3>Dominik Ofat</h3>
+            <p class="role">Ortopedyczna terapia manualna (OMT)</p>
+            <p class="bio">OMT moduły I–VII, staw skroniowo-żuchwowy, igłoterapia. Ból traktuje jako komunikat całego organizmu.</p>
+            <div class="foot">
+              <span class="tm-tag">Fizjoterapia</span>
+              <a class="tm-cta" href="#kontakt">Umów wizytę</a>
+            </div>
+          </div>
+        </button>
+
+        <button class="tm-card" data-tm="card" aria-pressed="false">
+          <div class="tm-photo empty" data-tone="1"><span>KP</span></div>
+          <span class="tm-flag warn">zdjęcie w drodze</span>
+          <div class="tm-strip"><b>Kamil Pasoń</b><span>Terapia manualna, trener medyczny</span></div>
+          <div class="tm-info">
+            <h3>Kamil Pasoń</h3>
+            <p class="role">Terapia manualna, trener medyczny</p>
+            <p class="bio">12 lat: Legia Warszawa, zawodnicy MMA, The Pain Clinic. Diagnostyka USG. „Narząd ruchu leczy się w ruchu.”</p>
+            <div class="foot">
+              <span class="tm-tag">Fizjoterapia</span>
+              <a class="tm-cta" href="#kontakt">Umów wizytę</a>
+            </div>
+          </div>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="wrap tm-foot"><span class="tm-count" data-tm="count">01 / 14</span></div>
+</section>
+
+
+
+<section id="pakiety" style="padding:var(--sec-y) 12px 12px">
+  <div class="wrap">
+      <div class="sec-head rv">
+        <span class="eyebrow">Pakiety</span>
+        <h2>Wiesz, ile to kosztuje</h2>
+      </div>
+  </div>
+  <div class="pricing">
+    <div class="plans">
+      <article class="plan rv">
+        <div class="head">
+          <h4>Konsultacja</h4>
+          <div class="price">od 350 zł <small>/ wizyta</small></div>
+        </div>
+        <ul>
+          <li>Konsultacja ortopedyczna lub fizjoterapeutyczna</li>
+          <li>Badanie funkcjonalne</li>
+          <li>USG na miejscu, jeśli potrzebne</li>
+          <li>Plan postępowania na piśmie</li>
+        </ul>
+        <a class="btn btn-line-dark" href="#kontakt">Umów termin</a>
+      </article>
+      <article class="plan mid rv" style="--d:80ms">
+        <div class="head">
+          <span class="tag">Najczęściej wybierany</span>
+          <h4>Powrót do sportu</h4>
+          <div class="price">od 4 900 zł <small>/ program</small></div>
+        </div>
+        <ul>
+          <li>Koordynator prowadzący przez cały proces</li>
+          <li>Komplet diagnostyki obrazowej</li>
+          <li>Rehabilitacja z przypisanym fizjoterapeutą</li>
+          <li>Testy kontrolne i kryteria powrotu</li>
+          <li>Plan prewencji na kolejny sezon</li>
+        </ul>
+        <a class="btn btn-dark" href="#kontakt">Porozmawiajmy</a>
+      </article>
+      <article class="plan alt rv" style="--d:160ms">
+        <div class="head">
+          <h4>Klub i organizacja</h4>
+          <div class="price">wycena <small>/ indywidualna</small></div>
+        </div>
+        <ul>
+          <li>Badania kwalifikacyjne całego składu</li>
+          <li>Dyżur medyczny i dostęp priorytetowy</li>
+          <li>Testy motoryczne i raport dla sztabu</li>
+          <li>Szkolenia dla trenerów</li>
+        </ul>
+        <a class="btn btn-line-dark" href="#kontakt">Zapytaj o współpracę</a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="sec-lg faq" id="faq">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="eyebrow">FAQ</span>
+      <h2>Najczęstsze pytania</h2>
+      <p>A jeśli czegoś tu brakuje, koordynator odbiera telefon w dni robocze 8:00–20:00.</p>
+    </div>
+    <div class="faq-list rv" style="--d:80ms">
+      <div class="faq-item">
+        <button class="faq-q" id="faq-b1" aria-expanded="false" aria-controls="faq-a1">
+          <span>Czy muszę być sportowcem, żeby się zapisać?</span>
+          <span class="faq-ico" aria-hidden="true"><i></i><i></i></span>
+        </button>
+        <div class="faq-a" id="faq-a1" role="region" aria-labelledby="faq-b1">
+          <div><p>Nie. Prowadzimy zawodowców, amatorów, dzieci z akademii i osoby, które chcą wrócić do biegania bez bólu. Protokoły są te same — różni się intensywność planu.</p></div>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" id="faq-b2" aria-expanded="false" aria-controls="faq-a2">
+          <span>Potrzebuję skierowania?</span>
+          <span class="faq-ico" aria-hidden="true"><i></i><i></i></span>
+        </button>
+        <div class="faq-a" id="faq-a2" role="region" aria-labelledby="faq-b2">
+          <div><p>Nie, przyjmujemy prywatnie bez skierowania. Jeśli masz wcześniejsze wyniki badań, weź je ze sobą — skrócą diagnostykę.</p></div>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" id="faq-b3" aria-expanded="false" aria-controls="faq-a3">
+          <span>Ile czeka się na diagnostykę obrazową?</span>
+          <span class="faq-ico" aria-hidden="true"><i></i><i></i></span>
+        </button>
+        <div class="faq-a" id="faq-a3" role="region" aria-labelledby="faq-b3">
+          <div><p>Rezonans, USG i RTG organizujemy w ramach jednego procesu, bez odsyłania do zewnętrznej rejestracji. Konkretny czas do potwierdzenia z klientem.</p></div>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" id="faq-b4" aria-expanded="false" aria-controls="faq-a4">
+          <span>Czy to są ci sami lekarze co w Legii?</span>
+          <span class="faq-ico" aria-hidden="true"><i></i><i></i></span>
+        </button>
+        <div class="faq-a" id="faq-a4" role="region" aria-labelledby="faq-b4">
+          <div><p>Tak — zespół wywodzi się ze sztabu medycznego pierwszej drużyny i Akademii Legii Warszawa. Skład i zakres dyżurów do potwierdzenia z klientem.</p></div>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" id="faq-b5" aria-expanded="false" aria-controls="faq-a5">
+          <span>Prowadzicie dzieci i młodzież?</span>
+          <span class="faq-ico" aria-hidden="true"><i></i><i></i></span>
+        </button>
+        <div class="faq-a" id="faq-a5" role="region" aria-labelledby="faq-b5">
+          <div><p>Tak, z osobnym podejściem do zawodników w okresie wzrostu — inne normy obciążeń, inne kryteria powrotu, kontakt z trenerem klubowym.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="kontakt" style="padding:0 12px 12px">
+  <div class="cta rv">
+    <div class="cta-copy">
+      <div class="block">
+        <span class="eyebrow">Pierwszy krok</span>
+        <h2>Zacznij od rozmowy<br>z <em>koordynatorem</em></h2>
+        <p>Piętnaście minut wystarczy, żeby ustalić, czego potrzebujesz i ile to zajmie. Bez skierowania i bez kolejki.</p>
+      </div>
+      <div class="row">
+        <a class="btn btn-white" href="tel:+48223182000">Zadzwoń: 22 318 20 00</a>
+        <a class="btn btn-line" href="mailto:info@legia.pl">Napisz do nas</a>
+      </div>
+    </div>
+    <div class="cta-photo"><img src="img/photo_04.png" alt="Zawodnicy Legii Warszawa"></div>
+  </div>
+</section>
+
+<footer class="site">
+  <div class="foot-grid">
+    <div class="foot-brand">
+      <a class="brand" href="#top"><img src="img/logo_LCH.svg" alt="Champions Health" width="240" height="66" style="height:40px"></a>
+      <p>Opieka medyczna i rehabilitacja wywodząca się z doświadczeń pierwszej drużyny i Akademii Legii Warszawa.</p>
+    </div>
+    <div class="foot-col">
+      <h6>Opieka</h6>
+      <ul>
+        <li><a href="#opieka">Ortopedia</a></li>
+        <li><a href="#opieka">Medycyna sportowa</a></li>
+        <li><a href="#opieka">Fizjoterapia</a></li>
+        <li><a href="#opieka">Dietetyka</a></li>
+      </ul>
+    </div>
+    <div class="foot-col">
+      <h6>Klinika</h6>
+      <ul>
+        <li><a href="#zespol">Zespół</a></li>
+        <li><a href="#sciezka">Jak to działa</a></li>
+        <li><a href="#pakiety">Pakiety</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+    </div>
+    <div class="foot-col">
+      <h6>Kontakt</h6>
+      <ul>
+        <li>ul. Łazienkowska 3<br>00-449 Warszawa</li>
+        <li><a href="tel:+48223182000">22 318 20 00</a></li>
+        <li><a href="mailto:info@legia.pl">info@legia.pl</a></li>
+        <li>Pon.–pt. 8:00–20:00</li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <span>© 2026 Champions Health · Legia Warszawa S.A.</span>
+  </div>
+</footer>
+
+
+
+<script>
+// ujawnianie sekcji: translateY(40px) → 0, tak jak robi to Framer w Aurze
+const io = new IntersectionObserver((entries) => {
+  for (const e of entries) {
+    if (!e.isIntersecting) continue;
+    e.target.classList.add('in');
+    io.unobserve(e.target);
+  }
+}, { rootMargin: '0px 0px -10% 0px', threshold: 0.05 });
+document.querySelectorAll('.rv').forEach(el => io.observe(el));
+
+// --- hero: parallax obrazu 0,4× ------------------------------------------
+// Aura trzyma obraz o 80 px wyższy od karty i przesuwa go wolniej niż stronę.
+// Zmierzone: przesunięcie względne startuje na −40 px i rośnie o 40 px na
+// każde 100 px scrolla, czyli współczynnik 0,4.
+// --- nawigacja: pełna szerokość → pigułka + wskaźnik pod aktywną sekcją ---
+(() => {
+  const hero = document.querySelector('.hero > img');
+  const nav = document.querySelector('.nav');
+  const ind = document.querySelector('.nav-ind');
+  const links = [...document.querySelectorAll('.nav-links a')];
+  const sections = links.map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+
+  const moveInd = el => {
+    if (!ind || !el) return;
+    links.forEach(a => a.classList.toggle('current', a === el));
+    ind.style.width = `${el.offsetWidth}px`;
+    ind.style.transform = `translate3d(${el.offsetLeft}px,-50%,0)`;
+    ind.classList.add('on');
+  };
+  const clearInd = () => {
+    if (!ind) return;
+    ind.classList.remove('on');
+    links.forEach(a => a.classList.remove('current'));
+  };
+
+  let ticking = false;
+  const onScroll = () => {
+    const y = window.scrollY;
+    if (hero) hero.style.transform = `translate3d(0,${Math.round(y * 0.4)}px,0)`;
+    if (nav) nav.classList.toggle('is-pill', y > 80);
+
+    // scroll-spy: aktywna jest sekcja, której górna krawędź minęła 40% ekranu
+    const line = window.innerHeight * 0.4;
+    let active = null;
+    sections.forEach((sec, n) => {
+      const r = sec.getBoundingClientRect();
+      if (r.top <= line && r.bottom > line) active = links[n];
+    });
+    active ? moveInd(active) : clearInd();
+    ticking = false;
+  };
+  const request = () => { if (!ticking) { ticking = true; requestAnimationFrame(onScroll); } };
+  window.addEventListener('scroll', request, { passive: true });
+  window.addEventListener('resize', request);
+  onScroll();
+
+  links.forEach(a => a.addEventListener('click', () => moveInd(a)));
+
+  // self-check: każdy link nawigacji musi mieć swoją sekcję, inaczej scroll-spy
+  // po cichu przestaje działać dla tej pozycji
+  console.assert(sections.length === links.length,
+    `nawigacja: ${links.length} linków, ale tylko ${sections.length} pasujących sekcji`);
+})();
+
+// --- karuzela zespołu: klik / strzałki / klawiatura / przeciąganie ---------
+// Interakcje przeniesione z komponentu Framer "Team Member Carousel".
+(() => {
+  const track = document.querySelector('[data-tm="track"]');
+  if (!track) return;
+  const cards = [...track.querySelectorAll('[data-tm="card"]')];
+  const view = track.parentElement;
+  const count = document.querySelector('[data-tm="count"]');
+  const pad = n => String(n + 1).padStart(2, '0');
+  let i = cards.findIndex(c => c.classList.contains('on'));
+  if (i < 0) i = 0;
+
+  const num = (el, prop) => parseFloat(getComputedStyle(el).getPropertyValue(prop)) || 0;
+
+  const render = () => {
+    cards.forEach((c, n) => {
+      c.classList.toggle('on', n === i);
+      c.setAttribute('aria-pressed', n === i ? 'true' : 'false');
+    });
+    if (count) count.textContent = `${pad(i)} / ${pad(cards.length - 1)}`;
+
+    const tm = document.querySelector('.tm');
+    const cw = num(tm, '--tm-card'), cwOn = num(tm, '--tm-card-on');
+    const gap = num(tm, '--tm-gap');
+    const railL = num(tm, '--rail-l'), railR = num(tm, '--rail-r');
+    const step = cw + gap;
+
+    // Karta rośnie symetrycznie, więc jej ŚRODEK się nie przesuwa — pozycje
+    // liczymy z formuły, nie z pomiaru (pomiar w trakcie animacji zwraca
+    // pośrednie szerokości i tor skacze).
+    cards.forEach((c, n) => {
+      const x = railL + n * step - (n === i ? (cwOn - cw) / 2 : 0);
+      c.style.transform = `translate3d(${Math.round(x)}px,-50%,0)`;
+    });
+
+    const contentW = railL + cards.length * cw + (cards.length - 1) * gap + railR;
+    const max = Math.max(0, contentW - view.clientWidth);
+    // Aktywną kartę środkujemy w kadrze — wtedy po obu stronach widać sąsiadów,
+    // które wygaszają się na krawędziach zamiast urywać twardą linią.
+    const want = railL + i * step + cw / 2 - view.clientWidth / 2;
+    track.style.transform = `translateX(${-Math.round(Math.min(Math.max(want, 0), max))}px)`;
+  };
+
+  const go = d => { i = (i + d + cards.length) % cards.length; render(); };
+  cards.forEach((c, n) => c.addEventListener('click', () => { if (n !== i) { i = n; render(); } }));
+  document.querySelectorAll('[data-tm="prev"],[data-tm="next"]').forEach(b =>
+    b.addEventListener('click', () => go(b.dataset.tm === 'next' ? 1 : -1)));
+  track.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight') { go(1); e.preventDefault(); }
+    if (e.key === 'ArrowLeft')  { go(-1); e.preventDefault(); }
+  });
+
+  // przeciąganie / swipe — próg 40 px, jak w oryginale
+  let x0 = null;
+  track.addEventListener('pointerdown', e => { x0 = e.clientX; });
+  track.addEventListener('pointerup', e => {
+    if (x0 === null) return;
+    const dx = e.clientX - x0; x0 = null;
+    if (Math.abs(dx) > 40) go(dx < 0 ? 1 : -1);
+  });
+  track.addEventListener('pointercancel', () => { x0 = null; });
+
+  window.addEventListener('resize', render);
+  render();
+
+  // self-check: dokładnie jedna karta może być aktywna
+  console.assert(track.querySelectorAll('.tm-card.on').length === 1,
+    'karuzela zespołu: liczba aktywnych kart != 1');
+  {
+    const c = getComputedStyle(document.querySelector('.tm'));
+    const rail = parseFloat(c.getPropertyValue('--rail-l'));
+    const fade = parseFloat(c.getPropertyValue('--fade-l'));
+    console.assert(rail >= fade + 10,
+      `karuzela: --rail-l (${rail}) musi być >= --fade-l + 10 (${fade + 10}), inaczej wygaszanie zjada krawędź aktywnej karty`);
+  }
+})();
+
+// --- FAQ: akordeon wg komponentu "FAQ Flow" -------------------------------
+// Rezygnujemy z <details>, bo natywny element nie potrafi animować rozwijania.
+// Semantykę trzyma para button[aria-expanded] + div[role=region].
+(() => {
+  const items = [...document.querySelectorAll('.faq-item')];
+  if (!items.length) return;
+  const set = (it, open) => {
+    it.classList.toggle('on', open);
+    it.querySelector('.faq-q').setAttribute('aria-expanded', open ? 'true' : 'false');
+  };
+
+  // Rozbijamy odpowiedzi na słowa i grupujemy je w linie — numer linii ląduje
+  // w --l i steruje kaskadą. Liczone po ułożeniu tekstu, więc działa na każdej
+  // szerokości; przy resize trzeba przeliczyć od nowa.
+  const paras = items.map(it => it.querySelector('.faq-a p'));
+  paras.forEach(p => {
+    p.innerHTML = p.textContent.split(' ').map(w => `<span class="w">${w}</span>`).join(' ');
+  });
+  const lines = () => paras.forEach(p => {
+    let top = null, l = -1;
+    for (const w of p.querySelectorAll('.w')) {
+      const t = w.offsetTop;
+      if (top === null || t > top + 2) { l++; top = t; }
+      w.style.setProperty('--l', l);
+    }
+  });
+  // pozycje mierzymy przy rozwiniętym bloku, inaczej offsetTop jest zerowy
+  const measure = () => {
+    items.forEach(it => it.classList.add('faq-measure'));
+    lines();
+    items.forEach(it => it.classList.remove('faq-measure'));
+  };
+  measure();
+  let rt; window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(measure, 150); });
+
+  items.forEach(it => it.querySelector('.faq-q').addEventListener('click', () => {
+    const open = !it.classList.contains('on');
+    items.forEach(o => set(o, false));   // jedna pozycja otwarta naraz
+    set(it, open);
+  }));
+
+  // self-check: każdy przycisk musi sterować istniejącym blokiem odpowiedzi
+  for (const b of document.querySelectorAll('.faq-q')) {
+    console.assert(document.getElementById(b.getAttribute('aria-controls')),
+      'FAQ: aria-controls wskazuje na nieistniejący blok — ' + b.getAttribute('aria-controls'));
+  }
+})();
+
+// --- zakres opieki: mozaika reagująca na kursor ---------------------------
+// Wagi kolumn i wierszy: krzywa Gaussa wokół kursora, ale z PODŁOGĄ —
+//   w(d) = 0,415 + exp(-(d / 0,340)²)
+// Sam Gauss (bez podłogi) zgniatał skrajne kafle do 4% szerokości i tekst
+// przestawał być czytelny. Podłoga wyszła z dopasowania do DWÓCH stanów dema
+// (spoczynek + kursor przy lewej krawędzi): błąd 0,07 px na siedmiu punktach.
+// Pozycja soczewki dociąga się lerpem 0,12 na klatkę, więc ruch jest ciągły.
+(() => {
+  const grid = document.querySelector('[data-mo="grid"]');
+  if (!grid) return;
+  const tiles = [...grid.querySelectorAll('[data-mo="tile"]')];
+  const COLS = 4, ROWS = 3, SIGMA = 0.340, FLOOR = 0.415, EASE = 0.12;
+  const lens = { x: .5, y: .5 }, target = { x: .5, y: .5 };
+  // Soczewka ma sens tylko tam, gdzie w ogóle istnieje siatka 4×3 i jest kursor.
+  // Sam test na `hover:hover` nie wystarczy — poniżej 1100 px CSS i tak układa
+  // kafle w stos, a wtedy opisy muszą być widoczne od razu.
+  const mq = window.matchMedia('(min-width:1101px) and (hover:hover) and (pointer:fine)');
+  let raf = null, fine = mq.matches;
+
+  const track = (n, l) => {
+    const w = [];
+    for (let i = 0; i < n; i++) {
+      const c = (i + 0.5) / n;
+      w.push(FLOOR + Math.exp(-(((c - l) / SIGMA) ** 2)));
+    }
+    return w.map(v => v.toFixed(4) + 'fr').join(' ');
+  };
+
+  const frame = () => {
+    lens.x += (target.x - lens.x) * EASE;
+    lens.y += (target.y - lens.y) * EASE;
+    grid.style.gridTemplateColumns = track(COLS, lens.x);
+    grid.style.gridTemplateRows = track(ROWS, lens.y);
+    // delikatna paralaksa zdjęcia w kaflu — obraz jest o 12% większy od kadru
+    tiles.forEach(t => {
+      const im = t.querySelector('img');
+      if (!im) return;
+      im.style.transform = `translate3d(${((lens.x - .5) * -14).toFixed(2)}px,${((lens.y - .5) * -14).toFixed(2)}px,0)`;
+    });
+    const done = Math.abs(target.x - lens.x) < 0.0004 && Math.abs(target.y - lens.y) < 0.0004;
+    raf = done ? null : requestAnimationFrame(frame);
+  };
+  const kick = () => { if (raf === null) raf = requestAnimationFrame(frame); };
+
+  const setLens = (x, y) => { target.x = Math.min(1, Math.max(0, x)); target.y = Math.min(1, Math.max(0, y)); kick(); };
+
+  // Rozwinięcie sterowane KLIKNIĘCIEM, nie najechaniem: soczewka jedzie na
+  // środek klikniętego kafla i tam zostaje. Ponowne kliknięcie zwija z powrotem
+  // do stanu spoczynku (soczewka w środku siatki).
+  const open = t => {
+    tiles.forEach(o => { o.classList.toggle('on', o === t); o.setAttribute('aria-expanded', o === t); });
+    if (!t) { setLens(.5, .5); return; }
+    const g = grid.getBoundingClientRect(), r = t.getBoundingClientRect();
+    setLens((r.left + r.width / 2 - g.left) / g.width, (r.top + r.height / 2 - g.top) / g.height);
+  };
+  tiles.forEach(t => t.addEventListener('click', () => {
+    if (!fine) return;                       // w układzie stosowym opisy są i tak odsłonięte
+    userActed = true; stopHint();
+    open(t.classList.contains('on') ? null : t);
+  }));
+
+  // Podpowiedź, że kafle są klikalne: co 12 s otwiera się kolejny. Zatrzymuje
+  // się na dobre po pierwszym kliknięciu użytkownika (rola podpowiedzi spełniona),
+  // a także gdy sekcja jest poza ekranem albo użytkownik ogranicza animacje.
+  const HINT_MS = 12000;
+  let hint = null, hintIdx = -1, userActed = false, onScreen = false;
+  const reduce = window.matchMedia('(prefers-reduced-motion:reduce)');
+  const stopHint = () => { if (hint) { clearInterval(hint); hint = null; } };
+  const syncHint = () => {
+    stopHint();
+    if (userActed || !fine || !onScreen || reduce.matches) return;
+    hint = setInterval(() => {
+      hintIdx = (hintIdx + 1) % tiles.length;
+      open(tiles[hintIdx]);
+    }, HINT_MS);
+  };
+  new IntersectionObserver(es => {
+    onScreen = es[0].isIntersecting;
+    if (!onScreen && !userActed) open(null);
+    syncHint();
+  }, { threshold: 0.35 }).observe(grid);
+
+  const applyMode = () => {
+    fine = mq.matches;
+    if (fine) { tiles.forEach(t => { t.classList.remove('on'); t.setAttribute('aria-expanded', 'false'); }); setLens(.5, .5); }
+    else tiles.forEach(t => { t.classList.add('on'); t.setAttribute('aria-expanded', 'true'); });
+  };
+  mq.addEventListener('change', () => { applyMode(); syncHint(); });
+  window.addEventListener('resize', applyMode);
+  applyMode();
+  syncHint();
+  frame();
+
+  // self-check: liczba kafli musi zgadzać się z układem siatki
+  console.assert(tiles.length === 6, `mozaika: ${tiles.length} kafli, układ przewiduje 6`);
+})();
+
+// --- ścieżka pacjenta: karty wg komponentu "Workflow cards" ---------------
+// Karty stoją absolutnie i jadą własnym transformem — w układzie przepływowym
+// rosnąca karta przepychała sąsiadów w trakcie animacji i całość „skakała".
+(() => {
+  const row = document.querySelector('[data-wf="row"]');
+  const track = document.querySelector('[data-wf="track"]');
+  if (!row || !track) return;
+  const cards = [...row.querySelectorAll('[data-wf="card"]')];
+  const pills = [...track.querySelectorAll('[data-wf="pill"]')];
+  let i = Math.max(0, cards.findIndex(c => c.classList.contains('on')));
+
+  const num = (el, prop) => parseFloat(getComputedStyle(el).getPropertyValue(prop)) || 0;
+
+  const render = () => {
+    cards.forEach((c, n) => { c.classList.toggle('on', n === i); c.setAttribute('aria-pressed', n === i); });
+    pills.forEach((p, n) => { p.classList.toggle('on', n === i); p.setAttribute('aria-pressed', n === i); });
+
+    const wf = document.querySelector('.wf');
+    const stage = row.parentElement;
+    const W = track.clientWidth;                        // szerokość siatki
+    const SW = stage.clientWidth;                       // szerokość kadru (poza padding sekcji)
+    const inset = track.getBoundingClientRect().left - stage.getBoundingClientRect().left;
+    const n = pills.length;
+    const cw = num(wf, '--wf-card'), cwOn = num(wf, '--wf-card-on');
+    const gap = num(wf, '--wf-gap'), pw = num(wf, '--wf-pill');
+
+    // pozycje liczymy z DOCELOWYCH szerokości, nie z bieżących (te są w trakcie animacji)
+    const w = k => (k === i ? cwOn : cw);
+    const x = []; let acc = 0;
+    for (let k = 0; k < cards.length; k++) { x.push(acc); acc += w(k) + gap; }
+    const rowW = acc - gap;
+
+    // Pigułka aktywna musi stać pod lewą krawędzią swojej karty, ale nie może
+    // wejść na grupy obok. Miejsce, w którym da się ją postawić:
+    const step = Math.min(num(wf, '--wf-step'), (W - pw) / Math.max(1, n - 1));
+    const leftEnd = i ? (i - 1) * step + pw + 8 : 0;
+    const rightStart = W - pw - (n - 1 - i) * step - 8;
+    const clampPill = v => Math.round(Math.min(Math.max(v, leftEnd), Math.max(rightStart - pw, leftEnd)));
+
+    // Gdy cały rząd mieści się w kadrze, nie ruszamy go wcale — inaczej każde
+    // kliknięcie przesuwałoby wszystkie karty o krok bez żadnego powodu.
+    // Gdy się nie mieści, to KARTA idzie pod pigułkę, a nie odwrotnie —
+    // inaczej ograniczenie pigułki rozjeżdża ją z kartą na wąskich ekranach.
+    let off;
+    if (rowW <= SW) {
+      off = Math.round((SW - rowW) / 2);
+    } else {
+      const want = clampPill((W - cwOn) / 2);
+      off = Math.round(Math.min(inset, Math.max(SW - rowW - inset, want + inset - x[i])));
+    }
+    cards.forEach((c, k) => { c.style.transform = `translateX(${off + x[k]}px)`; });
+
+    // pigułkę zawsze wyprowadzamy z FAKTYCZNEJ pozycji karty
+    const activeX = clampPill(off + x[i] - inset);
+
+    pills.forEach((p, k) => {
+      const px = k === i ? activeX
+               : k < i ? k * step
+               : W - pw - (n - 1 - k) * step;
+      p.style.transform = `translateX(${Math.round(px)}px)`;
+    });
+  };
+
+  const go = n => { i = (n + cards.length) % cards.length; render(); };
+  cards.forEach((c, n) => c.addEventListener('click', () => n !== i && go(n)));
+  pills.forEach((p, n) => p.addEventListener('click', () => n !== i && go(n)));
+  track.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight') { go(i + 1); e.preventDefault(); }
+    if (e.key === 'ArrowLeft') { go(i - 1); e.preventDefault(); }
+  });
+  let rt; window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(render, 120); });
+  render();
+
+  // self-check: tyle samo kart co pigułek, dokładnie jedna aktywna
+  console.assert(cards.length === pills.length,
+    `ścieżka: ${cards.length} kart vs ${pills.length} pigułek`);
+  console.assert(document.querySelectorAll('.wf-card.on').length === 1,
+    'ścieżka: liczba aktywnych kart != 1');
+})();
+
+// self-check: kazda kotwica musi trafiac w istniejaca sekcje
+// (dokladnie ten blad ma dzis produkcyjna strona na /kontakt)
+for (const a of document.querySelectorAll('a[href^="#"]')) {
+  const id = a.getAttribute('href').slice(1);
+  console.assert(!id || document.getElementById(id), 'martwa kotwica: #' + id);
+}
+</script>
+</body>
+</html>
