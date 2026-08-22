@@ -90,6 +90,29 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
     return { cofniete: !document.querySelector('.hero').classList.contains('morphed'),
              pelnyKadr: Math.round(m.width) === Math.round(H.width) };
   });
+  // strzałki talii + skok po kliknięciu karty (2026-08-22, wzór herodot.com)
+  const talia = await p.evaluate(async () => {
+    const sec = document.querySelector('.deal');
+    const focus = () => [...document.querySelectorAll('[data-card]')].findIndex(c => c.classList.contains('focus'));
+    const czekaj = ms => new Promise(r => setTimeout(r, ms));
+    sec.__doKarty(2); await czekaj(1500);
+    const skok = focus();
+    document.querySelector('[data-deal-next]').click(); await czekaj(1400);
+    const poNext = focus();
+    document.querySelector('[data-deal-prev]').click(); await czekaj(1400);
+    const poPrev = focus();
+    const wFokusie = [...document.querySelectorAll('[data-card]')][poPrev];
+    return { skok, poNext, poPrev,
+      opisWidoczny: +getComputedStyle(wFokusie.querySelector('.card-opis')).opacity > 0.9,
+      opisNiepusty: wFokusie.querySelector('.card-opis').textContent.trim().length > 40 };
+  });
+  const tOk = talia.skok === 2 && talia.poNext === 3 && talia.poPrev === 2
+           && talia.opisWidoczny && talia.opisNiepusty;
+  console.log(`${w}×${h} talia`, tOk ? 'ok' : 'BŁĄD ' + JSON.stringify(talia));
+  if (!tOk) process.exitCode = 1;
+  await p.evaluate(() => window.scrollTo(0, 150));
+  await new Promise(r => setTimeout(r, 1200));
+
   const mOk = przed.spoczynek && przed.pelnyKadr && po.zwiniete && po.trafiaWKarte
            && po.kartaWUwadze && po.kartaNaWierzchu && po.kartaPelneKrycie
            && po.heroOddane && po.etykietaWidoczna && po.lukRozlozony && po.napisyBiale && wroc.cofniete && wroc.pelnyKadr;
