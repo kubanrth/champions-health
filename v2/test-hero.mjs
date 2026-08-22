@@ -35,13 +35,19 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
         kropkaNaTekscie: tekst.some(t => zachodzi(d, t)),
         opisNiepusty: [...k.children].every(e => e.textContent.trim().length > 0),
         krojLegii: getComputedStyle(k.querySelector('strong')).fontFamily.includes('Archivo'),
+        // puls: trzy kółka rozchodzące się od kropki, z rozjazdem faz
+        puls: (() => { const ringi = [...j.querySelector('.jt-dot').querySelectorAll('i')];
+          const delays = ringi.map(r2 => getComputedStyle(r2).animationDelay);
+          return ringi.length === 3
+              && ringi.every(r2 => getComputedStyle(r2).animationName === 'jt-puls')
+              && new Set(delays).size === 3; })(),
       };
     }, c));
     await p.mouse.move(w - 40, h - 40);          // zwolnij, zanim sprawdzisz następny
     await new Promise(r => setTimeout(r, 400));
   }
   const zle = out.filter(o => !o.ukryty && (!o.rozsunieta || !o.kartaWKadrze || o.kropkaNaTekscie
-                                            || !o.opisNiepusty || !o.krojLegii));
+                                            || !o.opisNiepusty || !o.krojLegii || !o.puls));
   const ok = !zle.length && !errs.length && przepelnienie === 0;
   console.log(`${w}×${h}`, ok ? 'ok' : 'BŁĄD ' + JSON.stringify({ zle, errs, przepelnienie }));
   if (!ok) process.exitCode = 1;
