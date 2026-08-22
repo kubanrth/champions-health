@@ -159,6 +159,58 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
   console.log(`${w}×${h} odsłanianie`, revOk ? 'ok' : 'BŁĄD ' + JSON.stringify(rev));
   if (!revOk) process.exitCode = 1;
 
+  // --- zespół: pas, strzałki, wizytówka ------------------------------------
+  await p.evaluate(() => document.querySelector('#zespol').scrollIntoView({ block: 'center' }));
+  await new Promise(r => setTimeout(r, 900));
+  const zStart = await p.evaluate(() => {
+    const t = document.querySelector('[data-tm-track]');
+    const k = [...t.querySelectorAll('[data-tm]')];
+    return {
+      ile: k.length,
+      // strzałka wstecz musi startować wyłączona — inaczej pas rusza przesunięty
+      wsteczWyl: document.querySelector('[data-tm-prev]').disabled,
+      dalejCzynna: !document.querySelector('[data-tm-next]').disabled,
+      naStarcie: t.scrollLeft <= 1,
+      komplet: k.every(c => c.dataset.imie && c.dataset.spec && c.dataset.opis && c.dataset.dosw),
+    };
+  });
+  for (let i = 0; i < 16; i++) {
+    if (await p.evaluate(() => document.querySelector('[data-tm-next]').disabled)) break;
+    await p.click('[data-tm-next]');
+    await new Promise(r => setTimeout(r, 420));
+  }
+  const zKoniec = await p.evaluate(() => ({
+    dalejWyl: document.querySelector('[data-tm-next]').disabled,
+    ostatniaWKadrze: (() => { const k = [...document.querySelectorAll('[data-tm]')].at(-1).getBoundingClientRect();
+      return k.right <= innerWidth + 2 && k.left >= -2; })(),
+  }));
+  await p.click('.tm-card');
+  await new Promise(r => setTimeout(r, 500));
+  const zOkno = await p.evaluate(() => {
+    const d = document.querySelector('[data-wiz]'), r = d.getBoundingClientRect();
+    const karta = [...document.querySelectorAll('[data-tm]')].find(c => c.dataset.imie
+      === d.querySelector('[data-wiz-imie]').textContent);
+    return {
+      otwarte: d.open,
+      wKadrze: r.top >= -1 && r.bottom <= innerHeight + 1 && r.left >= -1 && r.right <= innerWidth + 1,
+      // dane w wizytówce muszą pochodzić z klikniętej karty
+      zgodne: !!karta && d.querySelector('[data-wiz-spec]').textContent === karta.dataset.spec,
+      maCta: !!d.querySelector('[data-wiz-cta]'),
+    };
+  });
+  await p.keyboard.press('Escape');
+  await new Promise(r => setTimeout(r, 400));
+  const zZamk = await p.evaluate(() => ({
+    zamkniete: !document.querySelector('[data-wiz]').open,
+    fokusWrocil: document.activeElement?.classList.contains('tm-card'),
+  }));
+  const zOk = zStart.ile === 14 && zStart.wsteczWyl && zStart.dalejCzynna && zStart.naStarcie
+           && zStart.komplet && zKoniec.dalejWyl && zKoniec.ostatniaWKadrze
+           && zOkno.otwarte && zOkno.wKadrze && zOkno.zgodne && zOkno.maCta
+           && zZamk.zamkniete && zZamk.fokusWrocil;
+  console.log(`${w}×${h} zespół`, zOk ? 'ok' : 'BŁĄD ' + JSON.stringify({ zStart, zKoniec, zOkno, zZamk }));
+  if (!zOk) process.exitCode = 1;
+
   await p.close();
 }
 await b.close();
