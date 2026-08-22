@@ -306,12 +306,12 @@ a{color:inherit;text-decoration:none}
 .morph>img{width:100%;height:100%;object-fit:cover;object-position:50% 50%;
   transition:object-position 1s var(--rev)}
 .hero.morphed .morph{left:var(--mx);top:var(--my);width:var(--mw);height:var(--mh);
-  transform:var(--mt);border-radius:24px}
+  transform:var(--mt);border-radius:28px}
 .hero.morphed .morph>img{object-position:38% 40%}
 
 /* podpis w morfie = 1:1 układ karty z „Zakresu opieki", żeby przekazanie było niewidoczne */
-.morph-in{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;align-items:center;
-  padding:26px 22px;text-align:center;opacity:0;transition:opacity .45s var(--rev) .45s}
+.morph-in{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;align-items:flex-start;
+  padding:clamp(24px,3vw,38px);text-align:left;opacity:0;transition:opacity .45s var(--rev) .45s}
 .hero.morphed .morph-in{opacity:1}
 .morph-in .card-chip{opacity:1;transform:none}
 .morph::after{content:"";position:absolute;inset:0;z-index:1;opacity:0;
@@ -478,12 +478,11 @@ a{color:inherit;text-decoration:none}
   .deal-head p{max-width:52ch;font-size:.95rem}
   .deal-cta{margin-top:.9rem;height:42px}
   .deal-head h2{font-size:clamp(1.7rem,3.4vw,2.6rem)}
-  .card{width:264px;height:364px}
-  .deal-track{height:440px}
-  .card-in h3{font-size:26px}
+  .deal{--dch:clamp(300px,46svh,420px)}
+  .card-in h3{font-size:clamp(26px,3vw,36px)}
   .card-chip{min-height:56px;font-size:12px}
 }
-.deal-arrows{position:absolute;z-index:120;left:50%;bottom:clamp(18px,4svh,44px);transform:translateX(-50%);
+.deal-arrows{position:absolute;z-index:120;right:clamp(20px,4vw,60px);bottom:clamp(18px,4svh,44px);
   display:flex;gap:10px;opacity:0;transition:opacity .6s var(--rev) .3s;pointer-events:none}
 .deal.rozwiniete .deal-arrows{opacity:1;pointer-events:auto}
 .deal-arrow{width:46px;height:46px;border-radius:50%;cursor:pointer;
@@ -493,7 +492,7 @@ a{color:inherit;text-decoration:none}
   transition:background-color .3s var(--ease),border-color .3s var(--ease)}
 .deal-arrow:hover{background:#fff;border-color:rgba(10,10,10,.55)}
 .deal-arrow:focus-visible{outline:2px solid #0A0A0A;outline-offset:3px}
-.deal{--rev:cubic-bezier(.35,0,0,1)}
+.deal{--rev:cubic-bezier(.35,0,0,1);--dcw:min(78vw,1040px);--dch:clamp(380px,56svh,560px)}
 /* zdjęcie hero zakrywa sekcję do momentu zwinięcia — potem nawigacja stoi na bieli */
 .deal .nav .menu a,.deal .nav .brand{transition:color .5s var(--rev) .35s,filter .5s var(--rev) .35s}
 .deal.rozwiniete .menu a{color:#0A0A0A}
@@ -501,20 +500,24 @@ a{color:inherit;text-decoration:none}
 .deal.rozwiniete .menu a:focus-visible{outline-color:#0A0A0A}
 .deal.rozwiniete .brand img{filter:invert(1)}          /* logo mamy tylko w wersji białej */
 .deal.rozwiniete .cta:focus-visible{outline-color:#0A0A0A}
-.deal-track{position:relative;width:100%;height:520px}
-.card{position:absolute;top:0;left:0;width:300px;height:414px;border-radius:24px;overflow:hidden;
+/* poziomy slider: tor na transformie, pionowy scroll przesuwa go w lewo;
+   padding-inline centruje pierwszą i ostatnią kartę w kadrze */
+/* scena centruje dzieci — szerszy od niej tor startowałby przesunięty o połowę nadmiaru */
+.deal-track{display:flex;gap:clamp(16px,2vw,28px);width:max-content;align-self:flex-start;
+  padding-inline:calc((100vw - var(--dcw)) / 2);will-change:transform}
+.card{position:relative;flex:none;width:var(--dcw);height:var(--dch);border-radius:28px;overflow:hidden;
   background:#151515;will-change:transform;transform-origin:50% 50%;
   box-shadow:0 2px 4px rgba(0,0,0,.08),0 26px 50px -28px rgba(0,0,0,.45)}
 .card>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .card::after{content:"";position:absolute;inset:0;
   background:linear-gradient(to bottom,rgba(8,14,10,.86) 0%,rgba(8,14,10,.72) 40%,rgba(8,14,10,.3) 68%,rgba(8,14,10,.76) 100%)}
-.card-in{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;align-items:center;
-  padding:26px 22px;text-align:center}
+.card-in{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;align-items:flex-start;
+  padding:clamp(24px,3vw,38px);text-align:left}
 .card-lab{font-size:13px;font-weight:500;letter-spacing:.01em;color:rgba(255,255,255,.85)}
-.card-in h3{margin:6px 0 0;font-size:30px;line-height:1.06;font-weight:700;letter-spacing:-.032em;text-wrap:balance}
+.card-in h3{margin:6px 0 0;max-width:14ch;font-size:clamp(30px,3.4vw,46px);line-height:1.04;font-weight:700;letter-spacing:-.032em;text-wrap:balance}
 /* anatomia napisów jak na kartach Revoluta: mała etykieta, gruby tytuł,
    biały chip na dole; treść chipa rotuje (przesuw pionowy pod maską) */
-.card-chip{margin-top:auto;width:calc(100% + 16px);margin-inline:-8px;min-height:64px;
+.card-chip{margin-top:auto;width:min(480px,100%);min-height:64px;
   padding:12px 15px;border-radius:14px;background:rgba(255,255,255,.95);
   display:grid;align-items:center;overflow:hidden;position:relative;
   color:#111;font-size:13px;font-weight:500;line-height:1.35;text-align:left;
@@ -534,12 +537,12 @@ a{color:inherit;text-decoration:none}
   text-transform:uppercase;white-space:nowrap}
 
 @media(max-width:1100px){
-  .deal-track{height:470px}
+  .deal{--dch:clamp(340px,52svh,480px)}
   .card{width:260px;height:360px}
   .card-in h3{font-size:23px}
 }
 @media(max-width:760px){
-  .deal-track{height:420px}
+  .deal{--dcw:88vw;--dch:min(58svh,420px)}
   .card{width:214px;height:296px}
   .card-in{padding:18px 15px}
   .card-in h3{font-size:19px}
@@ -752,22 +755,23 @@ footer.site img{height:26px}
 
 
 <script>
-// --- „Rozdanie": łuk kart rozkłada się przy zwinięciu hero i dryfuje przez punkt uwagi ---
-// Dwa niezależne parametry, oba z FORMUŁY (element w ruchu zwraca wartości pośrednie):
-//   we (0–1) — rozłożenie łuku, tween w CZASIE, odpalany razem ze zwinięciem hero,
-//   p  (0–1) — dryf przez punkt uwagi, liczony z pozycji scrolla w sekcji.
-// Dzięki temu łuk rozkłada się w tym samym ruchu co kurczące się zdjęcie, a nie osobno.
+// --- „Zakres opieki": poziomy slider napędzany scrollem ---------------------
+// Pionowy scroll przesuwa tor dużych poziomych kart w lewo (widok jedzie
+// w prawo). Po ostatniej karcie sekcja się domyka i strona płynie dalej.
+// Dwa parametry, oba z FORMUŁY: we (0–1) — wjazd kart tweenem w czasie,
+// odpalany razem ze zwinięciem hero; p (0–1) — pozycja slidera ze scrolla.
 (() => {
   const sec = document.querySelector('.deal');
   const track = document.querySelector('[data-track]');
   if (!sec || !track) return;
+  const stage = sec.querySelector('.deal-stage');
   const cards = [...track.querySelectorAll('[data-card]')];
   const N = cards.length;
   const reduce = matchMedia('(prefers-reduced-motion:reduce)');
 
-  const HERO = 0;        // „Medycyna sportowa" — w nią zwija się hero, więc otwiera łuk
-  const WSTEP = 0.6;     // ekran na zwinięcie, zanim łuk zacznie dryfować
-  const KROK = 0.055;    // rozjazd kart w rozkładaniu, liczony od karty hero
+  const HERO = 0;        // „Medycyna sportowa" — w nią zwija się hero, więc wchodzi pierwsza
+  const WSTEP = 0.6;     // ekran na zwinięcie, zanim slider ruszy
+  const KROK = 0.055;    // rozjazd wjazdu kart, liczony od karty hero
   const CZAS = 1080;     // ten sam czas co morf hero
   sec.style.height = `${100 + WSTEP * 100 + N * 42}svh`;
 
@@ -783,40 +787,30 @@ footer.site img{height:26px}
   };
 
   let we = 0, raf = null, tw = null;
-  const draw = () => {
-    raf = null;
+  const postep = () => {
     const r = sec.getBoundingClientRect();
     const wstep = window.innerHeight * WSTEP;
     const span = sec.offsetHeight - window.innerHeight - wstep;
-    const p = span > 0 ? Math.min(1, Math.max(0, (-r.top - wstep) / span)) : 0;
-
-    const cw = cards[0].offsetWidth, ch = cards[0].offsetHeight;
-    const step = cw + Math.max(16, Math.round(cw * 0.09));
-    const cx = track.clientWidth / 2 - cw / 2, cy = track.clientHeight / 2 - ch / 2;
+    return span > 0 ? Math.min(1, Math.max(0, (-r.top - wstep) / span)) : 0;
+  };
+  const draw = () => {
+    raf = null;
+    const p = postep();
+    const maxX = Math.max(0, track.scrollWidth - stage.clientWidth);
+    track.style.transform = `translate3d(${(-p * maxX).toFixed(1)}px,0,0)`;
     const focus = p * (N - 1);
     const rozjazd = 1 - (N - 1) * KROK;
-
     cards.forEach((c, i) => {
-      const d = i - focus;                            // odległość od punktu uwagi w krokach
-      const t = Math.min(1, Math.abs(d) / 2.2);
-      // cel: łuk — im dalej od środka, tym niżej, mniejsza i bardziej przechylona
-      const tx = cx + d * step, ty = cy + 46 * t * t;
-      const sc = 1 - 0.14 * t;
-      const rot = Math.max(-7, Math.min(7, d * 2.4));
-      // start: karty zgarnięte pod zdjęcie hero; kolejność od karty, w którą zwija się hero
       const w = Math.min(1, Math.max(0, (we - Math.abs(i - HERO) * KROK) / rozjazd));
-      const x = cx + (tx - cx) * w, y = cy + (ty - cy) * w;
-      const s2 = sc * (0.9 + 0.1 * w);
-      c.style.transform = `translate3d(${x.toFixed(1)}px,${y.toFixed(1)}px,0) scale(${s2.toFixed(3)}) rotate(${(rot * w).toFixed(2)}deg)`;
-      // na bieli spadek krycia rozjaśnia zamiast oddalać — głębię niosą skala i cień
-      c.style.opacity = ((1 - 0.18 * t) * w).toFixed(3);
-      c.style.zIndex = String(100 - Math.round(Math.abs(d) * 10));
-      c.classList.toggle('focus', Math.abs(d) < 0.5 && w > 0.9);
+      const t = Math.min(1, Math.abs(i - focus) / 1.1);
+      c.style.opacity = (w * (1 - 0.22 * t)).toFixed(3);
+      c.style.transform = `translate3d(${(52 * (1 - w)).toFixed(1)}px,0,0) scale(${(0.97 + 0.03 * (1 - t)).toFixed(3)})`;
+      c.classList.toggle('focus', Math.abs(i - focus) < 0.5 && w > 0.9);
     });
   };
   const kick = () => { if (raf === null) raf = requestAnimationFrame(draw); };
 
-  // rozłożenie łuku: tween w czasie, odpalany i cofany razem ze zwinięciem hero
+  // wjazd kart: tween w czasie, odpalany i cofany razem ze zwinięciem hero
   sec.__rozloz = cel => {
     const od = we, t0 = performance.now();
     if (tw) cancelAnimationFrame(tw);
@@ -829,9 +823,8 @@ footer.site img{height:26px}
     tw = requestAnimationFrame(krok);
   };
 
-  // skok do karty i: strzałki i klik NIE ruszają talii wprost — przewijają stronę
-  // do offsetu, z którego formuła sama wyliczy focus = i. Scroll zostaje jedynym
-  // źródłem prawdy, więc kółko myszy i strzałki nigdy się nie kłócą.
+  // skok do karty i: strzałki i klik przewijają stronę do offsetu, z którego
+  // formuła sama wyliczy pozycję slidera — scroll zostaje jedynym źródłem prawdy
   const doKarty = i => {
     i = Math.max(0, Math.min(N - 1, i));
     const wstep = window.innerHeight * WSTEP;
@@ -839,14 +832,13 @@ footer.site img{height:26px}
     const top = sec.getBoundingClientRect().top + scrollY + wstep + (i / (N - 1)) * span;
     window.scrollTo({ top: Math.ceil(top) + 1, behavior: 'smooth' });
   };
-  const biezaca = () => {
-    const r = sec.getBoundingClientRect();
-    const wstep = window.innerHeight * WSTEP;
-    const span = sec.offsetHeight - window.innerHeight - wstep;
-    return Math.round(Math.min(1, Math.max(0, (-r.top - wstep) / span)) * (N - 1));
-  };
-  // rotacja chipów: fakt zmienia się co 3,2 s na karcie w fokusie —
-  // stara linia wyjeżdża górą, nowa wchodzi dołem (jak transakcje u Revoluta)
+  const biezaca = () => Math.round(postep() * (N - 1));
+  document.querySelector('[data-deal-prev]')?.addEventListener('click', () => doKarty(biezaca() - 1));
+  document.querySelector('[data-deal-next]')?.addEventListener('click', () => doKarty(biezaca() + 1));
+  cards.forEach((c, i) => c.addEventListener('click', () => doKarty(i)));
+  sec.__doKarty = doKarty;
+
+  // rotacja chipów: fakt zmienia się co 3,2 s na karcie w fokusie
   if (!reduce.matches) setInterval(() => {
     if (document.hidden) return;
     const chip = track.querySelector('.card.focus .card-chip');
@@ -866,27 +858,24 @@ footer.site img{height:26px}
     setTimeout(() => stara?.remove(), 650);
   }, 3200);
 
-  document.querySelector('[data-deal-prev]')?.addEventListener('click', () => doKarty(biezaca() - 1));
-  document.querySelector('[data-deal-next]')?.addEventListener('click', () => doKarty(biezaca() + 1));
-  cards.forEach((c, i) => c.addEventListener('click', () => doKarty(i)));
-  sec.__doKarty = doKarty;
-
-  // geometria karty HERO w rozłożonym łuku (we = 1, p = 0) — hero zwija się dokładnie w nią
+  // geometria karty HERO przy p = 0 — hero zwija się dokładnie w nią.
+  // offsetLeft/offsetTop, nie getBoundingClientRect: transformy wjazdu kart
+  // nie ruszają layoutu, więc pomiar nie zależy od fazy animacji
   sec.__cel = () => {
-    const st = sec.querySelector('.deal-stage').getBoundingClientRect();
-    const tr = track.getBoundingClientRect();
-    const cw = cards[0].offsetWidth, ch = cards[0].offsetHeight;
+    const st = stage.getBoundingClientRect();
+    const tr = track.getBoundingClientRect();   // przy p=0 tor bez transformu
+    const c0 = cards[HERO];
     return {
-      x: tr.left - st.left + track.clientWidth / 2 - cw / 2,
-      y: tr.top - st.top + track.clientHeight / 2 - ch / 2,
-      w: cw, h: ch, t: 'none',
+      x: tr.left - st.left + c0.offsetLeft,
+      y: tr.top - st.top + c0.offsetTop,
+      w: c0.offsetWidth, h: c0.offsetHeight, t: 'none',
     };
   };
 
   if (reduce.matches) {
     sec.style.height = 'auto';
-    track.style.cssText = 'display:flex;gap:16px;overflow-x:auto;height:auto;padding:0 20px';
-    cards.forEach(c => { c.style.cssText += ';position:relative;opacity:1;transform:none'; c.classList.add('focus'); });
+    stage.style.cssText += ';position:static;height:auto;overflow-x:auto;padding-bottom:32px';
+    cards.forEach(c => { c.style.opacity = '1'; c.classList.add('focus'); });
     sec.__rozloz = () => {};
     sec.__doKarty = i => cards[Math.max(0, Math.min(N - 1, i))]
       .scrollIntoView({ inline: 'center', block: 'nearest' });
@@ -896,11 +885,10 @@ footer.site img{height:26px}
     draw();
   }
 
-  // self-check: w łuku dokładnie jedna karta może być w punkcie uwagi
-  // (w trybie reduced-motion łuku nie ma — jest prosty rząd, wszystkie odsłonięte)
+  // self-check: dokładnie jedna karta może być w fokusie
   if (!reduce.matches) addEventListener('scroll', () => {
     console.assert(track.querySelectorAll('.focus').length <= 1,
-      'rozdanie: więcej niż jedna karta w punkcie uwagi');
+      'slider: więcej niż jedna karta w fokusie');
   }, { passive: true, once: true });
 })();
 </script>
