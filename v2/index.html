@@ -70,24 +70,39 @@ a{color:inherit;text-decoration:none}
 .cta:active{transform:translateY(0)}
 .cta:focus-visible{outline:2px solid #fff;outline-offset:3px}
 
-/* --- deklaracja o Legii + odsłanianie tekstu ------------------------------
-   Animacja zdjęta z myhealthprac.com (GSAP + SplitType). Zmierzone: znak
-   jedzie translateY(100%) → 0, czas 0,33 s, rozjazd 16 ms, krzywa power2.out
-   = cubic-bezier(.25,.46,.45,.94). U nas bez GSAP-a — dzielenie w 20 liniach
-   JS-a, reszta to zwykły transition.                                       */
-.claim{background:var(--cream);color:#0A0A0A}
-.claim-in{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;
-  gap:clamp(2rem,5vw,4rem);padding-top:clamp(4.5rem,10vw,8rem);padding-bottom:clamp(4.5rem,10vw,8rem)}
-.claim-txt{margin:0;flex:1 1 0;min-width:0;max-width:19ch;font-size:clamp(2.1rem,5.2vw,4.4rem);line-height:1.04;
-  letter-spacing:-.035em;font-weight:600;text-wrap:balance}
-.claim-logo{flex:none;display:flex;flex-direction:column;align-items:flex-start;gap:8px;
-  padding:18px 20px;border:1px dashed rgba(10,10,10,.28);border-radius:14px}
-.claim-logo>span:last-child{font-size:12px;color:var(--muted-d)}
-.claim-logo .badge{background:rgba(200,40,40,.12);color:#A31212}
-@media(max-width:700px){
-  .claim-in{display:block}
-  .claim-txt{max-width:none}
-  .claim-logo{margin-top:2rem;display:inline-flex}
+/* --- sygnatura: autoryzacja Legii ----------------------------------------
+   Białe tło ciągnie się z sekcji kart wyżej, więc zamiast zmiany koloru
+   oddziela ją włos linii. Całość w jednej linii: logo · kreska · zdanie.
+   Rozmiar pisma na vw, żeby zdanie nie łamało się przy żadnej szerokości;
+   poniżej 760 px linia i tak nie ma prawa się zmieścić — wtedy układ
+   przechodzi na dwa wiersze.                                             */
+.claim{background:#fff;color:#0A0A0A;border-top:1px solid rgba(10,10,10,.09)}
+.claim .claim-in{display:flex;align-items:center;justify-content:center;gap:clamp(14px,1.6vw,24px);
+  padding:clamp(3.4rem,7vw,6rem) 24px}
+.claim-logo{flex:none;height:clamp(22px,2.1vw,32px);width:auto}
+.claim-kreska{flex:none;width:1px;height:clamp(26px,2.5vw,40px);background:rgba(10,10,10,.2)}
+.claim-txt{margin:0;white-space:nowrap;font-size:clamp(1.02rem,2.72vw,2.7rem);
+  line-height:1.1;letter-spacing:-.032em;font-weight:600}
+
+/* maska na słowie, znak wyjeżdża spod niej */
+.reveal .word{display:inline-block;white-space:nowrap;overflow:hidden;vertical-align:bottom;
+  padding-bottom:.16em;margin-bottom:-.16em}
+.reveal .char{display:inline-block;transform:translateY(115%);
+  transition:transform .33s cubic-bezier(.25,.46,.45,.94) calc(var(--i) * 16ms)}
+.reveal.pokaz .char{transform:none}
+.claim-logo,.claim-kreska{opacity:0;transform:translateY(14px);
+  transition:opacity .5s cubic-bezier(.25,.46,.45,.94),transform .6s cubic-bezier(.25,.46,.45,.94)}
+.claim.pokaz .claim-logo,.claim.pokaz .claim-kreska{opacity:1;transform:none}
+.claim.pokaz .claim-kreska{transition-delay:.08s}
+
+@media(max-width:760px){
+  .claim .claim-in{flex-wrap:wrap;gap:10px 14px}
+  .claim-txt{flex-basis:100%;white-space:normal;text-align:center;font-size:1.35rem;text-wrap:balance}
+  .claim-logo{height:26px}
+  .claim-kreska{display:none}
+}
+@media(prefers-reduced-motion:reduce){
+  .reveal .char,.claim-logo,.claim-kreska{transform:none;transition:none;opacity:1}
 }
 
 /* maska na słowie, znak wyjeżdża spod niej */
@@ -711,11 +726,9 @@ footer.site img{height:26px}
 
 <section class="claim" id="legia">
   <div class="wrap claim-in">
+    <img class="claim-logo" src="img/logo_LCH.svg" alt="Champions Health" width="150" height="24">
+    <span class="claim-kreska" aria-hidden="true"></span>
     <p class="claim-txt reveal" data-reveal>Autoryzowany punkt medyczny Legii Warszawa</p>
-    <div class="claim-logo">
-      <span class="badge">herb do wstawienia</span>
-      <span>wymaga zgody klubu</span>
-    </div>
   </div>
 </section>
 
@@ -989,6 +1002,7 @@ footer.site img{height:26px}
     new IntersectionObserver((e, o) => {
       if (!e[0].isIntersecting) return;
       el.classList.add('pokaz');
+      el.closest('section')?.classList.add('pokaz');
       o.disconnect();
     }, { threshold: 0.4 }).observe(el);
   }
