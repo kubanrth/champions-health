@@ -109,19 +109,13 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
     const sd = document.querySelector('[data-deal-next]').getBoundingClientRect();
     const cel = document.elementFromPoint(sd.left + sd.width / 2, sd.top + sd.height / 2);
     const strzalkaKlikalna = cel === document.querySelector('[data-deal-next]') || cel?.closest('[data-deal-next]');
-    const chip = wFokusie.querySelector('.card-chip');
-    const linia = () => chip.querySelector('.chip-linia:not(.out)')?.textContent.trim();
-    const przedRotacja = linia();
-    await czekaj(3600);                                     // obrót co 3,2 s
+    const txt = wFokusie.querySelector('.card-txt');
     return { skok, poNext, poPrev, strzalkaKlikalna: !!strzalkaKlikalna,
-      chipWidoczny: +getComputedStyle(chip).opacity > 0.9,
-      chipNiepusty: (przedRotacja || '').length > 20,
-      // treść chipa rotuje jak transakcje u Revoluta
-      rotuje: linia() !== przedRotacja,
-      jednaLinia: chip.querySelectorAll('.chip-linia:not(.out)').length === 1 };
+      tekstWidoczny: +getComputedStyle(txt).opacity > 0.9,
+      tekstNiepusty: txt.textContent.trim().length > 60 };
   });
   const tOk = talia.skok === 2 && talia.poNext === 3 && talia.poPrev === 2
-           && talia.chipWidoczny && talia.chipNiepusty && talia.rotuje && talia.jednaLinia && talia.strzalkaKlikalna;
+           && talia.tekstWidoczny && talia.tekstNiepusty && talia.strzalkaKlikalna;
   console.log(`${w}×${h} talia`, tOk ? 'ok' : 'BŁĄD ' + JSON.stringify(talia));
   if (!tOk) process.exitCode = 1;
   await p.evaluate(() => window.scrollTo(0, 150));

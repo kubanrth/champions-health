@@ -313,9 +313,9 @@ a{color:inherit;text-decoration:none}
 .morph-in{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;align-items:flex-start;
   padding:clamp(24px,3vw,38px);text-align:left;opacity:0;transition:opacity .45s var(--rev) .45s}
 .hero.morphed .morph-in{opacity:1}
-.morph-in .card-chip{opacity:1;transform:none}
+.morph-in .card-txt{opacity:1;transform:none}
 .morph::after{content:"";position:absolute;inset:0;z-index:1;opacity:0;
-  background:linear-gradient(to bottom,rgba(8,14,10,.86) 0%,rgba(8,14,10,.72) 40%,rgba(8,14,10,.3) 68%,rgba(8,14,10,.76) 100%);
+  background:linear-gradient(to bottom,rgba(8,14,10,.86) 0%,rgba(8,14,10,.6) 34%,rgba(8,14,10,.28) 56%,rgba(8,14,10,.92) 88%,rgba(8,14,10,.96) 100%);
   transition:opacity .8s var(--rev)}
 .hero.morphed .morph::after{opacity:1}
 
@@ -480,17 +480,24 @@ a{color:inherit;text-decoration:none}
   .deal-head h2{font-size:clamp(1.7rem,3.4vw,2.6rem)}
   .deal{--dch:clamp(300px,46svh,420px)}
   .card-in h3{font-size:clamp(26px,3vw,36px)}
-  .card-chip{min-height:56px;font-size:12px}
+  .card-txt{font-size:13px}
 }
-.deal-arrows{position:absolute;z-index:120;right:clamp(20px,4vw,60px);bottom:clamp(18px,4svh,44px);
-  display:flex;gap:10px;opacity:0;transition:opacity .6s var(--rev) .3s;pointer-events:none}
-.deal.rozwiniete .deal-arrows{opacity:1;pointer-events:auto}
-.deal-arrow{width:46px;height:46px;border-radius:50%;cursor:pointer;
-  border:1px solid rgba(10,10,10,.28);background:rgba(255,255,255,.8);color:#0A0A0A;
-  font-size:22px;line-height:1;display:grid;place-items:center;
-  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
-  transition:background-color .3s var(--ease),border-color .3s var(--ease)}
-.deal-arrow:hover{background:#fff;border-color:rgba(10,10,10,.55)}
+.deal-arrows{position:absolute;inset:0;z-index:120;pointer-events:none;
+  opacity:0;transition:opacity .6s var(--rev) .3s}
+.deal.rozwiniete .deal-arrows{opacity:1}
+/* liquid glass: mleczne szkło z rozmyciem tła, jasną obwódką i blikiem u góry */
+.deal-arrow{position:absolute;top:55%;transform:translateY(-50%);width:56px;height:56px;
+  border-radius:50%;cursor:pointer;pointer-events:auto;
+  border:1px solid rgba(255,255,255,.65);background:rgba(255,255,255,.28);
+  -webkit-backdrop-filter:blur(18px) saturate(1.5);backdrop-filter:blur(18px) saturate(1.5);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.75),inset 0 -8px 16px rgba(255,255,255,.18),
+             0 10px 28px -10px rgba(0,0,0,.35);
+  color:#0A0A0A;font-size:24px;line-height:1;display:grid;place-items:center;
+  transition:background-color .3s var(--ease),transform .3s var(--ease)}
+[data-deal-prev]{left:clamp(14px,2.6vw,44px)}
+[data-deal-next]{right:clamp(14px,2.6vw,44px)}
+.deal-arrow:hover{background:rgba(255,255,255,.5);transform:translateY(-50%) scale(1.06)}
+.deal-arrow:active{transform:translateY(-50%) scale(.97)}
 .deal-arrow:focus-visible{outline:2px solid #0A0A0A;outline-offset:3px}
 .deal{--rev:cubic-bezier(.35,0,0,1);--dcw:min(78vw,1040px);--dch:clamp(380px,56svh,560px)}
 /* zdjęcie hero zakrywa sekcję do momentu zwinięcia — potem nawigacja stoi na bieli */
@@ -510,24 +517,19 @@ a{color:inherit;text-decoration:none}
   box-shadow:0 2px 4px rgba(0,0,0,.08),0 26px 50px -28px rgba(0,0,0,.45)}
 .card>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .card::after{content:"";position:absolute;inset:0;
-  background:linear-gradient(to bottom,rgba(8,14,10,.86) 0%,rgba(8,14,10,.72) 40%,rgba(8,14,10,.3) 68%,rgba(8,14,10,.76) 100%)}
+  background:linear-gradient(to bottom,rgba(8,14,10,.86) 0%,rgba(8,14,10,.6) 34%,rgba(8,14,10,.28) 56%,rgba(8,14,10,.92) 88%,rgba(8,14,10,.96) 100%)}
 .card-in{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;align-items:flex-start;
   padding:clamp(24px,3vw,38px);text-align:left}
 .card-lab{font-size:13px;font-weight:500;letter-spacing:.01em;color:rgba(255,255,255,.85)}
 .card-in h3{margin:6px 0 0;max-width:14ch;font-size:clamp(30px,3.4vw,46px);line-height:1.04;font-weight:700;letter-spacing:-.032em;text-wrap:balance}
-/* anatomia napisów jak na kartach Revoluta: mała etykieta, gruby tytuł,
-   biały chip na dole; treść chipa rotuje (przesuw pionowy pod maską) */
-.card-chip{margin-top:auto;width:min(480px,100%);min-height:64px;
-  padding:12px 15px;border-radius:14px;background:rgba(255,255,255,.95);
-  display:grid;align-items:center;overflow:hidden;position:relative;
-  color:#111;font-size:13px;font-weight:500;line-height:1.35;text-align:left;
+/* tekst bezpośrednio na karcie — bez białego prostokąta; czytelność
+   trzyma mocniejszy dół gradientu karty (mierzony do AA) */
+.card-txt{margin-top:auto;max-width:54ch;padding-top:14px;
+  border-top:1px solid rgba(255,255,255,.28);
+  font-size:15.5px;line-height:1.6;text-align:left;color:rgba(255,255,255,.92);
   opacity:0;transform:translateY(8px);
   transition:opacity .45s var(--ease),transform .45s var(--ease)}
-.card.focus .card-chip{opacity:1;transform:none}
-.chip-linia{grid-area:1/1;display:block;
-  transition:transform .55s var(--ease),opacity .55s var(--ease)}
-.chip-linia.wchodzi{transform:translateY(130%);opacity:0}
-.chip-linia.out{transform:translateY(-130%);opacity:0}
+.card.focus .card-txt{opacity:1;transform:none}
 .card{cursor:pointer}
 /* brakujące zdjęcie — świadomie widoczne, nie zapychamy stockiem */
 .card.nofoto{background:
@@ -547,7 +549,7 @@ a{color:inherit;text-decoration:none}
   .card-in{padding:18px 15px}
   .card-in h3{font-size:19px}
   .card-lab{font-size:11px}
-  .card-chip{font-size:11.5px;min-height:56px}
+  .card-txt{font-size:12.5px}
 }
 
 
@@ -647,7 +649,7 @@ footer.site img{height:26px}
       <div class="morph-in">
       <span class="card-lab">01 / Prowadzenie</span>
       <h3>Medycyna sportowa</h3>
-      <span class="card-chip"><span class="chip-linia">Badania kwalifikacyjne i prowadzenie przez cały sezon</span></span>
+      <span class="card-txt">Badania kwalifikacyjne, prowadzenie przez cały sezon i decyzje o powrocie do gry — te same standardy, którymi prowadzimy pierwszą drużynę.</span>
     </div>
     </div>
   
@@ -706,7 +708,7 @@ footer.site img{height:26px}
         <div class="card-in">
           <span class="card-lab">01 / Prowadzenie</span>
           <h3>Medycyna sportowa</h3>
-          <span class="card-chip" data-fakty='["Badania kwalifikacyjne i prowadzenie przez cały sezon", "Decyzje o powrocie do gry — standard pierwszej drużyny"]'><span class="chip-linia">Badania kwalifikacyjne i prowadzenie przez cały sezon</span></span>
+          <span class="card-txt">Badania kwalifikacyjne, prowadzenie przez cały sezon i decyzje o powrocie do gry — te same standardy, którymi prowadzimy pierwszą drużynę.</span>
         </div>
       </article>
       <article class="card" data-card>
@@ -714,7 +716,7 @@ footer.site img{height:26px}
         <div class="card-in">
           <span class="card-lab">02 / Diagnostyka</span>
           <h3>Ortopedia</h3>
-          <span class="card-chip" data-fakty='["USG i RTG na miejscu, bez zewnętrznej rejestracji", "Decyzja o ścieżce leczenia od razu, nie za dwa tygodnie"]'><span class="chip-linia">USG i RTG na miejscu, bez zewnętrznej rejestracji</span></span>
+          <span class="card-txt">Konsultacje ortopedyczne z diagnostyką obrazową na miejscu. USG i RTG bez zewnętrznej rejestracji, decyzja o ścieżce leczenia od razu.</span>
         </div>
       </article>
       <article class="card" data-card>
@@ -722,7 +724,7 @@ footer.site img{height:26px}
         <div class="card-in">
           <span class="card-lab">03 / Powrót do sprawności</span>
           <h3>Fizjoterapia i rehabilitacja</h3>
-          <span class="card-chip" data-fakty='["Protokoły powrotu, którymi prowadzimy zawodników", "Praca 1:1 i kryteria progresu zamiast kalendarza"]'><span class="chip-linia">Protokoły powrotu, którymi prowadzimy zawodników</span></span>
+          <span class="card-txt">Protokoły powrotu po urazie, którymi na co dzień prowadzimy zawodników. Praca 1:1 i kryteria progresu zamiast kalendarza.</span>
         </div>
       </article>
             <article class="card" data-card>
@@ -730,7 +732,7 @@ footer.site img{height:26px}
         <div class="card-in">
           <span class="card-lab">04 / Żywienie</span>
           <h3>Dietetyka i suplementacja</h3>
-          <span class="card-chip" data-fakty='["Analiza składu ciała i plan żywienia pod cel", "Suplementacja tylko tam, gdzie ma sens"]'><span class="chip-linia">Analiza składu ciała i plan żywienia pod cel</span></span>
+          <span class="card-txt">Analiza składu ciała i plan żywienia pod cel — masa, redukcja, wydolność. Suplementacja tylko tam, gdzie ma sens.</span>
         </div>
       </article>
       <article class="card" data-card>
@@ -738,7 +740,7 @@ footer.site img{height:26px}
         <div class="card-in">
           <span class="card-lab">05 / Motoryka</span>
           <h3>Trening merytoryczny</h3>
-          <span class="card-chip" data-fakty='["Motoryka, siła i profilaktyka urazów", "Testy wydolnościowe i plan na cały sezon"]'><span class="chip-linia">Motoryka, siła i profilaktyka urazów</span></span>
+          <span class="card-txt">Motoryka, siła i profilaktyka urazów pod okiem trenerów przygotowania. Testy wydolnościowe i plan na cały sezon.</span>
         </div>
       </article>
       <article class="card" data-card>
@@ -746,7 +748,7 @@ footer.site img{height:26px}
         <div class="card-in">
           <span class="card-lab">06 / Wiedza</span>
           <h3>Edukacja i szkolenie</h3>
-          <span class="card-chip" data-fakty='["Warsztaty i szkolenia dla klubów oraz trenerów", "Wiedza sztabu pierwszej drużyny dla amatorów"]'><span class="chip-linia">Warsztaty i szkolenia dla klubów oraz trenerów</span></span>
+          <span class="card-txt">Warsztaty i szkolenia dla klubów oraz trenerów. Wiedza sztabu pierwszej drużyny dostępna dla akademii i amatorów.</span>
         </div>
       </article>
     </div>
@@ -838,25 +840,7 @@ footer.site img{height:26px}
   cards.forEach((c, i) => c.addEventListener('click', () => doKarty(i)));
   sec.__doKarty = doKarty;
 
-  // rotacja chipów: fakt zmienia się co 3,2 s na karcie w fokusie
-  if (!reduce.matches) setInterval(() => {
-    if (document.hidden) return;
-    const chip = track.querySelector('.card.focus .card-chip');
-    if (!chip || !chip.dataset.fakty) return;
-    const fakty = JSON.parse(chip.dataset.fakty);
-    const i = ((+chip.dataset.i || 0) + 1) % fakty.length;
-    chip.dataset.i = i;
-    const stara = chip.querySelector('.chip-linia:not(.out)');
-    const nowa = document.createElement('span');
-    nowa.className = 'chip-linia wchodzi';
-    nowa.textContent = fakty[i];
-    chip.appendChild(nowa);
-    requestAnimationFrame(() => requestAnimationFrame(() => {
-      stara?.classList.add('out');
-      nowa.classList.remove('wchodzi');
-    }));
-    setTimeout(() => stara?.remove(), 650);
-  }, 3200);
+  // (chip z rotacją usunięty 2026-08-22 — tekst leży wprost na karcie)
 
   // geometria karty HERO przy p = 0 — hero zwija się dokładnie w nią.
   // offsetLeft/offsetTop, nie getBoundingClientRect: transformy wjazdu kart
@@ -1267,15 +1251,22 @@ footer.site img{height:26px}
     return true;
   };
 
+  let odKiedy = 0;
   const sprawdz = () => {
     const teraz = scrollY > PROG;
-    if (teraz === zwiniete) return;
-    if (teraz && !ustawCel()) return;          // bez celu nie zwijamy — lepiej pełny kadr niż skok
-    zwiniete = teraz;
-    hero.classList.toggle('morphed', teraz);
-    hero.classList.toggle('oddane', teraz);
-    sec.classList.toggle('rozwiniete', teraz);
-    if (sec.__rozloz) sec.__rozloz(teraz ? 1 : 0);   // łuk rozkłada się w tym samym ruchu
+    if (teraz !== zwiniete) {
+      if (teraz && !ustawCel()) return;        // bez celu nie zwijamy — lepiej pełny kadr niż skok
+      zwiniete = teraz;
+      odKiedy = performance.now();
+      hero.classList.toggle('morphed', teraz);
+      hero.classList.toggle('oddane', teraz);
+      sec.classList.toggle('rozwiniete', teraz);
+      if (sec.__rozloz) sec.__rozloz(teraz ? 1 : 0); // karty wjeżdżają w tym samym ruchu
+    } else if (zwiniete && performance.now() - odKiedy < 1500) {
+      // przy szybkim scrollu tor już jedzie w lewo — cel musi gonić kartę,
+      // inaczej hero leci w dół do miejsca, w którym karty dawno nie ma
+      ustawCel();
+    }
   };
   addEventListener('scroll', sprawdz, { passive: true });
   addEventListener('resize', () => { if (zwiniete) ustawCel(); });
