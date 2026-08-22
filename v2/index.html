@@ -75,46 +75,55 @@ a{color:inherit;text-decoration:none}
    własna: kadr portretu, rola, nazwisko, specjalizacja. Przewijanie natywne
    (scroll-snap), strzałki tylko je popychają — dzięki temu działa bezwładność
    na dotyku i klawiatura bez dodatkowego kodu.                             */
+.tm{background:#fff;color:#0A0A0A}
+.tm .eyebrow,.tm .lead{color:var(--muted-d)}
 .tm-head{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap}
 .tm-arrows{display:flex;gap:10px;flex:none}
 .tm-arrow{width:46px;height:46px;border-radius:50%;flex:none;cursor:pointer;
-  border:1px solid rgba(255,255,255,.24);background:transparent;color:#fff;
+  border:1px solid rgba(10,10,10,.26);background:transparent;color:#0A0A0A;
   font-size:22px;line-height:1;display:grid;place-items:center;
-  transition:background-color .3s var(--ease),border-color .3s var(--ease),opacity .3s var(--ease)}
-.tm-arrow:hover:not(:disabled){background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.5)}
-.tm-arrow:disabled{opacity:.28;cursor:default}
-.tm-arrow:focus-visible{outline:2px solid #fff;outline-offset:3px}
+  transition:background-color .3s var(--ease),border-color .3s var(--ease)}
+.tm-arrow:hover{background:rgba(10,10,10,.06);border-color:rgba(10,10,10,.5)}
+.tm-arrow:focus-visible{outline:2px solid #0A0A0A;outline-offset:3px}
 
 .tm-track{margin-top:clamp(2rem,4vw,3rem);overflow:hidden}
 /* 1:1 z myhealthprac.com: taśma płynie sama (~80 px/s, bez pauzy na hover),
    pętla = dwie kopie zestawu i zawijanie transformu. Strzałki tylko
    popychają przesunięcie — taśma płynie dalej. */
-.tm-belt{display:flex;gap:16px;width:max-content;will-change:transform}
-.tm-set{display:flex;gap:16px;flex:none}
+.tm-belt{display:flex;gap:18px;width:max-content;will-change:transform}
+.tm-set{display:flex;gap:18px;flex:none}
 .tm-static .tm-track{overflow-x:auto;scrollbar-width:none;
   padding-inline:max(24px,calc((100% - var(--wrap)) / 2 + 24px))}
 
-.tm-card{flex:none;width:clamp(226px,20vw,272px);scroll-snap-align:start;
-  padding:0;border:0;background:none;color:inherit;font:inherit;text-align:left;cursor:pointer;
-  display:flex;flex-direction:column;
-  transition:transform .45s var(--ease)}
+/* karta: portret na całej powierzchni, napisy na zdjęciu (jak w inspiracji) */
+.tm-card{position:relative;flex:none;width:clamp(300px,26vw,380px);aspect-ratio:3/4;
+  padding:0;border:0;border-radius:22px;overflow:hidden;background:none;color:#fff;
+  font:inherit;text-align:left;cursor:pointer;transition:transform .45s var(--ease)}
 .tm-card:hover{transform:translateY(-6px)}
-.tm-card:focus-visible{outline:2px solid #fff;outline-offset:6px;border-radius:22px}
-.tm-foto{position:relative;aspect-ratio:3/4;border-radius:18px;overflow:hidden;
-  display:grid;place-items:center;
+.tm-card:focus-visible{outline:2px solid #0A0A0A;outline-offset:5px}
+.tm-foto{position:absolute;inset:0;display:grid;place-items:center;
   background:linear-gradient(160deg,#1b1b1b,#101010 60%),
              repeating-linear-gradient(45deg,rgba(255,255,255,.03) 0 12px,transparent 12px 24px)}
-.tm-ini{font-family:var(--legia);font-stretch:75%;font-weight:700;font-size:44px;
-  letter-spacing:.02em;color:rgba(255,255,255,.3)}
-.tm-rola{margin-top:14px;font-family:ui-monospace,Menlo,monospace;font-size:10px;
-  letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.42)}
-.tm-nazwa{margin-top:5px;font-size:17px;font-weight:600;letter-spacing:-.02em}
-.tm-spec{margin-top:2px;font-size:13px;line-height:1.35;color:rgba(255,255,255,.55)}
-.tm-wiecej{margin-top:10px;font-size:13px;font-weight:600;color:rgba(255,255,255,.75);
-  display:inline-flex;align-items:center;gap:6px}
+.tm-ini{font-family:var(--legia);font-stretch:75%;font-weight:700;font-size:56px;
+  letter-spacing:.02em;color:rgba(255,255,255,.28)}
+.tm-in{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:space-between;
+  padding:18px 20px 20px;
+  background:linear-gradient(to bottom,rgba(8,14,10,.5) 0%,rgba(8,14,10,0) 26%,
+             rgba(8,14,10,0) 52%,rgba(8,14,10,.78) 100%)}
+.tm-rola{font-family:ui-monospace,Menlo,monospace;font-size:10px;
+  letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.66)}
+.tm-dol{display:flex;flex-direction:column;align-items:flex-start}
+.tm-nazwa{font-family:var(--legia);font-stretch:75%;font-weight:700;font-size:23px;
+  line-height:1.02;text-transform:uppercase;letter-spacing:.005em}
+.tm-spec{margin-top:5px;font-family:Mulish,sans-serif;font-size:13px;line-height:1.4;
+  color:rgba(255,255,255,.78)}
+.tm-wiecej{margin-top:12px;padding-top:11px;width:100%;border-top:1px solid rgba(255,255,255,.22);
+  font-family:ui-monospace,Menlo,monospace;font-size:11px;letter-spacing:.16em;
+  text-transform:uppercase;font-weight:400;color:rgba(255,255,255,.85);
+  display:inline-flex;align-items:center;gap:7px}
 .tm-wiecej::after{content:"→";transition:transform .35s var(--ease)}
 .tm-card:hover .tm-wiecej::after{transform:translateX(4px)}
-.tm .team-note{margin-top:26px}
+.tm .team-note{margin-top:26px;color:#A31212}
 
 /* wizytówka */
 .wiz{width:min(920px,calc(100vw - 32px));max-height:calc(100svh - 32px);padding:0;border:0;
@@ -795,14 +804,6 @@ footer.site img{height:26px}
 })();
 </script>
 
-<section class="claim" id="legia">
-  <div class="wrap claim-in">
-    <img class="claim-logo" src="img/logo_LCH.svg" alt="Champions Health" width="150" height="24">
-    <span class="claim-kreska" aria-hidden="true"></span>
-    <p class="claim-txt reveal" data-reveal>Autoryzowany punkt medyczny Legii Warszawa</p>
-  </div>
-</section>
-
 <section class="ring" id="sciezka">
   <img class="ring-bg" src="img/hero-legia.png" alt="Zawodnik Legii Warszawa rozciągający przedramię">
   <svg class="ring-lines" aria-hidden="true"></svg>
@@ -845,7 +846,7 @@ footer.site img{height:26px}
   </div>
 </section>
 
-<section class="sec dotted tm" id="zespol">
+<section class="sec tm" id="zespol">
   <div class="wrap">
     <div class="tm-head rv">
       <div>
@@ -863,137 +864,201 @@ footer.site img{height:26px}
   <div class="tm-track" data-tm-track>
     <div class="tm-belt" data-tm-belt>
       <div class="tm-set" data-tm-set>
-<button class="tm-card" data-tm data-imie="Filip Latawiec" data-spec="Ortopedia, medycyna sportowa"
+        <button class="tm-card" data-tm data-imie="Filip Latawiec" data-spec="Ortopedia, medycyna sportowa"
                 data-rola="lekarz" data-opis="Opis do uzupełnienia przez klienta — nie wymyślamy życiorysu lekarza." data-dosw="Przebieg pracy i uprawnienia do uzupełnienia przez klienta."
                 aria-label="Filip Latawiec — Ortopedia, medycyna sportowa. Otwórz wizytówkę">
           <span class="tm-foto"><span class="tm-ini">FL</span></span>
-          <span class="tm-rola">lekarz</span>
-          <span class="tm-nazwa">Filip Latawiec</span>
-          <span class="tm-spec">Ortopedia, medycyna sportowa</span>
-          <span class="tm-wiecej">Wizytówka</span>
+          <span class="tm-in">
+            <span class="tm-rola">lekarz</span>
+            <span class="tm-dol">
+              <span class="tm-nazwa">Filip Latawiec</span>
+              <span class="tm-spec">Ortopedia, medycyna sportowa</span>
+              <span class="tm-wiecej">Wizytówka</span>
+            </span>
+          </span>
         </button>
         <button class="tm-card" data-tm data-imie="Mateusz Dłutowski" data-spec="Ortopedia i traumatologia"
                 data-rola="lekarz" data-opis="Opis do uzupełnienia przez klienta — nie wymyślamy życiorysu lekarza." data-dosw="Przebieg pracy i uprawnienia do uzupełnienia przez klienta."
                 aria-label="Mateusz Dłutowski — Ortopedia i traumatologia. Otwórz wizytówkę">
           <span class="tm-foto"><span class="tm-ini">MD</span></span>
-          <span class="tm-rola">lekarz</span>
-          <span class="tm-nazwa">Mateusz Dłutowski</span>
-          <span class="tm-spec">Ortopedia i traumatologia</span>
-          <span class="tm-wiecej">Wizytówka</span>
+          <span class="tm-in">
+            <span class="tm-rola">lekarz</span>
+            <span class="tm-dol">
+              <span class="tm-nazwa">Mateusz Dłutowski</span>
+              <span class="tm-spec">Ortopedia i traumatologia</span>
+              <span class="tm-wiecej">Wizytówka</span>
+            </span>
+          </span>
         </button>
         <button class="tm-card" data-tm data-imie="Szymon Gałczyński" data-spec="Medycyna sportowa i rodzinna"
                 data-rola="lekarz" data-opis="Opis do uzupełnienia przez klienta — nie wymyślamy życiorysu lekarza." data-dosw="Przebieg pracy i uprawnienia do uzupełnienia przez klienta."
                 aria-label="Szymon Gałczyński — Medycyna sportowa i rodzinna. Otwórz wizytówkę">
           <span class="tm-foto"><span class="tm-ini">SG</span></span>
-          <span class="tm-rola">lekarz</span>
-          <span class="tm-nazwa">Szymon Gałczyński</span>
-          <span class="tm-spec">Medycyna sportowa i rodzinna</span>
-          <span class="tm-wiecej">Wizytówka</span>
+          <span class="tm-in">
+            <span class="tm-rola">lekarz</span>
+            <span class="tm-dol">
+              <span class="tm-nazwa">Szymon Gałczyński</span>
+              <span class="tm-spec">Medycyna sportowa i rodzinna</span>
+              <span class="tm-wiecej">Wizytówka</span>
+            </span>
+          </span>
         </button>
         <button class="tm-card" data-tm data-imie="Piotr Modzelewski" data-spec="Ortopedia i traumatologia"
                 data-rola="lekarz" data-opis="Opis do uzupełnienia przez klienta — nie wymyślamy życiorysu lekarza." data-dosw="Przebieg pracy i uprawnienia do uzupełnienia przez klienta."
                 aria-label="Piotr Modzelewski — Ortopedia i traumatologia. Otwórz wizytówkę">
           <span class="tm-foto"><span class="tm-ini">PM</span></span>
-          <span class="tm-rola">lekarz</span>
-          <span class="tm-nazwa">Piotr Modzelewski</span>
-          <span class="tm-spec">Ortopedia i traumatologia</span>
-          <span class="tm-wiecej">Wizytówka</span>
+          <span class="tm-in">
+            <span class="tm-rola">lekarz</span>
+            <span class="tm-dol">
+              <span class="tm-nazwa">Piotr Modzelewski</span>
+              <span class="tm-spec">Ortopedia i traumatologia</span>
+              <span class="tm-wiecej">Wizytówka</span>
+            </span>
+          </span>
         </button>
         <button class="tm-card" data-tm data-imie="Marcin Tusiński" data-spec="Ortopedia i traumatologia"
                 data-rola="lekarz" data-opis="Opis do uzupełnienia przez klienta — nie wymyślamy życiorysu lekarza." data-dosw="Przebieg pracy i uprawnienia do uzupełnienia przez klienta."
                 aria-label="Marcin Tusiński — Ortopedia i traumatologia. Otwórz wizytówkę">
           <span class="tm-foto"><span class="tm-ini">MT</span></span>
-          <span class="tm-rola">lekarz</span>
-          <span class="tm-nazwa">Marcin Tusiński</span>
-          <span class="tm-spec">Ortopedia i traumatologia</span>
-          <span class="tm-wiecej">Wizytówka</span>
+          <span class="tm-in">
+            <span class="tm-rola">lekarz</span>
+            <span class="tm-dol">
+              <span class="tm-nazwa">Marcin Tusiński</span>
+              <span class="tm-spec">Ortopedia i traumatologia</span>
+              <span class="tm-wiecej">Wizytówka</span>
+            </span>
+          </span>
         </button>
         <button class="tm-card" data-tm data-imie="Dominika Daros" data-spec="Fizjoterapia sportowa"
                 data-rola="fizjoterapia" data-opis="Opis do uzupełnienia przez klienta — nie wymyślamy życiorysu lekarza." data-dosw="Przebieg pracy i uprawnienia do uzupełnienia przez klienta."
                 aria-label="Dominika Daros — Fizjoterapia sportowa. Otwórz wizytówkę">
           <span class="tm-foto"><span class="tm-ini">DD</span></span>
-          <span class="tm-rola">fizjoterapia</span>
-          <span class="tm-nazwa">Dominika Daros</span>
-          <span class="tm-spec">Fizjoterapia sportowa</span>
-          <span class="tm-wiecej">Wizytówka</span>
+          <span class="tm-in">
+            <span class="tm-rola">fizjoterapia</span>
+            <span class="tm-dol">
+              <span class="tm-nazwa">Dominika Daros</span>
+              <span class="tm-spec">Fizjoterapia sportowa</span>
+              <span class="tm-wiecej">Wizytówka</span>
+            </span>
+          </span>
         </button>
         <button class="tm-card" data-tm data-imie="Przemysław Domański" data-spec="Fizjoterapia sportowa"
                 data-rola="fizjoterapia" data-opis="Opis do uzupełnienia przez klienta — nie wymyślamy życiorysu lekarza." data-dosw="Przebieg pracy i uprawnienia do uzupełnienia przez klienta."
                 aria-label="Przemysław Domański — Fizjoterapia sportowa. Otwórz wizytówkę">
           <span class="tm-foto"><span class="tm-ini">PD</span></span>
-          <span class="tm-rola">fizjoterapia</span>
-          <span class="tm-nazwa">Przemysław Domański</span>
-          <span class="tm-spec">Fizjoterapia sportowa</span>
-          <span class="tm-wiecej">Wizytówka</span>
+          <span class="tm-in">
+            <span class="tm-rola">fizjoterapia</span>
+            <span class="tm-dol">
+              <span class="tm-nazwa">Przemysław Domański</span>
+              <span class="tm-spec">Fizjoterapia sportowa</span>
+              <span class="tm-wiecej">Wizytówka</span>
+            </span>
+          </span>
         </button>
         <button class="tm-card" data-tm data-imie="Łukasz Gembarzewski" data-spec="Fizjoterapia sportowa"
                 data-rola="fizjoterapia" data-opis="Opis do uzupełnienia przez klienta — nie wymyślamy życiorysu lekarza." data-dosw="Przebieg pracy i uprawnienia do uzupełnienia przez klienta."
                 aria-label="Łukasz Gembarzewski — Fizjoterapia sportowa. Otwórz wizytówkę">
           <span class="tm-foto"><span class="tm-ini">ŁG</span></span>
-          <span class="tm-rola">fizjoterapia</span>
-          <span class="tm-nazwa">Łukasz Gembarzewski</span>
-          <span class="tm-spec">Fizjoterapia sportowa</span>
-          <span class="tm-wiecej">Wizytówka</span>
+          <span class="tm-in">
+            <span class="tm-rola">fizjoterapia</span>
+            <span class="tm-dol">
+              <span class="tm-nazwa">Łukasz Gembarzewski</span>
+              <span class="tm-spec">Fizjoterapia sportowa</span>
+              <span class="tm-wiecej">Wizytówka</span>
+            </span>
+          </span>
         </button>
         <button class="tm-card" data-tm data-imie="Jakub Grodzki" data-spec="Ortopedia, fizjoterapia"
                 data-rola="fizjoterapia" data-opis="Opis do uzupełnienia przez klienta — nie wymyślamy życiorysu lekarza." data-dosw="Przebieg pracy i uprawnienia do uzupełnienia przez klienta."
                 aria-label="Jakub Grodzki — Ortopedia, fizjoterapia. Otwórz wizytówkę">
           <span class="tm-foto"><span class="tm-ini">JG</span></span>
-          <span class="tm-rola">fizjoterapia</span>
-          <span class="tm-nazwa">Jakub Grodzki</span>
-          <span class="tm-spec">Ortopedia, fizjoterapia</span>
-          <span class="tm-wiecej">Wizytówka</span>
+          <span class="tm-in">
+            <span class="tm-rola">fizjoterapia</span>
+            <span class="tm-dol">
+              <span class="tm-nazwa">Jakub Grodzki</span>
+              <span class="tm-spec">Ortopedia, fizjoterapia</span>
+              <span class="tm-wiecej">Wizytówka</span>
+            </span>
+          </span>
         </button>
         <button class="tm-card" data-tm data-imie="Sandra Heronimek" data-spec="Fizjoterapia sportowa"
                 data-rola="fizjoterapia" data-opis="Opis do uzupełnienia przez klienta — nie wymyślamy życiorysu lekarza." data-dosw="Przebieg pracy i uprawnienia do uzupełnienia przez klienta."
                 aria-label="Sandra Heronimek — Fizjoterapia sportowa. Otwórz wizytówkę">
           <span class="tm-foto"><span class="tm-ini">SH</span></span>
-          <span class="tm-rola">fizjoterapia</span>
-          <span class="tm-nazwa">Sandra Heronimek</span>
-          <span class="tm-spec">Fizjoterapia sportowa</span>
-          <span class="tm-wiecej">Wizytówka</span>
+          <span class="tm-in">
+            <span class="tm-rola">fizjoterapia</span>
+            <span class="tm-dol">
+              <span class="tm-nazwa">Sandra Heronimek</span>
+              <span class="tm-spec">Fizjoterapia sportowa</span>
+              <span class="tm-wiecej">Wizytówka</span>
+            </span>
+          </span>
         </button>
         <button class="tm-card" data-tm data-imie="Daniel Komar" data-spec="Ortopedia, fizjoterapia"
                 data-rola="fizjoterapia" data-opis="Opis do uzupełnienia przez klienta — nie wymyślamy życiorysu lekarza." data-dosw="Przebieg pracy i uprawnienia do uzupełnienia przez klienta."
                 aria-label="Daniel Komar — Ortopedia, fizjoterapia. Otwórz wizytówkę">
           <span class="tm-foto"><span class="tm-ini">DK</span></span>
-          <span class="tm-rola">fizjoterapia</span>
-          <span class="tm-nazwa">Daniel Komar</span>
-          <span class="tm-spec">Ortopedia, fizjoterapia</span>
-          <span class="tm-wiecej">Wizytówka</span>
+          <span class="tm-in">
+            <span class="tm-rola">fizjoterapia</span>
+            <span class="tm-dol">
+              <span class="tm-nazwa">Daniel Komar</span>
+              <span class="tm-spec">Ortopedia, fizjoterapia</span>
+              <span class="tm-wiecej">Wizytówka</span>
+            </span>
+          </span>
         </button>
         <button class="tm-card" data-tm data-imie="Giovanni Mangano" data-spec="Ortopedia, hydrokinezyterapia"
                 data-rola="fizjoterapia" data-opis="Opis do uzupełnienia przez klienta — nie wymyślamy życiorysu lekarza." data-dosw="Przebieg pracy i uprawnienia do uzupełnienia przez klienta."
                 aria-label="Giovanni Mangano — Ortopedia, hydrokinezyterapia. Otwórz wizytówkę">
           <span class="tm-foto"><span class="tm-ini">GM</span></span>
-          <span class="tm-rola">fizjoterapia</span>
-          <span class="tm-nazwa">Giovanni Mangano</span>
-          <span class="tm-spec">Ortopedia, hydrokinezyterapia</span>
-          <span class="tm-wiecej">Wizytówka</span>
+          <span class="tm-in">
+            <span class="tm-rola">fizjoterapia</span>
+            <span class="tm-dol">
+              <span class="tm-nazwa">Giovanni Mangano</span>
+              <span class="tm-spec">Ortopedia, hydrokinezyterapia</span>
+              <span class="tm-wiecej">Wizytówka</span>
+            </span>
+          </span>
         </button>
         <button class="tm-card" data-tm data-imie="Dominik Ofat" data-spec="Terapia manualna OMT"
                 data-rola="fizjoterapia" data-opis="Opis do uzupełnienia przez klienta — nie wymyślamy życiorysu lekarza." data-dosw="Przebieg pracy i uprawnienia do uzupełnienia przez klienta."
                 aria-label="Dominik Ofat — Terapia manualna OMT. Otwórz wizytówkę">
           <span class="tm-foto"><span class="tm-ini">DO</span></span>
-          <span class="tm-rola">fizjoterapia</span>
-          <span class="tm-nazwa">Dominik Ofat</span>
-          <span class="tm-spec">Terapia manualna OMT</span>
-          <span class="tm-wiecej">Wizytówka</span>
+          <span class="tm-in">
+            <span class="tm-rola">fizjoterapia</span>
+            <span class="tm-dol">
+              <span class="tm-nazwa">Dominik Ofat</span>
+              <span class="tm-spec">Terapia manualna OMT</span>
+              <span class="tm-wiecej">Wizytówka</span>
+            </span>
+          </span>
         </button>
         <button class="tm-card" data-tm data-imie="Kamil Pasoń" data-spec="Terapia manualna, trener medyczny"
                 data-rola="fizjoterapia" data-opis="Opis do uzupełnienia przez klienta — nie wymyślamy życiorysu lekarza." data-dosw="Przebieg pracy i uprawnienia do uzupełnienia przez klienta."
                 aria-label="Kamil Pasoń — Terapia manualna, trener medyczny. Otwórz wizytówkę">
           <span class="tm-foto"><span class="tm-ini">KP</span></span>
-          <span class="tm-rola">fizjoterapia</span>
-          <span class="tm-nazwa">Kamil Pasoń</span>
-          <span class="tm-spec">Terapia manualna, trener medyczny</span>
-          <span class="tm-wiecej">Wizytówka</span>
+          <span class="tm-in">
+            <span class="tm-rola">fizjoterapia</span>
+            <span class="tm-dol">
+              <span class="tm-nazwa">Kamil Pasoń</span>
+              <span class="tm-spec">Terapia manualna, trener medyczny</span>
+              <span class="tm-wiecej">Wizytówka</span>
+            </span>
+          </span>
         </button>
       </div>
     </div>
   </div>
   <div class="wrap"><p class="team-note">Zdjęcia zespołu i opisy w przygotowaniu — na obecnej stronie klienta
     wszystkie 14 osób ma podstawione te same dwa portrety.</p></div>
+</section>
+
+<section class="claim" id="legia">
+  <div class="wrap claim-in">
+    <img class="claim-logo" src="img/logo_LCH.svg" alt="Champions Health" width="150" height="24">
+    <span class="claim-kreska" aria-hidden="true"></span>
+    <p class="claim-txt reveal" data-reveal>Autoryzowany punkt medyczny Legii Warszawa</p>
+  </div>
 </section>
 
 <dialog class="wiz" data-wiz aria-labelledby="wiz-imie">
@@ -1158,7 +1223,7 @@ footer.site img{height:26px}
   tasma.appendChild(klon);
 
   const karty = [...tasma.querySelectorAll('[data-tm]')];
-  const GAP = 16;
+  const GAP = parseFloat(getComputedStyle(tasma).gap) || 16;
   const obieg = () => zestaw.offsetWidth + GAP;     // dystans zawinięcia
 
   let x = 0, pch = 0, cel = 0, ost = null, raf = null;

@@ -176,11 +176,18 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
                && [...klon.querySelectorAll('button')].every(b2 => b2.tabIndex === -1),
       // tempo zmierzone na referencji: ~80 px/s w lewo
       tempo: +(s.__mq.x() - a).toFixed(1),
+      // zmiany 2026-08-22: biała sekcja, napisy NA karcie, karta >= 300 px
+      tloBiale: getComputedStyle(document.querySelector('.tm')).backgroundColor === 'rgb(255, 255, 255)',
+      napisyNaKarcie: oryg.every(c => c.querySelector('.tm-in .tm-nazwa')),
+      kartaDuza: oryg[0].getBoundingClientRect().width >= 298,
+      sygnaturaPoZespole: document.querySelector('.claim').getBoundingClientRect().top
+                        > document.querySelector('.tm').getBoundingClientRect().top,
     };
   });
   const zPetla = await p.evaluate(async () => {
     const s = document.querySelector('.tm');
-    const o = document.querySelector('[data-tm-set]').offsetWidth + 16;
+    const o = document.querySelector('[data-tm-set]').offsetWidth
+      + parseFloat(getComputedStyle(document.querySelector('[data-tm-belt]')).gap);
     s.__mq.skok(-(o - 30));
     await new Promise(r => setTimeout(r, 600));
     const m = new DOMMatrix(getComputedStyle(document.querySelector('[data-tm-belt]')).transform);
@@ -221,6 +228,7 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
     fokusWrocil: document.activeElement?.classList.contains('tm-card'),
   }));
   const zOk = zBaza.ile === 14 && zBaza.komplet && zBaza.klonUkryty
+           && zBaza.tloBiale && zBaza.napisyNaKarcie && zBaza.kartaDuza && zBaza.sygnaturaPoZespole
            && zBaza.tempo < -60 && zBaza.tempo > -100
            && zPetla.zawinelo && zStrzalka.dalej < -250 && zStrzalka.wstecz > 120
            && zOkno.otwarte && zOkno.wKadrze && zOkno.zgodne && zOkno.maCta
