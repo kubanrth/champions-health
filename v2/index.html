@@ -85,14 +85,14 @@ a{color:inherit;text-decoration:none}
 .tm-arrow:disabled{opacity:.28;cursor:default}
 .tm-arrow:focus-visible{outline:2px solid #fff;outline-offset:3px}
 
-.tm-track{margin-top:clamp(2rem,4vw,3rem);display:flex;gap:16px;
-  overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;
-  scrollbar-width:none;padding-inline:max(24px,calc((100% - var(--wrap)) / 2 + 24px));
-  /* bez scroll-padding snap ignoruje padding i pas startuje przesunięty */
-  scroll-padding-inline:max(24px,calc((100% - var(--wrap)) / 2 + 24px))}
-.tm-track::-webkit-scrollbar{display:none}
-.tm-track:focus-visible{outline:2px solid #fff;outline-offset:-4px;border-radius:20px}
-.tm-koniec{flex:none;width:1px}      /* padding-right nie liczy się do scrollWidth */
+.tm-track{margin-top:clamp(2rem,4vw,3rem);overflow:hidden}
+/* 1:1 z myhealthprac.com: taśma płynie sama (~80 px/s, bez pauzy na hover),
+   pętla = dwie kopie zestawu i zawijanie transformu. Strzałki tylko
+   popychają przesunięcie — taśma płynie dalej. */
+.tm-belt{display:flex;gap:16px;width:max-content;will-change:transform}
+.tm-set{display:flex;gap:16px;flex:none}
+.tm-static .tm-track{overflow-x:auto;scrollbar-width:none;
+  padding-inline:max(24px,calc((100% - var(--wrap)) / 2 + 24px))}
 
 .tm-card{flex:none;width:clamp(226px,20vw,272px);scroll-snap-align:start;
   padding:0;border:0;background:none;color:inherit;font:inherit;text-align:left;cursor:pointer;
@@ -860,8 +860,10 @@ footer.site img{height:26px}
       </div>
     </div>
   </div>
-  <div class="tm-track" data-tm-track tabindex="0" role="group" aria-label="Zespół — przewijana lista">
-        <button class="tm-card" data-tm data-imie="Filip Latawiec" data-spec="Ortopedia, medycyna sportowa"
+  <div class="tm-track" data-tm-track>
+    <div class="tm-belt" data-tm-belt>
+      <div class="tm-set" data-tm-set>
+<button class="tm-card" data-tm data-imie="Filip Latawiec" data-spec="Ortopedia, medycyna sportowa"
                 data-rola="lekarz" data-opis="Opis do uzupełnienia przez klienta — nie wymyślamy życiorysu lekarza." data-dosw="Przebieg pracy i uprawnienia do uzupełnienia przez klienta."
                 aria-label="Filip Latawiec — Ortopedia, medycyna sportowa. Otwórz wizytówkę">
           <span class="tm-foto"><span class="tm-ini">FL</span></span>
@@ -987,7 +989,8 @@ footer.site img{height:26px}
           <span class="tm-spec">Terapia manualna, trener medyczny</span>
           <span class="tm-wiecej">Wizytówka</span>
         </button>
-    <span class="tm-koniec" aria-hidden="true"></span>
+      </div>
+    </div>
   </div>
   <div class="wrap"><p class="team-note">Zdjęcia zespołu i opisy w przygotowaniu — na obecnej stronie klienta
     wszystkie 14 osób ma podstawione te same dwa portrety.</p></div>
@@ -1131,33 +1134,61 @@ footer.site img{height:26px}
   }, { once: true });
 })();
 
-// --- zespół: przewijanie strzałkami + wizytówka ----------------------------
-// Przewijanie zostaje natywne (scroll-snap) — strzałki tylko je popychają,
-// więc bezwładność na dotyku i obsługa klawiaturą działają bez dodatkowego kodu.
+// --- zespół: marquee + wizytówka -------------------------------------------
+// Funkcjonalność 1:1 z panelu myhealthprac.com (zmierzone): nieskończone
+// marquee ~80 px/s w lewo, BEZ pauzy na hover, bez draga, bez sprzężenia ze
+// scrollem; pętla = dwie kopie zestawu (.marquee_track u nich). U nas ekstra:
+// strzałki (życzenie klienta) popychają przesunięcie, karty otwierają
+// wizytówkę. prefers-reduced-motion: taśma stoi, wraca natywne przewijanie.
 (() => {
-  const pas = document.querySelector('[data-tm-track]');
+  const sekcja = document.querySelector('.tm');
+  const tasma = document.querySelector('[data-tm-belt]');
+  const zestaw = document.querySelector('[data-tm-set]');
   const okno = document.querySelector('[data-wiz]');
-  if (!pas || !okno) return;
-  const karty = [...pas.querySelectorAll('[data-tm]')];
+  if (!tasma || !okno) return;
   const wstecz = document.querySelector('[data-tm-prev]');
   const dalej = document.querySelector('[data-tm-next]');
+  const reduce = matchMedia('(prefers-reduced-motion:reduce)').matches;
+  const TEMPO = 80;                                 // px/s, zmierzone na referencji
 
-  const krok = () => {
-    const k = karty[0].getBoundingClientRect().width;
-    const g = parseFloat(getComputedStyle(pas).gap) || 16;
-    // przesuwamy o tyle kart, ile mieści się w kadrze — nigdy mniej niż jedną
-    return Math.max(1, Math.floor(pas.clientWidth / (k + g))) * (k + g);
+  // druga kopia zestawu domyka pętlę; dla czytników i Taba to duplikat — znika
+  const klon = zestaw.cloneNode(true);
+  klon.setAttribute('aria-hidden', 'true');
+  klon.querySelectorAll('button').forEach(e => e.tabIndex = -1);
+  tasma.appendChild(klon);
+
+  const karty = [...tasma.querySelectorAll('[data-tm]')];
+  const GAP = 16;
+  const obieg = () => zestaw.offsetWidth + GAP;     // dystans zawinięcia
+
+  let x = 0, pch = 0, cel = 0, ost = null, raf = null;
+  const tick = ts => {
+    if (ost !== null && !reduce) {
+      x -= TEMPO * (ts - ost) / 1000;
+      // strzałka: dosuwamy pchnięcie do celu tą samą krzywą co reszta strony
+      pch += (cel - pch) * 0.14;
+      const o = obieg(), w = (x + pch) % o;
+      tasma.style.transform = `translate3d(${(w > 0 ? w - o : w).toFixed(2)}px,0,0)`;
+    }
+    ost = ts;
+    raf = requestAnimationFrame(tick);
   };
-  const stan = () => {
-    const max = pas.scrollWidth - pas.clientWidth;
-    wstecz.disabled = pas.scrollLeft <= 1;
-    dalej.disabled = pas.scrollLeft >= max - 1;
-  };
-  wstecz.addEventListener('click', () => pas.scrollBy({ left: -krok(), behavior: 'smooth' }));
-  dalej.addEventListener('click', () => pas.scrollBy({ left: krok(), behavior: 'smooth' }));
-  pas.addEventListener('scroll', stan, { passive: true });
-  addEventListener('resize', stan);
-  stan();
+
+  if (reduce) {
+    sekcja.classList.add('tm-static');
+    klon.remove();
+    const krok = () => karty[0].getBoundingClientRect().width + GAP;
+    const pas = document.querySelector('[data-tm-track]');
+    wstecz.addEventListener('click', () => pas.scrollBy({ left: -krok(), behavior: 'auto' }));
+    dalej.addEventListener('click', () => pas.scrollBy({ left: krok(), behavior: 'auto' }));
+  } else {
+    raf = requestAnimationFrame(tick);
+    // karta w tył = taśma jedzie w prawo, więc pchnięcie dodatnie
+    const skok = () => karty[0].getBoundingClientRect().width + GAP;
+    wstecz.addEventListener('click', () => cel += skok());
+    dalej.addEventListener('click', () => cel -= skok());
+    document.addEventListener('visibilitychange', () => { ost = null; });
+  }
 
   const pola = {
     imie: okno.querySelector('[data-wiz-imie]'), spec: okno.querySelector('[data-wiz-spec]'),
@@ -1175,13 +1206,15 @@ footer.site img{height:26px}
     okno.showModal();
   }));
   okno.querySelector('[data-wiz-x]').addEventListener('click', () => okno.close());
-  // kliknięcie w tło (poza kartą) zamyka
   okno.addEventListener('click', e => { if (e.target === okno) okno.close(); });
   okno.addEventListener('close', () => wrocDo?.focus());
   okno.querySelector('[data-wiz-cta]').addEventListener('click', () => okno.close());
 
+  // furtka dla testu: podgląd i przestawienie pozycji taśmy
+  sekcja.__mq = { x: () => x + pch, skok: v => { x = v; cel = pch = 0; } };
+
   // self-check: każda osoba musi mieć komplet pól wizytówki
-  for (const k of karty)
+  for (const k of karty.slice(0, karty.length / 2))
     console.assert(k.dataset.imie && k.dataset.spec && k.dataset.opis && k.dataset.dosw,
       'zespół: niepełna wizytówka — ' + (k.dataset.imie || k.className));
 })();

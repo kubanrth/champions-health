@@ -159,32 +159,49 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
   console.log(`${w}×${h} odsłanianie`, revOk ? 'ok' : 'BŁĄD ' + JSON.stringify(rev));
   if (!revOk) process.exitCode = 1;
 
-  // --- zespół: pas, strzałki, wizytówka ------------------------------------
+  // --- zespół: marquee, strzałki, wizytówka --------------------------------
   await p.evaluate(() => document.querySelector('#zespol').scrollIntoView({ block: 'center' }));
-  await new Promise(r => setTimeout(r, 900));
-  const zStart = await p.evaluate(() => {
-    const t = document.querySelector('[data-tm-track]');
-    const k = [...t.querySelectorAll('[data-tm]')];
+  await new Promise(r => setTimeout(r, 700));
+  const zBaza = await p.evaluate(async () => {
+    const s = document.querySelector('.tm');
+    const oryg = [...document.querySelectorAll('[data-tm-set]')[0].querySelectorAll('[data-tm]')];
+    const klon = document.querySelector('[data-tm-belt]').children[1];
+    const a = s.__mq.x();
+    await new Promise(r => setTimeout(r, 1000));
     return {
-      ile: k.length,
-      // strzałka wstecz musi startować wyłączona — inaczej pas rusza przesunięty
-      wsteczWyl: document.querySelector('[data-tm-prev]').disabled,
-      dalejCzynna: !document.querySelector('[data-tm-next]').disabled,
-      naStarcie: t.scrollLeft <= 1,
-      komplet: k.every(c => c.dataset.imie && c.dataset.spec && c.dataset.opis && c.dataset.dosw),
+      ile: oryg.length,
+      komplet: oryg.every(c => c.dataset.imie && c.dataset.spec && c.dataset.opis && c.dataset.dosw),
+      // pętla wymaga drugiej kopii zestawu, niewidocznej dla czytników i Taba
+      klonUkryty: klon?.getAttribute('aria-hidden') === 'true'
+               && [...klon.querySelectorAll('button')].every(b2 => b2.tabIndex === -1),
+      // tempo zmierzone na referencji: ~80 px/s w lewo
+      tempo: +(s.__mq.x() - a).toFixed(1),
     };
   });
-  for (let i = 0; i < 16; i++) {
-    if (await p.evaluate(() => document.querySelector('[data-tm-next]').disabled)) break;
-    await p.click('[data-tm-next]');
-    await new Promise(r => setTimeout(r, 420));
-  }
-  const zKoniec = await p.evaluate(() => ({
-    dalejWyl: document.querySelector('[data-tm-next]').disabled,
-    ostatniaWKadrze: (() => { const k = [...document.querySelectorAll('[data-tm]')].at(-1).getBoundingClientRect();
-      return k.right <= innerWidth + 2 && k.left >= -2; })(),
-  }));
-  await p.click('.tm-card');
+  const zPetla = await p.evaluate(async () => {
+    const s = document.querySelector('.tm');
+    const o = document.querySelector('[data-tm-set]').offsetWidth + 16;
+    s.__mq.skok(-(o - 30));
+    await new Promise(r => setTimeout(r, 600));
+    const m = new DOMMatrix(getComputedStyle(document.querySelector('[data-tm-belt]')).transform);
+    return { zawinelo: m.e > -o && m.e <= 0 };
+  });
+  const zStrzalka = await p.evaluate(async () => {
+    const s = document.querySelector('.tm');
+    const przed = s.__mq.x();
+    document.querySelector('[data-tm-next]').click();
+    await new Promise(r => setTimeout(r, 700));
+    const dalej = s.__mq.x() - przed;                 // krok ~-270 + dryf ~-56
+    const przed2 = s.__mq.x();
+    document.querySelector('[data-tm-prev]').click();
+    await new Promise(r => setTimeout(r, 700));
+    return { dalej: +dalej.toFixed(0), wstecz: +(s.__mq.x() - przed2).toFixed(0) };
+  });
+  await p.evaluate(() => {
+    const k = [...document.querySelectorAll('.tm-card')]
+      .find(c => { const r = c.getBoundingClientRect(); return r.left >= 0 && r.right <= innerWidth; });
+    k.click();
+  });
   await new Promise(r => setTimeout(r, 500));
   const zOkno = await p.evaluate(() => {
     const d = document.querySelector('[data-wiz]'), r = d.getBoundingClientRect();
@@ -193,7 +210,6 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
     return {
       otwarte: d.open,
       wKadrze: r.top >= -1 && r.bottom <= innerHeight + 1 && r.left >= -1 && r.right <= innerWidth + 1,
-      // dane w wizytówce muszą pochodzić z klikniętej karty
       zgodne: !!karta && d.querySelector('[data-wiz-spec]').textContent === karta.dataset.spec,
       maCta: !!d.querySelector('[data-wiz-cta]'),
     };
@@ -204,11 +220,12 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
     zamkniete: !document.querySelector('[data-wiz]').open,
     fokusWrocil: document.activeElement?.classList.contains('tm-card'),
   }));
-  const zOk = zStart.ile === 14 && zStart.wsteczWyl && zStart.dalejCzynna && zStart.naStarcie
-           && zStart.komplet && zKoniec.dalejWyl && zKoniec.ostatniaWKadrze
+  const zOk = zBaza.ile === 14 && zBaza.komplet && zBaza.klonUkryty
+           && zBaza.tempo < -60 && zBaza.tempo > -100
+           && zPetla.zawinelo && zStrzalka.dalej < -250 && zStrzalka.wstecz > 120
            && zOkno.otwarte && zOkno.wKadrze && zOkno.zgodne && zOkno.maCta
            && zZamk.zamkniete && zZamk.fokusWrocil;
-  console.log(`${w}×${h} zespół`, zOk ? 'ok' : 'BŁĄD ' + JSON.stringify({ zStart, zKoniec, zOkno, zZamk }));
+  console.log(`${w}×${h} zespół`, zOk ? 'ok' : 'BŁĄD ' + JSON.stringify({ zBaza, zPetla, zStrzalka, zOkno, zZamk }));
   if (!zOk) process.exitCode = 1;
 
   await p.close();
