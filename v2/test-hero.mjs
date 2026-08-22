@@ -79,7 +79,10 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
       // łuk ma być rozłożony, nie w stosie
       lukRozlozony: Math.abs(karty[1].getBoundingClientRect().x - karty[0].getBoundingClientRect().x) > karty[0].offsetWidth * .9,
       heroOddane: getComputedStyle(document.querySelector('.hero')).opacity === '0',
-      etykietaWidoczna: +getComputedStyle(document.querySelector('.deal-label')).opacity > 0.99,
+      etykietaWidoczna: +getComputedStyle(document.querySelector('.deal-head')).opacity > 0.99,
+      // nagłówek Revolut-style nie może nachodzić na karty
+      naglowekNadKartami: document.querySelector('.deal-head').getBoundingClientRect().bottom
+                        <= m.top + 1,
     };
   });
   await p.evaluate(() => window.scrollTo(0, 0));
@@ -102,11 +105,15 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
     document.querySelector('[data-deal-prev]').click(); await czekaj(1400);
     const poPrev = focus();
     const wFokusie = [...document.querySelectorAll('[data-card]')][poPrev];
+    // strzałka nie może być przykryta kartami — sprawdzamy realny cel kliknięcia
+    const sd = document.querySelector('[data-deal-next]').getBoundingClientRect();
+    const cel = document.elementFromPoint(sd.left + sd.width / 2, sd.top + sd.height / 2);
+    const strzalkaKlikalna = cel === document.querySelector('[data-deal-next]') || cel?.closest('[data-deal-next]');
     const chip = wFokusie.querySelector('.card-chip');
     const linia = () => chip.querySelector('.chip-linia:not(.out)')?.textContent.trim();
     const przedRotacja = linia();
     await czekaj(3600);                                     // obrót co 3,2 s
-    return { skok, poNext, poPrev,
+    return { skok, poNext, poPrev, strzalkaKlikalna: !!strzalkaKlikalna,
       chipWidoczny: +getComputedStyle(chip).opacity > 0.9,
       chipNiepusty: (przedRotacja || '').length > 20,
       // treść chipa rotuje jak transakcje u Revoluta
@@ -114,7 +121,7 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
       jednaLinia: chip.querySelectorAll('.chip-linia:not(.out)').length === 1 };
   });
   const tOk = talia.skok === 2 && talia.poNext === 3 && talia.poPrev === 2
-           && talia.chipWidoczny && talia.chipNiepusty && talia.rotuje && talia.jednaLinia;
+           && talia.chipWidoczny && talia.chipNiepusty && talia.rotuje && talia.jednaLinia && talia.strzalkaKlikalna;
   console.log(`${w}×${h} talia`, tOk ? 'ok' : 'BŁĄD ' + JSON.stringify(talia));
   if (!tOk) process.exitCode = 1;
   await p.evaluate(() => window.scrollTo(0, 150));
@@ -122,7 +129,7 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
 
   const mOk = przed.spoczynek && przed.pelnyKadr && po.zwiniete && po.trafiaWKarte
            && po.kartaWUwadze && po.kartaNaWierzchu && po.kartaPelneKrycie
-           && po.heroOddane && po.etykietaWidoczna && po.lukRozlozony && po.napisyBiale && wroc.cofniete && wroc.pelnyKadr;
+           && po.heroOddane && po.etykietaWidoczna && po.naglowekNadKartami && po.lukRozlozony && po.napisyBiale && wroc.cofniete && wroc.pelnyKadr;
   console.log(`${w}×${h} przejście`, mOk ? 'ok' : 'BŁĄD ' + JSON.stringify({ przed, po, wroc }));
   if (!mOk) process.exitCode = 1;
 

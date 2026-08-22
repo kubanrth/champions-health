@@ -455,13 +455,35 @@ a{color:inherit;text-decoration:none}
    ========================================================================== */
 .deal{position:relative;background:#fff}
 .deal-stage{position:sticky;top:0;height:100svh;overflow:hidden;
-  display:flex;flex-direction:column;align-items:center;justify-content:center}
-.deal-label{position:relative;z-index:3;margin:0 0 34px;padding:14px 26px;border-radius:999px;
-  background:#111;color:#fff;font-size:19px;font-weight:600;letter-spacing:-.02em;
-  opacity:0;transform:scale(.78) translateY(46px);
+  /* zapas u góry na nawigację — nagłówek sekcji nie może pod nią wjechać */
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding-top:calc(var(--pill-h) + 2 * var(--nav-pad) + 10px)}
+/* nagłówek sekcji 1:1 z Revoluta („Your salary, reimagined"): duży wyśrodkowany
+   tytuł, wyśrodkowany akapit, ciemna pigułka CTA — nad talią kart */
+.deal-head{position:relative;z-index:3;margin:0 0 clamp(16px,3svh,34px);padding:0 24px;
+  text-align:center;
+  opacity:0;transform:scale(.86) translateY(42px);
   transition:opacity .8s var(--rev) .22s,transform 1s var(--rev) .22s}
-.deal.rozwiniete .deal-label{opacity:1;transform:none}
-.deal-arrows{position:absolute;z-index:3;left:50%;bottom:clamp(18px,4svh,44px);transform:translateX(-50%);
+.deal.rozwiniete .deal-head{opacity:1;transform:none}
+.deal-head h2{margin:0 auto;max-width:22ch;font-size:clamp(1.9rem,4.2vw,3.4rem);
+  line-height:1.06;letter-spacing:-.035em;font-weight:600;color:#0A0A0A;text-wrap:balance}
+.deal-head p{margin:.85rem auto 0;max-width:58ch;font-size:clamp(.98rem,1.3vw,1.18rem);
+  line-height:1.5;color:var(--muted-d)}
+.deal-cta{margin-top:1.3rem;display:inline-flex;align-items:center;height:48px;padding:0 22px;
+  border-radius:999px;background:#111;color:#fff;font-size:16px;font-weight:600;
+  transition:transform .35s var(--ease),background-color .35s var(--ease)}
+.deal-cta:hover{transform:translateY(-2px);background:#000}
+.deal-cta:focus-visible{outline:2px solid #0A0A0A;outline-offset:3px}
+@media(max-height:820px){
+  .deal-head p{max-width:52ch;font-size:.95rem}
+  .deal-cta{margin-top:.9rem;height:42px}
+  .deal-head h2{font-size:clamp(1.7rem,3.4vw,2.6rem)}
+  .card{width:264px;height:364px}
+  .deal-track{height:440px}
+  .card-in h3{font-size:26px}
+  .card-chip{min-height:56px;font-size:12px}
+}
+.deal-arrows{position:absolute;z-index:120;left:50%;bottom:clamp(18px,4svh,44px);transform:translateX(-50%);
   display:flex;gap:10px;opacity:0;transition:opacity .6s var(--rev) .3s;pointer-events:none}
 .deal.rozwiniete .deal-arrows{opacity:1;pointer-events:auto}
 .deal-arrow{width:46px;height:46px;border-radius:50%;cursor:pointer;
@@ -517,7 +539,6 @@ a{color:inherit;text-decoration:none}
   .card-in h3{font-size:23px}
 }
 @media(max-width:760px){
-  .deal-label{font-size:16px;padding:11px 20px;margin-bottom:24px}
   .deal-track{height:420px}
   .card{width:214px;height:296px}
   .card-in{padding:18px 15px}
@@ -665,7 +686,13 @@ footer.site img{height:26px}
         <a class="cta" href="#kontakt">Umów wizytę</a>
       </div>
     </nav>
-    <span class="deal-label">Zakres opieki</span>
+    <div class="deal-head">
+      <h2>Kompleksowa opieka w jednym miejscu</h2>
+      <p>Zapraszamy do Champions Health — miejsca, w którym wiedza i standard pracy
+        profesjonalnego klubu sportowego są dostępne dla każdego. Niezależnie od tego,
+        czy jesteś zawodowcem, czy ambitnym amatorem.</p>
+      <a class="deal-cta" href="#kontakt">Umów wizytę</a>
+    </div>
     <div class="deal-arrows">
       <button class="deal-arrow" data-deal-prev aria-label="Poprzednia karta">‹</button>
       <button class="deal-arrow" data-deal-next aria-label="Następna karta">›</button>
@@ -914,8 +941,8 @@ footer.site img{height:26px}
   <div class="ring-copy">
     <span class="eyebrow">Jak to działa</span>
     <h2>Jak pomagamy?</h2>
-    <p class="lead">Champions Health to miejsce, w którym wiedza i standard pracy profesjonalnego
-      klubu są dostępne dla każdego — niezależnie od tego, czy jesteś zawodowcem, czy ambitnym amatorem.</p>
+    <p class="lead">Jeden zespół prowadzi Cię od diagnozy do pełnych obciążeń —
+      bez odsyłania na zewnątrz i tłumaczenia wszystkiego od nowa.</p>
     <span class="ring-hint"><span></span>Najedź na krok</span>
   </div>
 </section>
