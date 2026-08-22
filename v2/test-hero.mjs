@@ -130,6 +130,28 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
   console.log(`${w}×${h} pierścień`, rOk ? 'ok' : 'BŁĄD ' + JSON.stringify({ ring, rozwija }));
   if (!rOk) process.exitCode = 1;
 
+  // --- odsłanianie tekstu znak po znaku ------------------------------------
+  await p.evaluate(() => document.querySelector('.claim').scrollIntoView({ block: 'center' }));
+  await new Promise(r => setTimeout(r, 1800));
+  const rev = await p.evaluate(() => {
+    const el = document.querySelector('[data-reveal]');
+    const slowa = [...el.querySelectorAll('.word')];
+    const znaki = [...el.querySelectorAll('.char')];
+    const lh = parseFloat(getComputedStyle(el).lineHeight) || parseFloat(getComputedStyle(el).fontSize) * 1.04;
+    return {
+      podzielone: znaki.length > 20 && slowa.length > 2,
+      // podział nie może zgubić ani dołożyć znaku
+      trescCala: el.getAttribute('aria-label').replace(/\s+/g, '') === el.textContent.replace(/\s+/g, ''),
+      // znaki to osobne inline-block — bez nowrap słowo łamie się w środku
+      bezLamaniaSlow: slowa.every(w => w.getBoundingClientRect().height < lh * 1.6),
+      pokazane: el.classList.contains('pokaz'),
+      naMiejscu: znaki.every(c => Math.abs(new DOMMatrix(getComputedStyle(c).transform).f) < 0.5),
+    };
+  });
+  const revOk = rev.podzielone && rev.trescCala && rev.bezLamaniaSlow && rev.pokazane && rev.naMiejscu;
+  console.log(`${w}×${h} odsłanianie`, revOk ? 'ok' : 'BŁĄD ' + JSON.stringify(rev));
+  if (!revOk) process.exitCode = 1;
+
   await p.close();
 }
 await b.close();
