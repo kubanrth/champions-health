@@ -102,12 +102,19 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
     document.querySelector('[data-deal-prev]').click(); await czekaj(1400);
     const poPrev = focus();
     const wFokusie = [...document.querySelectorAll('[data-card]')][poPrev];
+    const chip = wFokusie.querySelector('.card-chip');
+    const linia = () => chip.querySelector('.chip-linia:not(.out)')?.textContent.trim();
+    const przedRotacja = linia();
+    await czekaj(3600);                                     // obrót co 3,2 s
     return { skok, poNext, poPrev,
-      opisWidoczny: +getComputedStyle(wFokusie.querySelector('.card-opis')).opacity > 0.9,
-      opisNiepusty: wFokusie.querySelector('.card-opis').textContent.trim().length > 40 };
+      chipWidoczny: +getComputedStyle(chip).opacity > 0.9,
+      chipNiepusty: (przedRotacja || '').length > 20,
+      // treść chipa rotuje jak transakcje u Revoluta
+      rotuje: linia() !== przedRotacja,
+      jednaLinia: chip.querySelectorAll('.chip-linia:not(.out)').length === 1 };
   });
   const tOk = talia.skok === 2 && talia.poNext === 3 && talia.poPrev === 2
-           && talia.opisWidoczny && talia.opisNiepusty;
+           && talia.chipWidoczny && talia.chipNiepusty && talia.rotuje && talia.jednaLinia;
   console.log(`${w}×${h} talia`, tOk ? 'ok' : 'BŁĄD ' + JSON.stringify(talia));
   if (!tOk) process.exitCode = 1;
   await p.evaluate(() => window.scrollTo(0, 150));
