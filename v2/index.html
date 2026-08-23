@@ -321,7 +321,6 @@ a{color:inherit;text-decoration:none}
   background:linear-gradient(to top,rgba(12,20,17,.86) 0%,rgba(12,20,17,.6) 30%,rgba(12,20,17,.2) 50%,rgba(12,20,17,0) 68%);
   transition:opacity .7s var(--rev)}
 .hero.morphed::after{opacity:0}
-.hero.morphed .jt{opacity:0;pointer-events:none}
 .jt{transition:opacity .45s var(--rev)}
 
 /* punkt na stawie — zwykła biała kropka */
@@ -335,6 +334,11 @@ a{color:inherit;text-decoration:none}
    dopiero wtedy, gdy tamten z niego zjedzie */
 .hero.wjazd .j-bark{opacity:0;pointer-events:none}
 .hero.bezkreski .j-bark{opacity:1;pointer-events:auto}
+/* Zwijanie hero w kartę: kropki gasną NATYCHMIAST. Wcześniej ta reguła stała
+   przed `.hero.wjazd .jt{opacity:1}` i przy równej wadze przegrywała — kropki
+   wisiały nad gotową już kartą. */
+.hero.morphed .jt,.hero.morphed .j-bark{opacity:0;pointer-events:none;
+  transition:opacity .12s linear}
 .jt-dot{position:absolute;inset:0;border-radius:50%;background:#fff;
   box-shadow:0 0 0 1px rgba(6,14,10,.35),0 0 18px rgba(255,255,255,.5);
   transform:scale(.2);transition:transform .5s cubic-bezier(.2,1.4,.4,1)}
@@ -1672,6 +1676,7 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
     if (teraz === zwiniete) return;
     if (teraz && !ustawCel()) return;          // bez celu nie zwijamy — lepiej pełny kadr niż skok
     zwiniete = teraz;
+    if (!teraz && hero.__zeruj) hero.__zeruj();     // kropki gasną razem z rozwinięciem
     hero.classList.toggle('morphed', teraz);
     hero.classList.toggle('oddane', teraz);
     sec.classList.toggle('rozwiniete', teraz);
@@ -2010,8 +2015,10 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
     requestAnimationFrame(krok);
   };
 
-  // powrót scrollem na samą górę odtwarza wjazd od początku
-  hero.__odtworz = () => {
+  // Powrót scrollem na górę odtwarza wjazd. Zerowanie musi pójść w TEJ SAMEJ
+  // klatce, w której znika klasa `morphed` — inaczej między jednym a drugim
+  // widać przez moment komplet zapalonych kropek.
+  hero.__zeruj = () => {
     if (matchMedia('(prefers-reduced-motion:reduce)').matches) return;
     bieg++;
     hero.classList.remove('wjazd', 'tekst', 'bezkreski');
@@ -2021,6 +2028,10 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
     joints.forEach(j => j.classList.remove('zapalony', 'on'));
     place();
     tor.style.strokeDasharray = '0 9999';
+  };
+  hero.__odtworz = () => {
+    if (matchMedia('(prefers-reduced-motion:reduce)').matches) return;
+    hero.__zeruj();
     requestAnimationFrame(() => requestAnimationFrame(wjazd));
   };
 

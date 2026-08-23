@@ -154,12 +154,37 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
                       && kopia.luz > 40 && kopia.podNawigacja > 8))
       && kopia.bezPrzyciemnienia
       && /Kontuzje/.test(kopia.tekst);
-    // zjazd w dół (hero zwija się w kartę) i powrót na górę = wjazd gra od nowa
-    await q.evaluate(() => scrollTo(0, 900));
+    // zjazd w dół (hero zwija się w kartę) i powrót na górę = wjazd gra od nowa.
+    // Kropki muszą zgasnąć zaraz po starcie morfu — inaczej wiszą nad gotową kartą.
+    const gasniecie = await q.evaluate(() => new Promise(res => {
+      const hero = document.querySelector('.hero'), k = document.querySelector('.j-kolano');
+      const t0 = performance.now(); let morf = null;
+      new MutationObserver(() => { if (hero.classList.contains('morphed') && morf === null)
+        morf = performance.now(); }).observe(hero, { attributes: true, attributeFilter: ['class'] });
+      scrollTo(0, 900);
+      const tik = () => {
+        if (morf !== null && +getComputedStyle(k).opacity < .08)
+          return res(Math.round(performance.now() - morf));
+        if (performance.now() - t0 > 3000) return res(9999);
+        requestAnimationFrame(tik);
+      };
+      requestAnimationFrame(tik);
+    }));
     await new Promise(r => setTimeout(r, 1500));
     const zwinal = await q.evaluate(() => document.querySelector('.hero').classList.contains('morphed'));
-    await q.evaluate(() => scrollTo(0, 0));
-    await new Promise(r => setTimeout(r, 700));
+    // przy rozwijaniu nie może mignąć komplet kropek, zanim ruszy powtórka
+    const migniecie = await q.evaluate(() => new Promise(res => {
+      let max = 0; const t0 = performance.now();
+      scrollTo(0, 0);
+      const tik = () => {
+        max = Math.max(max, [...document.querySelectorAll('.jt')]
+          .filter(j => +getComputedStyle(j).opacity > .08).length);
+        if (performance.now() - t0 > 420) return res(max);
+        requestAnimationFrame(tik);
+      };
+      requestAnimationFrame(tik);
+    }));
+    await new Promise(r => setTimeout(r, 400));
     const odNowa = await q.evaluate(() => ({
       gra: !document.querySelector('.hero').classList.contains('bezkreski'),
       zapalonych: document.querySelectorAll('.jt.zapalony').length }));
@@ -168,10 +193,11 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
       zapalonych: document.querySelectorAll('.jt.zapalony').length,
       tekst: document.querySelector('.hero').classList.contains('tekst') }));
     const powtorka = zwinal && odNowa.gra && odNowa.zapalonych < 5
-                     && poPowtorce.zapalonych === 5 && poPowtorce.tekst;
+                     && poPowtorce.zapalonych === 5 && poPowtorce.tekst
+                     && gasniecie < 300 && migniecie <= 2;
     console.log(`${w}×${h} wjazd hero`, wOk ? 'ok' : 'BŁĄD ' + JSON.stringify({ kolej, czasy, kopia }));
     console.log(`${w}×${h} powtórka wjazdu`, powtorka ? 'ok'
-      : 'BŁĄD ' + JSON.stringify({ zwinal, odNowa, poPowtorce }));
+      : 'BŁĄD ' + JSON.stringify({ zwinal, gasniecie, migniecie, odNowa, poPowtorce }));
     if (!powtorka) process.exitCode = 1;
     if (!wOk) process.exitCode = 1;
     await q.close();

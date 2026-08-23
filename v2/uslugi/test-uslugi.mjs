@@ -246,6 +246,44 @@ console.log('\n— wejście z karty na stronie głównej');
   await p.close();
 }
 
+// podstrona zespołu: 14 wizytówek, brak przepełnienia, czysta konsola,
+// wszystkie bloki wjeżdżają, przycisk na wizytówce prowadzi do #kontakt
+console.log('\n— zespol.html');
+for (const [w, h] of [[1440, 900], [390, 844]]) {
+  const p = await przegladarka.newPage();
+  await p.setViewport({ width: w, height: h, deviceScaleFactor: 1 });
+  const konsola = [];
+  p.on('console', m => m.type() === 'error' && konsola.push(m.text()));
+  await p.goto('http://localhost:3000/champions-health/v2/zespol.html', { waitUntil: 'networkidle2' });
+  await p.evaluate(async () => {
+    const k = Math.round(innerHeight * .8);
+    for (let y = 0; y < document.body.scrollHeight; y += k) {
+      scrollTo({ top: y, behavior: 'instant' }); await new Promise(r => setTimeout(r, 90));
+    }
+    await new Promise(r => setTimeout(r, 900));
+  });
+  const r = await p.evaluate(() => {
+    const wid = document.documentElement.clientWidth;
+    return {
+      osoby: document.querySelectorAll('.osoba').length,
+      przepelnienie: document.documentElement.scrollWidth - wid,
+      ukryte: [...document.querySelectorAll('[data-rv]')]
+        .filter(e => +getComputedStyle(e).opacity < .9).length,
+      kontakt: !!document.querySelector('#kontakt'),
+      cel: document.querySelector('.osoba .btn')?.getAttribute('href'),
+      inicjaly: [...document.querySelectorAll('.osoba-foto b')].every(b => /^[A-ZŁ]{2}$/.test(b.textContent)),
+    };
+  });
+  if (r.osoby !== 14) zle(`osób ${r.osoby} @${w}`);
+  if (r.przepelnienie > 0) zle(`przepełnienie ${r.przepelnienie}px @${w}`);
+  if (r.ukryte) zle(`${r.ukryte} bloków nie wjechało @${w}`);
+  if (!r.kontakt || r.cel !== '#kontakt') zle(`CTA wizytówki @${w}`, r.cel);
+  if (!r.inicjaly) zle(`inicjały @${w}`);
+  if (konsola.length) zle(`konsola @${w}`, konsola.slice(0, 3));
+  console.log(`  ${w}×${h} ${bledy ? '' : 'ok'}`);
+  await p.close();
+}
+
 // strzałki pasa „Pozostałe zakresy" przewijają o kartę
 {
   const p = await przegladarka.newPage();

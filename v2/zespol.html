@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Zespół | Champions Health</title>
+<meta name="description" content="Czternastu specjalistów sztabu medycznego Legii Warszawa: lekarze i fizjoterapeuci, którzy na co dzień prowadzą pierwszą drużynę i Akademię.">
+<link rel="icon" href="img/logo_LCH.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Inter:opsz,wght@14..32,400..700&display=swap" rel="stylesheet">
+<!-- Styl bazowy = kopia <style> z uslugi/szablon.html (stan 2026-08-23) + blok wizytówek.
+     Opisy i doświadczenie lekarzy: TYLKO fakty opublikowane przez klienta,
+     reszta jawnie „w przygotowaniu" — nie wolno fabrykować danych medycznych. -->
+<style>
+/* ==========================================================================
+   Podstrona usługi w języku podstron PRODUKTOWYCH Revoluta, spójna z home
+   (Inter 500, tracking −.028em, krzywa .35/0/0/1, pigułki #262626 i biała).
+   Kompozycja: wyśrodkowany nagłówek → pełnowymiarowa karta ze zdjęciem
+   (anatomia kart „Zakresu opieki" w skali strony) → kafle na szarym
+   wypełnieniu bez obrysów (sygnatura tile'ów Revoluta) → wielka linia
+   nad prozą → ciemny pas kontaktu (jak sekcja kontaktu na home).
+   Szkło zostaje tylko na ciemnym zdjęciu — tam, gdzie jest na home.
+   ========================================================================== */
+:root{
+  --ink:#0B0D0C;
+  --tekst:rgba(11,13,12,.72);
+  --tekst2:rgba(11,13,12,.6);
+  --kres:rgba(11,13,12,.1);
+  --plyta:#F5F5F3;            /* szare wypełnienie kafli — tile Revoluta */
+  --ease:cubic-bezier(.22,.8,.25,1);
+  --rev:cubic-bezier(.35,0,0,1);
+  --tresc:1180px;
+  --bok:clamp(20px,4vw,64px);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:#fff;color:var(--ink);
+  font-family:Inter,system-ui,sans-serif;font-size:16px;line-height:1.6;
+  font-optical-sizing:auto;-webkit-font-smoothing:antialiased;overflow-x:hidden;
+  --legia:"Scale VF",Archivo,Inter,system-ui,sans-serif}
+img{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+h1,h2,h3{margin:0;font-weight:500;letter-spacing:-.028em;line-height:1.05}
+p{margin:0}
+.wrap{max-width:var(--tresc);margin:0 auto;padding-inline:var(--bok)}
+
+/* --- nawigacja: przypięty stan nawigacji home ----------------------------- */
+.nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.86);
+  -webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--kres)}
+.nav-in{display:flex;align-items:center;gap:26px;height:64px;
+  max-width:var(--tresc);margin:0 auto;padding-inline:var(--bok)}
+.nav-in .brand img{height:26px}
+.wroc{display:inline-flex;align-items:center;gap:8px;margin-left:6px;white-space:nowrap;
+  font-size:14px;color:var(--tekst2);transition:color .25s var(--ease)}
+.wroc:hover{color:var(--ink)}
+.wroc svg{transition:transform .3s var(--ease)}
+.wroc:hover svg{transform:translateX(-3px)}
+.nav-menu{display:flex;gap:24px;margin-left:auto;font-size:15px;color:var(--tekst)}
+.nav-menu a{transition:color .25s var(--ease)}
+.nav-menu a:hover{color:var(--ink)}
+.nav .cta{display:inline-flex;align-items:center;height:37px;padding:0 16px;border-radius:999px;
+  background:#262626;color:#fff;font-size:15px;font-weight:500;
+  transition:background-color .3s var(--ease),transform .3s var(--ease)}
+.nav .cta:hover{background:#333;transform:translateY(-1px)}
+:where(a,button):focus-visible{outline:2px solid var(--ink);outline-offset:3px;border-radius:6px}
+
+/* --- pigułki home --------------------------------------------------------- */
+.btn{display:inline-flex;align-items:center;gap:10px;height:48px;padding:0 22px;border-radius:999px;
+  font-size:15px;font-weight:500;white-space:nowrap;
+  transition:background-color .3s var(--ease),transform .3s var(--ease),border-color .3s var(--ease)}
+.btn-pelny{background:#262626;color:#fff}
+.btn-pelny:hover{background:#333;transform:translateY(-1px)}
+.btn-ghost{background:#fff;color:var(--ink);border:1px solid rgba(11,13,12,.18)}
+.btn-ghost:hover{border-color:rgba(11,13,12,.4);transform:translateY(-1px)}
+.btn-szeroki{padding:0 30px}
+.btn svg{transition:transform .3s var(--ease)}
+.btn:hover svg{transform:translate(3px,-3px)}
+
+/* --- hero tekstowy (decyzja klienta: bez zdjęcia-banera, „zacznijmy od
+   tekstu") — układ sekcji produktowej Revoluta: tekst do lewej, zwięźle,
+   pod przyciskami cichy rząd trzech faktów zamiast osobnej sekcji ---------- */
+.pg-hero{padding:clamp(48px,7vw,84px) 0 clamp(40px,5.6vw,64px)}
+.pg-hero h1{margin:0;max-width:14ch;font-size:clamp(2.6rem,5vw,4.2rem);line-height:1.02}
+.pg-lead{margin:20px 0 0;max-width:46ch;font-size:18px;line-height:24px;color:var(--tekst)}
+.pg-akcje{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
+.fakty{margin:clamp(36px,4.6vw,56px) 0 0;display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));max-width:760px}
+.fakty div{padding:2px 18px}
+.fakty div:first-child{padding-left:0}
+.fakty div+div{border-left:1px solid var(--kres)}
+.fakty dt{font-size:11.5px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--tekst2)}
+.fakty dd{margin:5px 0 0;font-size:15px;line-height:1.35;color:var(--ink)}
+
+/* --- wspólna szpica sekcji ------------------------------------------------ */
+.sek{padding:clamp(48px,6.5vw,88px) 0;border-top:1px solid var(--kres)}
+.sek-head{max-width:660px}
+.sek-head h2{font-size:clamp(1.9rem,3.4vw,2.9rem);text-wrap:balance}
+
+/* --- zakres: układ wg myhealthprac (sekcja „Designed for You", zmierzona
+   z DOM przy 1440: tło #F1F1F1, lewa kolumna nagłówek+sub, prawa kolumna
+   wierszy ikona 32px → tytuł 18/500/−.288 → opis 13,7/18,5 na 363px,
+   rytm ~124px, BEZ pudełek i BEZ linii — kontrast niesie samo powietrze).
+   W roli ikon numery krojem Legii, jak na home. --------------------------- */
+.zakres{background:var(--plyta)}
+.zakres-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(32px,5vw,88px);
+  align-items:start}
+.zakres-head h2{max-width:12ch;font-size:clamp(2.2rem,4.2vw,3.6rem);text-wrap:balance}
+.zakres-head p{margin-top:18px;max-width:40ch;font-size:15px;line-height:1.6;color:var(--tekst)}
+.kafle{display:grid;gap:clamp(28px,3.2vw,44px)}
+.kafel{display:grid;grid-template-columns:44px 1fr;gap:20px;align-items:start;max-width:480px}
+.kafel i{font-family:var(--legia);font-style:normal;font-weight:700;font-size:15px;
+  line-height:1.55;color:var(--ink)}
+.kafel h3{font-size:18.5px;letter-spacing:-.018em;line-height:1.3}
+.kafel p{margin-top:8px;font-size:14.5px;line-height:1.6;color:var(--tekst)}
+
+/* --- wielka linia + proza + „dla kogo" ------------------------------------ */
+.claim-line{max-width:22ch;font-size:clamp(1.9rem,3.8vw,3.2rem);line-height:1.15;
+  letter-spacing:-.025em;font-weight:500;text-wrap:balance}
+.opis-grid{display:grid;grid-template-columns:1fr 360px;gap:clamp(28px,4vw,64px);
+  align-items:start;margin-top:clamp(28px,4vw,48px)}
+.proza p{max-width:600px;font-size:18px;line-height:1.65;color:var(--tekst)}
+.proza p+p{margin-top:1.15em}
+.dla-kogo h3{font-size:17px;letter-spacing:-.012em}
+.dla-kogo ul{margin:10px 0 0;padding:0;list-style:none}
+.dla-kogo li{padding:14px 0;font-size:14.5px;line-height:1.55;
+  color:var(--tekst);border-top:1px solid var(--kres)}
+.dla-kogo li:first-child{border-top:0}
+
+/* --- pas kontaktu: ciemne zdjęcie + szkło (jak kontakt na home) ----------- */
+.kont{position:relative;margin:clamp(48px,6.5vw,88px) auto 0;max-width:calc(var(--tresc) - 2px);
+  border-radius:28px;overflow:hidden}
+.kont>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 42%}
+.kont::after{content:"";position:absolute;inset:0;
+  background:linear-gradient(105deg,rgba(5,10,7,.92) 0%,rgba(5,10,7,.7) 55%,rgba(5,10,7,.42) 100%)}
+.kont-in{position:relative;z-index:2;display:grid;grid-template-columns:1.15fr .85fr;
+  gap:clamp(24px,3.4vw,56px);align-items:center;padding:clamp(34px,4.6vw,62px);color:#fff}
+.kont-in h2{font-size:clamp(2rem,3.6vw,3.1rem);max-width:16ch}
+.kont-in p{margin-top:16px;max-width:44ch;font-size:16.5px;line-height:1.6;color:rgba(255,255,255,.88)}
+.kont-karta{padding:26px;border-radius:20px;background:rgba(5,10,7,.38);
+  border:1px solid rgba(255,255,255,.22);
+  -webkit-backdrop-filter:blur(18px) saturate(1.5);backdrop-filter:blur(18px) saturate(1.5);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.14)}
+.kont-karta dl{margin:0;display:grid;gap:14px}
+.kont-karta dt{font-size:11.5px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;
+  color:rgba(255,255,255,.75)}
+.kont-karta dd{margin:3px 0 0;font-size:16px;color:#fff}
+.kont-karta dd a{border-bottom:1px solid rgba(255,255,255,.35);transition:border-color .25s var(--ease)}
+.kont-karta dd a:hover{border-color:#fff}
+.kont-akcje{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
+.kont .btn-pelny{background:#fff;color:#000}
+.kont .btn-pelny:hover{background:#E9E9E6}
+.kont .btn-ghost{background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.3);
+  -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+.kont .btn-ghost:hover{background:rgba(255,255,255,.2);border-color:rgba(255,255,255,.5)}
+.kont :where(a,button):focus-visible{outline-color:#fff}
+
+/* --- pozostałe usługi: pas kart w anatomii slidera „Zakresu opieki" z home.
+   Zamiast scroll-jackingu (to podstrona, nie scena) natywny poziomy scroll
+   ze snapem + szklane strzałki jak przy zespole na home. ------------------- */
+.inne-pas{position:relative;margin-top:32px}
+.inne{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x proximity;
+  margin-inline:calc(50% - 50vw);padding:4px calc(50vw - 50% + var(--bok)) 10px;
+  scrollbar-width:none}
+.inne::-webkit-scrollbar{display:none}
+.inna{position:relative;flex:none;width:min(72vw,460px);aspect-ratio:16/10;
+  border-radius:28px;overflow:hidden;scroll-snap-align:start;background:#151515;
+  display:flex;flex-direction:column;align-items:flex-start;padding:clamp(20px,2.4vw,28px);
+  color:#fff;transition:transform .45s var(--ease),box-shadow .45s var(--ease)}
+.inna:hover{transform:translateY(-4px);box-shadow:0 30px 56px -32px rgba(11,13,12,.55)}
+.inna>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+/* ten sam gradient co karty talii na home */
+.inna::after{content:"";position:absolute;inset:0;
+  background:linear-gradient(to bottom,rgba(8,14,10,.86) 0%,rgba(8,14,10,.6) 34%,
+             rgba(8,14,10,.28) 56%,rgba(8,14,10,.92) 88%,rgba(8,14,10,.96) 100%)}
+.inna span{position:relative;z-index:2;font-size:13px;font-weight:500;
+  letter-spacing:.01em;color:rgba(255,255,255,.85)}
+.inna b{position:relative;z-index:2;margin-top:6px;max-width:14ch;
+  font-size:clamp(20px,2vw,26px);font-weight:500;letter-spacing:-.022em;line-height:1.1;
+  text-wrap:balance}
+/* szklane strzałki — jak przy pasie zespołu na home */
+.pas-strzalka{position:absolute;top:50%;transform:translateY(-50%);z-index:3;
+  width:48px;height:48px;border-radius:50%;border:0;cursor:pointer;color:#fff;
+  background:rgba(255,255,255,.28);
+  -webkit-backdrop-filter:blur(18px) saturate(1.5);backdrop-filter:blur(18px) saturate(1.5);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.4),0 8px 24px rgba(0,0,0,.18);
+  display:grid;place-items:center;transition:background-color .3s var(--ease)}
+.pas-strzalka:hover{background:rgba(255,255,255,.45)}
+.pas-strzalka.w-lewo{left:calc(-1 * clamp(8px,1vw,14px))}
+.pas-strzalka.w-prawo{right:calc(-1 * clamp(8px,1vw,14px))}
+
+/* --- stopka --------------------------------------------------------------- */
+footer.site{border-top:1px solid var(--kres);padding:44px 0 28px;
+  font-size:13.5px;color:var(--tekst2)}
+footer.site .wrap{display:flex;flex-wrap:wrap;align-items:center;gap:18px}
+footer.site img{height:26px}
+footer.site span:last-child{margin-left:auto}
+
+/* --- wjazd ---------------------------------------------------------------- */
+[data-rv]{opacity:0;transform:translateY(22px);
+  transition:opacity .8s var(--rev),transform .8s var(--rev)}
+[data-rv].in{opacity:1;transform:none}
+
+/* --- węższe ekrany -------------------------------------------------------- */
+@media(max-width:1080px){
+  .opis-grid,.kont-in{grid-template-columns:1fr}
+  .zakres-grid{grid-template-columns:1fr;gap:36px}
+  .inne{grid-template-columns:repeat(3,1fr)}
+  .pg-kadr>img{aspect-ratio:16/9}
+}
+@media(max-width:720px){
+  .nav-menu{display:none}
+  .kafel{grid-template-columns:36px 1fr;gap:14px}
+  .fakty{grid-template-columns:1fr}
+  .fakty div{padding:9px 2px;border-left:0;border-top:1px solid var(--kres);
+    display:flex;align-items:baseline;gap:10px}
+  .fakty div:first-child{border-top:0;padding-left:2px}
+  .fakty dd{margin:0}
+  .btn{width:100%;justify-content:center}
+  .inna{width:min(84vw,460px)}
+  footer.site span:last-child{margin-left:0}
+}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  [data-rv]{opacity:1;transform:none}
+}
+
+/* --- podstrona zespołu: wizytówki -----------------------------------------
+   Typografia kart zespołu z home: rola 13/500, nazwisko 30/700/−.032em,
+   specjalizacja 15,5; inicjały krojem Legii (jedyne miejsce dla --legia).
+   Zdjęć i opisów NIE MA i nie wolno ich wymyślić (realni lekarze) — kafel
+   inicjałów + jawne „w przygotowaniu"; realne fakty tylko z materiałów
+   klienta (funkcje w Legii, Al Jazira, Tour de Pologne). ------------------ */
+.zesp-sek{padding:clamp(44px,6vw,80px) 0;border-top:1px solid var(--kres)}
+.zesp-sek h2{font-size:clamp(1.9rem,3.4vw,2.9rem)}
+.zesp-sek .licznik{margin-left:14px;font-family:var(--legia);font-weight:700;
+  font-size:15px;color:var(--tekst2);vertical-align:super}
+.osoby{margin-top:clamp(20px,3vw,34px)}
+.osoba{display:grid;grid-template-columns:clamp(220px,26vw,320px) 1fr;
+  gap:clamp(24px,4.5vw,64px);align-items:start;
+  padding:clamp(28px,4vw,44px) 0;border-top:1px solid var(--kres)}
+.osoba-foto{position:relative;aspect-ratio:4/5;border-radius:14px;overflow:hidden;
+  display:grid;place-items:center;color:#fff;
+  background:linear-gradient(160deg,#161a17,#0B0D0C)}
+.osoba-foto::after{content:"";position:absolute;inset:0;
+  background:radial-gradient(90% 70% at 50% 0%,rgba(11,107,54,.28),transparent 70%)}
+.osoba-foto b{position:relative;z-index:2;font-family:var(--legia);font-weight:700;
+  font-size:clamp(44px,5.4vw,76px);letter-spacing:.02em;
+  transition:transform .7s var(--ease)}
+.osoba:hover .osoba-foto b{transform:scale(1.07)}
+.osoba-foto span{position:absolute;bottom:14px;z-index:2;font-size:11px;font-weight:500;
+  letter-spacing:.07em;text-transform:uppercase;color:rgba(255,255,255,.5)}
+.osoba-rola{font-size:13px;font-weight:500;color:var(--tekst2)}
+.osoba h3{margin-top:6px;font-size:clamp(24px,2.3vw,30px);font-weight:700;
+  letter-spacing:-.032em;line-height:1.1}
+.osoba-spec{margin-top:6px;font-size:15.5px;color:var(--tekst)}
+.osoba-opis{margin-top:16px;max-width:58ch;font-size:15px;line-height:1.65;color:var(--tekst)}
+.osoba-dosw{margin:18px 0 0}
+.osoba-dosw dt{font-size:11.5px;font-weight:500;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--tekst2)}
+.osoba-dosw dd{margin:5px 0 0;max-width:58ch;font-size:15px;line-height:1.5;color:var(--ink)}
+.osoba .btn{margin-top:24px}
+@media(max-width:820px){
+  .osoba{grid-template-columns:1fr;gap:18px}
+  .osoba-foto{max-width:300px}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-in">
+    <a class="brand" href="index.html" aria-label="Champions Health — strona główna">
+      <img src="img/logo_LCH.svg" alt="Champions Health">
+    </a>
+    <a class="wroc" href="index.html">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+        <path d="M8.5 2.5 4 7l4.5 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>Strona główna</a>
+    <div class="nav-menu">
+      <a href="index.html#opieka">Opieka</a>
+      <a href="index.html#sciezka">Jak to działa</a>
+      <a href="#kontakt">Kontakt</a>
+    </div>
+    <a class="cta" href="#kontakt">Umów wizytę</a>
+  </div>
+</nav>
+
+<main>
+
+<header class="pg-hero">
+  <div class="wrap">
+    <h1 data-rv>Zespół</h1>
+    <p class="pg-lead" data-rv>Ci sami ludzie, którzy na co dzień prowadzą pierwszą drużynę
+      i Akademię Legii Warszawa, przyjmują w klinice.</p>
+    <div class="pg-akcje" data-rv>
+      <a class="btn btn-pelny" href="#kontakt">Umów wizytę
+        <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
+          <path d="M3 10 10 3M4.6 3H10v5.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg></a>
+      <a class="btn btn-ghost btn-szeroki" href="tel:+48223182000">Zadzwoń: 22 318 20 00</a>
+    </div>
+    <dl class="fakty" data-rv>
+      <div><dt>Zespół</dt><dd>14 specjalistów</dd></div>
+      <div><dt>Lekarze</dt><dd>5</dd></div>
+      <div><dt>Fizjoterapeuci</dt><dd>9</dd></div>
+    </dl>
+  </div>
+</header>
+
+<section class="zesp-sek">
+  <div class="wrap">
+    <h2 data-rv>Lekarze<span class="licznik">05</span></h2>
+    <div class="osoby">
+      <article class="osoba" data-rv>
+        <div class="osoba-foto"><b>FL</b><span>Zdjęcie w przygotowaniu</span></div>
+        <div>
+          <span class="osoba-rola">Lekarz</span>
+          <h3>Filip Latawiec</h3>
+          <p class="osoba-spec">Ortopedia i medycyna sportowa</p>
+          <p class="osoba-opis">Krótka notka o sposobie pracy jest w przygotowaniu — uzupełni ją zespół kliniki.</p>
+          <dl class="osoba-dosw"><dt>Doświadczenie</dt><dd>Były kierownik medyczny Legii Warszawa i Al Jazira FC.</dd></dl>
+          <a class="btn btn-pelny" href="#kontakt">Umów wizytę
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
+              <path d="M3 10 10 3M4.6 3H10v5.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg></a>
+        </div>
+      </article>
+      <article class="osoba" data-rv>
+        <div class="osoba-foto"><b>MD</b><span>Zdjęcie w przygotowaniu</span></div>
+        <div>
+          <span class="osoba-rola">Lekarz</span>
+          <h3>Mateusz Dłutowski</h3>
+          <p class="osoba-spec">Ortopedia i traumatologia</p>
+          <p class="osoba-opis">Krótka notka o sposobie pracy jest w przygotowaniu — uzupełni ją zespół kliniki.</p>
+          <dl class="osoba-dosw"><dt>Doświadczenie</dt><dd>Lekarz pierwszego zespołu Legii Warszawa od 2024 roku.</dd></dl>
+          <a class="btn btn-pelny" href="#kontakt">Umów wizytę
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
+              <path d="M3 10 10 3M4.6 3H10v5.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg></a>
+        </div>
+      </article>
+      <article class="osoba" data-rv>
+        <div class="osoba-foto"><b>SG</b><span>Zdjęcie w przygotowaniu</span></div>
+        <div>
+          <span class="osoba-rola">Lekarz</span>
+          <h3>Szymon Gałczyński</h3>
+          <p class="osoba-spec">Medycyna sportowa i rodzinna</p>
+          <p class="osoba-opis">Krótka notka o sposobie pracy jest w przygotowaniu — uzupełni ją zespół kliniki.</p>
+          <dl class="osoba-dosw"><dt>Doświadczenie</dt><dd>Opieka medyczna wydarzeń sportowych, m.in. Tour de Pologne.</dd></dl>
+          <a class="btn btn-pelny" href="#kontakt">Umów wizytę
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
+              <path d="M3 10 10 3M4.6 3H10v5.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg></a>
+        </div>
+      </article>
+      <article class="osoba" data-rv>
+        <div class="osoba-foto"><b>PM</b><span>Zdjęcie w przygotowaniu</span></div>
+        <div>
+          <span class="osoba-rola">Lekarz</span>
+          <h3>Piotr Modzelewski</h3>
+          <p class="osoba-spec">Lekarz Akademii Legii i Legii Ladies</p>
+          <p class="osoba-opis">Krótka notka o sposobie pracy jest w przygotowaniu — uzupełni ją zespół kliniki.</p>
+          <dl class="osoba-dosw"><dt>Doświadczenie</dt><dd>Prowadzenie zawodników Akademii Legii Warszawa oraz zespołu Legia Ladies.</dd></dl>
+          <a class="btn btn-pelny" href="#kontakt">Umów wizytę
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
+              <path d="M3 10 10 3M4.6 3H10v5.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg></a>
+        </div>
+      </article>
+      <article class="osoba" data-rv>
+        <div class="osoba-foto"><b>MT</b><span>Zdjęcie w przygotowaniu</span></div>
+        <div>
+          <span class="osoba-rola">Lekarz</span>
+          <h3>Marcin Tusiński</h3>
+          <p class="osoba-spec">Medycyna sportowa</p>
+          <p class="osoba-opis">Krótka notka o sposobie pracy jest w przygotowaniu — uzupełni ją zespół kliniki.</p>
+          <dl class="osoba-dosw"><dt>Doświadczenie</dt><dd>W sztabie medycznym Legii Warszawa od 2025 roku.</dd></dl>
+          <a class="btn btn-pelny" href="#kontakt">Umów wizytę
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
+              <path d="M3 10 10 3M4.6 3H10v5.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg></a>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="zesp-sek">
+  <div class="wrap">
+    <h2 data-rv>Fizjoterapeuci<span class="licznik">09</span></h2>
+    <div class="osoby">
+      <article class="osoba" data-rv>
+        <div class="osoba-foto"><b>DD</b><span>Zdjęcie w przygotowaniu</span></div>
+        <div>
+          <span class="osoba-rola">Fizjoterapeuta</span>
+          <h3>Dominika Daros</h3>
+          <p class="osoba-spec">Fizjoterapeuta</p>
+          <p class="osoba-opis">Krótka notka o sposobie pracy jest w przygotowaniu — uzupełni ją zespół kliniki.</p>
+          <dl class="osoba-dosw"><dt>Doświadczenie</dt><dd>W przygotowaniu.</dd></dl>
+          <a class="btn btn-pelny" href="#kontakt">Umów wizytę
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
+              <path d="M3 10 10 3M4.6 3H10v5.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg></a>
+        </div>
+      </article>
+      <article class="osoba" data-rv>
+        <div class="osoba-foto"><b>PD</b><span>Zdjęcie w przygotowaniu</span></div>
+        <div>
+          <span class="osoba-rola">Fizjoterapeuta</span>
+          <h3>Przemysław Domański</h3>
+          <p class="osoba-spec">Fizjoterapeuta</p>
+          <p class="osoba-opis">Krótka notka o sposobie pracy jest w przygotowaniu — uzupełni ją zespół kliniki.</p>
+          <dl class="osoba-dosw"><dt>Doświadczenie</dt><dd>W przygotowaniu.</dd></dl>
+          <a class="btn btn-pelny" href="#kontakt">Umów wizytę
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
+              <path d="M3 10 10 3M4.6 3H10v5.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg></a>
+        </div>
+      </article>
+      <article class="osoba" data-rv>
+        <div class="osoba-foto"><b>ŁG</b><span>Zdjęcie w przygotowaniu</span></div>
+        <div>
+          <span class="osoba-rola">Fizjoterapeuta</span>
+          <h3>Łukasz Gembarzewski</h3>
+          <p class="osoba-spec">Fizjoterapeuta</p>
+          <p class="osoba-opis">Krótka notka o sposobie pracy jest w przygotowaniu — uzupełni ją zespół kliniki.</p>
+          <dl class="osoba-dosw"><dt>Doświadczenie</dt><dd>W przygotowaniu.</dd></dl>
+          <a class="btn btn-pelny" href="#kontakt">Umów wizytę
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
+              <path d="M3 10 10 3M4.6 3H10v5.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg></a>
+        </div>
+      </article>
+      <article class="osoba" data-rv>
+        <div class="osoba-foto"><b>JG</b><span>Zdjęcie w przygotowaniu</span></div>
+        <div>
+          <span class="osoba-rola">Fizjoterapeuta</span>
+          <h3>Jakub Grodzki</h3>
+          <p class="osoba-spec">Fizjoterapeuta</p>
+          <p class="osoba-opis">Krótka notka o sposobie pracy jest w przygotowaniu — uzupełni ją zespół kliniki.</p>
+          <dl class="osoba-dosw"><dt>Doświadczenie</dt><dd>W przygotowaniu.</dd></dl>
+          <a class="btn btn-pelny" href="#kontakt">Umów wizytę
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
+              <path d="M3 10 10 3M4.6 3H10v5.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg></a>
+        </div>
+      </article>
+      <article class="osoba" data-rv>
+        <div class="osoba-foto"><b>SH</b><span>Zdjęcie w przygotowaniu</span></div>
+        <div>
+          <span class="osoba-rola">Fizjoterapeuta</span>
+          <h3>Sandra Heronimek</h3>
+          <p class="osoba-spec">Fizjoterapeuta</p>
+          <p class="osoba-opis">Krótka notka o sposobie pracy jest w przygotowaniu — uzupełni ją zespół kliniki.</p>
+          <dl class="osoba-dosw"><dt>Doświadczenie</dt><dd>W przygotowaniu.</dd></dl>
+          <a class="btn btn-pelny" href="#kontakt">Umów wizytę
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
+              <path d="M3 10 10 3M4.6 3H10v5.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg></a>
+        </div>
+      </article>
+      <article class="osoba" data-rv>
+        <div class="osoba-foto"><b>DK</b><span>Zdjęcie w przygotowaniu</span></div>
+        <div>
+          <span class="osoba-rola">Fizjoterapeuta</span>
+          <h3>Daniel Komar</h3>
+          <p class="osoba-spec">Fizjoterapeuta</p>
+          <p class="osoba-opis">Krótka notka o sposobie pracy jest w przygotowaniu — uzupełni ją zespół kliniki.</p>
+          <dl class="osoba-dosw"><dt>Doświadczenie</dt><dd>W przygotowaniu.</dd></dl>
+          <a class="btn btn-pelny" href="#kontakt">Umów wizytę
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
+              <path d="M3 10 10 3M4.6 3H10v5.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg></a>
+        </div>
+      </article>
+      <article class="osoba" data-rv>
+        <div class="osoba-foto"><b>GM</b><span>Zdjęcie w przygotowaniu</span></div>
+        <div>
+          <span class="osoba-rola">Fizjoterapeuta</span>
+          <h3>Giovanni Mangano</h3>
+          <p class="osoba-spec">Fizjoterapeuta</p>
+          <p class="osoba-opis">Krótka notka o sposobie pracy jest w przygotowaniu — uzupełni ją zespół kliniki.</p>
+          <dl class="osoba-dosw"><dt>Doświadczenie</dt><dd>W przygotowaniu.</dd></dl>
+          <a class="btn btn-pelny" href="#kontakt">Umów wizytę
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
+              <path d="M3 10 10 3M4.6 3H10v5.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg></a>
+        </div>
+      </article>
+      <article class="osoba" data-rv>
+        <div class="osoba-foto"><b>DO</b><span>Zdjęcie w przygotowaniu</span></div>
+        <div>
+          <span class="osoba-rola">Fizjoterapeuta</span>
+          <h3>Dominik Ofat</h3>
+          <p class="osoba-spec">Fizjoterapeuta</p>
+          <p class="osoba-opis">Krótka notka o sposobie pracy jest w przygotowaniu — uzupełni ją zespół kliniki.</p>
+          <dl class="osoba-dosw"><dt>Doświadczenie</dt><dd>W przygotowaniu.</dd></dl>
+          <a class="btn btn-pelny" href="#kontakt">Umów wizytę
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
+              <path d="M3 10 10 3M4.6 3H10v5.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg></a>
+        </div>
+      </article>
+      <article class="osoba" data-rv>
+        <div class="osoba-foto"><b>KP</b><span>Zdjęcie w przygotowaniu</span></div>
+        <div>
+          <span class="osoba-rola">Fizjoterapeuta</span>
+          <h3>Kamil Pasoń</h3>
+          <p class="osoba-spec">Fizjoterapeuta</p>
+          <p class="osoba-opis">Krótka notka o sposobie pracy jest w przygotowaniu — uzupełni ją zespół kliniki.</p>
+          <dl class="osoba-dosw"><dt>Doświadczenie</dt><dd>W przygotowaniu.</dd></dl>
+          <a class="btn btn-pelny" href="#kontakt">Umów wizytę
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
+              <path d="M3 10 10 3M4.6 3H10v5.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg></a>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="kont" id="kontakt">
+  <img src="img/kontakt.png" alt="" aria-hidden="true">
+  <div class="kont-in">
+    <div class="kont-tekst" data-rv>
+      <h2>Zacznij od rozmowy z koordynatorem</h2>
+      <p>Piętnaście minut wystarczy, żeby ustalić, czego potrzebujesz.
+        Bez skierowania i bez kolejki.</p>
+      <div class="kont-akcje">
+        <a class="btn btn-pelny" href="../index.html#kontakt">Wypełnij formularz
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
+            <path d="M3 10 10 3M4.6 3H10v5.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg></a>
+        <a class="btn btn-ghost" href="tel:+48223182000">Zadzwoń: 22 318 20 00</a>
+      </div>
+    </div>
+    <div class="kont-karta" data-rv>
+      <dl>
+        <div><dt>Telefon</dt><dd><a href="tel:+48223182000">22 318 20 00</a></dd></div>
+        <div><dt>E-mail</dt><dd><a href="mailto:info@legia.pl">info@legia.pl</a></dd></div>
+        <div><dt>Godziny</dt><dd>Pon.–pt. 8:00–20:00</dd></div>
+        <div><dt>Adres</dt><dd>ul. Łazienkowska 3, Warszawa</dd></div>
+      </dl>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <img src="img/logo_LCH.svg" alt="Champions Health">
+    <span>ul. Łazienkowska 3, 00-449 Warszawa · 22 318 20 00</span>
+    <span>© 2026 Champions Health · Legia Warszawa S.A.</span>
+  </div>
+</footer>
+
+<script>
+// wjazd sekcji — ta sama kaskada co na podstronach usług
+const rv = document.querySelectorAll('[data-rv]');
+if (matchMedia('(prefers-reduced-motion:reduce)').matches) {
+  rv.forEach(e => e.classList.add('in'));
+} else {
+  const io = new IntersectionObserver((wpisy, o) => {
+    wpisy.forEach(w => {
+      if (!w.isIntersecting) return;
+      const r = [...w.target.parentElement.querySelectorAll('[data-rv]')].indexOf(w.target);
+      w.target.style.transitionDelay = Math.min(r, 4) * 70 + 'ms';
+      w.target.classList.add('in');
+      o.unobserve(w.target);
+    });
+  }, { threshold: .12, rootMargin: '0px 0px -8% 0px' });
+  rv.forEach(e => io.observe(e));
+}
+</script>
+</body>
+</html>
