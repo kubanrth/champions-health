@@ -276,12 +276,12 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
     const sec = document.querySelector('.deal');
     const focus = () => [...document.querySelectorAll('[data-card]')].findIndex(c => c.classList.contains('focus'));
     const czekaj = ms => new Promise(r => setTimeout(r, ms));
-    sec.__doKarty(2); await czekaj(1500);
+    sec.__doKarty(2); await czekaj(2000);
     const skok = focus();
     // strzałki usunięte — nawigacja to klik w kartę i scroll
-    [...document.querySelectorAll('[data-card]')][3].click(); await czekaj(1400);
+    [...document.querySelectorAll('[data-card]')][3].click(); await czekaj(1600);
     const poNext = focus();
-    [...document.querySelectorAll('[data-card]')][2].click(); await czekaj(1400);
+    [...document.querySelectorAll('[data-card]')][2].click(); await czekaj(1600);
     const poPrev = focus();
     const wFokusie = [...document.querySelectorAll('[data-card]')][poPrev];
     // karta w fokusie musi dać się kliknąć — to jedyna nawigacja po usunięciu strzałek
