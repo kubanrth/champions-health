@@ -30,27 +30,70 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
                               && Math.min(a.right, b.right) - Math.max(a.left, b.left) > 0;
       return {
         staw: cl,
-        rozsunieta: getComputedStyle(k).clipPath.replace(/\s/g, '') === 'inset(0pxround16px)',
+        rozsunieta: /circle/.test(getComputedStyle(k).clipPath),
         kartaWKadrze: kr.top >= -1 && kr.bottom <= H.height + 1 && kr.left >= -1 && kr.right <= H.width + 1,
         kropkaNaTekscie: tekst.some(t => zachodzi(d, t)),
         opisNiepusty: [...k.children].every(e => e.textContent.trim().length > 0),
         krojLegii: getComputedStyle(k.querySelector('strong')).fontFamily.includes('Archivo'),
-        // puls: trzy kółka rozchodzące się od kropki, z rozjazdem faz
-        puls: (() => { const ringi = [...j.querySelector('.jt-dot').querySelectorAll('i')];
-          const delays = ringi.map(r2 => getComputedStyle(r2).animationDelay);
-          return ringi.length === 3
-              && ringi.every(r2 => getComputedStyle(r2).animationName === 'jt-puls')
-              && new Set(delays).size === 3; })(),
+        // kropka to zwykłe białe koło (bez pulsu i obrysu)
+        kropkaBiala: (() => { const c = getComputedStyle(j.querySelector('.jt-dot'));
+          return c.borderRadius === '50%' && c.backgroundColor === 'rgb(255, 255, 255)'; })(),
       };
     }, c));
     await p.mouse.move(w - 40, h - 40);          // zwolnij, zanim sprawdzisz następny
     await new Promise(r => setTimeout(r, 400));
   }
   const zle = out.filter(o => !o.ukryty && (!o.rozsunieta || !o.kartaWKadrze || o.kropkaNaTekscie
-                                            || !o.opisNiepusty || !o.krojLegii || !o.puls));
+                                            || !o.opisNiepusty || !o.krojLegii || !o.kropkaBiala));
   const ok = !zle.length && !errs.length && przepelnienie === 0;
   console.log(`${w}×${h}`, ok ? 'ok' : 'BŁĄD ' + JSON.stringify({ zle, errs, przepelnienie }));
   if (!ok) process.exitCode = 1;
+  // --- wjazd: kreska po stawach + nagłówek --------------------------------
+  {
+    const q = await b.newPage();
+    await q.setViewport({ width: w, height: h, deviceScaleFactor: 1 });
+    await q.evaluateOnNewDocument(() => {
+      window.__log = [];
+      const obs = new MutationObserver(ms => { for (const m of ms) {
+        const t = m.target;
+        if (t.classList?.contains('jt') && t.classList.contains('zapalony') && !t.__z) {
+          t.__z = 1; window.__log.push([t.className.split(' ')[1], performance.now()]); }
+        if (t.classList?.contains('hero') && t.classList.contains('tekst') && !window.__t) {
+          window.__t = 1; window.__log.push(['tekst', performance.now()]); }
+      }});
+      addEventListener('DOMContentLoaded', () =>
+        obs.observe(document.body, { subtree: true, attributes: true, attributeFilter: ['class'] }));
+    });
+    await q.goto('http://localhost:3000/champions-health/v2/', { waitUntil: 'networkidle2' });
+    await new Promise(r => setTimeout(r, 4200));
+    const log = await q.evaluate(() => window.__log);
+    const kolej = log.filter(l => l[0] !== 'tekst').map(l => l[0]);
+    const czasy = Object.fromEntries(log);
+    const kopia = await q.evaluate(() => {
+      const c = document.querySelector('.hero-copy');
+      const r = c.getBoundingClientRect();
+      const bk = document.querySelector('.j-bark').getBoundingClientRect();
+      const H = document.querySelector('.hero').getBoundingClientRect();
+      return { widoczna: +getComputedStyle(c).opacity > 0.9,
+        nadBarkiem: r.bottom <= bk.top + 2,
+        wKadrze: r.top >= -1 && r.right <= H.width + 1,
+        tekst: c.querySelector('h1').textContent.trim() };
+    });
+    const wOk = (h > 800 || w > 800)
+      // kolejność zapalania: kostka → kolano → biodro → bark
+      && JSON.stringify(kolej) === JSON.stringify(['j-skok', 'j-kolano', 'j-biodro', 'j-bark'])
+      // każdy kolejny punkt wyraźnie po poprzednim, nie wszystkie naraz
+      && czasy['j-kolano'] - czasy['j-skok'] > 250
+      && czasy['j-biodro'] - czasy['j-kolano'] > 250
+      && czasy['j-bark'] - czasy['j-biodro'] > 250
+      && czasy['tekst'] > czasy['j-bark'] + 300
+      && kopia.widoczna && kopia.nadBarkiem && kopia.wKadrze
+      && /Kontuzje/.test(kopia.tekst);
+    console.log(`${w}×${h} wjazd hero`, wOk ? 'ok' : 'BŁĄD ' + JSON.stringify({ kolej, czasy, kopia }));
+    if (!wOk) process.exitCode = 1;
+    await q.close();
+  }
+
   // --- zwinięcie hero w kartę „Medycyna sportowa" -------------------------
   const przed = await p.evaluate(() => {
     const m = document.querySelector('.morph').getBoundingClientRect();
