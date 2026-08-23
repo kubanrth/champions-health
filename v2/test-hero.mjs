@@ -172,7 +172,7 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
   await p.evaluate(() => document.querySelector('.claim').scrollIntoView({ block: 'center' }));
   await new Promise(r => setTimeout(r, 1800));
   const rev = await p.evaluate(() => {
-    const el = document.querySelector('[data-reveal]');
+    const el = document.querySelector('.claim [data-reveal]');
     const slowa = [...el.querySelectorAll('.word')];
     const znaki = [...el.querySelectorAll('.char')];
     const lh = parseFloat(getComputedStyle(el).lineHeight) || parseFloat(getComputedStyle(el).fontSize) * 1.04;
@@ -209,6 +209,10 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
     return {
       ile: oryg.length,
       komplet: oryg.every(c => c.dataset.imie && c.dataset.spec && c.dataset.opis && c.dataset.dosw),
+      // nagłówek zespołu: pełna szerokość (karty schodzą do krawędzi) + odsłanianie znak po znaku
+      naglowekSzeroki: (() => { const h = document.querySelector('.tm-head h2').getBoundingClientRect();
+        return h.left < 80 && h.right > innerWidth - 120; })(),
+      naglowekOdslania: document.querySelectorAll('.tm-head h2 .char').length > 10,
       // pętla wymaga drugiej kopii zestawu, niewidocznej dla czytników i Taba
       klonUkryty: klon?.getAttribute('aria-hidden') === 'true'
                && [...klon.querySelectorAll('button')].every(b2 => b2.tabIndex === -1),
@@ -266,6 +270,7 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
     fokusWrocil: document.activeElement?.classList.contains('tm-card'),
   }));
   const zOk = zBaza.ile === 14 && zBaza.komplet && zBaza.klonUkryty
+           && zBaza.naglowekSzeroki && zBaza.naglowekOdslania
            && zBaza.tloBiale && zBaza.napisyNaKarcie && zBaza.kartaDuza && zBaza.sygnaturaPoZespole
            && zBaza.tempo < -60 && zBaza.tempo > -100
            && zPetla.zawinelo && zStrzalka.dalej < -250 && zStrzalka.wstecz > 120

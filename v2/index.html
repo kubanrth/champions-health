@@ -77,10 +77,11 @@ a{color:inherit;text-decoration:none}
    na dotyku i klawiatura bez dodatkowego kodu.                             */
 .tm{background:#fff;color:#0A0A0A}
 .tm .eyebrow,.tm .lead{color:var(--muted-d)}
-.tm-head{max-width:var(--wrap);margin:0 auto;padding:0 24px}
-.tm-head h2{max-width:14ch;font-size:clamp(2.4rem,6vw,5.4rem);line-height:1.0;
+.tm-head{max-width:none;margin:0;padding:0 clamp(24px,3.4vw,52px)}
+.tm-head h2{max-width:none;font-size:clamp(2.4rem,6vw,5.4rem);line-height:1.0;
   letter-spacing:-.025em;font-weight:500}
-.tm-head .lead{margin-top:1.1rem;max-width:46ch}
+.tm-head .lead{margin-top:1.4rem;max-width:56ch;
+  font-size:clamp(1.08rem,1.5vw,1.45rem);line-height:1.45}
 
 /* strzałki na krawędziach pasa — to samo szkło co w sliderze „Zakresu opieki" */
 .tm-arrows{position:absolute;left:0;right:0;top:0;bottom:0;z-index:20;pointer-events:none}
@@ -940,14 +941,10 @@ footer.site img{height:26px}
 </section>
 
 <section class="sec tm" id="zespol" style="position:relative">
-  <div class="wrap">
-    <div class="tm-head rv">
-      <div>
-        <h2>Wiesz, kto się Tobą zajmie</h2>
-        <p class="lead">Pięciu lekarzy i dziewięciu fizjoterapeutów, którzy na co dzień prowadzą
-          pierwszą drużynę, Legia Ladies i Akademię.</p>
-      </div>
-    </div>
+  <div class="tm-head rv">
+    <h2 class="reveal" data-reveal>Wiesz, kto się Tobą zajmie</h2>
+    <p class="lead">Pięciu lekarzy i dziewięciu fizjoterapeutów, którzy na co dzień prowadzą
+      pierwszą drużynę, Legia Ladies i Akademię.</p>
   </div>
   <div class="tm-arrows">
     <button class="tm-arrow" data-tm-prev aria-label="Poprzednie osoby">‹</button>
