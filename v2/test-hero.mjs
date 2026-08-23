@@ -296,6 +296,31 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
   const tOk = talia.skok === 2 && talia.poNext === 3 && talia.poPrev === 2
            && talia.tekstWidoczny && talia.tekstNiepusty && talia.kartaKlikalna;
   console.log(`${w}×${h} talia`, tOk ? 'ok' : 'BŁĄD ' + JSON.stringify(talia));
+
+  // opór talii: mocny rzut kółkiem nie może przerzucić kilku kart naraz
+  // ani wyrzucić poza sekcję (zgłoszenie klienta 2026-08-24)
+  {
+    const o = await p.evaluate(() => new Promise(r => { scrollTo(0, 0); setTimeout(r, 900); }));
+    await p.mouse.move(Math.round(w / 2), Math.round(h / 2));
+    const rzut = async sila => {
+      for (let i = 0; i < 45; i++) await p.mouse.wheel({ deltaY: Math.max(4, Math.round(sila * Math.pow(.93, i))) });
+      await new Promise(r => setTimeout(r, 1400));
+    };
+    await rzut(160);
+    const po1 = await p.evaluate(() => [...document.querySelectorAll('[data-card]')]
+      .findIndex(c => c.classList.contains('focus')));
+    // szarpnięcie „na maksa": 180 zdarzeń po 400 px
+    for (let k = 0; k < 3; k++) for (let i = 0; i < 60; i++) await p.mouse.wheel({ deltaY: 400 });
+    await new Promise(r => setTimeout(r, 1800));
+    const poSzarpnieciu = await p.evaluate(() => ({
+      karta: [...document.querySelectorAll('[data-card]')].findIndex(c => c.classList.contains('focus')),
+      koniecStrony: scrollY + innerHeight >= document.documentElement.scrollHeight - 8 }));
+    const opOk = po1 <= 1 && poSzarpnieciu.karta <= 4 && !poSzarpnieciu.koniecStrony;
+    console.log(`${w}×${h} opór talii`, opOk ? 'ok'
+      : 'BŁĄD ' + JSON.stringify({ po1, poSzarpnieciu }));
+    if (!opOk) process.exitCode = 1;
+    await p.evaluate(() => new Promise(r => { scrollTo(0, 0); setTimeout(r, 900); }));
+  }
   if (!tOk) process.exitCode = 1;
   await p.evaluate(() => window.scrollTo(0, 150));
   await new Promise(r => setTimeout(r, 1200));

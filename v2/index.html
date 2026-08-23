@@ -987,7 +987,9 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
   const WSTEP = 0.6;     // ekran na zwinięcie, zanim slider ruszy
   const KROK = 0.055;    // rozjazd wjazdu kart, liczony od karty hero
   const CZAS = 1080;     // ten sam czas co morf hero
-  sec.style.height = `${100 + WSTEP * 100 + N * 42}svh`;
+  // 42svh na kartę oznaczało, że jeden mocny ruch kółkiem (≈1,2 ekranu)
+  // przerzucał prawie trzy karty. 68 daje ~1 kartę na taki ruch.
+  sec.style.height = `${100 + WSTEP * 100 + N * 68}svh`;
 
   // cubic-bezier(.35,0,0,1) — krzywa zdjęta z revolut.com, ta sama co w CSS
   const rev = x => {
@@ -1005,24 +1007,29 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
   // scrollu tor odjeżdża i morf ląduje obok albo na karcie 02.
   let zamrozone = 0;
   sec.__zamroz = wl => { zamrozone = wl ? performance.now() + CZAS + 120 : 0; };
-  const DOGON = 460;                       // ile trwa dojście do pozycji ze scrolla
+  // Cel wyliczony ze scrolla. Taśma NIE skacze do niego — dochodzi z limitem
+  // prędkości (patrz `pokazany`), więc gwałtowny scroll przewija karty płynnie
+  // zamiast teleportować o kilka pozycji.
   const postep = () => {
+    if (zamrozone && performance.now() < zamrozone) return 0;   // hero leci do karty 01
+    if (zamrozone) zamrozone = 0;
     const r = sec.getBoundingClientRect();
     const wstep = window.innerHeight * WSTEP;
     const span = sec.offsetHeight - window.innerHeight - wstep;
-    const p = span > 0 ? Math.min(1, Math.max(0, (-r.top - wstep) / span)) : 0;
-    if (!zamrozone) return p;
-    const t = performance.now();
-    if (t < zamrozone) return 0;             // hero jeszcze leci do karty 01 — tor stoi
-    // Bez tego taśma po odmrożeniu PRZESKAKIWAŁA od razu na pozycję ze scrolla
-    // (przy szybkim zjeździe nawet o 850 px). Teraz dochodzi do niej płynnie.
-    const u = Math.min(1, (t - zamrozone) / DOGON);
-    if (u >= 1) zamrozone = 0;
-    return p * (u < .5 ? 2 * u * u : 1 - Math.pow(-2 * u + 2, 2) / 2);
+    return span > 0 ? Math.min(1, Math.max(0, (-r.top - wstep) / span)) : 0;
   };
-  const draw = () => {
+
+  const NA_KARTE = 380;                    // ms na przejechanie jednej karty
+  let pokazany = 0, ostTs = 0;
+  const draw = ts => {
     raf = null;
-    const p = postep();
+    const cel = postep();
+    const dt = ostTs ? Math.min(64, ts - ostTs) : 16; ostTs = ts;
+    const limit = dt / (NA_KARTE * (N - 1));            // maks. przyrost postępu
+    const d = cel - pokazany;
+    pokazany += Math.abs(d) <= limit ? d : Math.sign(d) * limit;
+    const p = pokazany;
+    if (Math.abs(cel - pokazany) > 0.0004) kick();      // dojeżdżamy dalej
     const maxX = Math.max(0, track.scrollWidth - stage.clientWidth);
     track.style.transform = `translate3d(${(-p * maxX).toFixed(1)}px,0,0)`;
     const focus = p * (N - 1);
@@ -1036,8 +1043,35 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
     });
   };
   const kick = () => { if (raf === null) raf = requestAnimationFrame(draw); };
-  // podczas zamrożenia rysujemy dalej, żeby po odmrożeniu slider dogonił scroll płynnie
-  setInterval(() => { if (zamrozone && performance.now() < zamrozone + DOGON + 80) kick(); }, 60);
+
+  // --- opór talii ---------------------------------------------------------
+  // Pozycja taśmy jest pochodną scrolla, więc jeden mocny rzut kółkiem
+  // przerzucał kilka kart naraz (a bardzo mocny wyrzucał na koniec strony).
+  // Limit na pojedyncze zdarzenie nic nie daje — trackpad wysyła ich dziesiątki.
+  // Dlatego talia ma BUDŻET pikseli odnawiany w czasie: rzut zużywa zapas
+  // (≈ jedna karta), a dalej strona jedzie tempem TEMPO. Poza talią i na jej
+  // krańcach kółko działa normalnie; dotyk i klawiatura są nietknięte.
+  const TEMPO = 0.9;                      // px na ms po wyczerpaniu zapasu
+  const ZAPAS = 420;                      // ile można „wystrzelić" od razu
+  let budzet = ZAPAS, budzetT = 0;
+  if (!reduce.matches) addEventListener('wheel', e => {
+    if (e.ctrlKey) return;                                  // zoom przeglądarki
+    const gora = sec.offsetTop + window.innerHeight * WSTEP;   // tu taśma zaczyna jechać
+    const dol = sec.offsetTop + sec.offsetHeight - window.innerHeight;
+    const y = window.scrollY;
+    if (y < gora - 2 || y > dol + 2) { budzet = ZAPAS; return; }
+    if (e.deltaY > 0 && y >= dol - 2) return;               // koniec talii — puszczamy dalej
+    if (e.deltaY < 0 && y <= gora + 2) return;              // początek — puszczamy w górę
+    e.preventDefault();
+    const t = performance.now();
+    budzet = Math.min(ZAPAS, budzet + (budzetT ? (t - budzetT) * TEMPO : ZAPAS));
+    budzetT = t;
+    const krok = Math.min(Math.abs(e.deltaY), budzet);
+    budzet -= krok;
+    window.scrollTo(0, Math.max(gora, Math.min(dol, y + Math.sign(e.deltaY) * krok)));
+  }, { passive: false });
+  // podczas zamrożenia rysujemy dalej, żeby po jego końcu taśma ruszyła bez zwłoki
+  setInterval(() => { if (zamrozone) kick(); }, 60);
 
   // wjazd kart: tween w czasie, odpalany i cofany razem ze zwinięciem hero
   sec.__rozloz = cel => {
@@ -1046,7 +1080,7 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
     const krok = ts => {
       const u = Math.min(1, (ts - t0) / CZAS);
       we = od + (cel - od) * rev(u);
-      draw();
+      draw(ts);
       tw = u < 1 ? requestAnimationFrame(krok) : null;
     };
     tw = requestAnimationFrame(krok);
