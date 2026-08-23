@@ -83,6 +83,11 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
       // nagłówek Revolut-style nie może nachodzić na karty
       naglowekNadKartami: document.querySelector('.deal-head').getBoundingClientRect().bottom
                         <= m.top + 1,
+      // metryki akapitu 1:1 z revolut.com (18/24 w bloku 600 px, dwa wiersze)
+      akapitJakRevolut: (() => { const pa = document.querySelector('.deal-head p'), c = getComputedStyle(pa);
+        const zwezony = innerWidth < 500 || innerHeight <= 820;
+        return (zwezony || (c.fontSize === '18px' && c.lineHeight === '24px'))
+            && pa.getBoundingClientRect().height / parseFloat(c.lineHeight) <= 3.4; })(),
     };
   });
   await p.evaluate(() => window.scrollTo(0, 0));
@@ -123,7 +128,7 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
 
   const mOk = przed.spoczynek && przed.pelnyKadr && po.zwiniete && po.trafiaWKarte
            && po.kartaWUwadze && po.kartaNaWierzchu && po.kartaPelneKrycie
-           && po.heroOddane && po.etykietaWidoczna && po.naglowekNadKartami && po.lukRozlozony && po.napisyBiale && wroc.cofniete && wroc.pelnyKadr;
+           && po.heroOddane && po.etykietaWidoczna && po.naglowekNadKartami && po.akapitJakRevolut && po.lukRozlozony && po.napisyBiale && wroc.cofniete && wroc.pelnyKadr;
   console.log(`${w}×${h} przejście`, mOk ? 'ok' : 'BŁĄD ' + JSON.stringify({ przed, po, wroc }));
   if (!mOk) process.exitCode = 1;
 
