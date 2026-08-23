@@ -190,10 +190,10 @@ a{color:inherit;text-decoration:none}
 .claim{background:#fff;color:#0A0A0A}
 .claim .claim-in{width:100%;max-width:none;display:flex;align-items:center;justify-content:flex-start;
   gap:clamp(18px,2.4vw,40px);padding:clamp(4.5rem,9vw,8rem) clamp(24px,3.4vw,52px)}
-.claim-logo{flex:none;height:clamp(30px,3.6vw,58px);width:auto}
+.claim-logo{flex:none;height:min(3.4vw,60px);width:auto}
 .claim-kreska{flex:none;width:1px;align-self:stretch;background:rgba(10,10,10,.18)}
-.claim-txt{margin:0;max-width:19ch;font-size:clamp(1.6rem,4.6vw,4.2rem);
-  line-height:1.04;letter-spacing:-.03em;font-weight:500;text-wrap:balance}
+.claim-txt{margin:0;white-space:nowrap;font-size:min(3.78vw,4.8rem);
+  line-height:1.1;letter-spacing:-.022em;font-weight:500}
 
 /* maska na słowie, znak wyjeżdża spod niej */
 .reveal .word{display:inline-block;white-space:nowrap;overflow:hidden;vertical-align:bottom;
@@ -208,8 +208,8 @@ a{color:inherit;text-decoration:none}
 
 @media(max-width:760px){
   .claim .claim-in{flex-wrap:wrap;gap:14px}
-  .claim-txt{flex-basis:100%;font-size:1.9rem}
-  .claim-logo{height:32px}
+  .claim-txt{flex-basis:100%;white-space:normal;font-size:1.6rem}
+  .claim-logo{height:30px}
   .claim-kreska{display:none}
 }
 @media(prefers-reduced-motion:reduce){
@@ -410,15 +410,11 @@ a{color:inherit;text-decoration:none}
   transition:transform 1s var(--rev),opacity .22s var(--rev);min-height:100svh;display:flex;flex-direction:column;
   justify-content:flex-end;align-items:flex-end;width:var(--nav-w);max-width:100%;margin:0 auto;
   padding:0 24px clamp(2.4rem,5vw,3.6rem);pointer-events:none}
-.hero-copy>*{width:min(30rem,100%)}
+.hero-copy>*{width:min(41rem,100%)}
 .hero.morphed .hero-copy{opacity:0;transform:translateY(-64px)}
-.hero-copy h1{margin:0;font-size:clamp(2.3rem,5vw,4.1rem);line-height:1.04;
-  letter-spacing:-.03em;font-weight:500}
-.hero-copy p{margin:1rem 0 0;max-width:46ch;font-size:1.02rem;color:rgba(255,255,255,.8)}
-.hero-hint{margin-top:1.6rem;display:inline-flex;align-items:center;gap:9px;
-  font-family:ui-monospace,Menlo,monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;
-  color:rgba(255,255,255,.6)}
-.hero-hint span{width:11px;height:11px;border-radius:3px;border:1px solid rgba(255,255,255,.6)}
+.hero-copy h1{margin:0;font-size:clamp(2.6rem,6.1vw,5.5rem);line-height:1.0;
+  letter-spacing:-.0238em;font-weight:500}
+.hero-copy p{margin:1.3rem 0 0;max-width:400px;font-size:18px;line-height:24px;color:rgba(255,255,255,.86)}
 
 @media(max-width:900px){
   .hero{--cw:min(280px,64vw)}
@@ -607,22 +603,30 @@ h2{margin:0;font-size:clamp(2.1rem,4.6vw,3.6rem);line-height:1.05;letter-spacing
 /* --- zespół ------------------------------------------------------------- */
 
 /* --- FAQ ---------------------------------------------------------------- */
-.faq{margin-top:clamp(2.5rem,5vw,4rem);display:grid;gap:10px;max-width:860px}
-.qa{background:rgba(10,10,10,.045);border-radius:18px}
-.q{width:100%;min-height:74px;padding:20px 22px;display:flex;align-items:center;justify-content:space-between;gap:20px;
+/* FAQ 1:1 z revolut.com/esim: wyśrodkowany nagłówek 51,79/500, wiersze
+   1000 px z pytaniem 24/500 i kółkiem +/− po prawej, włosowa linia pod spodem */
+.faq-sec{background:#fff;color:#0A0A0A}
+.faq-head{text-align:center}
+.faq-head h2{margin:0 auto;max-width:none;font-size:clamp(2.1rem,3.6vw,3.24rem);
+  line-height:1.0;letter-spacing:-.0116em;font-weight:500}
+.faq{margin-top:clamp(2.4rem,5vw,3.6rem);max-width:1000px;margin-inline:auto}
+.qa{border-bottom:1px solid rgba(10,10,10,.16)}
+.q{width:100%;min-height:80px;padding:24px 0;display:flex;align-items:center;justify-content:space-between;gap:24px;
   background:none;border:0;cursor:pointer;font:inherit;text-align:left;color:inherit;
-  font-size:clamp(1.02rem,1.7vw,1.2rem);font-weight:600;letter-spacing:-.02em}
-.q:focus-visible{outline:2px solid #0B6B36;outline-offset:-3px;border-radius:18px}
-.q i{flex:none;width:26px;height:26px;position:relative;transition:transform .5s var(--ease)}
-.q i::before,.q i::after{content:"";position:absolute;top:50%;left:50%;background:#0A0A0A;border-radius:2px}
-.q i::before{width:15px;height:2px;margin:-1px 0 0 -7.5px}
-.q i::after{width:2px;height:15px;margin:-7.5px 0 0 -1px;transition:opacity .4s var(--ease)}
-.qa.on .q i{transform:rotate(90deg)}
+  font-size:clamp(1.15rem,1.7vw,1.5rem);line-height:1.17;font-weight:500;letter-spacing:-.01em}
+.q:focus-visible{outline:2px solid #0A0A0A;outline-offset:-3px}
+.q i{flex:none;width:26px;height:26px;position:relative;border-radius:50%;background:#0A0A0A;
+  transition:background-color .3s var(--ease)}
+.q i::before,.q i::after{content:"";position:absolute;top:50%;left:50%;background:#fff;border-radius:1px}
+.q i::before{width:12px;height:2px;margin:-1px 0 0 -6px}
+.q i::after{width:2px;height:12px;margin:-6px 0 0 -1px;transition:opacity .35s var(--ease)}
+.qa.on .q i{background:rgba(10,10,10,.42)}
 .qa.on .q i::after{opacity:0}
 .a{display:grid;grid-template-rows:0fr;transition:grid-template-rows .55s var(--ease)}
 .qa.on .a{grid-template-rows:1fr}
 .a>div{overflow:hidden;min-height:0}
-.a p{margin:0;padding:0 22px 22px;font-size:1rem;line-height:1.6;color:var(--muted-d);max-width:60ch}
+.a p{margin:0;padding:0 60px 26px 0;font-size:15px;line-height:22px;color:var(--muted-d);max-width:92ch}
+.faq-stopka{margin:2.2rem auto 0;max-width:1000px;font-size:15px;line-height:22px;color:var(--muted-d)}
 
 /* --- CTA + stopka ------------------------------------------------------- */
 .end h2{max-width:14ch}
@@ -701,8 +705,7 @@ footer.site img{height:26px}
     <div class="hero-copy">
       <h1>Znamy te stawy z boiska, nie z podręcznika</h1>
       <p>Ortopedia, medycyna sportowa i rehabilitacja prowadzone przez sztab medyczny Legii Warszawa.</p>
-      <span class="hero-hint"><span></span>Najedź na staw</span>
-    </div>
+      </div>
   </header>
 
     <div class="deal-head">
@@ -1157,12 +1160,10 @@ footer.site img{height:26px}
   </div>
 </dialog>
 
-<section class="sec light dotted" id="faq">
+<section class="sec faq-sec" id="faq">
   <div class="wrap">
-    <div class="rv">
-      <span class="eyebrow">FAQ</span>
+    <div class="faq-head rv">
       <h2>Najczęstsze pytania</h2>
-      <p class="lead">A jeśli czegoś tu brakuje, koordynator odbiera telefon w dni robocze 8:00–20:00.</p>
     </div>
     <div class="faq">
         <div class="qa">

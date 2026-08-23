@@ -177,6 +177,35 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
   console.log(`${w}×${h} pierścień`, rOk ? 'ok' : 'BŁĄD ' + JSON.stringify({ ring, rozwija }));
   if (!rOk) process.exitCode = 1;
 
+  // --- FAQ 1:1 z revolut.com ----------------------------------------------
+  await p.evaluate(() => document.querySelector('#faq').scrollIntoView({ block: 'start' }));
+  await new Promise(r => setTimeout(r, 700));
+  await p.click('#faq .q');
+  await new Promise(r => setTimeout(r, 800));
+  const faq = await p.evaluate(() => {
+    const h = getComputedStyle(document.querySelector('.faq-head h2'));
+    const q = getComputedStyle(document.querySelector('.q'));
+    const wiersz = document.querySelector('.qa');
+    const odp = document.querySelector('.qa.on .a');
+    return {
+      // zmierzone u nich: nagłówek 51,79/500 wyśrodkowany, pytanie 24/500, tor 1000 px
+      // rozmiary referencyjne dotyczą 1440 — niżej mają prawo maleć
+      naglowek: h.fontWeight === '500' && h.textAlign === 'center'
+             && (innerWidth < 1300 || Math.abs(parseFloat(h.fontSize) - 51.79) < 6),
+      pytanie: q.fontWeight === '500'
+            && (innerWidth < 1300 || Math.abs(parseFloat(q.fontSize) - 24) < 3),
+      tor: Math.abs(document.querySelector('.faq').getBoundingClientRect().width - 1000) < 40
+        || innerWidth < 1100,
+      wloskowaLinia: getComputedStyle(wiersz).borderBottomWidth === '1px',
+      rozwija: odp && odp.getBoundingClientRect().height > 20,
+      // otwarty wiersz to minus, nie obrócony plus
+      minus: getComputedStyle(document.querySelector('.qa.on .q i')).transform === 'none',
+    };
+  });
+  const fOk = faq.naglowek && faq.pytanie && faq.tor && faq.wloskowaLinia && faq.rozwija && faq.minus;
+  console.log(`${w}×${h} FAQ`, fOk ? 'ok' : 'BŁĄD ' + JSON.stringify(faq));
+  if (!fOk) process.exitCode = 1;
+
   // --- odsłanianie tekstu znak po znaku ------------------------------------
   await p.evaluate(() => document.querySelector('.claim').scrollIntoView({ block: 'center' }));
   await new Promise(r => setTimeout(r, 1800));
@@ -195,14 +224,20 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
       naMiejscu: znaki.every(c => Math.abs(new DOMMatrix(getComputedStyle(c).transform).f) < 0.5),
       // sygnatura: duża, dosunięta do lewej, do dwóch wierszy
       doLewej: document.querySelector('.claim-in').getBoundingClientRect().left < 80,
-      duza: parseFloat(getComputedStyle(el).fontSize) >= 30,
+      // jedna linia na całą szerokość — rozmiar musi ustąpić na wąskim oknie
+      duza: parseFloat(getComputedStyle(el).fontSize) >= (innerWidth >= 1200 ? 38 : 22),
+      jednaLinia: innerWidth < 761 || el.getBoundingClientRect().height
+                  < parseFloat(getComputedStyle(el).fontSize) * 1.6,
+      naCalosc: (() => { const t = el.getBoundingClientRect(),
+        c = document.querySelector('.claim-in').getBoundingClientRect();
+        return innerWidth < 761 || t.right > c.right - 90; })(),
       wKadrze: (() => { const t = el.getBoundingClientRect(),
         c = document.querySelector('.claim-in').getBoundingClientRect();
         return t.left >= c.left - 1 && t.right <= c.right + 1; })(),
     };
   });
   const revOk = rev.podzielone && rev.trescCala && rev.bezLamaniaSlow && rev.pokazane
-           && rev.naMiejscu && rev.doLewej && rev.duza && rev.wKadrze;
+           && rev.naMiejscu && rev.doLewej && rev.duza && rev.jednaLinia && rev.naCalosc && rev.wKadrze;
   console.log(`${w}×${h} odsłanianie`, revOk ? 'ok' : 'BŁĄD ' + JSON.stringify(rev));
   if (!revOk) process.exitCode = 1;
 
