@@ -159,7 +159,8 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
     await new Promise(r => setTimeout(r, 900));
     rozwija = await p.evaluate(() => {
       const k = document.querySelector('.krag');
-      return k.getBoundingClientRect().width > 180
+      const dh = parseFloat(getComputedStyle(document.querySelector('.ring')).getPropertyValue('--dh'));
+      return k.getBoundingClientRect().width > dh - 6
           && +getComputedStyle(k.querySelector('.krag-txt')).opacity > 0.9;
     });
   }

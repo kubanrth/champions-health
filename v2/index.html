@@ -212,7 +212,7 @@ a{color:inherit;text-decoration:none}
 .ring{--d:132px;--dh:212px;--rev:cubic-bezier(.35,0,0,1);
   position:relative;min-height:100svh;overflow:hidden;background:#07100C;isolation:isolate}
 .ring-bg{position:absolute;inset:0;z-index:0;width:100%;height:100%;
-  object-fit:cover;object-position:62% 50%}
+  object-fit:cover;object-position:50% 50%}
 .ring::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
   background:linear-gradient(100deg,rgba(7,16,12,.94) 0%,rgba(7,16,12,.72) 30%,rgba(7,16,12,.1) 58%,rgba(7,16,12,0) 78%)}
 .ring-lines{position:absolute;inset:0;z-index:2;pointer-events:none;overflow:visible}
@@ -222,12 +222,9 @@ a{color:inherit;text-decoration:none}
 
 .ring-copy{position:relative;z-index:3;width:min(var(--nav-w),100%);margin:0 auto;
   padding:clamp(4rem,11svh,7.5rem) 24px}
-.ring-copy>*{max-width:24rem}
-.ring-copy h2{margin:.6rem 0 0}
-.ring-hint{margin-top:1.8rem;display:inline-flex;align-items:center;gap:9px;
-  font-family:ui-monospace,Menlo,monospace;font-size:11px;letter-spacing:.16em;
-  text-transform:uppercase;color:rgba(255,255,255,.55)}
-.ring-hint span{width:11px;height:11px;border-radius:50%;border:1px solid rgba(255,255,255,.55)}
+.ring-copy h2{max-width:12ch;font-size:clamp(3rem,7vw,6rem);line-height:1.02;
+  letter-spacing:-.04em;font-weight:600}
+.ring-copy .lead{max-width:26rem}
 
 /* krąg */
 .krag{position:absolute;z-index:4;width:var(--d);height:var(--d);
@@ -261,7 +258,6 @@ a{color:inherit;text-decoration:none}
   .ring{min-height:0;display:flex;flex-direction:column}
   .ring-copy{order:-1;padding-bottom:2rem}
   .ring-copy>*{max-width:none}
-  .ring-hint{display:none}
   .ring-bg{position:relative;height:46svh}
   .ring-lines{display:none}
   .ring::after{background:linear-gradient(to bottom,rgba(7,16,12,.55),rgba(7,16,12,.1) 40%,rgba(7,16,12,.9))}
@@ -273,6 +269,15 @@ a{color:inherit;text-decoration:none}
   .krag-n{grid-row:span 2;padding-top:3px}
   .krag-txt{max-width:none;opacity:1;max-height:none}
   .krag:hover,.krag.on{width:auto;height:auto;background:rgba(7,16,12,.52);border-color:rgba(255,255,255,.62)}
+}
+/* niskie okno: mniej miejsca w pionie — mniejszy nagłówek i mniejsze kręgi,
+   inaczej powiększony krąg wchodzi w wielki napis */
+@media(max-height:820px){
+  .ring{--d:112px;--dh:176px}
+  .ring-copy{padding-block:clamp(2.6rem,7svh,5rem)}
+  .ring-copy h2{font-size:clamp(2.4rem,5.4vw,4rem)}
+  .krag-lab{font-size:14px}
+  .krag-txt{font-size:11px}
 }
 @media(prefers-reduced-motion:reduce){
   .ring-lines circle,.krag{transition:none}
@@ -469,14 +474,8 @@ a{color:inherit;text-decoration:none}
   line-height:1.06;letter-spacing:-.035em;font-weight:600;color:#0A0A0A;text-wrap:balance}
 .deal-head p{margin:.85rem auto 0;max-width:58ch;font-size:clamp(.98rem,1.3vw,1.18rem);
   line-height:1.5;color:var(--muted-d)}
-.deal-cta{margin-top:1.3rem;display:inline-flex;align-items:center;height:48px;padding:0 22px;
-  border-radius:999px;background:#111;color:#fff;font-size:16px;font-weight:600;
-  transition:transform .35s var(--ease),background-color .35s var(--ease)}
-.deal-cta:hover{transform:translateY(-2px);background:#000}
-.deal-cta:focus-visible{outline:2px solid #0A0A0A;outline-offset:3px}
 @media(max-height:820px){
   .deal-head p{max-width:52ch;font-size:.95rem}
-  .deal-cta{margin-top:.9rem;height:42px}
   .deal-head h2{font-size:clamp(1.7rem,3.4vw,2.6rem)}
   .deal{--dch:clamp(300px,46svh,420px)}
   .card-in h3{font-size:clamp(26px,3vw,36px)}
@@ -488,10 +487,9 @@ a{color:inherit;text-decoration:none}
 /* liquid glass: mleczne szkło z rozmyciem tła, jasną obwódką i blikiem u góry */
 .deal-arrow{position:absolute;top:55%;transform:translateY(-50%);width:56px;height:56px;
   border-radius:50%;cursor:pointer;pointer-events:auto;
-  border:1px solid rgba(255,255,255,.65);background:rgba(255,255,255,.28);
+  border:0;background:rgba(255,255,255,.3);
   -webkit-backdrop-filter:blur(18px) saturate(1.5);backdrop-filter:blur(18px) saturate(1.5);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.75),inset 0 -8px 16px rgba(255,255,255,.18),
-             0 10px 28px -10px rgba(0,0,0,.35);
+  box-shadow:inset 0 10px 20px rgba(255,255,255,.16),0 10px 28px -10px rgba(0,0,0,.3);
   color:#0A0A0A;font-size:24px;line-height:1;display:grid;place-items:center;
   transition:background-color .3s var(--ease),transform .3s var(--ease)}
 [data-deal-prev]{left:clamp(14px,2.6vw,44px)}
@@ -530,6 +528,13 @@ a{color:inherit;text-decoration:none}
   opacity:0;transform:translateY(8px);
   transition:opacity .45s var(--ease),transform .45s var(--ease)}
 .card.focus .card-txt{opacity:1;transform:none}
+.card-cta{margin-top:16px;display:inline-flex;align-items:center;height:44px;padding:0 20px;
+  border-radius:999px;background:#fff;color:#000;font-size:15px;font-weight:600;
+  opacity:0;transform:translateY(8px);
+  transition:opacity .45s var(--ease) .06s,transform .45s var(--ease) .06s,background-color .3s var(--ease)}
+.card.focus .card-cta,.morph-in .card-cta{opacity:1;transform:none}
+.card-cta:hover{background:#E9E9E6}
+.card-cta:focus-visible{outline:2px solid #fff;outline-offset:3px}
 .card{cursor:pointer}
 /* brakujące zdjęcie — świadomie widoczne, nie zapychamy stockiem */
 .card.nofoto{background:
@@ -650,6 +655,7 @@ footer.site img{height:26px}
       <span class="card-lab">01 / Prowadzenie</span>
       <h3>Medycyna sportowa</h3>
       <span class="card-txt">Badania kwalifikacyjne, prowadzenie przez cały sezon i decyzje o powrocie do gry — te same standardy, którymi prowadzimy pierwszą drużynę.</span>
+          <a class="card-cta" href="#kontakt">Umów wizytę</a>
     </div>
     </div>
   
@@ -696,7 +702,6 @@ footer.site img{height:26px}
       <p>Zapraszamy do Champions Health — miejsca, w którym wiedza i standard pracy
         profesjonalnego klubu sportowego są dostępne dla każdego. Niezależnie od tego,
         czy jesteś zawodowcem, czy ambitnym amatorem.</p>
-      <a class="deal-cta" href="#kontakt">Umów wizytę</a>
     </div>
     <div class="deal-arrows">
       <button class="deal-arrow" data-deal-prev aria-label="Poprzednia karta">‹</button>
@@ -709,6 +714,7 @@ footer.site img{height:26px}
           <span class="card-lab">01 / Prowadzenie</span>
           <h3>Medycyna sportowa</h3>
           <span class="card-txt">Badania kwalifikacyjne, prowadzenie przez cały sezon i decyzje o powrocie do gry — te same standardy, którymi prowadzimy pierwszą drużynę.</span>
+          <a class="card-cta" href="#kontakt">Umów wizytę</a>
         </div>
       </article>
       <article class="card" data-card>
@@ -717,6 +723,7 @@ footer.site img{height:26px}
           <span class="card-lab">02 / Diagnostyka</span>
           <h3>Ortopedia</h3>
           <span class="card-txt">Konsultacje ortopedyczne z diagnostyką obrazową na miejscu. USG i RTG bez zewnętrznej rejestracji, decyzja o ścieżce leczenia od razu.</span>
+          <a class="card-cta" href="#kontakt">Umów wizytę</a>
         </div>
       </article>
       <article class="card" data-card>
@@ -725,6 +732,7 @@ footer.site img{height:26px}
           <span class="card-lab">03 / Powrót do sprawności</span>
           <h3>Fizjoterapia i rehabilitacja</h3>
           <span class="card-txt">Protokoły powrotu po urazie, którymi na co dzień prowadzimy zawodników. Praca 1:1 i kryteria progresu zamiast kalendarza.</span>
+          <a class="card-cta" href="#kontakt">Umów wizytę</a>
         </div>
       </article>
             <article class="card" data-card>
@@ -733,6 +741,7 @@ footer.site img{height:26px}
           <span class="card-lab">04 / Żywienie</span>
           <h3>Dietetyka i suplementacja</h3>
           <span class="card-txt">Analiza składu ciała i plan żywienia pod cel — masa, redukcja, wydolność. Suplementacja tylko tam, gdzie ma sens.</span>
+          <a class="card-cta" href="#kontakt">Umów wizytę</a>
         </div>
       </article>
       <article class="card" data-card>
@@ -741,6 +750,7 @@ footer.site img{height:26px}
           <span class="card-lab">05 / Motoryka</span>
           <h3>Trening merytoryczny</h3>
           <span class="card-txt">Motoryka, siła i profilaktyka urazów pod okiem trenerów przygotowania. Testy wydolnościowe i plan na cały sezon.</span>
+          <a class="card-cta" href="#kontakt">Umów wizytę</a>
         </div>
       </article>
       <article class="card" data-card>
@@ -749,6 +759,7 @@ footer.site img{height:26px}
           <span class="card-lab">06 / Wiedza</span>
           <h3>Edukacja i szkolenie</h3>
           <span class="card-txt">Warsztaty i szkolenia dla klubów oraz trenerów. Wiedza sztabu pierwszej drużyny dostępna dla akademii i amatorów.</span>
+          <a class="card-cta" href="#kontakt">Umów wizytę</a>
         </div>
       </article>
     </div>
@@ -878,44 +889,42 @@ footer.site img{height:26px}
 </script>
 
 <section class="ring" id="sciezka">
-  <img class="ring-bg" src="img/hero-legia.png" alt="Zawodnik Legii Warszawa rozciągający przedramię">
+  <img class="ring-bg" src="img/ring-banner.png" alt="Zawodnik Legii Warszawa rozciągający ramię przed treningiem">
   <svg class="ring-lines" aria-hidden="true"></svg>
-  <button class="krag" data-krag data-ix="49" data-iy="46.3" style="--i:0"
+  <button class="krag" data-krag data-ix="44" data-iy="52" style="--i:0"
           aria-label="Koordynator: Jeden opiekun pacjenta planuje, umawia i pilnuje terminów. Nie odbijasz się między rejestracjami.">
     <span class="krag-n">01</span>
     <span class="krag-lab">Koordynator</span>
     <span class="krag-txt">Jeden opiekun pacjenta planuje, umawia i pilnuje terminów. Nie odbijasz się między rejestracjami.</span>
   </button>
-  <button class="krag" data-krag data-ix="67" data-iy="28.8" style="--i:1"
+  <button class="krag" data-krag data-ix="62" data-iy="36" style="--i:1"
           aria-label="Diagnoza: Wywiad, badanie, diagnostyka obrazowa i funkcjonalna, decyzja o ścieżce leczenia.">
     <span class="krag-n">02</span>
     <span class="krag-lab">Diagnoza</span>
     <span class="krag-txt">Wywiad, badanie, diagnostyka obrazowa i funkcjonalna, decyzja o ścieżce leczenia.</span>
   </button>
-  <button class="krag" data-krag data-ix="85" data-iy="46.3" style="--i:2"
+  <button class="krag" data-krag data-ix="80" data-iy="52" style="--i:2"
           aria-label="Realizacja: Leczenie i rehabilitacja u nas, zabiegi u partnerów. Informacja idzie za Tobą.">
     <span class="krag-n">03</span>
     <span class="krag-lab">Realizacja</span>
     <span class="krag-txt">Leczenie i rehabilitacja u nas, zabiegi u partnerów. Informacja idzie za Tobą.</span>
   </button>
-  <button class="krag" data-krag data-ix="85" data-iy="81.3" style="--i:3"
+  <button class="krag" data-krag data-ix="80" data-iy="86" style="--i:3"
           aria-label="Testy kontrolne: Obiektywne kryteria progresu i gotowości do powrotu — liczby, nie przeczucie.">
     <span class="krag-n">04</span>
     <span class="krag-lab">Testy kontrolne</span>
     <span class="krag-txt">Obiektywne kryteria progresu i gotowości do powrotu — liczby, nie przeczucie.</span>
   </button>
-  <button class="krag" data-krag data-ix="49" data-iy="81.3" style="--i:4"
+  <button class="krag" data-krag data-ix="44" data-iy="86" style="--i:4"
           aria-label="Profilaktyka: Zalecenia treningowe, praca nad motoryką i kontrole okresowe.">
     <span class="krag-n">05</span>
     <span class="krag-lab">Profilaktyka</span>
     <span class="krag-txt">Zalecenia treningowe, praca nad motoryką i kontrole okresowe.</span>
   </button>
   <div class="ring-copy">
-    <span class="eyebrow">Jak to działa</span>
     <h2>Jak pomagamy?</h2>
     <p class="lead">Jeden zespół prowadzi Cię od diagnozy do pełnych obciążeń —
       bez odsyłania na zewnątrz i tłumaczenia wszystkiego od nowa.</p>
-    <span class="ring-hint"><span></span>Najedź na krok</span>
   </div>
 </section>
 
@@ -1420,7 +1429,7 @@ footer.site img{height:26px}
   if (!sec) return;
   const svg = sec.querySelector('.ring-lines');
   const kregi = [...sec.querySelectorAll('[data-krag]')];
-  const IW = 1344, IH = 768;                       // hero-legia.png
+  const IW = 2000, IH = 1125;                      // ring-banner.png
   const NS = 'http://www.w3.org/2000/svg';
 
   const pierscien = matchMedia('(min-width:901px)');
