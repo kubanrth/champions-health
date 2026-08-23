@@ -109,22 +109,23 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
     const czekaj = ms => new Promise(r => setTimeout(r, ms));
     sec.__doKarty(2); await czekaj(1500);
     const skok = focus();
-    document.querySelector('[data-deal-next]').click(); await czekaj(1400);
+    // strzałki usunięte — nawigacja to klik w kartę i scroll
+    [...document.querySelectorAll('[data-card]')][3].click(); await czekaj(1400);
     const poNext = focus();
-    document.querySelector('[data-deal-prev]').click(); await czekaj(1400);
+    [...document.querySelectorAll('[data-card]')][2].click(); await czekaj(1400);
     const poPrev = focus();
     const wFokusie = [...document.querySelectorAll('[data-card]')][poPrev];
-    // strzałka nie może być przykryta kartami — sprawdzamy realny cel kliknięcia
-    const sd = document.querySelector('[data-deal-next]').getBoundingClientRect();
-    const cel = document.elementFromPoint(sd.left + sd.width / 2, sd.top + sd.height / 2);
-    const strzalkaKlikalna = cel === document.querySelector('[data-deal-next]') || cel?.closest('[data-deal-next]');
+    // karta w fokusie musi dać się kliknąć — to jedyna nawigacja po usunięciu strzałek
+    const kb = wFokusie.getBoundingClientRect();
+    const cel = document.elementFromPoint(kb.left + kb.width / 2, kb.top + kb.height / 2);
+    const strzalkaKlikalna = !!cel?.closest('[data-card]');
     const txt = wFokusie.querySelector('.card-txt');
-    return { skok, poNext, poPrev, strzalkaKlikalna: !!strzalkaKlikalna,
+    return { skok, poNext, poPrev, kartaKlikalna: !!strzalkaKlikalna,
       tekstWidoczny: +getComputedStyle(txt).opacity > 0.9,
       tekstNiepusty: txt.textContent.trim().length > 60 };
   });
   const tOk = talia.skok === 2 && talia.poNext === 3 && talia.poPrev === 2
-           && talia.tekstWidoczny && talia.tekstNiepusty && talia.strzalkaKlikalna;
+           && talia.tekstWidoczny && talia.tekstNiepusty && talia.kartaKlikalna;
   console.log(`${w}×${h} talia`, tOk ? 'ok' : 'BŁĄD ' + JSON.stringify(talia));
   if (!tOk) process.exitCode = 1;
   await p.evaluate(() => window.scrollTo(0, 150));

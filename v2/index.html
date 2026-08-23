@@ -511,22 +511,6 @@ a{color:inherit;text-decoration:none}
   .card-in h3{font-size:clamp(26px,3vw,36px)}
   .card-txt{font-size:13px}
 }
-.deal-arrows{position:absolute;inset:0;z-index:120;pointer-events:none;
-  opacity:0;transition:opacity .6s var(--rev) .3s}
-.deal.rozwiniete .deal-arrows{opacity:1}
-/* liquid glass: mleczne szkło z rozmyciem tła, jasną obwódką i blikiem u góry */
-.deal-arrow{position:absolute;top:55%;transform:translateY(-50%);width:56px;height:56px;
-  border-radius:50%;cursor:pointer;pointer-events:auto;
-  border:0;background:rgba(255,255,255,.3);
-  -webkit-backdrop-filter:blur(18px) saturate(1.5);backdrop-filter:blur(18px) saturate(1.5);
-  box-shadow:inset 0 10px 20px rgba(255,255,255,.16),0 10px 28px -10px rgba(0,0,0,.3);
-  color:#0A0A0A;font-size:24px;line-height:1;display:grid;place-items:center;
-  transition:background-color .3s var(--ease),transform .3s var(--ease)}
-[data-deal-prev]{left:clamp(14px,2.6vw,44px)}
-[data-deal-next]{right:clamp(14px,2.6vw,44px)}
-.deal-arrow:hover{background:rgba(255,255,255,.5);transform:translateY(-50%) scale(1.06)}
-.deal-arrow:active{transform:translateY(-50%) scale(.97)}
-.deal-arrow:focus-visible{outline:2px solid #0A0A0A;outline-offset:3px}
 .deal{--rev:cubic-bezier(.35,0,0,1);--dcw:min(78vw,1040px);--dch:clamp(380px,56svh,560px)}
 /* poziomy slider: tor na transformie, pionowy scroll przesuwa go w lewo;
    padding-inline centruje pierwszą i ostatnią kartę w kadrze */
@@ -788,10 +772,6 @@ footer.site img{height:26px}
       <p>Zbadaj, wylecz i wróć do formy w jednym miejscu — z zespołem, który na co
         dzień prowadzi zawodowców.</p>
     </div>
-    <div class="deal-arrows">
-      <button class="deal-arrow" data-deal-prev aria-label="Poprzednia karta">‹</button>
-      <button class="deal-arrow" data-deal-next aria-label="Następna karta">›</button>
-    </div>
     <div class="deal-track" data-track>
       <article class="card" data-card>
         <img src="img/sprint-sharp.png" alt="Medycyna sportowa" style="object-position:38% 40%">
@@ -930,9 +910,6 @@ footer.site img{height:26px}
     const top = sec.getBoundingClientRect().top + scrollY + wstep + (i / (N - 1)) * span;
     window.scrollTo({ top: Math.ceil(top) + 1, behavior: 'smooth' });
   };
-  const biezaca = () => Math.round(postep() * (N - 1));
-  document.querySelector('[data-deal-prev]')?.addEventListener('click', () => doKarty(biezaca() - 1));
-  document.querySelector('[data-deal-next]')?.addEventListener('click', () => doKarty(biezaca() + 1));
   cards.forEach((c, i) => c.addEventListener('click', () => doKarty(i)));
   sec.__doKarty = doKarty;
 
