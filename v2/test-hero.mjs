@@ -78,10 +78,13 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
     const czasy = Object.fromEntries(log);
     const kopia = await q.evaluate(() => {
       const c = document.querySelector('.hero-copy');
-      const r = c.getBoundingClientRect();
+      // ramka sięga teraz aż do kreski (tekst z niej wyjeżdża),
+      // więc położenie mierzymy po samym nagłówku, nie po ramce
+      const g = c.querySelector('h1');
+      const r = g.getBoundingClientRect();
       const bk = document.querySelector('.j-lokiec').getBoundingClientRect();
       const H = document.querySelector('.hero').getBoundingClientRect();
-      return { widoczna: +getComputedStyle(c).opacity > 0.9,
+      return { widoczna: +getComputedStyle(g).opacity > 0.9,
         nadBarkiem: r.bottom <= bk.top + 2,
         start: window.__start, wtedy: window.__wtedy,
         // nagłówek czyta się bez przyciemnienia TYLKO dlatego, że stoi
@@ -95,7 +98,10 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
         kropekWidocznych: [...document.querySelectorAll('.jt')]
           .filter(j => +getComputedStyle(j).opacity > .5).length,
         wKadrze: r.top >= -1 && r.right <= H.width + 1,
-        tekst: c.querySelector('h1').textContent.trim() };
+        wierszy: Math.round(r.height / parseFloat(getComputedStyle(g).lineHeight)),
+        // tekst ląduje wyraźnie nad kreską i z niej wyjeżdża
+        luz: bk.top - r.bottom,
+        tekst: g.textContent.trim() };
     });
     const wOk = (h > 800 || w > 800)
       // kolejność zapalania: kostka → kolano → biodro → bark
@@ -115,7 +121,8 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
       // na końcu zostają same kropki
       && kopia.kreskaZnikla && kopia.kropekWidocznych === 4
       && kopia.widoczna && kopia.nadBarkiem && kopia.wKadrze
-      && (w < 900 || kopia.wKolumnie) && kopia.bezPrzyciemnienia
+      && (w < 900 || (kopia.wKolumnie && kopia.wierszy === 2 && kopia.luz > 100))
+      && kopia.bezPrzyciemnienia
       && /Kontuzje/.test(kopia.tekst);
     console.log(`${w}×${h} wjazd hero`, wOk ? 'ok' : 'BŁĄD ' + JSON.stringify({ kolej, czasy, kopia }));
     if (!wOk) process.exitCode = 1;

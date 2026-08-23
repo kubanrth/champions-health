@@ -6,6 +6,7 @@
 // w poziomie, obecność wszystkich sekcji, dojście linków do rodzeństwa, kontrast
 // tekstu na szkle oraz to, że wjazd sekcji faktycznie odsłania treść.
 import puppeteer from 'puppeteer';
+import { PNG } from 'pngjs';
 import { readFileSync, existsSync, mkdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -18,15 +19,26 @@ const KAT = join(tu, '../../../..', 'temporary screenshots');
 let bledy = 0;
 const zle = (co, szcz) => { console.log('  BŁĄD ' + co, szcz ?? ''); bledy++; };
 
-// względna luminancja wg WCAG
-const kontrast = (a, b) => {
-  const L = c => {
-    const [r, g, bl] = c.match(/\d+(\.\d+)?/g).slice(0, 3).map(v => {
-      const s = v / 255; return s <= .03928 ? s / 12.92 : ((s + .055) / 1.055) ** 2.4;
-    });
-    return .2126 * r + .7152 * g + .0722 * bl;
-  };
-  const [x, y] = [L(a), L(b)].sort((p, q) => q - p);
+// Kontrast wg WCAG. Tekst na tej stronie jest półprzezroczysty
+// (rgba(11,13,12,.72)), więc trzeba go najpierw NAŁOŻYĆ na tło — liczenie
+// z samych składowych RGB z pominięciem alfy zawyża wynik prawie dwukrotnie
+// i przepuściłoby napis, który realnie nie przechodzi progu.
+const rozbij = c => {
+  const n = c.match(/[\d.]+/g).map(Number);
+  return { r: n[0], g: n[1], b: n[2], a: n.length > 3 ? n[3] : 1 };
+};
+const nalozony = (przod, tlo) => {
+  const f = rozbij(przod), t = rozbij(tlo);
+  return { r: f.r * f.a + t.r * (1 - f.a),
+           g: f.g * f.a + t.g * (1 - f.a),
+           b: f.b * f.a + t.b * (1 - f.a) };
+};
+const lum = ({ r, g, b }) => {
+  const k = v => { const s = v / 255; return s <= .03928 ? s / 12.92 : ((s + .055) / 1.055) ** 2.4; };
+  return .2126 * k(r) + .7152 * k(g) + .0722 * k(b);
+};
+const kontrast = (przod, tlo) => {
+  const [x, y] = [lum(nalozony(przod, tlo)), lum(rozbij(tlo))].sort((p, q) => q - p);
   return (x + .05) / (y + .05);
 };
 
@@ -95,8 +107,12 @@ for (const u of uslugi) {
 
     // kontrast liczymy raz — na szkle tło elementu jest półprzezroczyste, więc
     // realnym tłem jest czerń strony; bierzemy ostrzejszy z dwóch wariantów
+    // Tło kafla jest półprzezroczyste, więc realnym podłożem jest korpus strony.
+    // Bierzemy ostrzejszy z dwóch wariantów: czysty korpus i korpus przygaszony
+    // kropką rastra — kropki są rozsiane po całej stronie i mogą wypaść pod tekstem.
     if (w === 1440 && r.para) {
-      const k = Math.min(kontrast(r.para[0], 'rgb(5,7,6)'), kontrast(r.para[0], 'rgb(28,30,29)'));
+      const podklad = t => `rgb(${[.72 * 255 + .28 * t, .72 * 255 + .28 * t, .72 * 255 + .28 * t]})`;
+      const k = Math.min(kontrast(r.para[0], podklad(245)), kontrast(r.para[0], podklad(222)));
       if (k < 4.5) zle(`kontrast opisu kafla ${k.toFixed(2)}:1`);
       else console.log(`  kontrast opisu kafla ${k.toFixed(2)}:1`);
     }
@@ -108,6 +124,88 @@ for (const u of uslugi) {
     console.log(`  ${w}×${h} ${bledy ? '' : 'ok'}`);
     await p.close();
   }
+}
+
+// --- kontrast: mierzony na pikselach, nie szacowany -----------------------
+// Sześć podstron dzieli jeden szablon, więc kolory i tła są identyczne —
+// pełny przemiar leci raz, na jednej stronie. Metoda: chowamy SAM TEKST
+// (`color:transparent`, NIE `visibility:hidden` — to schowałoby też tło
+// elementu i mierzylibyśmy goły korpus strony), robimy zrzut kadru i czytamy
+// realne piksele pod napisem. Zrzut musi być kadrem viewportu, nie `fullPage`:
+// poświaty i raster są `position:fixed`, więc w pełnym zrzucie malują się
+// tylko na górze i niżej wyszłoby tło JAŚNIEJSZE, niż jest naprawdę.
+console.log('\n— kontrast tekstu (piksele, ortopedia @1440)');
+{
+  const ROLE = [
+    ['.pg-lead', 'lead heroju'], ['.kick', 'pigułka działu'],
+    ['.kafel p', 'opis kafla'], ['.kafel i', 'numer kafla'],
+    ['.fakty dt', 'etykieta faktu'], ['.fakty dd', 'wartość faktu'],
+    ['.proza p', 'proza'], ['.dla-kogo li', 'punkt „dla kogo"'],
+    ['.krok b', 'numer kroku'], ['.krok p', 'opis kroku'],
+    ['.kont-in p', 'lead kontaktu'], ['.kont-karta dt', 'etykieta kontaktu'],
+    ['.kont-karta dd', 'dana kontaktowa'],
+    ['.inna em', 'dział na kaflu usługi'], ['footer.site span', 'stopka'],
+  ];
+  const p = await przegladarka.newPage();
+  await p.setViewport({ width: 1440, height: 900, deviceScaleFactor: 1 });
+  await p.goto(BAZA + 'ortopedia.html', { waitUntil: 'networkidle2' });
+  await p.evaluate(async () => {
+    const k = Math.round(innerHeight * .8);
+    for (let y = 0; y < document.body.scrollHeight; y += k) {
+      scrollTo({ top: y, behavior: 'instant' }); await new Promise(r => setTimeout(r, 90));
+    }
+  });
+  // NAJPIERW kolory — po wstrzyknięciu `color:transparent` getComputedStyle
+  // zwraca rgba(0,0,0,0) dla każdego napisu i wszystko wychodzi 1:1.
+  const pisma = await p.evaluate(sel => sel.map(x => {
+    const e = document.querySelector(x);
+    if (!e) return null;
+    const st = getComputedStyle(e);
+    return { kolor: st.color, rozmiar: parseFloat(st.fontSize),
+             waga: parseInt(st.fontWeight, 10) || 400 };
+  }), ROLE.map(r => r[0]));
+
+  // dopiero teraz tekst na przezroczysty — razem z potomkami, bo dt/dd mają
+  // własne reguły koloru i nie dziedziczą po rodzicu
+  await p.evaluate(sel => {
+    const st = document.createElement('style');
+    st.textContent = sel.map(x => `${x},${x} *`).join(',') + '{color:transparent!important}';
+    document.head.append(st);
+  }, ROLE.map(r => r[0]));
+
+  for (const [i_, [sel, nazwa]] of ROLE.entries()) {
+    const el = await p.$(sel);
+    if (!el || !pisma[i_]) { zle('brak elementu do pomiaru', sel); continue; }
+    const info = await p.evaluate(e => {
+      e.scrollIntoView({ block: 'center', behavior: 'instant' });
+      const r = e.getBoundingClientRect();
+      return { x: Math.round(r.left), y: Math.round(r.top),
+               w: Math.round(r.width), h: Math.round(r.height) };
+    }, el);
+    Object.assign(info, pisma[i_]);
+    await new Promise(r => setTimeout(r, 120));
+    const png = PNG.sync.read(await p.screenshot());
+
+    // średnie tło pod napisem; pomijamy 2 px marginesu, żeby nie łapać obwódki
+    let sr = 0, sg = 0, sb = 0, n = 0;
+    for (let y = info.y + 2; y < info.y + info.h - 2; y++) {
+      if (y < 0 || y >= png.height) continue;
+      for (let x = info.x + 2; x < info.x + info.w - 2; x++) {
+        if (x < 0 || x >= png.width) continue;
+        const i = (png.width * y + x) << 2;
+        sr += png.data[i]; sg += png.data[i + 1]; sb += png.data[i + 2]; n++;
+      }
+    }
+    if (!n) { zle('pusty kadr pomiaru', sel); continue; }
+    const tlo = `rgb(${sr / n},${sg / n},${sb / n})`;
+    const k = kontrast(info.kolor, tlo);
+    // WCAG: duży tekst (≥24 px, albo ≥18,66 px przy wadze ≥700) ma próg 3:1
+    const duzy = info.rozmiar >= 24 || (info.rozmiar >= 18.66 && info.waga >= 700);
+    const prog = duzy ? 3 : 4.5;
+    const opis = `  ${nazwa.padEnd(24)} ${k.toFixed(2)}:1 (próg ${prog})`;
+    if (k < prog) zle(opis.trim()); else console.log(opis);
+  }
+  await p.close();
 }
 
 // Wejście z karty „Zakresu opieki" na stronie głównej. Klik w kartę przewija

@@ -373,19 +373,20 @@ a{color:inherit;text-decoration:none}
 
 
 /* treść hero — nagłówek nad poziomym odcinkiem kreski, dosunięty do lewej */
-/* nagłówek stoi w ciemnej kolumnie zdjęcia (od 55% szerokości kadru w prawo) —
-   dzięki temu czyta się bez żadnego przyciemnienia. --kx to ta krawędź w px,
-   liczona tym samym przelicznikiem `cover` co pozycje kropek. */
+/* Nagłówek leży w ciemnym polu zdjęcia (od 44% szerokości, dolna krawędź na 24%
+   wysokości kadru) — dlatego czyta się bez żadnego przyciemnienia. Ramka sięga
+   od miejsca lądowania aż po kreskę i przycina, więc tekst WYJEŻDŻA Z LINII.
+   --kx/--kt/--kh liczy JS tym samym przelicznikiem `cover` co pozycje kropek. */
 .hero-copy{position:absolute;z-index:4;right:clamp(24px,3.4vw,52px);
-  left:var(--kx,50%);bottom:calc(100% - var(--ky,50%) + 22px);pointer-events:none;
-  text-align:right;
-  opacity:0;transform:translateY(26px);
-  transition:opacity .7s var(--rev),transform .9s var(--rev)}
-.hero.tekst .hero-copy{opacity:1;transform:none}
+  left:var(--kx,50%);top:var(--kt,20%);height:var(--kh,auto);
+  overflow:hidden;pointer-events:none;text-align:right}
+.hero-copy h1{transform:translateY(var(--kh,60px));opacity:0;
+  transition:transform 1.05s var(--rev),opacity .5s var(--rev)}
+.hero.tekst .hero-copy h1{transform:none;opacity:1}
 
 .hero-copy h1{margin:0 0 0 auto;font-size:clamp(1.8rem,4.4vw,4rem);line-height:1.06;
   letter-spacing:-.028em;font-weight:500;text-wrap:balance}
-.hero.morphed .hero-copy{opacity:0;transform:translateY(-40px)}
+.hero.morphed .hero-copy h1{opacity:0;transform:translateY(-40px)}
 
 /* drugi blok: mniejsze zdanie + duży przycisk (wzór: myhealthprac.com) */
 .hero-dol{position:absolute;z-index:4;right:clamp(24px,3.4vw,52px);
@@ -409,9 +410,10 @@ a{color:inherit;text-decoration:none}
 .pigulka:hover .pigulka-kolo svg{transform:translate(14px,-14px)}
 
 @media(max-width:900px){
-  /* przy tym przybliżeniu ciemna kolumna wypada poza kadr — nagłówek idzie
+  /* przy tym przybliżeniu ciemne pole wypada poza kadr — nagłówek idzie
      w ciemny pas nad sylwetką: wciąż nad linią i wciąż bez przyciemnienia */
-  .hero-copy{left:24px;right:24px;bottom:auto;top:clamp(92px,15svh,150px)}
+  .hero-copy{left:24px;right:24px;top:clamp(92px,15svh,150px);height:auto;overflow:visible}
+  .hero-copy h1{transform:translateY(40px)}
 }
 @media(max-width:760px){
   .hero-dol{right:24px;left:24px;width:auto;text-align:left}
@@ -1715,8 +1717,21 @@ footer.site img{height:26px}
       // wąski kadr wycina część sylwetki — nie pokazujemy znacznika stawu, którego nie widać
       j.hidden = x < 24 || x > H.width - 24 || y < 88 || y > H.height - 24;
     });
-    // lewa krawędź ciemnej kolumny zdjęcia — o nią opiera się nagłówek
-    hero.style.setProperty('--kx', (ox + w * 0.55).toFixed(1) + 'px');
+    // Ciemne pole zdjęcia: od 44% szerokości w prawo jest czarne aż do 24%
+    // wysokości — tam ląduje nagłówek. Kreska biegnie niżej, na łokciu (47%),
+    // i to z niej tekst wyjeżdża, więc ramka musi sięgać od jednego do drugiego.
+    const kopia = hero.querySelector('.hero-copy'), naglowek = kopia.querySelector('h1');
+    if (H.width > 900) {
+      hero.style.setProperty('--kx', (ox + w * 0.44).toFixed(1) + 'px');
+      const dol = oy + h * 0.24;                       // dolna krawędź tekstu
+      const gora = dol - naglowek.offsetHeight;
+      const kreska = oy + h * (+hero.querySelector('.j-lokiec').dataset.iy2) / 100;
+      kopia.style.setProperty('--kt', gora.toFixed(1) + 'px');
+      kopia.style.setProperty('--kh', Math.max(0, kreska - gora).toFixed(1) + 'px');
+    } else {
+      kopia.style.removeProperty('--kt');
+      kopia.style.removeProperty('--kh');
+    }
   };
   place();
 
@@ -1728,6 +1743,7 @@ footer.site img{height:26px}
   const KOLEJ = ['j-skok', 'j-kolano', 'j-biodro', 'j-lokiec'];
 
   const wjazd = () => {
+    place();                       // krój już wczytany — wysokość nagłówka jest ostateczna
     const H = hero.getBoundingClientRect();
     const pkt = KOLEJ.map(c => {
       const el = hero.querySelector('.' + c);
@@ -1798,9 +1814,7 @@ footer.site img{height:26px}
     joints.forEach(j => j.classList.add('zapalony'));
     const bk = hero.querySelector('.j-lokiec');
     bk.classList.add('wedruje');   // bez animacji kropka od razu stoi na łokciu
-    place();
-    hero.style.setProperty('--kx', bk.style.left);
-    hero.style.setProperty('--ky', bk.style.top);
+    place();   // ustawia i kropki, i ciemne pole pod nagłówkiem
   } else {
     // czekamy na krój i obraz — inaczej pozycje stawów jeszcze się przesuną
     Promise.all([document.fonts?.ready,
