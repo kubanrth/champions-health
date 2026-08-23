@@ -3,7 +3,7 @@
 // Uruchom przy działającym serve.mjs:
 //   node sites/champions-health/v2/test-hero.mjs
 import puppeteer from 'puppeteer';
-const STAWY = ['j-lokiec', 'j-biodro', 'j-kolano', 'j-skok'];
+const STAWY = ['j-bark', 'j-lokiec', 'j-biodro', 'j-kolano', 'j-skok'];
 const b = await puppeteer.launch({ headless: 'new', args: ['--no-sandbox'] });
 for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
   const p = await b.newPage(), errs = [];
@@ -12,6 +12,9 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
   await p.setViewport({ width: w, height: h, deviceScaleFactor: 1 });
   await p.goto('http://localhost:3000/champions-health/v2/', { waitUntil: 'networkidle2' });
   await p.evaluate(() => document.fonts.ready);
+  // bark zapala się dopiero po wjeździe kreski — czekamy na koniec animacji
+  await p.waitForFunction(() => document.querySelector('.hero').classList.contains('bezkreski'),
+    { timeout: 15000 }).catch(() => {});
   await new Promise(r => setTimeout(r, 800));
   const przepelnienie = await p.evaluate(() =>
     document.documentElement.scrollWidth - document.documentElement.clientWidth);
@@ -22,20 +25,31 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
     await p.mouse.move(bb.x + bb.width / 2, bb.y + bb.height / 2);
     await new Promise(r => setTimeout(r, 800));
     out.push(await p.evaluate(cl => {
-      const j = document.querySelector('.' + cl), k = j.querySelector('.jt-card');
+      const j = document.querySelector('.' + cl);
       const H = document.querySelector('.hero').getBoundingClientRect();
-      const kr = k.getBoundingClientRect(), d = j.querySelector('.jt-dot').getBoundingClientRect();
-      const tekst = [...k.children].map(e => e.getBoundingClientRect());
+      const d = j.querySelector('.jt-dot').getBoundingClientRect();
+      const kreska = j.querySelector('.jt-kreska');
+      const kr = kreska.getBoundingClientRect();
+      const nz = j.querySelector('.jt-nazwa i'), op = j.querySelector('.jt-opis i');
+      const rn = nz.getBoundingClientRect(), ro = op.getBoundingClientRect();
+      const wys = j.querySelector('.jt-wys::before') ? null : getComputedStyle(j.querySelector('.jt-wys'), '::before');
       const zachodzi = (a, b) => Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top) > 0
                               && Math.min(a.right, b.right) - Math.max(a.left, b.left) > 0;
+      const wKadrze = r => r.top >= -1 && r.bottom <= H.height + 1 && r.left >= -1 && r.right <= H.width + 1;
       return {
         staw: cl,
-        rozsunieta: /circle/.test(getComputedStyle(k).clipPath),
-        kartaWKadrze: kr.top >= -1 && kr.bottom <= H.height + 1 && kr.left >= -1 && kr.right <= H.width + 1,
-        kropkaNaTekscie: tekst.some(t => zachodzi(d, t)),
-        opisNiepusty: [...k.children].every(e => e.textContent.trim().length > 0),
-        krojLegii: getComputedStyle(k.querySelector('strong')).fontFamily.includes('Archivo'),
-        // kropka to zwykłe białe koło (bez pulsu i obrysu)
+        // kreska wysunięta na pełną długość
+        kreskaWysunieta: new DOMMatrix(getComputedStyle(kreska).transform).a > 0.98 && kr.width > 80,
+        // nazwa NAD kreską, opis POD kreską
+        nazwaNad: rn.bottom <= kr.top + 2,
+        opisPod: ro.top >= kr.bottom - 2,
+        wKadrze: wKadrze(rn) && wKadrze(ro) && wKadrze(kr),
+        kropkaNaTekscie: zachodzi(d, rn) || zachodzi(d, ro),
+        opisNiepusty: nz.textContent.trim().length > 0 && op.textContent.trim().length > 0,
+        krojLegii: getComputedStyle(nz).fontFamily.includes('Archivo'),
+        // to ma NIE być karta: żadnych zaokrągleń, ramki ani panelu z blurem
+        bezKarty: wys.borderRadius === '0px' && wys.borderTopWidth === '0px'
+                  && (wys.backdropFilter === 'none' || wys.backdropFilter === ''),
         kropkaBiala: (() => { const c = getComputedStyle(j.querySelector('.jt-dot'));
           return c.borderRadius === '50%' && c.backgroundColor === 'rgb(255, 255, 255)'; })(),
       };
@@ -43,8 +57,9 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
     await p.mouse.move(w - 40, h - 40);          // zwolnij, zanim sprawdzisz następny
     await new Promise(r => setTimeout(r, 400));
   }
-  const zle = out.filter(o => !o.ukryty && (!o.rozsunieta || !o.kartaWKadrze || o.kropkaNaTekscie
-                                            || !o.opisNiepusty || !o.krojLegii || !o.kropkaBiala));
+  const zle = out.filter(o => !o.ukryty && (!o.kreskaWysunieta || !o.nazwaNad || !o.opisPod
+                                            || !o.wKadrze || o.kropkaNaTekscie || !o.opisNiepusty
+                                            || !o.krojLegii || !o.bezKarty || !o.kropkaBiala));
   const ok = !zle.length && !errs.length && przepelnienie === 0;
   console.log(`${w}×${h}`, ok ? 'ok' : 'BŁĄD ' + JSON.stringify({ zle, errs, przepelnienie }));
   if (!ok) process.exitCode = 1;
@@ -107,7 +122,10 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
     });
     const wOk = (h > 800 || w > 800)
       // kolejność zapalania: kostka → kolano → biodro → bark
-      && JSON.stringify(kolej) === JSON.stringify(['j-skok', 'j-kolano', 'j-biodro', 'j-lokiec'])
+      && JSON.stringify(kolej.slice(0, 4))
+         === JSON.stringify(['j-skok', 'j-kolano', 'j-biodro', 'j-lokiec'])
+      // piąty punkt (bark) wraca dopiero po wjeździe, gdy znacznik z niego zjechał
+      && kolej[4] === 'j-bark' && czasy['j-bark'] > czasy['tekst']
       // każdy kolejny punkt wyraźnie po poprzednim, nie wszystkie naraz
       // punkty jeden po drugim, ale szybko — cała czwórka poniżej sekundy
       && czasy['j-kolano'] - czasy['j-skok'] > 90
@@ -121,7 +139,7 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
       && czasy['tekst'] > czasy['j-lokiec'] + 500
       && kopia.wtedy && kopia.wtedy.offset > 1 && kopia.wtedy.widocznaKreska
       // na końcu zostają same kropki
-      && kopia.kreskaZnikla && kopia.kropekWidocznych === 4
+      && kopia.kreskaZnikla && kopia.kropekWidocznych === 5
       && kopia.widoczna && kopia.nadBarkiem && kopia.wKadrze
       && (w < 900 || (kopia.wKolumnie && kopia.wierszy === 2
                       && kopia.luz > 40 && kopia.podNawigacja > 8))

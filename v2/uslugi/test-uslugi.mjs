@@ -65,6 +65,14 @@ for (const u of uslugi) {
         scrollTo({ top: y, behavior: 'instant' });
         await new Promise(r => setTimeout(r, 90));
       }
+      // pas usług jest lazy — bez poziomego przejazdu dalsze karty słusznie
+      // nie ładują zdjęć i test fałszywie krzyczy „obraz nie wczytany"
+      const pas = document.querySelector('[data-pas]');
+      if (pas) {
+        pas.scrollTo({ left: pas.scrollWidth, behavior: 'instant' });
+        await new Promise(r => setTimeout(r, 250));
+        pas.scrollTo({ left: 0, behavior: 'instant' });
+      }
       scrollTo({ top: 0, behavior: 'instant' });
       await new Promise(r => setTimeout(r, 1000));
     });
@@ -79,7 +87,7 @@ for (const u of uslugi) {
       return {
         przepelnienie: document.documentElement.scrollWidth - wid,
         poza,
-        sekcje: ['.pg-hero', '.kafle', '.proza', '.kroki', '#kontakt', '.inne']
+        sekcje: ['.pg-hero', '.kafle', '.proza', '#kontakt', '.inne']
           .filter(s => !document.querySelector(s)),
         ukryte: [...document.querySelectorAll('[data-rv]')]
           .filter(e => +st(e).opacity < .9).length,
@@ -107,9 +115,9 @@ for (const u of uslugi) {
 
     // kontrast liczymy raz — na szkle tło elementu jest półprzezroczyste, więc
     // realnym tłem jest czerń strony; bierzemy ostrzejszy z dwóch wariantów
-    // kafel stoi na czystej bieli i sam jest biały — podkład to #fff
+    // kafle mają pełne wypełnienia (szare i ciemne), więc tło bierzemy z pomiaru
     if (w === 1440 && r.para) {
-      const k = kontrast(r.para[0], 'rgb(255,255,255)');
+      const k = kontrast(r.para[0], r.para[1]);
       if (k < 4.5) zle(`kontrast opisu kafla ${k.toFixed(2)}:1`);
       else console.log(`  kontrast opisu kafla ${k.toFixed(2)}:1`);
     }
@@ -137,11 +145,12 @@ console.log('\n— kontrast tekstu (piksele, ortopedia @1440)');
     ['.pg-lead', 'lead heroju'], ['.kick', 'pigułka działu'],
     ['.kafel p', 'opis kafla'], ['.kafel i', 'numer kafla'],
     ['.fakty dt', 'etykieta faktu'], ['.fakty dd', 'wartość faktu'],
+    ['.claim-line', 'wielka linia'],
     ['.proza p', 'proza'], ['.dla-kogo li', 'punkt „dla kogo"'],
-    ['.krok b', 'numer kroku'], ['.krok p', 'opis kroku'],
     ['.kont-in p', 'lead kontaktu'], ['.kont-karta dt', 'etykieta kontaktu'],
     ['.kont-karta dd', 'dana kontaktowa'],
-    ['.inna em', 'dział na kaflu usługi'], ['footer.site span', 'stopka'],
+    ['.inna span', 'etykieta karty usługi'], ['.inna b', 'tytuł karty usługi'],
+    ['footer.site span', 'stopka'],
   ];
   const p = await przegladarka.newPage();
   await p.setViewport({ width: 1440, height: 900, deviceScaleFactor: 1 });
@@ -234,6 +243,22 @@ console.log('\n— wejście z karty na stronie głównej');
     if (!/\/uslugi\/[a-z-]+\.html$/.test(u)) zle('klik nie doszedł na podstronę', u);
     else console.log('  klik z karty →', u.split('/').pop());
   }
+  await p.close();
+}
+
+// strzałki pasa „Pozostałe zakresy" przewijają o kartę
+{
+  const p = await przegladarka.newPage();
+  await p.setViewport({ width: 1440, height: 900, deviceScaleFactor: 1 });
+  await p.goto(BAZA + 'ortopedia.html', { waitUntil: 'networkidle2' });
+  await p.evaluate(() => document.querySelector('.inne-pas').scrollIntoView({ block: 'center', behavior: 'instant' }));
+  await new Promise(r => setTimeout(r, 900));
+  const przed = await p.$eval('[data-pas]', e => e.scrollLeft);
+  await p.click('[data-pas-d]');
+  await new Promise(r => setTimeout(r, 700));
+  const po = await p.$eval('[data-pas]', e => e.scrollLeft);
+  if (po - przed < 200) zle('strzałka pasa nie przewija', { przed, po });
+  else console.log(`\n— pas usług: strzałka przewija o ${Math.round(po - przed)}px`);
   await p.close();
 }
 

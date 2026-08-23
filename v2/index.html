@@ -331,6 +331,10 @@ a{color:inherit;text-decoration:none}
 /* czwarta kropka zjeżdża z barku na łokieć — stąd przejście na pozycji */
 .jt.wedruje{transition:opacity .35s var(--rev),left .5s var(--rev),top .5s var(--rev)}
 .hero.wjazd .jt{opacity:1}
+/* na barku stoi w czasie wjazdu wędrujący znacznik — własny punkt zapala się
+   dopiero wtedy, gdy tamten z niego zjedzie */
+.hero.wjazd .j-bark{opacity:0;pointer-events:none}
+.hero.bezkreski .j-bark{opacity:1;pointer-events:auto}
 .jt-dot{position:absolute;inset:0;border-radius:50%;background:#fff;
   box-shadow:0 0 0 1px rgba(6,14,10,.35),0 0 18px rgba(255,255,255,.5);
   transform:scale(.2);transition:transform .5s cubic-bezier(.2,1.4,.4,1)}
@@ -348,29 +352,65 @@ a{color:inherit;text-decoration:none}
 .jt:hover .jt-dot,.jt:focus-visible .jt-dot,.jt.on .jt-dot{background:#fff}
 .jt:focus-visible{outline:2px solid #fff;outline-offset:6px;border-radius:4px}
 
-/* karta rozsuwana z kwadratu — clip-path zamiast width/height, żeby tekst się nie rozjeżdżał */
-.jt-card{position:absolute;top:-8px;left:-8px;width:var(--cw);
-  padding:24px 15px 15px;border-radius:16px;background:rgba(6,14,10,.86);
-  -webkit-backdrop-filter:blur(16px) saturate(.85);backdrop-filter:blur(16px) saturate(.85);
-  clip-path:circle(0 at 14.5px 14.5px);
-  transition:clip-path .45s var(--ease)}
-.jt.o-l .jt-card{left:auto;right:-8px;
-  clip-path:circle(0 at calc(100% - 14.5px) 14.5px)}
-.jt.o-u .jt-card{top:auto;bottom:-8px;padding:15px 15px 24px;
-  clip-path:circle(0 at 14.5px calc(100% - 14.5px))}
-.jt.o-u.o-l .jt-card{clip-path:circle(0 at calc(100% - 14.5px) calc(100% - 14.5px))}
-.jt:hover .jt-card,.jt:focus-visible .jt-card,.jt.on .jt-card{clip-path:circle(150% at 14.5px 14.5px)}
+/* Zamiast kart: po najechaniu z kropki wysuwa się kreska, nad nią wjeżdża nazwa
+   stawu, a pod nią opis. Ten sam język, co wjazd nagłówka na starcie strony. */
+/* sama kropka ma 13 px — powiększamy cel wskaźnika, nie punkt */
+.jt::before{content:"";position:absolute;inset:-13px;border-radius:50%}
+.jt-wys{position:absolute;top:6.5px;left:6.5px;width:var(--wys,clamp(200px,21vw,290px));
+  pointer-events:none}
+/* po wejściu na punkt można przejechać myszą na tekst — opis nie ucieknie */
+.jt:hover .jt-wys{pointer-events:auto}
+
+/* Punkty leżą na jego ciele, więc opis trafia na jasną koszulkę albo ramię
+   (surowo 1,2–3,4:1). To nie jest karta: przyciemnienie wygasa w poziomie
+   z obu stron, a maska zdejmuje je u góry i u dołu — nie ma ani jednej
+   prostej krawędzi, tylko cień przy kropce. */
+.jt-wys::before{content:"";position:absolute;z-index:-1;
+  left:-46px;right:-76px;top:-86px;bottom:-132px;
+  background:linear-gradient(90deg,rgba(4,10,14,0) 0%,rgba(4,10,14,.42) 7%,rgba(4,10,14,.86) 17%,
+    rgba(4,10,14,.84) 80%,rgba(4,10,14,.3) 93%,rgba(4,10,14,0) 100%);
+  -webkit-mask-image:linear-gradient(180deg,rgba(0,0,0,0) 0%,#000 20%,#000 78%,rgba(0,0,0,0) 100%);
+  mask-image:linear-gradient(180deg,rgba(0,0,0,0) 0%,#000 20%,#000 78%,rgba(0,0,0,0) 100%);
+  opacity:0;transform:scaleX(.6);transform-origin:left center;
+  transition:opacity .5s var(--rev),transform .55s var(--rev)}
+.jt.w-lewo .jt-wys::before{left:-76px;right:-46px;transform-origin:right center;
+  background:linear-gradient(270deg,rgba(4,10,14,0) 0%,rgba(4,10,14,.42) 7%,rgba(4,10,14,.86) 17%,
+    rgba(4,10,14,.84) 80%,rgba(4,10,14,.3) 93%,rgba(4,10,14,0) 100%)}
+.jt:hover .jt-wys::before,.jt:focus-visible .jt-wys::before,.jt.on .jt-wys::before{
+  opacity:1;transform:none}
+.jt.w-lewo .jt-wys{left:auto;right:6.5px;text-align:right}
+
+.jt-kreska{position:absolute;top:0;left:13px;right:0;height:1px;
+  background:rgba(255,255,255,.9);box-shadow:0 0 8px rgba(255,255,255,.45);
+  transform:scaleX(0);transform-origin:left center;
+  transition:transform .5s var(--rev)}
+.jt.w-lewo .jt-kreska{left:0;right:13px;transform-origin:right center}
+
+/* nazwa nad kreską, opis pod kreską — oba wynurzają się z niej */
+.jt-nazwa,.jt-opis{position:absolute;left:15px;right:0;overflow:hidden}
+.jt.w-lewo .jt-nazwa,.jt.w-lewo .jt-opis{left:0;right:15px}
+.jt-nazwa{bottom:9px}
+.jt-opis{top:9px}
+.jt-nazwa i,.jt-opis i{display:block;font-style:normal;
+  transition:transform .55s var(--rev),opacity .4s var(--rev)}
+.jt-nazwa i{transform:translateY(105%)}
+.jt-opis i{transform:translateY(-105%);opacity:0}
+
+.jt-nazwa i{font-family:var(--legia);font-stretch:75%;text-transform:uppercase;
+  font-size:clamp(15px,1.25vw,19px);font-weight:700;letter-spacing:.02em;line-height:1.1;color:#fff}
+.jt-opis i{padding-top:2px;font-size:clamp(12.5px,.98vw,14px);line-height:1.5;
+  font-weight:450;color:rgba(255,255,255,.94)}
+
+.jt:hover .jt-kreska,.jt:focus-visible .jt-kreska,.jt.on .jt-kreska{transform:scaleX(1)}
+.jt:hover .jt-nazwa i,.jt:focus-visible .jt-nazwa i,.jt.on .jt-nazwa i,
+.jt:hover .jt-opis i,.jt:focus-visible .jt-opis i,.jt.on .jt-opis i{transform:none;opacity:1}
+.jt:hover .jt-nazwa i,.jt:focus-visible .jt-nazwa i,.jt.on .jt-nazwa i{transition-delay:.16s}
+.jt:hover .jt-opis i,.jt:focus-visible .jt-opis i,.jt.on .jt-opis i{transition-delay:.24s}
+
 @media(prefers-reduced-motion:reduce){
-  .jt-card,.morph,.morph>img,.morph-in,.hero,.hero-copy,.hero::after,.deal-label{transition:none}
+  .jt-kreska,.jt-nazwa i,.jt-opis i,.morph,.morph>img,.morph-in,
+  .hero,.hero-copy h1,.hero::after,.deal-label{transition:none}
 }
-
-.jt-card b,.jt-card strong{display:block;font-family:var(--legia);font-stretch:75%;
-  text-transform:uppercase;color:#fff}
-.jt-card b{font-size:10px;font-weight:500;letter-spacing:.2em;color:rgba(255,255,255,.58)}
-.jt-card strong{margin-top:6px;font-size:21px;line-height:1.02;font-weight:700;letter-spacing:.005em}
-.jt-card span{display:block;margin-top:9px;font-family:Mulish,var(--legia),sans-serif;
-  font-size:12px;line-height:1.46;font-weight:400;text-transform:none;color:rgba(255,255,255,.9)}
-
 
 /* treść hero — nagłówek nad poziomym odcinkiem kreski, dosunięty do lewej */
 /* Nagłówek leży w ciemnym polu zdjęcia (od 44% szerokości, dolna krawędź na 24%
@@ -384,8 +424,8 @@ a{color:inherit;text-decoration:none}
   transition:transform 1.05s var(--rev),opacity .5s var(--rev)}
 .hero.tekst .hero-copy h1{transform:none;opacity:1}
 
-.hero-copy h1{margin:0 0 0 auto;font-size:clamp(1.8rem,4.05vw,4rem);line-height:1.06;
-  letter-spacing:-.028em;font-weight:500;text-wrap:balance}
+.hero-copy h1{margin:0 0 0 auto;font-size:clamp(1.8rem,4.6vw,4.5rem);line-height:1.06;
+  letter-spacing:-.028em;font-weight:500}
 .hero.morphed .hero-copy h1{opacity:0;transform:translateY(-40px)}
 
 /* drugi blok: mniejsze zdanie + duży przycisk (wzór: myhealthprac.com) */
@@ -413,6 +453,7 @@ a{color:inherit;text-decoration:none}
   /* przy tym przybliżeniu ciemne pole wypada poza kadr — nagłówek idzie
      w ciemny pas nad sylwetką: wciąż nad linią i wciąż bez przyciemnienia */
   .hero-copy{left:24px;right:24px;top:clamp(92px,15svh,150px);height:auto;overflow:visible}
+  .hero-copy h1 br.lam{display:none}   /* tu tekst łamie się sam, do szerokości kadru */
   .hero-copy h1{transform:translateY(40px)}
 }
 @media(max-width:760px){
@@ -752,25 +793,50 @@ footer.site img{height:26px}
     </div>
   
   
+    <button class="jt j-bark" data-jt data-kier="lewo" data-ix="36.5" data-iy="29.5" aria-label="Staw ramienny: Stabilność łopatki decyduje o tym, ile wytrzyma sam staw — od niej zaczynamy ocenę barku.">
+      <span class="jt-dot"></span>
+      <span class="jt-wys" aria-hidden="true">
+        <span class="jt-nazwa"><i>Staw ramienny</i></span>
+        <span class="jt-kreska"></span>
+        <span class="jt-opis"><i>Stabilność łopatki decyduje o tym, ile wytrzyma sam staw — od niej zaczynamy ocenę barku.</i></span>
+      </span>
+    </button>
+
     <button class="jt j-lokiec" data-jt data-ix="36.5" data-iy="29.5" data-ix2="44.7" data-iy2="47" aria-label="Staw łokciowy: Ból po zewnętrznej stronie bierze się zwykle z przeciążenia przyczepów prostowników nadgarstka, nie z samego stawu.">
       <span class="jt-dot"></span>
-      <span class="jt-card"><b>Zgięcie + rotacja przedramienia</b><strong>Staw łokciowy</strong><span>Ból po zewnętrznej stronie bierze się zwykle z przeciążenia przyczepów prostowników nadgarstka, nie z samego stawu.</span></span>
+      <span class="jt-wys" aria-hidden="true">
+        <span class="jt-nazwa"><i>Staw łokciowy</i></span>
+        <span class="jt-kreska"></span>
+        <span class="jt-opis"><i>Ból po zewnętrznej stronie bierze się zwykle z przeciążenia przyczepów prostowników nadgarstka, nie z samego stawu.</i></span>
+      </span>
     </button>
     <button class="jt j-biodro" data-jt data-ix="28.0" data-iy="52.0" aria-label="Staw biodrowy: Ograniczona rotacja przenosi obciążenie na kręgosłup lędźwiowy i pachwinę.">
       <span class="jt-dot"></span>
-      <span class="jt-card"><b>Wyprost + rotacja</b><strong>Staw biodrowy</strong><span>Ograniczona rotacja przenosi obciążenie na kręgosłup lędźwiowy i pachwinę.</span></span>
+      <span class="jt-wys" aria-hidden="true">
+        <span class="jt-nazwa"><i>Staw biodrowy</i></span>
+        <span class="jt-kreska"></span>
+        <span class="jt-opis"><i>Ograniczona rotacja przenosi obciążenie na kręgosłup lędźwiowy i pachwinę.</i></span>
+      </span>
     </button>
     <button class="jt j-kolano" data-jt data-ix="22.0" data-iy="62.0" aria-label="Staw kolanowy · ACL: Po rekonstrukcji ACL o powrocie decyduje symetria siły uda, nie kalendarz.">
       <span class="jt-dot"></span>
-      <span class="jt-card"><b>Zgięcie + stabilizacja</b><strong>Staw kolanowy · ACL</strong><span>Po rekonstrukcji ACL o powrocie decyduje symetria siły uda, nie kalendarz.</span></span>
+      <span class="jt-wys" aria-hidden="true">
+        <span class="jt-nazwa"><i>Staw kolanowy · ACL</i></span>
+        <span class="jt-kreska"></span>
+        <span class="jt-opis"><i>Po rekonstrukcji ACL o powrocie decyduje symetria siły uda, nie kalendarz.</i></span>
+      </span>
     </button>
     <button class="jt j-skok" data-jt data-ix="8.5" data-iy="77.5" aria-label="Staw skokowo-goleniowy: Zbyt małe zgięcie grzbietowe zmienia mechanikę kolana i podnosi ryzyko urazu.">
       <span class="jt-dot"></span>
-      <span class="jt-card"><b>Zgięcie grzbietowe</b><strong>Staw skokowo-goleniowy</strong><span>Zbyt małe zgięcie grzbietowe zmienia mechanikę kolana i podnosi ryzyko urazu.</span></span>
+      <span class="jt-wys" aria-hidden="true">
+        <span class="jt-nazwa"><i>Staw skokowo-goleniowy</i></span>
+        <span class="jt-kreska"></span>
+        <span class="jt-opis"><i>Zbyt małe zgięcie grzbietowe zmienia mechanikę kolana i podnosi ryzyko urazu.</i></span>
+      </span>
     </button>
   
     <div class="hero-copy" data-kopia>
-    <h1>Kontuzje, które znamy z boiska, nie z podręczników</h1>
+    <h1>Kontuzje, które znamy z boiska,<br class="lam">nie z podręczników</h1>
   </div>
   <div class="hero-dol">
     <p>Ortopedia, medycyna sportowa i rehabilitacja — prowadzone przez sztab medyczny
@@ -1710,10 +1776,12 @@ footer.site img{height:26px}
       j.hidden = false;                       // ukryty element nie ma wymiarów — mierzymy odsłonięty
       j.style.left = x.toFixed(1) + 'px';
       j.style.top  = y.toFixed(1) + 'px';
-      // karta zawsze rozsuwa się do wnętrza kadru
-      const c = j.querySelector('.jt-card');
-      j.classList.toggle('o-l', x + c.offsetWidth + 24 > H.width);
-      j.classList.toggle('o-u', y + c.offsetHeight + 24 > H.height);
+      // Kierunek wysuwki: bark ma wychodzić w lewo, ale przy wąskim kadrze
+      // tam się nie mieści — wtedy wygrywa strona, w której tekst zostaje w kadrze.
+      const wys = j.querySelector('.jt-wys').offsetWidth;
+      const lewoOk = x - wys - 24 > 0, prawoOk = x + wys + 24 < H.width;
+      j.classList.toggle('w-lewo',
+        j.dataset.kier === 'lewo' ? (lewoOk || !prawoOk) : (!prawoOk && lewoOk));
       // wąski kadr wycina część sylwetki — nie pokazujemy znacznika stawu, którego nie widać
       j.hidden = x < 24 || x > H.width - 24 || y < 88 || y > H.height - 24;
     });
@@ -1723,9 +1791,14 @@ footer.site img{height:26px}
     // musi więc sięgać od jednego do drugiego.
     const kopia = hero.querySelector('.hero-copy'), naglowek = kopia.querySelector('h1');
     if (H.width > 900) {
-      hero.style.setProperty('--kx', (ox + w * 0.48).toFixed(1) + 'px');
+      // górny (długi) wiersz leży wyżej, gdzie ciemne pole zaczyna się już od 36%
+      hero.style.setProperty('--kx', (ox + w * 0.36).toFixed(1) + 'px');
       const nawFloor = (document.querySelector('.nav')?.getBoundingClientRect().bottom || 0) + 18;
-      let dol = oy + h * 0.345;                        // dolna krawędź tekstu
+      // Dół tekstu tuż nad dłonią (34,5%), ale górny — dłuższy — wiersz nie może
+      // zejść poniżej 27% wysokości: tam ciemne pole zwęża się z 36% do 48%
+      // szerokości i długi wiersz wjechałby na sylwetkę.
+      const wiersz = parseFloat(getComputedStyle(naglowek).lineHeight);
+      let dol = Math.min(oy + h * 0.345, oy + h * 0.27 + wiersz);
       let gora = dol - naglowek.offsetHeight;
       if (gora < nawFloor) gora = nawFloor;            // krótkie okno: nie wchodzimy pod nawigację
       const kreska = oy + h * (+hero.querySelector('.j-lokiec').dataset.iy2) / 100;
@@ -1807,7 +1880,10 @@ footer.site img{height:26px}
       }
       etap++; t0 = null;
       if (etap < etapy.length) setTimeout(() => requestAnimationFrame(krok), e.pauza);
-      else setTimeout(() => hero.classList.add('bezkreski'), 140);  // kropki zostają same
+      else setTimeout(() => {
+        hero.classList.add('bezkreski');                 // kropki zostają same
+        hero.querySelector('.j-bark').classList.add('zapalony');  // bark wraca
+      }, 140);
     };
     requestAnimationFrame(krok);
   };
@@ -1817,6 +1893,7 @@ footer.site img{height:26px}
     joints.forEach(j => j.classList.add('zapalony'));
     const bk = hero.querySelector('.j-lokiec');
     bk.classList.add('wedruje');   // bez animacji kropka od razu stoi na łokciu
+    hero.querySelector('.j-bark').classList.add('zapalony');
     place();   // ustawia i kropki, i ciemne pole pod nagłówkiem
   } else {
     // czekamy na krój i obraz — inaczej pozycje stawów jeszcze się przesuną
@@ -1836,9 +1913,9 @@ footer.site img{height:26px}
 
   // self-check: każdy kwadracik musi mieć komplet opisu
   for (const j of joints)
-    console.assert(j.querySelector('.jt-card b')?.textContent.trim()
-                && j.querySelector('.jt-card strong')?.textContent.trim()
-                && j.querySelector('.jt-card span')?.textContent.trim(),
+    console.assert(j.querySelector('.jt-nazwa i')?.textContent.trim()
+                && j.querySelector('.jt-opis i')?.textContent.trim()
+                && j.getAttribute('aria-label')?.trim(),
       'staw bez pełnego opisu: ' + j.className);
 })();
 </script>
