@@ -548,7 +548,7 @@ a{color:inherit;text-decoration:none}
   .deal-head p{max-width:520px;font-size:16px;line-height:22px}
   .deal-head h2{font-size:clamp(1.8rem,3.6vw,2.8rem)}
   .deal{--dch:clamp(320px,52svh,460px)}
-  .card-in h3{font-size:clamp(26px,3vw,36px)}
+  .card-in h3{font-size:clamp(29px,3.4vw,41px)}
   .card-txt{font-size:13px}
 }
 .deal{--rev:cubic-bezier(.35,0,0,1);--dcw:min(78vw,1040px);--dch:clamp(400px,64svh,640px)}
@@ -565,8 +565,9 @@ a{color:inherit;text-decoration:none}
   background:linear-gradient(to bottom,rgba(8,14,10,.86) 0%,rgba(8,14,10,.6) 34%,rgba(8,14,10,.28) 56%,rgba(8,14,10,.92) 88%,rgba(8,14,10,.96) 100%)}
 .card-in{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;align-items:flex-start;
   padding:clamp(24px,3vw,38px);text-align:left}
-.card-lab{font-size:13px;font-weight:500;letter-spacing:.01em;color:rgba(255,255,255,.85)}
-.card-in h3{margin:6px 0 0;max-width:14ch;font-size:clamp(30px,3.4vw,46px);line-height:1.04;font-weight:500;letter-spacing:-.028em;text-wrap:balance}
+/* po usunięciu podpisu tytuł startuje od górnej krawędzi i bierze jego miejsce */
+.card-in h3{margin:0;max-width:14ch;font-size:clamp(34px,3.9vw,52px);line-height:1.04;
+  font-weight:500;letter-spacing:-.028em;text-wrap:balance}
 /* tekst bezpośrednio na karcie — bez białego prostokąta; czytelność
    trzyma mocniejszy dół gradientu karty (mierzony do AA) */
 .card-txt{margin-top:auto;max-width:54ch;padding-top:14px;
@@ -608,13 +609,12 @@ a{color:inherit;text-decoration:none}
 
 @media(max-width:1100px){
   .deal{--dch:clamp(340px,52svh,480px)}
-  .card-in h3{font-size:23px}
+  .card-in h3{font-size:26px}
 }
 @media(max-width:760px){
   .deal{--dcw:88vw;--dch:min(58svh,420px)}
   .card-in{padding:18px 15px}
-  .card-in h3{font-size:19px}
-  .card-lab{font-size:11px}
+  .card-in h3{font-size:21px}
   .card-txt{font-size:12.5px}
 }
 
@@ -836,7 +836,6 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
   <div class="morph" data-morph>
       <img src="img/sprint-sharp.png" alt="Zawodnik Legii Warszawa w pełnym sprincie">
       <div class="morph-in">
-      <span class="card-lab">01 / Prowadzenie</span>
       <h3>Medycyna sportowa</h3>
       <span class="card-txt">Badania kwalifikacyjne, prowadzenie przez cały sezon i decyzje o powrocie do gry — te same standardy, którymi prowadzimy pierwszą drużynę.</span>
           <div class="card-akcje"><a class="card-cta" href="#kontakt">Umów wizytę</a><a class="card-link" href="uslugi/medycyna-sportowa.html">Zakres opieki<svg width="12" height="12" viewBox="0 0 13 13" fill="none" aria-hidden="true"><path d="M3 10 10 3M4.6 3H10v5.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
@@ -917,7 +916,6 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
       <article class="card" data-card>
         <img src="img/sprint-sharp.png" alt="Medycyna sportowa" style="object-position:38% 40%">
         <div class="card-in">
-          <span class="card-lab">01 / Prowadzenie</span>
           <h3>Medycyna sportowa</h3>
           <span class="card-txt">Badania kwalifikacyjne, prowadzenie przez cały sezon i decyzje o powrocie do gry — te same standardy, którymi prowadzimy pierwszą drużynę.</span>
           <div class="card-akcje"><a class="card-cta" href="#kontakt">Umów wizytę</a><a class="card-link" href="uslugi/medycyna-sportowa.html">Zakres opieki<svg width="12" height="12" viewBox="0 0 13 13" fill="none" aria-hidden="true"><path d="M3 10 10 3M4.6 3H10v5.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
@@ -926,7 +924,6 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
       <article class="card" data-card>
         <img src="img/c1-ortopedia.png" alt="Ortopedia" loading="lazy">
         <div class="card-in">
-          <span class="card-lab">02 / Diagnostyka</span>
           <h3>Ortopedia</h3>
           <span class="card-txt">Konsultacje ortopedyczne z diagnostyką obrazową na miejscu. USG i RTG bez zewnętrznej rejestracji, decyzja o ścieżce leczenia od razu.</span>
           <div class="card-akcje"><a class="card-cta" href="#kontakt">Umów wizytę</a><a class="card-link" href="uslugi/ortopedia.html">Zakres opieki<svg width="12" height="12" viewBox="0 0 13 13" fill="none" aria-hidden="true"><path d="M3 10 10 3M4.6 3H10v5.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
@@ -935,7 +932,6 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
       <article class="card" data-card>
         <img src="img/c3-fizjoterapia.png" alt="Fizjoterapia i rehabilitacja" loading="lazy">
         <div class="card-in">
-          <span class="card-lab">03 / Powrót do sprawności</span>
           <h3>Fizjoterapia i rehabilitacja</h3>
           <span class="card-txt">Protokoły powrotu po urazie, którymi na co dzień prowadzimy zawodników. Praca 1:1 i kryteria progresu zamiast kalendarza.</span>
           <div class="card-akcje"><a class="card-cta" href="#kontakt">Umów wizytę</a><a class="card-link" href="uslugi/fizjoterapia.html">Zakres opieki<svg width="12" height="12" viewBox="0 0 13 13" fill="none" aria-hidden="true"><path d="M3 10 10 3M4.6 3H10v5.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
@@ -944,7 +940,6 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
             <article class="card" data-card>
         <img src="img/c4-dietetyka.png" alt="Dietetyka i suplementacja" loading="lazy">
         <div class="card-in">
-          <span class="card-lab">04 / Żywienie</span>
           <h3>Dietetyka i suplementacja</h3>
           <span class="card-txt">Analiza składu ciała i plan żywienia pod cel — masa, redukcja, wydolność. Suplementacja tylko tam, gdzie ma sens.</span>
           <div class="card-akcje"><a class="card-cta" href="#kontakt">Umów wizytę</a><a class="card-link" href="uslugi/dietetyka.html">Zakres opieki<svg width="12" height="12" viewBox="0 0 13 13" fill="none" aria-hidden="true"><path d="M3 10 10 3M4.6 3H10v5.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
@@ -953,7 +948,6 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
       <article class="card" data-card>
         <img src="img/c5-trening.png" alt="Trening merytoryczny" loading="lazy">
         <div class="card-in">
-          <span class="card-lab">05 / Motoryka</span>
           <h3>Trening merytoryczny</h3>
           <span class="card-txt">Motoryka, siła i profilaktyka urazów pod okiem trenerów przygotowania. Testy wydolnościowe i plan na cały sezon.</span>
           <div class="card-akcje"><a class="card-cta" href="#kontakt">Umów wizytę</a><a class="card-link" href="uslugi/trening.html">Zakres opieki<svg width="12" height="12" viewBox="0 0 13 13" fill="none" aria-hidden="true"><path d="M3 10 10 3M4.6 3H10v5.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
@@ -962,7 +956,6 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
       <article class="card" data-card>
         <img src="img/c6-edukacja.png" alt="Edukacja i szkolenie" loading="lazy">
         <div class="card-in">
-          <span class="card-lab">06 / Wiedza</span>
           <h3>Edukacja i szkolenie</h3>
           <span class="card-txt">Warsztaty i szkolenia dla klubów oraz trenerów. Wiedza sztabu pierwszej drużyny dostępna dla akademii i amatorów.</span>
           <div class="card-akcje"><a class="card-cta" href="#kontakt">Umów wizytę</a><a class="card-link" href="uslugi/edukacja.html">Zakres opieki<svg width="12" height="12" viewBox="0 0 13 13" fill="none" aria-hidden="true"><path d="M3 10 10 3M4.6 3H10v5.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>

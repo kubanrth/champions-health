@@ -236,7 +236,7 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
       naglowekNadKartami: document.querySelector('.deal-head').getBoundingClientRect().bottom
                         <= m.top + 1,
       // Revolut składa całą sekcję jedną wagą (Aeonik Medium 500) — u nas Inter
-      jednaWaga: ['.deal-head h2', '.card-in h3', '.card-cta', '.card-lab']
+      jednaWaga: ['.deal-head h2', '.card-in h3', '.card-cta']
         .every(sel => { const c = getComputedStyle(document.querySelector(sel));
           return c.fontWeight === '500' && c.fontFamily.startsWith('Inter'); }),
       // metryki akapitu 1:1 z revolut.com (18/24 w bloku 600 px, dwa wiersze)
