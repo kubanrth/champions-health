@@ -987,9 +987,7 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
   const WSTEP = 0.6;     // ekran na zwinięcie, zanim slider ruszy
   const KROK = 0.055;    // rozjazd wjazdu kart, liczony od karty hero
   const CZAS = 1080;     // ten sam czas co morf hero
-  // 42svh na kartę oznaczało, że jeden mocny ruch kółkiem (≈1,2 ekranu)
-  // przerzucał prawie trzy karty. 68 daje ~1 kartę na taki ruch.
-  sec.style.height = `${100 + WSTEP * 100 + N * 68}svh`;
+  sec.style.height = `${100 + WSTEP * 100 + N * 56}svh`;
 
   // cubic-bezier(.35,0,0,1) — krzywa zdjęta z revolut.com, ta sama co w CSS
   const rev = x => {
@@ -1044,32 +1042,6 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
   };
   const kick = () => { if (raf === null) raf = requestAnimationFrame(draw); };
 
-  // --- opór talii ---------------------------------------------------------
-  // Pozycja taśmy jest pochodną scrolla, więc jeden mocny rzut kółkiem
-  // przerzucał kilka kart naraz (a bardzo mocny wyrzucał na koniec strony).
-  // Limit na pojedyncze zdarzenie nic nie daje — trackpad wysyła ich dziesiątki.
-  // Dlatego talia ma BUDŻET pikseli odnawiany w czasie: rzut zużywa zapas
-  // (≈ jedna karta), a dalej strona jedzie tempem TEMPO. Poza talią i na jej
-  // krańcach kółko działa normalnie; dotyk i klawiatura są nietknięte.
-  const TEMPO = 0.9;                      // px na ms po wyczerpaniu zapasu
-  const ZAPAS = 420;                      // ile można „wystrzelić" od razu
-  let budzet = ZAPAS, budzetT = 0;
-  if (!reduce.matches) addEventListener('wheel', e => {
-    if (e.ctrlKey) return;                                  // zoom przeglądarki
-    const gora = sec.offsetTop + window.innerHeight * WSTEP;   // tu taśma zaczyna jechać
-    const dol = sec.offsetTop + sec.offsetHeight - window.innerHeight;
-    const y = window.scrollY;
-    if (y < gora - 2 || y > dol + 2) { budzet = ZAPAS; return; }
-    if (e.deltaY > 0 && y >= dol - 2) return;               // koniec talii — puszczamy dalej
-    if (e.deltaY < 0 && y <= gora + 2) return;              // początek — puszczamy w górę
-    e.preventDefault();
-    const t = performance.now();
-    budzet = Math.min(ZAPAS, budzet + (budzetT ? (t - budzetT) * TEMPO : ZAPAS));
-    budzetT = t;
-    const krok = Math.min(Math.abs(e.deltaY), budzet);
-    budzet -= krok;
-    window.scrollTo(0, Math.max(gora, Math.min(dol, y + Math.sign(e.deltaY) * krok)));
-  }, { passive: false });
   // podczas zamrożenia rysujemy dalej, żeby po jego końcu taśma ruszyła bez zwłoki
   setInterval(() => { if (zamrozone) kick(); }, 60);
 
@@ -1093,12 +1065,62 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
     const wstep = window.innerHeight * WSTEP;
     const span = sec.offsetHeight - window.innerHeight - wstep;
     const top = sec.getBoundingClientRect().top + scrollY + wstep + (i / (N - 1)) * span;
+    if (sec.__pomin) sec.__pomin(900);      // to skok celowy — kotwica ma nie przeszkadzać
     window.scrollTo({ top: Math.ceil(top) + 1, behavior: 'smooth' });
   };
   cards.forEach((c, i) => c.addEventListener('click', e => {
     if (!e.target.closest('a')) doKarty(i);   // link na karcie ma nawigować, nie przewijać
   }));
   sec.__doKarty = doKarty;
+
+  // --- jeden rzut = jedna karta -------------------------------------------
+  // Pozycja taśmy jest pochodną scrolla, więc mocny rzut przerzucał kilka kart
+  // naraz. Zamiast dławić kółko (co blokowało też ruch w górę) kotwiczymy
+  // stronę na karcie DOCELOWEJ na czas gestu. Gest = seria zdarzeń przerwana
+  // ciszą 180 ms, więc rozpęd trackpada nie ma znaczenia: ile byś nie pchnął,
+  // wjedzie jedna karta. Działa tak samo w dół i w górę, a poza krańcami talii
+  // oddaje sterowanie, żeby dało się z niej wyjechać. Dotyk i klawiatura
+  // korzystają z tego samego mechanizmu — nie przechwytujemy żadnych zdarzeń.
+  if (!reduce.matches) {
+    const wstepPx = () => window.innerHeight * WSTEP;
+    const spanPx = () => sec.offsetHeight - window.innerHeight - wstepPx();
+    const yKarty = i => Math.round(sec.offsetTop + wstepPx() + (i / (N - 1)) * spanPx());
+    // -1 = jesteśmy jeszcze nad talią (hero / strefa postoju)
+    const idx = y => y < sec.offsetTop + wstepPx() - 2 ? -1
+      : Math.max(0, Math.min(N - 1, Math.round(((y - sec.offsetTop - wstepPx()) / spanPx()) * (N - 1))));
+
+    let gest = false, cel = 0, ostatni = 0, wlasny = false, poprzedniY = window.scrollY, pomin = 0;
+    sec.__pomin = ms => { pomin = performance.now() + ms; };   // skok z klikniętej karty
+
+    // Kotwiczymy WYŁĄCZNIE ruch z palca: kółko i dotyk. Bez tego mechanizm
+    // łapał też skoki programowe (linki w menu, `scrollTo`) i ściągał stronę
+    // z powrotem do talii.
+    let gestOd = 0;
+    const znacz = () => { gestOd = performance.now(); };
+    addEventListener('wheel', znacz, { passive: true });
+    addEventListener('touchmove', znacz, { passive: true });
+
+    addEventListener('scroll', () => {
+      if (wlasny) { wlasny = false; return; }
+      const t = performance.now();
+      if (t - gestOd > 220 || t < pomin) {          // nie gest — nie ruszamy
+        gest = false; poprzedniY = window.scrollY; ostatni = t; return;
+      }
+      if (!gest || t - ostatni > 180) {              // nowy gest
+        const kier = Math.sign(window.scrollY - poprzedniY) || 1;
+        const doKtorej = idx(poprzedniY) + kier;
+        gest = doKtorej >= 0 && doKtorej <= N - 1;   // poza talią puszczamy dalej
+        if (gest) cel = yKarty(doKtorej);
+      }
+      ostatni = t;
+      if (gest && Math.abs(window.scrollY - cel) > 2) { wlasny = true; window.scrollTo(0, cel); }
+    }, { passive: true });
+
+    setInterval(() => {
+      if (gest && performance.now() - ostatni > 180) { gest = false; poprzedniY = window.scrollY; }
+      if (!gest) poprzedniY = window.scrollY;
+    }, 60);
+  }
 
   // (chip z rotacją usunięty 2026-08-22 — tekst leży wprost na karcie)
 
@@ -1719,6 +1741,7 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
     sec.classList.toggle('rozwiniete', teraz);
     if (sec.__rozloz) sec.__rozloz(teraz ? 1 : 0);  // karty wjeżdżają w tym samym ruchu
     if (sec.__zamroz) sec.__zamroz(teraz);          // slider stoi, dopóki hero leci
+
     // powrót na samą górę = wjazd gra od nowa (po tym, jak kadr wróci na miejsce)
     if (!teraz && hero.__odtworz) setTimeout(() => { if (scrollY <= PROG) hero.__odtworz(); }, 220);
   };

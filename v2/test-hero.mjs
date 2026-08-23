@@ -297,29 +297,40 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
            && talia.tekstWidoczny && talia.tekstNiepusty && talia.kartaKlikalna;
   console.log(`${w}×${h} talia`, tOk ? 'ok' : 'BŁĄD ' + JSON.stringify(talia));
 
-  // opór talii: mocny rzut kółkiem nie może przerzucić kilku kart naraz
-  // ani wyrzucić poza sekcję (zgłoszenie klienta 2026-08-24)
+  // „jeden rzut = jedna karta" (zgłoszenie klienta 2026-08-24, wzór revolut.com):
+  // z hero zawsze ląduje się na karcie 01 — choćby rzut był maksymalny — a dalej
+  // każdy gest przesuwa dokładnie o jedną, symetrycznie w dół i w górę.
   {
-    const o = await p.evaluate(() => new Promise(r => { scrollTo(0, 0); setTimeout(r, 900); }));
-    await p.mouse.move(Math.round(w / 2), Math.round(h / 2));
+    const doGory = () => p.evaluate(() => new Promise(r => { scrollTo(0, 0); setTimeout(r, 1200); }));
+    const karta = () => p.evaluate(() => [...document.querySelectorAll('[data-card]')]
+      .findIndex(c => c.classList.contains('focus')) + 1);
     const rzut = async sila => {
-      for (let i = 0; i < 45; i++) await p.mouse.wheel({ deltaY: Math.max(4, Math.round(sila * Math.pow(.93, i))) });
-      await new Promise(r => setTimeout(r, 1400));
+      const zn = Math.sign(sila);
+      for (let i = 0; i < 45; i++)
+        await p.mouse.wheel({ deltaY: zn * Math.max(4, Math.round(Math.abs(sila) * Math.pow(.93, i))) });
+      await new Promise(r => setTimeout(r, 1700));
     };
+    await doGory();
+    await p.mouse.move(Math.round(w / 2), Math.round(h / 2));
     await rzut(160);
-    const po1 = await p.evaluate(() => [...document.querySelectorAll('[data-card]')]
-      .findIndex(c => c.classList.contains('focus')));
-    // szarpnięcie „na maksa": 180 zdarzeń po 400 px
-    for (let k = 0; k < 3; k++) for (let i = 0; i < 60; i++) await p.mouse.wheel({ deltaY: 400 });
+    const zHero = await karta();
+    const wDol = [];
+    for (let i = 0; i < 3; i++) { await rzut(160); wDol.push(await karta()); }
+    const wGore = [];
+    for (let i = 0; i < 3; i++) { await rzut(-160); wGore.push(await karta()); }
+    // gwałtowny rzut z hero też ma wylądować na karcie 01
+    await doGory();
+    for (let i = 0; i < 80; i++) await p.mouse.wheel({ deltaY: 600 });
     await new Promise(r => setTimeout(r, 1800));
-    const poSzarpnieciu = await p.evaluate(() => ({
-      karta: [...document.querySelectorAll('[data-card]')].findIndex(c => c.classList.contains('focus')),
-      koniecStrony: scrollY + innerHeight >= document.documentElement.scrollHeight - 8 }));
-    const opOk = po1 <= 1 && poSzarpnieciu.karta <= 4 && !poSzarpnieciu.koniecStrony;
-    console.log(`${w}×${h} opór talii`, opOk ? 'ok'
-      : 'BŁĄD ' + JSON.stringify({ po1, poSzarpnieciu }));
+    const poSzarpnieciu = await karta();
+    const opOk = zHero === 1
+      && JSON.stringify(wDol) === JSON.stringify([2, 3, 4])
+      && JSON.stringify(wGore) === JSON.stringify([3, 2, 1])
+      && poSzarpnieciu === 1;
+    console.log(`${w}×${h} rzut = karta`, opOk ? 'ok'
+      : 'BŁĄD ' + JSON.stringify({ zHero, wDol, wGore, poSzarpnieciu }));
     if (!opOk) process.exitCode = 1;
-    await p.evaluate(() => new Promise(r => { scrollTo(0, 0); setTimeout(r, 900); }));
+    await doGory();
   }
   if (!tOk) process.exitCode = 1;
   await p.evaluate(() => window.scrollTo(0, 150));
