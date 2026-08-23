@@ -138,6 +138,26 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
   if (!mOk) process.exitCode = 1;
 
   // --- etapy opieki --------------------------------------------------------
+  // wjazd: skala .9 → 1 wiązana ze scrollem (zmierzone na myhealthprac)
+  const wjazd = await p.evaluate(async () => {
+    const sec = document.querySelector('.etapy');
+    const y = sec.getBoundingClientRect().top + scrollY;
+    const czekaj = ms => new Promise(r => setTimeout(r, ms));
+    const s2 = () => +new DOMMatrix(getComputedStyle(sec).transform).a.toFixed(3);
+    window.scrollTo(0, y - innerHeight * 1.15); await czekaj(500);
+    const daleko = s2();
+    window.scrollTo(0, y - innerHeight * 0.55); await czekaj(500);
+    const wpol = s2();
+    window.scrollTo(0, y - innerHeight * 0.1); await czekaj(500);
+    const blisko = s2();
+    return { daleko, wpol, blisko };
+  });
+  const wOk = Math.abs(wjazd.daleko - 0.9) < 0.02
+           && wjazd.wpol > wjazd.daleko && wjazd.wpol < wjazd.blisko
+           && Math.abs(wjazd.blisko - 1) < 0.02;
+  console.log(`${w}×${h} wjazd etapów`, wOk ? 'ok' : 'BŁĄD ' + JSON.stringify(wjazd));
+  if (!wOk) process.exitCode = 1;
+
   await p.evaluate(() => document.querySelector('.etapy').scrollIntoView({ block: 'start' }));
   await new Promise(r => setTimeout(r, 1800));
   const etapy = await p.evaluate(() => {
