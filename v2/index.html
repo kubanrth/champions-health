@@ -317,17 +317,8 @@ a{color:inherit;text-decoration:none}
   transition:opacity .8s var(--rev)}
 .hero.morphed .morph::after{opacity:1}
 
-/* nagłówek kładzie się na jasnej koszulce (kontrast surowy 1.08:1) — przyciemnienie
-   zaczepione o górną krawędź kadru, żeby nie było widocznego prostokąta pod tekstem */
-.hero::before{content:"";position:absolute;inset:0;z-index:3;pointer-events:none;opacity:0;
-  transition:opacity .9s var(--rev);
-  background:linear-gradient(to bottom,rgba(4,10,14,.74) 0%,rgba(4,10,14,.7) 40%,
-             rgba(4,10,14,.42) 56%,rgba(4,10,14,.12) 68%,rgba(4,10,14,0) 78%)}
-.hero.tekst::before{opacity:1}
-.hero.morphed::before{opacity:0}
-
 .hero::after{content:"";position:absolute;inset:0;z-index:3;pointer-events:none;
-  background:linear-gradient(to top,rgba(12,20,17,.84) 0%,rgba(12,20,17,.46) 26%,rgba(12,20,17,.1) 48%,rgba(12,20,17,0) 66%);
+  background:linear-gradient(to top,rgba(12,20,17,.86) 0%,rgba(12,20,17,.6) 30%,rgba(12,20,17,.2) 50%,rgba(12,20,17,0) 68%);
   transition:opacity .7s var(--rev)}
 .hero.morphed::after{opacity:0}
 .hero.morphed .jt{opacity:0;pointer-events:none}
@@ -382,13 +373,17 @@ a{color:inherit;text-decoration:none}
 
 
 /* treść hero — nagłówek nad poziomym odcinkiem kreski, dosunięty do lewej */
-.hero-copy{position:absolute;z-index:4;left:clamp(24px,3.4vw,52px);
-  bottom:calc(100% - var(--ky,50%) + 22px);width:min(72%,1000px);pointer-events:none;
+/* nagłówek stoi w ciemnej kolumnie zdjęcia (od 55% szerokości kadru w prawo) —
+   dzięki temu czyta się bez żadnego przyciemnienia. --kx to ta krawędź w px,
+   liczona tym samym przelicznikiem `cover` co pozycje kropek. */
+.hero-copy{position:absolute;z-index:4;right:clamp(24px,3.4vw,52px);
+  left:var(--kx,50%);bottom:calc(100% - var(--ky,50%) + 22px);pointer-events:none;
+  text-align:right;
   opacity:0;transform:translateY(26px);
   transition:opacity .7s var(--rev),transform .9s var(--rev)}
 .hero.tekst .hero-copy{opacity:1;transform:none}
 
-.hero-copy h1{margin:0;max-width:24ch;font-size:clamp(1.8rem,4.4vw,4rem);line-height:1.06;
+.hero-copy h1{margin:0 0 0 auto;font-size:clamp(1.8rem,4.4vw,4rem);line-height:1.06;
   letter-spacing:-.028em;font-weight:500;text-wrap:balance}
 .hero.morphed .hero-copy{opacity:0;transform:translateY(-40px)}
 
@@ -399,8 +394,8 @@ a{color:inherit;text-decoration:none}
   transition:opacity .7s var(--rev) .25s,transform .9s var(--rev) .25s}
 .hero.tekst .hero-dol{opacity:1;transform:none}
 .hero.morphed .hero-dol{opacity:0;transform:translateY(-24px)}
-.hero-dol p{margin:0 0 1.2rem;font-size:clamp(.98rem,1.25vw,1.15rem);line-height:1.5;
-  color:rgba(255,255,255,.95)}
+.hero-dol p{margin:0 0 1.35rem;font-size:clamp(1.15rem,1.72vw,1.6rem);line-height:1.34;
+  font-weight:500;letter-spacing:-.022em;color:rgba(255,255,255,.95)}
 /* pastylka 1:1 z referencji: 52 px wysokości, padding 4/4/4/20, koło 46 px */
 .pigulka{display:inline-flex;align-items:center;gap:18px;height:52px;padding:4px 4px 4px 22px;
   border-radius:999px;background:#F1F1F1;color:#1F1F1F;
@@ -413,12 +408,12 @@ a{color:inherit;text-decoration:none}
 .pigulka-kolo svg{width:18px;height:18px;transition:transform .4s var(--ease)}
 .pigulka:hover .pigulka-kolo svg{transform:translate(14px,-14px)}
 
+@media(max-width:900px){
+  /* przy tym przybliżeniu ciemna kolumna wypada poza kadr — nagłówek idzie
+     w ciemny pas nad sylwetką: wciąż nad linią i wciąż bez przyciemnienia */
+  .hero-copy{left:24px;right:24px;bottom:auto;top:clamp(92px,15svh,150px)}
+}
 @media(max-width:760px){
-  /* kropki i kreska są tu schowane, więc nagłówek nie ma się o co zaczepić —
-     dostaje własny punkt pod nawigacją, a blok z CTA zostaje przy dole */
-  .hero-copy{left:24px;right:24px;width:auto;max-width:none;bottom:auto;
-             top:clamp(92px,15svh,150px)}
-  .hero-copy h1{max-width:none}
   .hero-dol{right:24px;left:24px;width:auto;text-align:left}
 }
 
@@ -536,6 +531,22 @@ a{color:inherit;text-decoration:none}
 .card.focus .card-cta,.morph-in .card-cta{opacity:1;transform:none}
 .card-cta:hover{background:#E9E9E6}
 .card-cta:focus-visible{outline:2px solid #fff;outline-offset:3px}
+/* druga droga z karty: pełny zakres usługi na własnej podstronie.
+   Szkło zamiast bieli, żeby „Umów wizytę" zostało jedynym pełnym akcentem. */
+.card-akcje{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:16px}
+.card-akcje .card-cta{margin-top:0}
+.card-link{display:inline-flex;align-items:center;gap:8px;height:44px;padding:0 18px;
+  border-radius:999px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.28);
+  -webkit-backdrop-filter:blur(14px) saturate(1.4);backdrop-filter:blur(14px) saturate(1.4);
+  color:#fff;font-size:15px;font-weight:500;
+  opacity:0;transform:translateY(8px);
+  transition:opacity .45s var(--ease) .1s,transform .45s var(--ease) .1s,
+             background-color .3s var(--ease),border-color .3s var(--ease)}
+.card.focus .card-link,.morph-in .card-link{opacity:1;transform:none}
+.card-link:hover{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.5)}
+.card-link:focus-visible{outline:2px solid #fff;outline-offset:3px}
+.card-link svg{transition:transform .3s var(--ease)}
+.card-link:hover svg{transform:translate(3px,-3px)}
 .card{cursor:pointer}
 /* brakujące zdjęcie — świadomie widoczne, nie zapychamy stockiem */
 .card.nofoto{background:
@@ -734,7 +745,7 @@ footer.site img{height:26px}
       <span class="card-lab">01 / Prowadzenie</span>
       <h3>Medycyna sportowa</h3>
       <span class="card-txt">Badania kwalifikacyjne, prowadzenie przez cały sezon i decyzje o powrocie do gry — te same standardy, którymi prowadzimy pierwszą drużynę.</span>
-          <a class="card-cta" href="#kontakt">Umów wizytę</a>
+          <div class="card-akcje"><a class="card-cta" href="#kontakt">Umów wizytę</a><a class="card-link" href="uslugi/medycyna-sportowa.html">Zakres opieki<svg width="12" height="12" viewBox="0 0 13 13" fill="none" aria-hidden="true"><path d="M3 10 10 3M4.6 3H10v5.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
     </div>
     </div>
   
@@ -784,7 +795,7 @@ footer.site img{height:26px}
           <span class="card-lab">01 / Prowadzenie</span>
           <h3>Medycyna sportowa</h3>
           <span class="card-txt">Badania kwalifikacyjne, prowadzenie przez cały sezon i decyzje o powrocie do gry — te same standardy, którymi prowadzimy pierwszą drużynę.</span>
-          <a class="card-cta" href="#kontakt">Umów wizytę</a>
+          <div class="card-akcje"><a class="card-cta" href="#kontakt">Umów wizytę</a><a class="card-link" href="uslugi/medycyna-sportowa.html">Zakres opieki<svg width="12" height="12" viewBox="0 0 13 13" fill="none" aria-hidden="true"><path d="M3 10 10 3M4.6 3H10v5.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
         </div>
       </article>
       <article class="card" data-card>
@@ -793,7 +804,7 @@ footer.site img{height:26px}
           <span class="card-lab">02 / Diagnostyka</span>
           <h3>Ortopedia</h3>
           <span class="card-txt">Konsultacje ortopedyczne z diagnostyką obrazową na miejscu. USG i RTG bez zewnętrznej rejestracji, decyzja o ścieżce leczenia od razu.</span>
-          <a class="card-cta" href="#kontakt">Umów wizytę</a>
+          <div class="card-akcje"><a class="card-cta" href="#kontakt">Umów wizytę</a><a class="card-link" href="uslugi/ortopedia.html">Zakres opieki<svg width="12" height="12" viewBox="0 0 13 13" fill="none" aria-hidden="true"><path d="M3 10 10 3M4.6 3H10v5.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
         </div>
       </article>
       <article class="card" data-card>
@@ -802,7 +813,7 @@ footer.site img{height:26px}
           <span class="card-lab">03 / Powrót do sprawności</span>
           <h3>Fizjoterapia i rehabilitacja</h3>
           <span class="card-txt">Protokoły powrotu po urazie, którymi na co dzień prowadzimy zawodników. Praca 1:1 i kryteria progresu zamiast kalendarza.</span>
-          <a class="card-cta" href="#kontakt">Umów wizytę</a>
+          <div class="card-akcje"><a class="card-cta" href="#kontakt">Umów wizytę</a><a class="card-link" href="uslugi/fizjoterapia.html">Zakres opieki<svg width="12" height="12" viewBox="0 0 13 13" fill="none" aria-hidden="true"><path d="M3 10 10 3M4.6 3H10v5.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
         </div>
       </article>
             <article class="card" data-card>
@@ -811,7 +822,7 @@ footer.site img{height:26px}
           <span class="card-lab">04 / Żywienie</span>
           <h3>Dietetyka i suplementacja</h3>
           <span class="card-txt">Analiza składu ciała i plan żywienia pod cel — masa, redukcja, wydolność. Suplementacja tylko tam, gdzie ma sens.</span>
-          <a class="card-cta" href="#kontakt">Umów wizytę</a>
+          <div class="card-akcje"><a class="card-cta" href="#kontakt">Umów wizytę</a><a class="card-link" href="uslugi/dietetyka.html">Zakres opieki<svg width="12" height="12" viewBox="0 0 13 13" fill="none" aria-hidden="true"><path d="M3 10 10 3M4.6 3H10v5.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
         </div>
       </article>
       <article class="card" data-card>
@@ -820,7 +831,7 @@ footer.site img{height:26px}
           <span class="card-lab">05 / Motoryka</span>
           <h3>Trening merytoryczny</h3>
           <span class="card-txt">Motoryka, siła i profilaktyka urazów pod okiem trenerów przygotowania. Testy wydolnościowe i plan na cały sezon.</span>
-          <a class="card-cta" href="#kontakt">Umów wizytę</a>
+          <div class="card-akcje"><a class="card-cta" href="#kontakt">Umów wizytę</a><a class="card-link" href="uslugi/trening.html">Zakres opieki<svg width="12" height="12" viewBox="0 0 13 13" fill="none" aria-hidden="true"><path d="M3 10 10 3M4.6 3H10v5.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
         </div>
       </article>
       <article class="card" data-card>
@@ -829,7 +840,7 @@ footer.site img{height:26px}
           <span class="card-lab">06 / Wiedza</span>
           <h3>Edukacja i szkolenie</h3>
           <span class="card-txt">Warsztaty i szkolenia dla klubów oraz trenerów. Wiedza sztabu pierwszej drużyny dostępna dla akademii i amatorów.</span>
-          <a class="card-cta" href="#kontakt">Umów wizytę</a>
+          <div class="card-akcje"><a class="card-cta" href="#kontakt">Umów wizytę</a><a class="card-link" href="uslugi/edukacja.html">Zakres opieki<svg width="12" height="12" viewBox="0 0 13 13" fill="none" aria-hidden="true"><path d="M3 10 10 3M4.6 3H10v5.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
         </div>
       </article>
     </div>
@@ -922,7 +933,9 @@ footer.site img{height:26px}
     const top = sec.getBoundingClientRect().top + scrollY + wstep + (i / (N - 1)) * span;
     window.scrollTo({ top: Math.ceil(top) + 1, behavior: 'smooth' });
   };
-  cards.forEach((c, i) => c.addEventListener('click', () => doKarty(i)));
+  cards.forEach((c, i) => c.addEventListener('click', e => {
+    if (!e.target.closest('a')) doKarty(i);   // link na karcie ma nawigować, nie przewijać
+  }));
   sec.__doKarty = doKarty;
 
   // (chip z rotacją usunięty 2026-08-22 — tekst leży wprost na karcie)
@@ -1702,6 +1715,8 @@ footer.site img{height:26px}
       // wąski kadr wycina część sylwetki — nie pokazujemy znacznika stawu, którego nie widać
       j.hidden = x < 24 || x > H.width - 24 || y < 88 || y > H.height - 24;
     });
+    // lewa krawędź ciemnej kolumny zdjęcia — o nią opiera się nagłówek
+    hero.style.setProperty('--kx', (ox + w * 0.55).toFixed(1) + 'px');
   };
   place();
 

@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Edukacja i szkolenie — Champions Health</title>
+<meta name="description" content="Warsztaty i szkolenia dla klubów oraz trenerów. Wiedza sztabu pierwszej drużyny dostępna dla akademii i amatorów.">
+<link rel="icon" href="../img/logo_LCH.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Inter:opsz,wght@14..32,400..700&display=swap" rel="stylesheet">
+<!-- PLIK GENEROWANY — nie edytuj ręcznie.
+     Źródła: uslugi/szablon.html + uslugi/dane.json, przebudowa: node uslugi/gen.mjs
+     UWAGA: opisy usług to copy marketingowe. Przed publikacją musi je zatwierdzić
+     zespół medyczny klienta — to treść na stronie placówki, nie hasło reklamowe. -->
+<style>
+/* ==========================================================================
+   Podstrona usługi — wariant strony głównej, nie osobny język wizualny.
+   Wspólne z /index.html: Inter w jednej wadze 500 na nagłówkach, tracking
+   −.028em, krzywa Revoluta, raster kropek 196 px, biały tekst na czerni.
+   Różnice (celowe, żeby podstrona nie była kopią home):
+     · nawigacja stale widoczna i szklana zamiast chowanej,
+     · układ dwukolumnowy zamiast pełnoekranowych scen,
+     · sekcje rozdzielone włosową linią zamiast zmiany koloru tła,
+     · szkło (backdrop-filter) jako główny materiał paneli.
+   Szkło potrzebuje faktury POD spodem — stąd poświaty i raster na body;
+   na płaskiej czerni backdrop-filter nie ma czego rozmyć i panel wygląda
+   jak zwykła półprzezroczysta plama.
+   ========================================================================== */
+:root{
+  --ink:#050706;
+  --ease:cubic-bezier(.22,.8,.25,1);
+  --rev:cubic-bezier(.35,0,0,1);
+  --zielen:#0B6B36;
+  --tresc:1180px;
+  --bok:clamp(20px,4vw,64px);
+  --szklo:rgba(255,255,255,.055);
+  --szklo-brd:rgba(255,255,255,.13);
+  --grid:196px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--ink);color:#fff;
+  font-family:Inter,system-ui,sans-serif;font-size:16px;line-height:1.6;
+  font-optical-sizing:auto;-webkit-font-smoothing:antialiased;overflow-x:hidden;
+  --legia:"Scale VF",Archivo,Inter,system-ui,sans-serif}
+/* faktura pod szkłem: dwie poświaty + ten sam raster kropek co na stronie głównej */
+body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(60% 45% at 78% 4%,rgba(11,107,54,.34),transparent 70%),
+    radial-gradient(48% 38% at 4% 52%,rgba(11,107,54,.16),transparent 72%),
+    radial-gradient(70% 50% at 50% 108%,rgba(24,58,38,.5),transparent 72%)}
+body::after{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.75;
+  background-image:radial-gradient(rgba(255,255,255,.16) 1px,transparent 1px);
+  background-size:var(--grid) var(--grid)}
+main,nav,footer{position:relative;z-index:1}
+img{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+h1,h2,h3{margin:0;font-weight:500;letter-spacing:-.028em;line-height:1.05}
+p{margin:0}
+.wrap{max-width:var(--tresc);margin:0 auto;padding-inline:var(--bok)}
+
+/* --- materiał: szkło ------------------------------------------------------ */
+.szklo{background:var(--szklo);border:1px solid var(--szklo-brd);
+  -webkit-backdrop-filter:blur(18px) saturate(1.5);backdrop-filter:blur(18px) saturate(1.5);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.16),0 24px 60px -34px rgba(0,0,0,.9)}
+
+/* --- nawigacja: stale widoczna, szklana ----------------------------------- */
+.nav{position:sticky;top:0;z-index:50;background:rgba(5,7,6,.55);
+  -webkit-backdrop-filter:blur(20px) saturate(1.4);backdrop-filter:blur(20px) saturate(1.4);
+  border-bottom:1px solid rgba(255,255,255,.09)}
+.nav-in{display:flex;align-items:center;gap:26px;height:64px;
+  max-width:var(--tresc);margin:0 auto;padding-inline:var(--bok)}
+.nav-in .brand img{height:24px}
+.wroc{display:inline-flex;align-items:center;gap:8px;margin-left:6px;white-space:nowrap;
+  font-size:14px;color:rgba(255,255,255,.7);transition:color .25s var(--ease)}
+.wroc:hover{color:#fff}
+.wroc svg{transition:transform .3s var(--ease)}
+.wroc:hover svg{transform:translateX(-3px)}
+.nav-menu{display:flex;gap:24px;margin-left:auto;font-size:15px;color:rgba(255,255,255,.78)}
+.nav-menu a{transition:color .25s var(--ease)}
+.nav-menu a:hover{color:#fff}
+.nav .cta{display:inline-flex;align-items:center;height:37px;padding:0 16px;border-radius:999px;
+  background:#fff;color:#000;font-size:15px;font-weight:500;
+  transition:background-color .3s var(--ease),transform .3s var(--ease)}
+.nav .cta:hover{background:#E9E9E6;transform:translateY(-1px)}
+:where(a,button):focus-visible{outline:2px solid #fff;outline-offset:3px;border-radius:6px}
+
+/* --- przyciski ------------------------------------------------------------ */
+.btn{display:inline-flex;align-items:center;gap:10px;height:48px;padding:0 22px;border-radius:999px;
+  font-size:15px;font-weight:500;white-space:nowrap;
+  transition:background-color .3s var(--ease),transform .3s var(--ease),border-color .3s var(--ease)}
+.btn-w{background:#fff;color:#000}
+.btn-w:hover{background:#E9E9E6;transform:translateY(-1px)}
+.btn-g{background:rgba(255,255,255,.09);color:#fff;border:1px solid rgba(255,255,255,.22);
+  -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+.btn-g:hover{background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.4);transform:translateY(-1px)}
+.btn svg{transition:transform .3s var(--ease)}
+.btn:hover svg{transform:translate(3px,-3px)}
+
+/* --- hero podstrony: dwie kolumny ----------------------------------------- */
+.pg-hero{padding:clamp(48px,7vw,96px) 0 clamp(40px,6vw,72px)}
+.pg-hero .wrap{display:grid;grid-template-columns:1.04fr .96fr;gap:clamp(28px,4vw,64px);align-items:center}
+.kick{display:inline-flex;align-items:center;gap:10px;height:32px;padding:0 14px;border-radius:999px;
+  background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.16);
+  -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+  font-size:12.5px;font-weight:500;letter-spacing:.04em;text-transform:uppercase;
+  color:rgba(255,255,255,.85)}
+.kick b{font-family:var(--legia);font-weight:700;font-size:13px;color:#fff}
+.pg-hero h1{margin:22px 0 0;max-width:15ch;font-size:clamp(2.4rem,5.6vw,4.4rem)}
+.pg-lead{margin-top:20px;max-width:52ch;font-size:clamp(17px,1.4vw,19px);line-height:1.62;
+  color:rgba(255,255,255,.78)}
+.pg-akcje{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
+
+/* zdjęcie + szklana karta faktów zachodząca na jego róg */
+.pg-foto{position:relative;padding-bottom:34px}
+.pg-foto>img{width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:24px;
+  object-position:50% 45%;
+  box-shadow:0 40px 80px -40px rgba(0,0,0,.95)}
+.pg-foto::after{content:"";position:absolute;inset:0 0 34px;border-radius:24px;pointer-events:none;
+  background:linear-gradient(to top,rgba(5,7,6,.72),transparent 46%);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
+.fakty{position:absolute;left:clamp(-40px,-2.4vw,-16px);right:clamp(24px,3vw,44px);bottom:0;z-index:2;
+  display:grid;grid-template-columns:repeat(3,1fr);gap:2px;overflow:hidden;border-radius:18px}
+.fakty div{padding:14px 16px 16px;background:rgba(255,255,255,.04)}
+.fakty dt{font-size:11.5px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;
+  color:rgba(255,255,255,.55)}
+.fakty dd{margin:5px 0 0;font-size:15px;line-height:1.3;color:#fff}
+
+/* --- wspólna szpica sekcji ------------------------------------------------ */
+.sek{padding:clamp(48px,6.5vw,88px) 0;border-top:1px solid rgba(255,255,255,.09)}
+.sek-head{max-width:660px}
+.sek-head h2{font-size:clamp(1.9rem,3.4vw,2.9rem);text-wrap:balance}
+.sek-head p{margin-top:14px;max-width:52ch;font-size:17px;color:rgba(255,255,255,.7)}
+
+/* --- zakres: kafle szklane ------------------------------------------------ */
+.kafle{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:36px}
+.kafel{position:relative;padding:26px 24px 28px;border-radius:20px;
+  transition:transform .45s var(--ease),background-color .45s var(--ease),border-color .45s var(--ease)}
+.kafel:hover{transform:translateY(-4px);background:rgba(255,255,255,.085);
+  border-color:rgba(255,255,255,.26)}
+.kafel i{display:block;width:34px;height:34px;margin-bottom:18px;border-radius:10px;
+  background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);
+  font-family:var(--legia);font-weight:700;font-style:normal;font-size:13px;
+  line-height:32px;text-align:center;color:rgba(255,255,255,.9)}
+.kafel h3{font-size:19px;letter-spacing:-.018em;line-height:1.25}
+.kafel p{margin-top:10px;font-size:14.5px;line-height:1.6;color:rgba(255,255,255,.72)}
+
+/* --- opis: proza + szklana kolumna „dla kogo" ----------------------------- */
+.opis-grid{display:grid;grid-template-columns:1fr 360px;gap:clamp(28px,4vw,64px);align-items:start}
+.proza p{max-width:62ch;font-size:clamp(16.5px,1.25vw,18px);line-height:1.72;
+  color:rgba(255,255,255,.82)}
+.proza p+p{margin-top:1.15em}
+.cytat{margin:34px 0;padding:26px 28px;border-radius:20px;border-left:2px solid rgba(255,255,255,.5);
+  font-size:clamp(18px,1.8vw,22px);line-height:1.42;letter-spacing:-.018em;color:#fff}
+.dla-kogo{position:sticky;top:88px;padding:26px 26px 28px;border-radius:20px}
+.dla-kogo h3{font-size:17px;letter-spacing:-.012em}
+.dla-kogo ul{margin:16px 0 0;padding:0;list-style:none}
+.dla-kogo li{position:relative;padding:12px 0 12px 22px;font-size:14.5px;line-height:1.55;
+  color:rgba(255,255,255,.78);border-top:1px solid rgba(255,255,255,.1)}
+.dla-kogo li:first-child{border-top:0;padding-top:0}
+.dla-kogo li::before{content:"";position:absolute;left:2px;top:1.05em;width:7px;height:7px;
+  border-radius:50%;background:#fff;opacity:.85}
+.dla-kogo li:first-child::before{top:.5em}
+
+/* --- przebieg: numerowane wiersze ----------------------------------------- */
+.kroki{margin-top:36px;display:grid;gap:12px}
+.krok{display:grid;grid-template-columns:74px 1fr;gap:clamp(16px,2.4vw,40px);align-items:center;
+  padding:22px 26px;border-radius:18px}
+.krok b{font-family:var(--legia);font-weight:700;font-size:clamp(26px,3vw,38px);line-height:1;
+  color:rgba(255,255,255,.34)}
+.krok h3{font-size:19px;letter-spacing:-.016em}
+.krok p{margin-top:7px;font-size:14.5px;line-height:1.6;color:rgba(255,255,255,.72);max-width:60ch}
+
+/* --- pas kontaktu: szkło na zdjęciu --------------------------------------- */
+.kont{position:relative;margin:clamp(48px,6.5vw,88px) auto 0;max-width:calc(var(--tresc) - 2px);
+  border-radius:28px;overflow:hidden}
+.kont>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 42%}
+.kont::after{content:"";position:absolute;inset:0;
+  background:linear-gradient(105deg,rgba(5,10,7,.9) 0%,rgba(5,10,7,.72) 52%,rgba(5,10,7,.42) 100%)}
+.kont-in{position:relative;z-index:2;display:grid;grid-template-columns:1.15fr .85fr;
+  gap:clamp(24px,3.4vw,56px);align-items:center;padding:clamp(34px,4.6vw,62px)}
+.kont-in h2{font-size:clamp(1.8rem,3.2vw,2.7rem);max-width:18ch}
+.kont-in p{margin-top:16px;max-width:44ch;font-size:16.5px;line-height:1.6;color:rgba(255,255,255,.82)}
+.kont-karta{padding:26px;border-radius:20px}
+.kont-karta dl{margin:0;display:grid;gap:14px}
+.kont-karta dt{font-size:11.5px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;
+  color:rgba(255,255,255,.55)}
+.kont-karta dd{margin:3px 0 0;font-size:16px}
+.kont-karta dd a{border-bottom:1px solid rgba(255,255,255,.3);transition:border-color .25s var(--ease)}
+.kont-karta dd a:hover{border-color:#fff}
+.kont-akcje{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
+
+/* --- pozostałe usługi ----------------------------------------------------- */
+.inne{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:32px}
+.inna{display:flex;flex-direction:column;justify-content:space-between;gap:26px;min-height:150px;
+  padding:20px;border-radius:18px;
+  transition:transform .45s var(--ease),background-color .45s var(--ease),border-color .45s var(--ease)}
+.inna:hover{transform:translateY(-4px);background:rgba(255,255,255,.085);
+  border-color:rgba(255,255,255,.26)}
+.inna span{font-family:var(--legia);font-weight:700;font-size:13px;color:rgba(255,255,255,.5)}
+.inna b{font-size:16.5px;font-weight:500;letter-spacing:-.014em;line-height:1.25}
+.inna em{display:block;margin-top:8px;font-style:normal;font-size:13px;color:rgba(255,255,255,.6)}
+
+/* --- stopka --------------------------------------------------------------- */
+footer.site{border-top:1px solid rgba(255,255,255,.09);padding:44px 0 28px;
+  font-size:13.5px;color:rgba(255,255,255,.55)}
+footer.site .wrap{display:flex;flex-wrap:wrap;align-items:center;gap:18px}
+footer.site img{height:24px;opacity:.9}
+footer.site span:last-child{margin-left:auto}
+
+/* --- wjazd ---------------------------------------------------------------- */
+[data-rv]{opacity:0;transform:translateY(22px);
+  transition:opacity .8s var(--rev),transform .8s var(--rev)}
+[data-rv].in{opacity:1;transform:none}
+
+/* --- węższe ekrany -------------------------------------------------------- */
+@media(max-width:1080px){
+  .pg-hero .wrap,.opis-grid,.kont-in{grid-template-columns:1fr}
+  .dla-kogo{position:static}
+  .kafle{grid-template-columns:repeat(2,1fr)}
+  .inne{grid-template-columns:repeat(3,1fr)}
+  .fakty{left:0;right:0}
+  .pg-foto>img{aspect-ratio:16/11}
+}
+@media(max-width:720px){
+  :root{--grid:132px}
+  .nav-menu{display:none}
+  .kafle,.inne{grid-template-columns:1fr}
+  .krok{grid-template-columns:1fr;gap:10px;align-items:start}
+  .fakty{grid-template-columns:1fr;gap:1px}
+  .fakty div{display:flex;align-items:baseline;gap:10px;padding:11px 14px}
+  .fakty dd{margin:0}
+  .btn{width:100%;justify-content:center}
+  footer.site span:last-child{margin-left:0}
+}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  [data-rv]{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-in">
+    <a class="brand" href="../index.html" aria-label="Champions Health — strona główna">
+      <img src="../img/logo_LCH_white.svg" alt="Champions Health">
+    </a>
+    <a class="wroc" href="../index.html#opieka">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+        <path d="M8.5 2.5 4 7l4.5 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>Zakres opieki</a>
+    <div class="nav-menu">
+      <a href="../index.html#sciezka">Jak to działa</a>
+      <a href="../index.html#zespol">Zespół</a>
+      <a href="#kontakt">Kontakt</a>
+    </div>
+    <a class="cta" href="#kontakt">Umów wizytę</a>
+  </div>
+</nav>
+
+<main>
+
+<header class="pg-hero">
+  <div class="wrap">
+    <div>
+      <span class="kick" data-rv><b>06</b>Wiedza</span>
+      <h1 data-rv>Edukacja i szkolenie</h1>
+      <p class="pg-lead" data-rv>Warsztaty i szkolenia dla klubów oraz trenerów. Wiedza sztabu pierwszej drużyny dostępna dla akademii i amatorów.</p>
+      <div class="pg-akcje" data-rv>
+        <a class="btn btn-w" href="#kontakt">Umów wizytę
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
+            <path d="M3 10 10 3M4.6 3H10v5.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg></a>
+        <a class="btn btn-g" href="tel:+48223182000">22 318 20 00</a>
+      </div>
+    </div>
+    <div class="pg-foto" data-rv>
+      <img src="../img/c6-edukacja.png" alt="Edukacja i szkolenie — Champions Health">
+      <dl class="fakty szklo"><div><dt>Forma</dt><dd>Warsztat, nie wykład</dd></div>
+      <div><dt>Odbiorca</dt><dd>Kluby i akademie</dd></div>
+      <div><dt>Miejsce</dt><dd>U nas lub u Was</dd></div></dl>
+    </div>
+  </div>
+</header>
+
+<section class="sek">
+  <div class="wrap">
+    <div class="sek-head" data-rv>
+      <h2>Co obejmuje ten zakres</h2>
+      <p>Sześć elementów, które składają się na prowadzenie w tym obszarze. Nie musisz korzystać ze wszystkich — plan układamy pod to, z czym przychodzisz.</p>
+    </div>
+    <div class="kafle"><article class="kafel szklo" data-rv><i>01</i><h3>Szkolenia dla trenerów</h3><p>Rozpoznawanie urazów, zarządzanie obciążeniami i praca z zawodnikiem po kontuzji.</p></article>
+      <article class="kafel szklo" data-rv><i>02</i><h3>Warsztaty dla klubów i akademii</h3><p>Profilaktyka urazów wpleciona w codzienny plan treningowy zespołu.</p></article>
+      <article class="kafel szklo" data-rv><i>03</i><h3>Pierwsza pomoc przy urazie</h3><p>Postępowanie na boisku w pierwszych minutach po zdarzeniu.</p></article>
+      <article class="kafel szklo" data-rv><i>04</i><h3>Szkolenia dla rodziców</h3><p>Obciążenia treningowe i regeneracja u zawodników w wieku rozwojowym.</p></article>
+      <article class="kafel szklo" data-rv><i>05</i><h3>Konsultacje dla sztabów</h3><p>Przegląd procedur medycznych klubu i ścieżki postępowania po urazie.</p></article>
+      <article class="kafel szklo" data-rv><i>06</i><h3>Wykłady otwarte</h3><p>Spotkania dla amatorów — trening, regeneracja i najczęstsze błędy.</p></article></div>
+  </div>
+</section>
+
+<section class="sek">
+  <div class="wrap opis-grid">
+    <div class="proza" data-rv>
+      <p>Największy wpływ na liczbę urazów w klubie ma to, co dzieje się codziennie na treningu, a nie to, co dzieje się w gabinecie po urazie. Dlatego wiedzę, którą sztab wykorzystuje przy pierwszej drużynie, udostępniamy w formie szkoleń dla trenerów, akademii i całych sztabów.</p>
+      <p>Zajęcia mają formę warsztatu. Pracujemy na konkretnych sytuacjach z Waszego zespołu — kalendarzu obciążeń, historii kontuzji, procedurach po urazie — i wychodzimy z ustaleniami, które da się wdrożyć w najbliższym mikrocyklu.</p>
+      <p>Program układamy pod odbiorcę. Inaczej wygląda spotkanie dla trenerów akademii, inaczej dla rodziców zawodników w wieku rozwojowym, a jeszcze inaczej dla sztabu medycznego klubu. Zakres i długość ustalamy przed szkoleniem.</p>
+      <blockquote class="cytat szklo">O liczbie urazów decyduje codzienny trening, nie gabinet po urazie.</blockquote>
+    </div>
+    <aside class="dla-kogo szklo" data-rv>
+      <h3>Dla kogo</h3>
+      <ul><li>Kluby i akademie piłkarskie oraz inne sporty zespołowe</li>
+        <li>Trenerzy i sztaby medyczne szukające spójnych procedur po urazie</li>
+        <li>Organizatorzy zajęć dla amatorów i rodzice młodych zawodników</li></ul>
+    </aside>
+  </div>
+</section>
+
+<section class="sek">
+  <div class="wrap">
+    <div class="sek-head" data-rv><h2>Jak to wygląda w praktyce</h2></div>
+    <div class="kroki"><article class="krok szklo" data-rv><b>01</b><div><h3>Rozmowa wstępna</h3><p>Ustalamy, kto jest odbiorcą i jaki problem ma rozwiązać szkolenie.</p></div></article>
+      <article class="krok szklo" data-rv><b>02</b><div><h3>Program</h3><p>Dostajesz zakres, długość i formę zajęć do akceptacji.</p></div></article>
+      <article class="krok szklo" data-rv><b>03</b><div><h3>Warsztat</h3><p>Spotkanie u nas albo u Was, na Waszych realnych przypadkach.</p></div></article>
+      <article class="krok szklo" data-rv><b>04</b><div><h3>Wdrożenie</h3><p>Ustalenia na piśmie i możliwość konsultacji po szkoleniu.</p></div></article></div>
+  </div>
+</section>
+
+<section class="kont" id="kontakt">
+  <img src="../img/kontakt.png" alt="" aria-hidden="true">
+  <div class="kont-in">
+    <div data-rv>
+      <h2>Zacznij od rozmowy z koordynatorem</h2>
+      <p>Piętnaście minut wystarczy, żeby ustalić, czy „Edukacja i szkolenie” to zakres, którego
+        potrzebujesz — a jeśli nie, skierujemy Cię do właściwego. Bez skierowania i bez kolejki.</p>
+      <div class="kont-akcje">
+        <a class="btn btn-w" href="../index.html#kontakt">Wypełnij formularz
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
+            <path d="M3 10 10 3M4.6 3H10v5.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg></a>
+        <a class="btn btn-g" href="tel:+48223182000">Zadzwoń: 22 318 20 00</a>
+      </div>
+    </div>
+    <div class="kont-karta szklo" data-rv>
+      <dl>
+        <div><dt>Telefon</dt><dd><a href="tel:+48223182000">22 318 20 00</a></dd></div>
+        <div><dt>E-mail</dt><dd><a href="mailto:info@legia.pl">info@legia.pl</a></dd></div>
+        <div><dt>Godziny</dt><dd>Pon.–pt. 8:00–20:00</dd></div>
+        <div><dt>Adres</dt><dd>ul. Łazienkowska 3, Warszawa</dd></div>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<section class="sek">
+  <div class="wrap">
+    <div class="sek-head" data-rv><h2>Pozostałe zakresy opieki</h2></div>
+    <div class="inne"><a class="inna szklo" href="medycyna-sportowa.html" data-rv><span>01</span><div><b>Medycyna sportowa</b><em>Prowadzenie</em></div></a>
+      <a class="inna szklo" href="ortopedia.html" data-rv><span>02</span><div><b>Ortopedia</b><em>Diagnostyka</em></div></a>
+      <a class="inna szklo" href="fizjoterapia.html" data-rv><span>03</span><div><b>Fizjoterapia i rehabilitacja</b><em>Powrót do sprawności</em></div></a>
+      <a class="inna szklo" href="dietetyka.html" data-rv><span>04</span><div><b>Dietetyka i suplementacja</b><em>Żywienie</em></div></a>
+      <a class="inna szklo" href="trening.html" data-rv><span>05</span><div><b>Trening merytoryczny</b><em>Motoryka</em></div></a></div>
+  </div>
+</section>
+
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <img src="../img/logo_LCH_white.svg" alt="Champions Health">
+    <span>ul. Łazienkowska 3, 00-449 Warszawa · 22 318 20 00</span>
+    <span>© 2026 Champions Health · Legia Warszawa S.A.</span>
+  </div>
+</footer>
+
+<script>
+// wjazd sekcji — jedyny skrypt na podstronie
+const rv = document.querySelectorAll('[data-rv]');
+if (matchMedia('(prefers-reduced-motion:reduce)').matches) {
+  rv.forEach(e => e.classList.add('in'));
+} else {
+  const io = new IntersectionObserver((wpisy, o) => {
+    wpisy.forEach(w => {
+      if (!w.isIntersecting) return;
+      // kaskada w obrębie jednego rodzica, żeby elementy nie wjeżdżały jednocześnie
+      const r = [...w.target.parentElement.querySelectorAll('[data-rv]')].indexOf(w.target);
+      w.target.style.transitionDelay = Math.min(r, 4) * 70 + 'ms';
+      w.target.classList.add('in');
+      o.unobserve(w.target);
+    });
+  }, { threshold: .12, rootMargin: '0px 0px -8% 0px' });
+  rv.forEach(e => io.observe(e));
+}
+</script>
+</body>
+</html>

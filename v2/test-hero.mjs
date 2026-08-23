@@ -84,6 +84,12 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
       return { widoczna: +getComputedStyle(c).opacity > 0.9,
         nadBarkiem: r.bottom <= bk.top + 2,
         start: window.__start, wtedy: window.__wtedy,
+        // nagłówek czyta się bez przyciemnienia TYLKO dlatego, że stoi
+        // w ciemnej kolumnie zdjęcia — pilnujemy, żeby z niej nie wyjechał
+        wKolumnie: r.left >= parseFloat(getComputedStyle(
+          document.querySelector('.hero')).getPropertyValue('--kx')) - 2,
+        bezPrzyciemnienia: getComputedStyle(document.querySelector('.hero'), '::before')
+          .backgroundImage === 'none',
         koniec: [parseFloat(bk.left ?? 0) || bk.x + bk.width / 2, bk.y + bk.height / 2],
         kreskaZnikla: +getComputedStyle(document.querySelector('.jt-tor')).opacity < .1,
         kropekWidocznych: [...document.querySelectorAll('.jt')]
@@ -109,6 +115,7 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
       // na końcu zostają same kropki
       && kopia.kreskaZnikla && kopia.kropekWidocznych === 4
       && kopia.widoczna && kopia.nadBarkiem && kopia.wKadrze
+      && (w < 900 || kopia.wKolumnie) && kopia.bezPrzyciemnienia
       && /Kontuzje/.test(kopia.tekst);
     console.log(`${w}×${h} wjazd hero`, wOk ? 'ok' : 'BŁĄD ' + JSON.stringify({ kolej, czasy, kopia }));
     if (!wOk) process.exitCode = 1;
