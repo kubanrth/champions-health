@@ -338,6 +338,8 @@ a{color:inherit;text-decoration:none}
 
 /* kreska wędrująca po stawach przy starcie strony */
 .jt-tor{position:absolute;inset:0;z-index:3;pointer-events:none;overflow:visible}
+.jt-tor{transition:opacity .8s var(--rev) .25s}
+.hero.tekst .jt-tor{opacity:0}
 .jt-tor path{fill:none;stroke:rgba(255,255,255,.9);stroke-width:1.6;
   stroke-linecap:round;stroke-linejoin:round;
   filter:drop-shadow(0 0 6px rgba(255,255,255,.45))}
@@ -368,17 +370,45 @@ a{color:inherit;text-decoration:none}
   font-size:12px;line-height:1.46;font-weight:400;text-transform:none;color:rgba(255,255,255,.9)}
 
 
-/* treść hero — siada nad poziomym odcinkiem kreski, który kończy animację */
-.hero-copy{position:absolute;z-index:4;left:var(--kx,50%);bottom:calc(100% - var(--ky,50%) + 18px);
-  width:calc(100% - var(--kx,50%) - clamp(24px,3.4vw,52px));pointer-events:none;
+/* treść hero — nagłówek nad poziomym odcinkiem kreski, dosunięty do lewej */
+.hero-copy{position:absolute;z-index:4;left:clamp(24px,3.4vw,52px);
+  bottom:calc(100% - var(--ky,50%) + 22px);width:min(58%,760px);pointer-events:none;
   opacity:0;transform:translateY(26px);
   transition:opacity .7s var(--rev),transform .9s var(--rev)}
 .hero.tekst .hero-copy{opacity:1;transform:none}
-.hero-copy h1{margin:0;font-size:clamp(1.5rem,3.9vw,3.5rem);line-height:1.06;
+/* nagłówek kładzie się na jasnej koszulce — potrzebuje własnego, wygasającego tła */
+.hero-copy::before{content:"";position:absolute;z-index:-1;
+  inset:-46px -22% -34px calc(-1 * clamp(24px,3.4vw,52px));
+  background:linear-gradient(100deg,rgba(4,10,14,.96) 0%,rgba(4,10,14,.93) 58%,
+             rgba(4,10,14,.7) 82%,rgba(4,10,14,0) 100%)}
+.hero-copy h1{margin:0;font-size:clamp(1.8rem,4.9vw,4.4rem);line-height:1.04;
   letter-spacing:-.028em;font-weight:500;text-wrap:balance}
 .hero.morphed .hero-copy{opacity:0;transform:translateY(-40px)}
+
+/* drugi blok: mniejsze zdanie + duży przycisk (wzór: myhealthprac.com) */
+.hero-dol{position:absolute;z-index:4;right:clamp(24px,3.4vw,52px);
+  bottom:clamp(2rem,6svh,4.4rem);width:min(30rem,58%);text-align:right;
+  opacity:0;transform:translateY(22px);
+  transition:opacity .7s var(--rev) .25s,transform .9s var(--rev) .25s}
+.hero.tekst .hero-dol{opacity:1;transform:none}
+.hero.morphed .hero-dol{opacity:0;transform:translateY(-24px)}
+.hero-dol p{margin:0 0 1.2rem;font-size:clamp(.98rem,1.25vw,1.15rem);line-height:1.5;
+  color:rgba(255,255,255,.84)}
+/* pastylka 1:1 z referencji: 52 px wysokości, padding 4/4/4/20, koło 46 px */
+.pigulka{display:inline-flex;align-items:center;gap:18px;height:52px;padding:4px 4px 4px 22px;
+  border-radius:999px;background:#F1F1F1;color:#1F1F1F;
+  font-size:15px;font-weight:500;letter-spacing:-.01em;
+  transition:transform .35s var(--ease),background-color .35s var(--ease)}
+.pigulka:hover{transform:translateY(-2px);background:#fff}
+.pigulka:focus-visible{outline:2px solid #fff;outline-offset:3px}
+.pigulka-kolo{width:44px;height:44px;flex:none;border-radius:50%;background:#1F1F1F;color:#fff;
+  display:grid;place-items:center;overflow:hidden}
+.pigulka-kolo svg{width:18px;height:18px;transition:transform .4s var(--ease)}
+.pigulka:hover .pigulka-kolo svg{transform:translate(14px,-14px)}
+
 @media(max-width:760px){
   .hero-copy{left:24px;right:24px;width:auto;bottom:auto;top:auto}
+  .hero-dol{right:24px;left:24px;width:auto;text-align:left}
 }
 
 @media(max-width:900px){
@@ -698,9 +728,9 @@ footer.site img{height:26px}
     </div>
   
   
-    <button class="jt j-bark" data-jt data-ix="36.5" data-iy="29.5" aria-label="Staw ramienny: Najbardziej ruchomy staw ciała. Stabilizują go mięśnie, nie kości — dlatego liczy się siła obręczy barkowej.">
+    <button class="jt j-lokiec" data-jt data-ix="44.7" data-iy="47" aria-label="Staw łokciowy: Ból po zewnętrznej stronie bierze się zwykle z przeciążenia przyczepów prostowników nadgarstka, nie z samego stawu.">
       <span class="jt-dot"></span>
-      <span class="jt-card"><b>Zgięcie + odwiedzenie</b><strong>Staw ramienny</strong><span>Najbardziej ruchomy staw ciała. Stabilizują go mięśnie, nie kości — dlatego liczy się siła obręczy barkowej.</span></span>
+      <span class="jt-card"><b>Zgięcie + rotacja przedramienia</b><strong>Staw łokciowy</strong><span>Ból po zewnętrznej stronie bierze się zwykle z przeciążenia przyczepów prostowników nadgarstka, nie z samego stawu.</span></span>
     </button>
     <button class="jt j-biodro" data-jt data-ix="28.0" data-iy="52.0" aria-label="Staw biodrowy: Ograniczona rotacja przenosi obciążenie na kręgosłup lędźwiowy i pachwinę.">
       <span class="jt-dot"></span>
@@ -717,6 +747,17 @@ footer.site img{height:26px}
   
     <div class="hero-copy" data-kopia>
     <h1>Kontuzje, które znamy z boiska, nie z podręczników</h1>
+  </div>
+  <div class="hero-dol">
+    <p>Ortopedia, medycyna sportowa i rehabilitacja — prowadzone przez sztab medyczny
+      Legii Warszawa.</p>
+    <a class="pigulka" href="#kontakt">
+      <span>Umów się na wizytę</span>
+      <span class="pigulka-kolo" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+             stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg>
+      </span>
+    </a>
   </div>
   </header>
 
@@ -1657,7 +1698,7 @@ footer.site img{height:26px}
   // w prawo, nad którym wyjeżdża nagłówek. Rysowanie przez stroke-dashoffset,
   // punkty zapalane w chwili, gdy czoło kreski mija ich odległość na ścieżce.
   const tor = hero.querySelector('[data-tor] path');
-  const KOLEJ = ['j-skok', 'j-kolano', 'j-biodro', 'j-bark'];
+  const KOLEJ = ['j-skok', 'j-kolano', 'j-biodro', 'j-lokiec'];
   const CZAS_TORU = 2200;
 
   const wjazd = () => {
@@ -1717,7 +1758,7 @@ footer.site img{height:26px}
   if (matchMedia('(prefers-reduced-motion:reduce)').matches) {
     hero.classList.add('wjazd', 'tekst');
     joints.forEach(j => j.classList.add('zapalony'));
-    const bk = hero.querySelector('.j-bark');
+    const bk = hero.querySelector('.j-lokiec');
     hero.style.setProperty('--kx', bk.style.left);
     hero.style.setProperty('--ky', bk.style.top);
   } else {

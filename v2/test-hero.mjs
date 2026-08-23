@@ -3,7 +3,7 @@
 // Uruchom przy działającym serve.mjs:
 //   node sites/champions-health/v2/test-hero.mjs
 import puppeteer from 'puppeteer';
-const STAWY = ['j-bark', 'j-biodro', 'j-kolano', 'j-skok'];
+const STAWY = ['j-lokiec', 'j-biodro', 'j-kolano', 'j-skok'];
 const b = await puppeteer.launch({ headless: 'new', args: ['--no-sandbox'] });
 for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
   const p = await b.newPage(), errs = [];
@@ -72,7 +72,7 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
     const kopia = await q.evaluate(() => {
       const c = document.querySelector('.hero-copy');
       const r = c.getBoundingClientRect();
-      const bk = document.querySelector('.j-bark').getBoundingClientRect();
+      const bk = document.querySelector('.j-lokiec').getBoundingClientRect();
       const H = document.querySelector('.hero').getBoundingClientRect();
       return { widoczna: +getComputedStyle(c).opacity > 0.9,
         nadBarkiem: r.bottom <= bk.top + 2,
@@ -81,12 +81,12 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
     });
     const wOk = (h > 800 || w > 800)
       // kolejność zapalania: kostka → kolano → biodro → bark
-      && JSON.stringify(kolej) === JSON.stringify(['j-skok', 'j-kolano', 'j-biodro', 'j-bark'])
+      && JSON.stringify(kolej) === JSON.stringify(['j-skok', 'j-kolano', 'j-biodro', 'j-lokiec'])
       // każdy kolejny punkt wyraźnie po poprzednim, nie wszystkie naraz
       && czasy['j-kolano'] - czasy['j-skok'] > 250
       && czasy['j-biodro'] - czasy['j-kolano'] > 250
-      && czasy['j-bark'] - czasy['j-biodro'] > 250
-      && czasy['tekst'] > czasy['j-bark'] + 300
+      && czasy['j-lokiec'] - czasy['j-biodro'] > 250
+      && czasy['tekst'] > czasy['j-lokiec'] + 300
       && kopia.widoczna && kopia.nadBarkiem && kopia.wKadrze
       && /Kontuzje/.test(kopia.tekst);
     console.log(`${w}×${h} wjazd hero`, wOk ? 'ok' : 'BŁĄD ' + JSON.stringify({ kolej, czasy, kopia }));
