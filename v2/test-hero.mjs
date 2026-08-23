@@ -94,6 +94,23 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
             && pa.getBoundingClientRect().height / parseFloat(c.lineHeight) <= 3.4; })(),
     };
   });
+  // szybki zjazd w głąb i powrót — morf ma wrócić do pełnego kadru,
+  // a nie przylecieć z boku (cel liczony z offsetów, nie z rect-u toru)
+  await p.evaluate(() => window.scrollTo(0, 2400));
+  await new Promise(r => setTimeout(r, 1500));
+  await p.evaluate(() => window.scrollTo(0, 0));
+  await new Promise(r => setTimeout(r, 1800));
+  const poSzybkim = await p.evaluate(() => {
+    const m = document.querySelector('.morph').getBoundingClientRect();
+    const H = document.querySelector('.hero').getBoundingClientRect();
+    return Math.abs(m.left - H.left) < 2 && Math.abs(m.width - H.width) < 2;
+  });
+  await p.evaluate(() => window.scrollTo(0, 150));
+  await new Promise(r => setTimeout(r, 1700));
+  // slider nie może przeskoczyć poza kartę 01, dopóki morf leci
+  const naKarcie1 = await p.evaluate(() =>
+    [...document.querySelectorAll('[data-card]')].findIndex(c => c.classList.contains('focus')) <= 0);
+
   await p.evaluate(() => window.scrollTo(0, 0));
   await new Promise(r => setTimeout(r, 1600));
   const wroc = await p.evaluate(() => {
@@ -133,8 +150,9 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
 
   const mOk = przed.spoczynek && przed.pelnyKadr && po.zwiniete && po.trafiaWKarte
            && po.kartaWUwadze && po.kartaNaWierzchu && po.kartaPelneKrycie
+           && poSzybkim && naKarcie1
            && po.heroOddane && po.etykietaWidoczna && po.naglowekNadKartami && po.akapitJakRevolut && po.jednaWaga && po.lukRozlozony && po.napisyBiale && wroc.cofniete && wroc.pelnyKadr;
-  console.log(`${w}×${h} przejście`, mOk ? 'ok' : 'BŁĄD ' + JSON.stringify({ przed, po, wroc }));
+  console.log(`${w}×${h} przejście`, mOk ? 'ok' : 'BŁĄD ' + JSON.stringify({ przed, po, wroc, poSzybkim, naKarcie1 }));
   if (!mOk) process.exitCode = 1;
 
   // --- etapy opieki --------------------------------------------------------

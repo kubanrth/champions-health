@@ -451,7 +451,7 @@ a{color:inherit;text-decoration:none}
 .deal-stage{position:sticky;top:0;height:100svh;overflow:hidden;
   /* zapas u góry na nawigację — nagłówek sekcji nie może pod nią wjechać */
   display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding-top:calc(var(--pill-h) / 2);padding-bottom:clamp(2rem,6svh,5rem)}
+  padding-top:calc(var(--pill-h) / 2);padding-bottom:clamp(.5rem,2svh,1.6rem)}
 /* zapas u góry na doczepioną nawigację */
 .claim,.ring,.tm{scroll-margin-top:72px}
 /* nagłówek sekcji 1:1 z Revoluta („Your salary, reimagined"): duży wyśrodkowany
@@ -468,11 +468,11 @@ a{color:inherit;text-decoration:none}
 @media(max-height:820px){
   .deal-head p{max-width:520px;font-size:16px;line-height:22px}
   .deal-head h2{font-size:clamp(1.8rem,3.6vw,2.8rem)}
-  .deal{--dch:clamp(300px,46svh,420px)}
+  .deal{--dch:clamp(320px,52svh,460px)}
   .card-in h3{font-size:clamp(26px,3vw,36px)}
   .card-txt{font-size:13px}
 }
-.deal{--rev:cubic-bezier(.35,0,0,1);--dcw:min(78vw,1040px);--dch:clamp(380px,56svh,560px)}
+.deal{--rev:cubic-bezier(.35,0,0,1);--dcw:min(78vw,1040px);--dch:clamp(400px,64svh,640px)}
 /* poziomy slider: tor na transformie, pionowy scroll przesuwa go w lewo;
    padding-inline centruje pierwszą i ostatnią kartę w kadrze */
 /* scena centruje dzieci — szerszy od niej tor startowałby przesunięty o połowę nadmiaru */
@@ -826,7 +826,12 @@ footer.site img{height:26px}
   };
 
   let we = 0, raf = null, tw = null;
+  // Dopóki hero leci do karty 01, slider musi stać — inaczej przy szybkim
+  // scrollu tor odjeżdża i morf ląduje obok albo na karcie 02.
+  let zamrozone = 0;
+  sec.__zamroz = wl => { zamrozone = wl ? performance.now() + CZAS + 120 : 0; };
   const postep = () => {
+    if (zamrozone && performance.now() < zamrozone) return 0;
     const r = sec.getBoundingClientRect();
     const wstep = window.innerHeight * WSTEP;
     const span = sec.offsetHeight - window.innerHeight - wstep;
@@ -848,6 +853,8 @@ footer.site img{height:26px}
     });
   };
   const kick = () => { if (raf === null) raf = requestAnimationFrame(draw); };
+  // podczas zamrożenia rysujemy dalej, żeby po odmrożeniu slider dogonił scroll płynnie
+  setInterval(() => { if (zamrozone && performance.now() < zamrozone + 400) kick(); }, 60);
 
   // wjazd kart: tween w czasie, odpalany i cofany razem ze zwinięciem hero
   sec.__rozloz = cel => {
@@ -879,13 +886,14 @@ footer.site img{height:26px}
   // geometria karty HERO przy p = 0 — hero zwija się dokładnie w nią.
   // offsetLeft/offsetTop, nie getBoundingClientRect: transformy wjazdu kart
   // nie ruszają layoutu, więc pomiar nie zależy od fazy animacji
+  // Geometria karty HERO w pozycji SPOCZYNKOWEJ (p = 0), liczona z offsetów —
+  // NIE z getBoundingClientRect toru, bo ten zawiera bieżące przesunięcie
+  // slidera. Przy szybkim scrollu rect wędruje w lewo i hero leciało za nim.
   sec.__cel = () => {
-    const st = stage.getBoundingClientRect();
-    const tr = track.getBoundingClientRect();   // przy p=0 tor bez transformu
     const c0 = cards[HERO];
     return {
-      x: tr.left - st.left + c0.offsetLeft,
-      y: tr.top - st.top + c0.offsetTop,
+      x: track.offsetLeft + c0.offsetLeft,
+      y: track.offsetTop + c0.offsetTop,
       w: c0.offsetWidth, h: c0.offsetHeight, t: 'none',
     };
   };
@@ -1428,22 +1436,16 @@ footer.site img{height:26px}
     return true;
   };
 
-  let odKiedy = 0;
   const sprawdz = () => {
     const teraz = scrollY > PROG;
-    if (teraz !== zwiniete) {
-      if (teraz && !ustawCel()) return;        // bez celu nie zwijamy — lepiej pełny kadr niż skok
-      zwiniete = teraz;
-      odKiedy = performance.now();
-      hero.classList.toggle('morphed', teraz);
-      hero.classList.toggle('oddane', teraz);
-      sec.classList.toggle('rozwiniete', teraz);
-      if (sec.__rozloz) sec.__rozloz(teraz ? 1 : 0); // karty wjeżdżają w tym samym ruchu
-    } else if (zwiniete && performance.now() - odKiedy < 1500) {
-      // przy szybkim scrollu tor już jedzie w lewo — cel musi gonić kartę,
-      // inaczej hero leci w dół do miejsca, w którym karty dawno nie ma
-      ustawCel();
-    }
+    if (teraz === zwiniete) return;
+    if (teraz && !ustawCel()) return;          // bez celu nie zwijamy — lepiej pełny kadr niż skok
+    zwiniete = teraz;
+    hero.classList.toggle('morphed', teraz);
+    hero.classList.toggle('oddane', teraz);
+    sec.classList.toggle('rozwiniete', teraz);
+    if (sec.__rozloz) sec.__rozloz(teraz ? 1 : 0);  // karty wjeżdżają w tym samym ruchu
+    if (sec.__zamroz) sec.__zamroz(teraz);          // slider stoi, dopóki hero leci
   };
   addEventListener('scroll', sprawdz, { passive: true });
   addEventListener('resize', () => { if (zwiniete) ustawCel(); });
