@@ -137,66 +137,36 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
   console.log(`${w}×${h} przejście`, mOk ? 'ok' : 'BŁĄD ' + JSON.stringify({ przed, po, wroc }));
   if (!mOk) process.exitCode = 1;
 
-  // --- pierścień punktów wokół ramienia ------------------------------------
-  await p.evaluate(() => document.querySelector('.ring').scrollIntoView({ block: 'center' }));
-  await new Promise(r => setTimeout(r, 2200));
-  const ring = await p.evaluate(() => {
-    const s2 = document.querySelector('.ring'), S = s2.getBoundingClientRect();
-    const ks = [...s2.querySelectorAll('[data-krag]')].filter(k => !k.hidden);
-    const pier = matchMedia('(min-width:761px)').matches;
-    const okrag = s2.querySelector('.ring-okrag');
-    const h2 = s2.querySelector('.ring-copy h2').getBoundingClientRect();
-    const hit = (a2, b2) => Math.min(a2.bottom, b2.bottom) - Math.max(a2.top, b2.top) > 0
-                         && Math.min(a2.right, b2.right) - Math.max(a2.left, b2.left) > 0;
-    const w = e => { const r = e.getBoundingClientRect();
-      return r.left - S.left >= -1 && r.right - S.left <= S.width + 1
-          && r.top - S.top >= -1 && r.bottom - S.top <= S.height + 1; };
+  // --- etapy opieki --------------------------------------------------------
+  await p.evaluate(() => document.querySelector('.etapy').scrollIntoView({ block: 'start' }));
+  await new Promise(r => setTimeout(r, 1800));
+  const etapy = await p.evaluate(() => {
+    const sec = document.querySelector('.etapy'), S = sec.getBoundingClientRect();
+    const et = [...sec.querySelectorAll('.etap')];
+    const c = getComputedStyle(et[0]);
+    const ty = getComputedStyle(et[0].querySelector('.etap-tytul'));
+    const ik = et[0].querySelector('.etap-ikona').getBoundingClientRect();
     return {
-      uklad: pier ? 'pierścień' : 'lista',
-      pojawily: s2.classList.contains('widoczne'),
-      ile: ks.length,
-      // w układzie pierścienia: jeden przerywany okrąg, kropki na nim
-      okragJest: pier ? !!okrag && /^M .* A /.test(okrag.getAttribute('d') || '') : !okrag,
-      // wszystkie kropki w równej odległości od wspólnego środka = leżą na jednym okręgu
-      naOkregu: !pier || (() => {
-        const sr = ks.map(k => { const r = k.getBoundingClientRect();
-          return [r.left + r.width / 2, r.top + r.height / 2]; });
-        const cx2 = sr.reduce((a2, q) => a2 + q[0], 0) / sr.length;
-        const cy2 = sr.reduce((a2, q) => a2 + q[1], 0) / sr.length;
-        const d2 = sr.map(q => Math.hypot(q[0] - cx2, q[1] - cy2));
-        return Math.max(...d2) - Math.min(...d2) < 6;
-      })(),
-      etykietyWKadrze: !pier || ks.every(k => w(k.querySelector('.krag-etykieta'))),
-      // podpis nie może wchodzić w nagłówek sekcji
-      bezKolizji: !pier || !ks.some(k => hit(k.querySelector('.krag-etykieta').getBoundingClientRect(), h2)),
-      // ramię leży NAD pierścieniem, żeby część okręgu chowała się za nim
-      ramieNadKropkami: !pier || +getComputedStyle(s2.querySelector('.ring-reka')).zIndex
-                              > +getComputedStyle(ks[0]).zIndex,
-      kierunki: !pier || ks.every(k => k.classList.contains('w-lewo')
-                                    || k.classList.contains('w-prawo')
-                                    || k.classList.contains('w-gore')),
-      tresc: ks.every(k => k.querySelector('.krag-lab').textContent.trim()
-                        && k.querySelector('.krag-txt').textContent.trim()),
-      lead: !!s2.querySelector('.ring-lead'),
+      ile: et.length,
+      pojawily: sec.classList.contains('widoczne')
+             && et.every(e => +getComputedStyle(e).opacity > 0.9),
+      // zmierzone u nich: kreska przerywana nad wierszem, padding 32, kółko 70, tytuł 23,76/500
+      kreska: c.borderTopStyle === 'dashed' && c.borderTopWidth === '1px',
+      kolko: Math.abs(ik.width - 70) < 16 && Math.abs(ik.height - ik.width) < 2,
+      tytul: ty.fontWeight === '500'
+          && (innerWidth < 1400 || Math.abs(parseFloat(ty.fontSize) - 23.76) < 2),
+      komplet: et.every(e => e.querySelector('.etap-kiedy').textContent.trim()
+                          && e.querySelector('.etap-tytul').textContent.trim()
+                          && e.querySelectorAll('.etap-punkty li').length >= 3),
+      wKadrze: et.every(e => { const r = e.getBoundingClientRect();
+        return r.left - S.left >= -1 && r.right - S.left <= S.width + 1; }),
+      tlo: !!sec.querySelector('.etapy-tlo'),
     };
   });
-  let rozwija = true;
-  if (ring.uklad === 'pierścień') {
-    const kb = await (await p.$('[data-krag]:not([hidden])')).boundingBox();
-    await p.mouse.move(kb.x + kb.width / 2, kb.y + kb.height / 2);
-    await new Promise(r => setTimeout(r, 800));
-    rozwija = await p.evaluate(() => {
-      const t = document.querySelector('[data-krag]:not([hidden]) .krag-txt');
-      return +getComputedStyle(t).opacity > 0.9 && t.getBoundingClientRect().height > 15;
-    });
-    await p.mouse.move(4, 4);
-    await new Promise(r => setTimeout(r, 300));
-  }
-  const rOk = ring.pojawily && ring.ile === 5 && ring.okragJest && ring.naOkregu
-           && ring.etykietyWKadrze && ring.bezKolizji && ring.ramieNadKropkami
-           && ring.kierunki && ring.tresc && ring.lead && rozwija;
-  console.log(`${w}×${h} pierścień`, rOk ? 'ok' : 'BŁĄD ' + JSON.stringify({ ring, rozwija }));
-  if (!rOk) process.exitCode = 1;
+  const eOk = etapy.ile === 3 && etapy.pojawily && etapy.kreska && etapy.kolko
+           && etapy.tytul && etapy.komplet && etapy.wKadrze && etapy.tlo;
+  console.log(`${w}×${h} etapy`, eOk ? 'ok' : 'BŁĄD ' + JSON.stringify(etapy));
+  if (!eOk) process.exitCode = 1;
 
   // --- FAQ 1:1 z revolut.com ----------------------------------------------
   await p.evaluate(() => document.querySelector('#faq').scrollIntoView({ block: 'start' }));

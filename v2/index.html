@@ -226,93 +226,49 @@ a{color:inherit;text-decoration:none}
   .reveal .char{transform:none;transition:none}
 }
 
-/* --- „Jak pomagamy": pierścień punktów wokół ramienia ---------------------
-   Wzór z inspiracji: przerywany okrąg, na nim zwykłe kropki, podpisy na
-   zewnątrz. Ramię zawodnika leży NA pierścieniu (osobny wycinek z tą samą
-   kanwą co baner), więc część okręgu chowa się za nim. Po najechaniu podpis
-   wyjeżdża na zewnątrz — kropki z lewej w lewo, z prawej w prawo.        */
-.ring{--r:min(28vw,310px);--kropka:14px;--rev:cubic-bezier(.35,0,0,1);
-  position:relative;min-height:100svh;overflow:hidden;background:#07100C;isolation:isolate}
-.ring-bg,.ring-reka{position:absolute;inset:0;width:100%;height:100%;
+/* --- etapy opieki (wzór: myhealthprac.com #personal-professional) ---------
+   Zmierzone u nich: wiersz z `border-top:1px dashed` i `padding:32px`,
+   kółko ikony 70 px z obwódką rgba(241,241,241,.45), tytuł 23,76/500,
+   lista punktów w osobnej kolumnie. Tło = rozmyte zdjęcie, tekst #F1F1F1. */
+.etapy{position:relative;overflow:hidden;background:#0A1A10;color:#F1F1F1;isolation:isolate}
+.etapy-tlo{position:absolute;inset:0;z-index:0;width:100%;height:100%;
   object-fit:cover;object-position:50% 50%}
-.ring-bg{z-index:0}
-.ring-reka{z-index:5;pointer-events:none}      /* ramię przykrywa pierścień */
-.ring-promien{position:absolute;width:var(--r);height:0;visibility:hidden;pointer-events:none}
-.ring::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
-  background:linear-gradient(100deg,rgba(7,16,12,.94) 0%,rgba(7,16,12,.72) 30%,rgba(7,16,12,.1) 58%,rgba(7,16,12,0) 78%)}
-.ring-lines{position:absolute;inset:0;z-index:2;pointer-events:none;overflow:visible}
-.ring-okrag{fill:none;stroke:rgba(255,255,255,.5);stroke-width:1.5;
-  stroke-dasharray:2 12;stroke-linecap:round;
-  opacity:0;transition:opacity .9s var(--rev) .1s}
-.ring.widoczne .ring-okrag{opacity:1}
+.etapy::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:linear-gradient(180deg,rgba(6,14,9,.86) 0%,rgba(6,14,9,.66) 38%,rgba(6,14,9,.8) 100%)}
+.etapy-in{position:relative;z-index:2;max-width:1440px;margin:0 auto;
+  padding:clamp(4rem,9vw,7rem) clamp(24px,3.4vw,52px) clamp(3rem,6vw,5rem)}
+.etapy-naglowek{margin:0 0 clamp(3rem,6vw,5rem);max-width:19ch;
+  font-size:clamp(2.4rem,6vw,5.4rem);line-height:1.04;letter-spacing:-.025em;font-weight:500}
 
-.ring-copy{position:relative;z-index:6;width:100%;margin:0;
-  padding:clamp(2.2rem,5svh,3.6rem) clamp(24px,3.4vw,52px);pointer-events:none}
-.ring-copy h2{max-width:12ch;font-size:clamp(3rem,7vw,6rem);line-height:1.02;
-  letter-spacing:-.035em;font-weight:500}
-.ring-lead{margin:1.6rem 0 0;max-width:20ch;font-size:clamp(1.15rem,1.7vw,1.5rem);
-  line-height:1.45;color:rgba(255,255,255,.8)}
+.etapy-lista{margin:0;padding:0;list-style:none}
+.etap{display:grid;grid-template-columns:70px minmax(150px,1fr) minmax(0,1.5fr);
+  align-items:start;gap:clamp(20px,3vw,48px);
+  padding:clamp(24px,3vw,32px) 0;border-top:1px dashed rgba(241,241,241,.34)}
+.etap:last-child{border-bottom:1px dashed rgba(241,241,241,.34)}
+.etap-ikona{width:70px;height:70px;flex:none;border-radius:50%;display:grid;place-items:center;
+  border:1px solid rgba(241,241,241,.45);color:#F1F1F1}
+.etap-ikona svg{width:26px;height:26px}
+.etap-kiedy{margin:20px 0 0;font-size:clamp(19px,1.7vw,23.76px);font-weight:500;letter-spacing:-.015em}
+.etap-tresc{margin-top:20px}
+.etap-tytul{margin:0;font-size:clamp(19px,1.7vw,23.76px);font-weight:500;letter-spacing:-.015em}
+.etap-punkty{margin:14px 0 0;padding-left:20px;display:grid;gap:8px;
+  font-size:16px;line-height:1.45;color:rgba(241,241,241,.78)}
 
-/* punkt na pierścieniu */
-.krag{position:absolute;z-index:4;width:var(--kropka);height:var(--kropka);
-  margin:calc(var(--kropka) / -2) 0 0 calc(var(--kropka) / -2);padding:0;
-  border:0;background:none;color:#fff;font:inherit;text-align:left;cursor:pointer;
-  opacity:0;transform:scale(.4);
-  transition:opacity .5s var(--rev) calc(var(--i) * 130ms + .35s),
-             transform .6s var(--rev) calc(var(--i) * 130ms + .35s)}
-.ring.widoczne .krag{opacity:1;transform:none}
-.krag-kropka{position:absolute;inset:0;border-radius:50%;background:#fff;
-  box-shadow:0 0 0 1px rgba(7,16,12,.5),0 0 16px rgba(255,255,255,.45);
-  transition:transform .35s var(--rev)}
-.krag:hover .krag-kropka,.krag:focus-visible .krag-kropka,.krag.on .krag-kropka{transform:scale(1.35)}
-.krag:focus-visible{outline:2px solid #fff;outline-offset:8px;border-radius:50%}
+/* wejście wierszy przy dojechaniu sekcji — kolejno, z dołu */
+.etap{opacity:0;transform:translateY(24px);
+  transition:opacity .7s var(--ease) calc(var(--i) * 140ms),
+             transform .8s var(--ease) calc(var(--i) * 140ms)}
+.etapy.widoczne .etap{opacity:1;transform:none}
 
-/* podpis na zewnątrz pierścienia; kierunek ustala JS klasą w-lewo / w-prawo */
-.krag-etykieta{position:absolute;top:50%;width:max-content;max-width:min(300px,24vw);
-  transform:translateY(-50%);pointer-events:none}
-.krag.w-prawo .krag-etykieta{left:calc(var(--kropka) + 14px);text-align:left}
-.krag.w-lewo .krag-etykieta{right:calc(var(--kropka) + 14px);text-align:right}
-.krag.w-gore .krag-etykieta{top:auto;bottom:calc(var(--kropka) + 14px);
-  left:50%;right:auto;transform:translateX(-50%);text-align:center}
-.krag-n{display:block;font-size:12px;font-weight:500;letter-spacing:.16em;
-  color:rgba(255,255,255,.55)}
-.krag-lab{display:block;margin-top:4px;font-size:clamp(17px,1.5vw,21px);font-weight:500;
-  letter-spacing:-.01em;white-space:nowrap;text-shadow:0 1px 12px rgba(7,16,12,.9)}
-.krag-txt{display:block;margin-top:10px;font-size:15px;line-height:1.5;
-  color:rgba(255,255,255,.92);text-shadow:0 1px 10px rgba(7,16,12,.95);
-  opacity:0;max-height:0;overflow:hidden;
-  transition:opacity .45s var(--rev),max-height .6s var(--rev),transform .6s var(--rev)}
-.krag.w-prawo .krag-txt{transform:translateX(-46px)}
-.krag.w-lewo .krag-txt{transform:translateX(46px)}
-.krag:hover .krag-txt,.krag:focus-visible .krag-txt,.krag.on .krag-txt{
-  opacity:1;max-height:180px;transform:none}
-
-@media(max-width:1100px){
-  .ring{--r:min(32vw,250px)}
-  .krag-etykieta{max-width:min(200px,25vw)}
-  /* bez nowrap — inaczej max-width nie wiąże i podpis wychodzi poza kadr */
-  .krag-lab{font-size:15px;white-space:normal}
-  .krag-txt{font-size:13px}
-}
-/* wąski kadr wycina ramię — pierścień nie ma się o co zaczepić */
-@media(max-width:760px){
-  .ring{min-height:0;display:flex;flex-direction:column}
-  .ring-copy{order:-1;padding-bottom:2rem}
-  .ring-bg{position:relative;height:46svh}
-  .ring-reka,.ring-lines{display:none}
-  .ring::after{background:linear-gradient(to bottom,rgba(7,16,12,.55),rgba(7,16,12,.1) 40%,rgba(7,16,12,.9))}
-  .krag{position:relative;margin:0 24px 10px;padding:15px 17px;width:auto;height:auto;
-    display:grid;border:1px solid rgba(255,255,255,.16);border-radius:16px;
-    opacity:1;transform:none;cursor:default}
-  .krag:first-of-type{margin-top:22px}
-  .krag:last-of-type{margin-bottom:clamp(3rem,8svh,5rem)}
-  .krag-kropka{display:none}
-  .krag-etykieta{position:relative;top:auto;left:auto;right:auto;bottom:auto;
-    transform:none!important;max-width:none;width:auto;text-align:left!important}
-  .krag-txt{opacity:1;max-height:none;margin-top:6px}
+@media(max-width:900px){
+  .etap{grid-template-columns:56px 1fr;gap:16px 20px}
+  .etap-ikona{width:56px;height:56px}
+  .etap-ikona svg{width:22px;height:22px}
+  .etap-kiedy{margin-top:12px}
+  .etap-tresc{grid-column:1 / -1;margin-top:4px}
 }
 @media(prefers-reduced-motion:reduce){
-  .ring-okrag,.krag,.krag-txt,.krag-kropka{transition:none}
+  .etap{transition:none;opacity:1;transform:none}
 }
 
 /* --- hero: STAWY ----------------------------------------------------------
@@ -950,59 +906,57 @@ footer.site img{height:26px}
 })();
 </script>
 
-<section class="ring" id="sciezka">
-  <img class="ring-bg" src="img/ring-banner.png" alt="Zawodnik Legii Warszawa rozciągający ramię przed treningiem">
-  <img class="ring-reka" src="img/ring-reka.png" alt="" aria-hidden="true">
-  <svg class="ring-lines" aria-hidden="true"></svg>
-  <span class="ring-promien" data-promien aria-hidden="true"></span>
-  <button class="krag" data-krag data-kat="216" style="--i:0"
-          aria-label="Koordynator: Jeden opiekun pacjenta planuje, umawia i pilnuje terminów. Nie odbijasz się między rejestracjami.">
-    <span class="krag-kropka"></span>
-    <span class="krag-etykieta">
-      <span class="krag-n">01</span>
-      <span class="krag-lab">Koordynator</span>
-      <span class="krag-txt">Jeden opiekun pacjenta planuje, umawia i pilnuje terminów. Nie odbijasz się między rejestracjami.</span>
-    </span>
-  </button>
-  <button class="krag" data-krag data-kat="288" style="--i:1"
-          aria-label="Diagnoza: Wywiad, badanie, diagnostyka obrazowa i funkcjonalna, decyzja o ścieżce leczenia.">
-    <span class="krag-kropka"></span>
-    <span class="krag-etykieta">
-      <span class="krag-n">02</span>
-      <span class="krag-lab">Diagnoza</span>
-      <span class="krag-txt">Wywiad, badanie, diagnostyka obrazowa i funkcjonalna, decyzja o ścieżce leczenia.</span>
-    </span>
-  </button>
-  <button class="krag" data-krag data-kat="0" style="--i:2"
-          aria-label="Realizacja: Leczenie i rehabilitacja u nas, zabiegi u partnerów. Informacja idzie za Tobą.">
-    <span class="krag-kropka"></span>
-    <span class="krag-etykieta">
-      <span class="krag-n">03</span>
-      <span class="krag-lab">Realizacja</span>
-      <span class="krag-txt">Leczenie i rehabilitacja u nas, zabiegi u partnerów. Informacja idzie za Tobą.</span>
-    </span>
-  </button>
-  <button class="krag" data-krag data-kat="72" style="--i:3"
-          aria-label="Testy kontrolne: Obiektywne kryteria progresu i gotowości do powrotu — liczby, nie przeczucie.">
-    <span class="krag-kropka"></span>
-    <span class="krag-etykieta">
-      <span class="krag-n">04</span>
-      <span class="krag-lab">Testy kontrolne</span>
-      <span class="krag-txt">Obiektywne kryteria progresu i gotowości do powrotu — liczby, nie przeczucie.</span>
-    </span>
-  </button>
-  <button class="krag" data-krag data-kat="144" style="--i:4"
-          aria-label="Profilaktyka: Zalecenia treningowe, praca nad motoryką i kontrole okresowe.">
-    <span class="krag-kropka"></span>
-    <span class="krag-etykieta">
-      <span class="krag-n">05</span>
-      <span class="krag-lab">Profilaktyka</span>
-      <span class="krag-txt">Zalecenia treningowe, praca nad motoryką i kontrole okresowe.</span>
-    </span>
-  </button>
-  <div class="ring-copy">
-    <h2 class="reveal" data-reveal>Jak pomagamy?</h2>
-    <p class="ring-lead">Wiedza sztabu Legii i nowoczesna diagnostyka — w pięciu krokach.</p>
+<section class="etapy" id="sciezka">
+  <img class="etapy-tlo" src="img/etapy.png" alt="" aria-hidden="true">
+  <div class="etapy-in">
+    <h2 class="etapy-naglowek reveal" data-reveal>Opieka, która prowadzi Cię od pierwszej wizyty do pełnej formy</h2>
+    <ol class="etapy-lista">
+      <li class="etap">
+        <span class="etap-ikona" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+               stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 13h6l-2 9 8-11h-6l2-9Z"/></svg>
+        </span>
+        <p class="etap-kiedy">W kilka dni</p>
+        <div class="etap-tresc">
+          <p class="etap-tytul">Diagnoza i plan.</p>
+          <ul class="etap-punkty">
+            <li>Konsultacja i badanie funkcjonalne</li>
+            <li>Diagnostyka obrazowa na miejscu</li>
+            <li>Decyzja o ścieżce leczenia</li>
+          </ul>
+        </div>
+      </li>
+      <li class="etap">
+        <span class="etap-ikona" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+               stroke-linecap="round" stroke-linejoin="round"><path d="M4 18V9m5 9V5m5 13v-7m5 7V7"/></svg>
+        </span>
+        <p class="etap-kiedy">W kilka tygodni</p>
+        <div class="etap-tresc">
+          <p class="etap-tytul">Powrót do obciążeń.</p>
+          <ul class="etap-punkty">
+            <li>Rehabilitacja prowadzona 1:1</li>
+            <li>Obiektywne testy kontrolne</li>
+            <li>Stopniowy powrót do treningu</li>
+          </ul>
+        </div>
+      </li>
+      <li class="etap">
+        <span class="etap-ikona" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+               stroke-linecap="round" stroke-linejoin="round"><path d="M12 21a9 9 0 1 1 9-9M12 7v5l3 2"/></svg>
+        </span>
+        <p class="etap-kiedy">Przez cały sezon</p>
+        <div class="etap-tresc">
+          <p class="etap-tytul">Zdrowie w ruchu.</p>
+          <ul class="etap-punkty">
+            <li>Profilaktyka i praca nad motoryką</li>
+            <li>Kontrole okresowe</li>
+            <li>Stały kontakt z koordynatorem</li>
+          </ul>
+        </div>
+      </li>
+    </ol>
   </div>
 </section>
 
@@ -1597,120 +1551,27 @@ footer.site img{height:26px}
       'odsłanianie: podział zmienił treść');
 })();
 
-// --- „Jak pomagamy": pierścień punktów wokół ramienia -----------------------
-// Punkty leżą na jednym okręgu (kąt w data-kat), środek liczony w % ZDJĘCIA
-// i przeliczany przez object-fit:cover — inaczej przy każdej proporcji okna
-// zjeżdżałby z ramienia. Ramię jest osobną warstwą NAD pierścieniem, więc
-// część okręgu chowa się za nim. Podpis wyjeżdża na zewnątrz: kropki z lewej
-// połowy w lewo, z prawej w prawo, górna do góry.
+// --- etapy opieki ----------------------------------------------------------
+// Wzór: myhealthprac.com #personal-professional. Statyczna lista wierszy
+// (kółko + „kiedy" + tytuł + punkty), wchodząca kolejno przy dojechaniu sekcji.
 (() => {
-  const sec = document.querySelector('.ring');
+  const sec = document.querySelector('.etapy');
   if (!sec) return;
-  const svg = sec.querySelector('.ring-lines');
-  const sonda = sec.querySelector('[data-promien]');
-  const kropki = [...sec.querySelectorAll('[data-krag]')];
-  const IW = 2000, IH = 1125;                      // ring-banner.png
-  const LOKIEC_X = 40, LOKIEC_Y = 60;              // przedramię w % ZDJĘCIA — tam ma trafić lewa krawędź
-  const NS = 'http://www.w3.org/2000/svg';
-  const pierscien = matchMedia('(min-width:761px)');
-
-  const ustaw = (lx, cy, R) => {
-    const cx = lx + R;
-    kropki.forEach(el => {
-      const kat = (+el.dataset.kat) * Math.PI / 180;
-      el.style.left = (cx + R * Math.cos(kat)).toFixed(1) + 'px';
-      el.style.top = (cy + R * Math.sin(kat)).toFixed(1) + 'px';
-      const cos = Math.cos(kat);
-      el.classList.toggle('w-gore', Math.abs(cos) < 0.2);
-      el.classList.toggle('w-lewo', cos <= -0.2);
-      el.classList.toggle('w-prawo', cos >= 0.2);
-    });
-    return cx;
-  };
-  // ile podpisy wystają poza sekcję po ułożeniu — mierzone, nie szacowane
-  const wystaje = S => Math.max(0, ...kropki.map(el => {
-    const e = el.querySelector('.krag-etykieta').getBoundingClientRect();
-    return Math.max(S.left - e.left, e.right - S.right, S.top - e.top, e.bottom - S.bottom);
-  }));
-
-  const rysuj = () => {
-    if (!pierscien.matches) {
-      kropki.forEach(el => { el.style.left = el.style.top = ''; el.hidden = false;
-        el.classList.remove('w-lewo', 'w-prawo', 'w-gore'); });
-      svg.textContent = '';
-      return;
-    }
-    const S = sec.getBoundingClientRect();
-    const k = Math.max(S.width / IW, S.height / IH), w = IW * k, h = IH * k;
-    // łokieć w pikselach — od niego liczymy lewą krawędź okręgu
-    const lx = (S.width - w) / 2 + w * LOKIEC_X / 100;
-    const cy = (S.height - h) / 2 + h * LOKIEC_Y / 100;
-    // --r to min()/clamp() — getPropertyValue oddaje surowy zapis, nie piksele,
-    // więc górną granicę promienia czytamy z szerokości sondy...
-    const gora = sonda.offsetWidth;
-    // ...a potem ścieśniamy tak, żeby najszerszy podpis zmieścił się w kadrze.
-    // Środek jest przesunięty w prawo, więc liczymy zapas od NIEGO, nie od środka sekcji.
-    const podpis = Math.max(...kropki.map(el =>
-      el.querySelector('.krag-etykieta').offsetWidth)) + 26;
-    const R = Math.max(190, Math.min(gora,
-      (S.width - lx - podpis) / 2,          // środek = lx + R, więc prawy podpis musi się zmieścić
-      cy - 80, S.height - cy - 80));
-    const cx = lx + R;
-
-    svg.setAttribute('viewBox', `0 0 ${Math.round(S.width)} ${Math.round(S.height)}`);
-    svg.textContent = '';
-    // łuk, nie pełne koło — odcinek między 05 (144°) a 01 (216°) zostaje pusty
-    const pkt = (deg) => { const a2 = deg * Math.PI / 180;
-      return [cx + R * Math.cos(a2), cy + R * Math.sin(a2)]; };
-    const [x1, y1] = pkt(216), [x2, y2] = pkt(144);
-    const luk = document.createElementNS(NS, 'path');
-    luk.setAttribute('class', 'ring-okrag');
-    luk.setAttribute('d', `M ${x1.toFixed(1)} ${y1.toFixed(1)} `
-      + `A ${R.toFixed(1)} ${R.toFixed(1)} 0 1 1 ${x2.toFixed(1)} ${y2.toFixed(1)}`);
-    svg.appendChild(luk);
-
-    let r = R;
-    ustaw(lx, cy, r);
-    // szacunek bywa o kilka pikseli za hojny — poprawiamy po realnym pomiarze
-    for (let i = 0; i < 3; i++) {
-      const nad = wystaje(S);
-      if (nad < 1) break;
-      r = Math.max(110, r - nad - 2);
-      ustaw(lx, cy, r);
-    }
-    if (r !== R) {
-      const [x1b, y1b] = [lx + r + r * Math.cos(216 * Math.PI / 180), cy + r * Math.sin(216 * Math.PI / 180)];
-      const [x2b, y2b] = [lx + r + r * Math.cos(144 * Math.PI / 180), cy + r * Math.sin(144 * Math.PI / 180)];
-      luk.setAttribute('d', `M ${x1b.toFixed(1)} ${y1b.toFixed(1)} `
-        + `A ${r.toFixed(1)} ${r.toFixed(1)} 0 1 1 ${x2b.toFixed(1)} ${y2b.toFixed(1)}`);
-    }
-    kropki.forEach(el => { el.hidden = false; });
-  };
-  rysuj();
-  addEventListener('resize', rysuj);
-  pierscien.addEventListener('change', rysuj);
-  // podpisy mierzone przed dojechaniem kroju są węższe — po nim trzeba przeliczyć
-  document.fonts?.ready.then(rysuj);
+  const etapy = [...sec.querySelectorAll('.etap')];
+  etapy.forEach((el, i) => el.style.setProperty('--i', i));
 
   new IntersectionObserver((e, o) => {
     if (!e[0].isIntersecting) return;
     sec.classList.add('widoczne');
     o.disconnect();
-  }, { threshold: 0.35 }).observe(sec);
+  }, { threshold: 0.25 }).observe(sec);
 
-  // dotyk: opis przełączany dotknięciem, jeden naraz
-  kropki.forEach(el => el.addEventListener('click', () => {
-    const otwarty = el.classList.contains('on');
-    kropki.forEach(o => o.classList.remove('on'));
-    el.classList.toggle('on', !otwarty);
-  }));
-
-  // self-check: każdy krok ma komplet treści i kąt na okręgu
-  for (const el of kropki)
-    console.assert(Number.isFinite(+el.dataset.kat)
-                && el.querySelector('.krag-lab')?.textContent.trim()
-                && el.querySelector('.krag-txt')?.textContent.trim(),
-      'krok bez treści albo bez kąta: ' + el.getAttribute('aria-label'));
+  // self-check: każdy etap ma komplet — kiedy, tytuł i punkty
+  for (const el of etapy)
+    console.assert(el.querySelector('.etap-kiedy')?.textContent.trim()
+                && el.querySelector('.etap-tytul')?.textContent.trim()
+                && el.querySelectorAll('.etap-punkty li').length >= 2,
+      'etap bez kompletu treści: ' + (el.querySelector('.etap-kiedy')?.textContent || ''));
 })();
 
 // --- hero: stawy ----------------------------------------------------------
