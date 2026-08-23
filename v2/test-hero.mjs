@@ -148,6 +148,7 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
     const ik = et[0].querySelector('.etap-ikona').getBoundingClientRect();
     return {
       ile: et.length,
+      nazwy: et.map(e => e.querySelector('.etap-kiedy').textContent.trim()),
       pojawily: sec.classList.contains('widoczne')
              && et.every(e => +getComputedStyle(e).opacity > 0.9),
       // zmierzone u nich: kreska przerywana nad wierszem, padding 32, kółko 70, tytuł 23,76/500
@@ -163,7 +164,10 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
       tlo: !!sec.querySelector('.etapy-tlo'),
     };
   });
-  const eOk = etapy.ile === 3 && etapy.pojawily && etapy.kreska && etapy.kolko
+  const eOk = etapy.ile === 5
+           && ['Koordynator','Diagnoza','Realizacja','Testy kontrolne','Profilaktyka']
+              .every((n, i) => etapy.nazwy[i] === n)
+           && etapy.pojawily && etapy.kreska && etapy.kolko
            && etapy.tytul && etapy.komplet && etapy.wKadrze && etapy.tlo;
   console.log(`${w}×${h} etapy`, eOk ? 'ok' : 'BŁĄD ' + JSON.stringify(etapy));
   if (!eOk) process.exitCode = 1;
