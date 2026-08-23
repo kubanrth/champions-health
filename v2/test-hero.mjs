@@ -184,16 +184,16 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
       bezLamaniaSlow: slowa.every(w => w.getBoundingClientRect().height < lh * 1.6),
       pokazane: el.classList.contains('pokaz'),
       naMiejscu: znaki.every(c => Math.abs(new DOMMatrix(getComputedStyle(c).transform).f) < 0.5),
-      // sygnatura ma trzymać się jednej linii aż do układu mobilnego (760 px)
-      jednaLinia: innerWidth < 761 || el.getBoundingClientRect().height
-                  < parseFloat(getComputedStyle(el).fontSize) * 1.5,
+      // sygnatura: duża, dosunięta do lewej, do dwóch wierszy
+      doLewej: document.querySelector('.claim-in').getBoundingClientRect().left < 80,
+      duza: parseFloat(getComputedStyle(el).fontSize) >= 30,
       wKadrze: (() => { const t = el.getBoundingClientRect(),
         c = document.querySelector('.claim-in').getBoundingClientRect();
         return t.left >= c.left - 1 && t.right <= c.right + 1; })(),
     };
   });
   const revOk = rev.podzielone && rev.trescCala && rev.bezLamaniaSlow && rev.pokazane
-           && rev.naMiejscu && rev.jednaLinia && rev.wKadrze;
+           && rev.naMiejscu && rev.doLewej && rev.duza && rev.wKadrze;
   console.log(`${w}×${h} odsłanianie`, revOk ? 'ok' : 'BŁĄD ' + JSON.stringify(rev));
   if (!revOk) process.exitCode = 1;
 
