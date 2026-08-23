@@ -99,8 +99,10 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
           .filter(j => +getComputedStyle(j).opacity > .5).length,
         wKadrze: r.top >= -1 && r.right <= H.width + 1,
         wierszy: Math.round(r.height / parseFloat(getComputedStyle(g).lineHeight)),
-        // tekst ląduje wyraźnie nad kreską i z niej wyjeżdża
+        // tekst ląduje nad kreską (z niej wyjeżdża) i tuż nad jego dłonią,
+        // a przy krótkim oknie nie może wjechać pod nawigację
         luz: bk.top - r.bottom,
+        podNawigacja: r.top - document.querySelector('.nav').getBoundingClientRect().bottom,
         tekst: g.textContent.trim() };
     });
     const wOk = (h > 800 || w > 800)
@@ -121,7 +123,8 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
       // na końcu zostają same kropki
       && kopia.kreskaZnikla && kopia.kropekWidocznych === 4
       && kopia.widoczna && kopia.nadBarkiem && kopia.wKadrze
-      && (w < 900 || (kopia.wKolumnie && kopia.wierszy === 2 && kopia.luz > 100))
+      && (w < 900 || (kopia.wKolumnie && kopia.wierszy === 2
+                      && kopia.luz > 40 && kopia.podNawigacja > 8))
       && kopia.bezPrzyciemnienia
       && /Kontuzje/.test(kopia.tekst);
     console.log(`${w}×${h} wjazd hero`, wOk ? 'ok' : 'BŁĄD ' + JSON.stringify({ kolej, czasy, kopia }));

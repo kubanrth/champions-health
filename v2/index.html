@@ -384,7 +384,7 @@ a{color:inherit;text-decoration:none}
   transition:transform 1.05s var(--rev),opacity .5s var(--rev)}
 .hero.tekst .hero-copy h1{transform:none;opacity:1}
 
-.hero-copy h1{margin:0 0 0 auto;font-size:clamp(1.8rem,4.4vw,4rem);line-height:1.06;
+.hero-copy h1{margin:0 0 0 auto;font-size:clamp(1.8rem,4.05vw,4rem);line-height:1.06;
   letter-spacing:-.028em;font-weight:500;text-wrap:balance}
 .hero.morphed .hero-copy h1{opacity:0;transform:translateY(-40px)}
 
@@ -1717,14 +1717,17 @@ footer.site img{height:26px}
       // wąski kadr wycina część sylwetki — nie pokazujemy znacznika stawu, którego nie widać
       j.hidden = x < 24 || x > H.width - 24 || y < 88 || y > H.height - 24;
     });
-    // Ciemne pole zdjęcia: od 44% szerokości w prawo jest czarne aż do 24%
-    // wysokości — tam ląduje nagłówek. Kreska biegnie niżej, na łokciu (47%),
-    // i to z niej tekst wyjeżdża, więc ramka musi sięgać od jednego do drugiego.
+    // Ciemne pole zdjęcia: od 48% szerokości w prawo jest czarne aż do 35,5%
+    // wysokości, gdzie zaczyna się jego dłoń. Nagłówek siada tuż nad nią (34,5%).
+    // Kreska biegnie niżej, na łokciu (47%), i to z niej tekst wyjeżdża — ramka
+    // musi więc sięgać od jednego do drugiego.
     const kopia = hero.querySelector('.hero-copy'), naglowek = kopia.querySelector('h1');
     if (H.width > 900) {
-      hero.style.setProperty('--kx', (ox + w * 0.44).toFixed(1) + 'px');
-      const dol = oy + h * 0.24;                       // dolna krawędź tekstu
-      const gora = dol - naglowek.offsetHeight;
+      hero.style.setProperty('--kx', (ox + w * 0.48).toFixed(1) + 'px');
+      const nawFloor = (document.querySelector('.nav')?.getBoundingClientRect().bottom || 0) + 18;
+      let dol = oy + h * 0.345;                        // dolna krawędź tekstu
+      let gora = dol - naglowek.offsetHeight;
+      if (gora < nawFloor) gora = nawFloor;            // krótkie okno: nie wchodzimy pod nawigację
       const kreska = oy + h * (+hero.querySelector('.j-lokiec').dataset.iy2) / 100;
       kopia.style.setProperty('--kt', gora.toFixed(1) + 'px');
       kopia.style.setProperty('--kh', Math.max(0, kreska - gora).toFixed(1) + 'px');

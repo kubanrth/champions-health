@@ -14,66 +14,47 @@
      zespół medyczny klienta — to treść na stronie placówki, nie hasło reklamowe. -->
 <style>
 /* ==========================================================================
-   Podstrona usługi — wariant strony głównej, nie osobny język wizualny.
-   Wspólne z /index.html: Inter w jednej wadze 500 na nagłówkach, tracking
-   −.028em, krzywa Revoluta, raster kropek 196 px. Tło jasne — jak sekcja
-   „Zakres opieki" (.deal) na stronie głównej, z której się tu wchodzi.
-   Różnice (celowe, żeby podstrona nie była kopią home):
-     · nawigacja stale widoczna i szklana zamiast chowanej,
-     · układ dwukolumnowy zamiast pełnoekranowych scen,
-     · sekcje rozdzielone włosową linią zamiast zmiany koloru tła,
-     · szkło (backdrop-filter) jako główny materiał paneli.
-   NA BIELI SZKŁO DZIAŁA ODWROTNIE NIŻ NA CZERNI: na ciemnym tle panel można
-   trzymać przy 5% krycia, bo jasny tekst i tak wygrywa. Tutaj tekst jest
-   ciemny, więc panel musi być GĘSTY (72%) — inaczej pod napisem prześwituje
-   zdjęcie i kontrast leci poniżej AA. Rozmycie i tak niesie efekt szkła.
+   Podstrona usługi — ten sam język co strona główna, tylko w układzie
+   podstrony. Po uwadze klienta („za duży miszmasz") wycięte wszystko,
+   czego home nie ma: poświaty, raster kropek na bieli, szklane panele
+   na białym tle. Zostały wyłącznie wzorce ze strony głównej:
+     · czysta biel + włosowe linie między sekcjami (język FAQ/Revolut),
+     · zdjęcie hero = anatomia kart „Zakresu opieki" (radius 28,
+       gradient dołem, biały tekst na fotografii),
+     · kroki = wiersze z kreskowaną linią i kołem (sekcja „etapy"),
+     · ciemny pas kontaktu ze szkłem = sekcja kontaktu z home;
+       szkło zostaje TYLKO tam, gdzie jest na home: na ciemnym zdjęciu,
+     · pigułki: ciemna #262626 (nawigacja home) i biała (karty home).
    ========================================================================== */
 :root{
-  --ink:#0B0D0C;          /* tekst i ciemne bloki */
-  --tlo:#F5F6F4;          /* korpus strony */
+  --ink:#0B0D0C;
   --tekst:rgba(11,13,12,.72);
-  --tekst2:rgba(11,13,12,.68);   /* .55 wygląda dobrze, ale drobnica 11,5 px schodzi wtedy do 3,8:1 */
-  --kres:rgba(11,13,12,.1);   /* włosowe linie */
+  --tekst2:rgba(11,13,12,.6);   /* drobnica na czystej bieli: 5,2:1 */
+  --kres:rgba(11,13,12,.1);     /* włosowe linie */
   --ease:cubic-bezier(.22,.8,.25,1);
   --rev:cubic-bezier(.35,0,0,1);
-  --zielen:#0B6B36;
   --tresc:1180px;
   --bok:clamp(20px,4vw,64px);
-  --szklo:rgba(255,255,255,.72);
-  --szklo-brd:rgba(11,13,12,.09);
-  --grid:196px;
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{margin:0;background:var(--tlo);color:var(--ink);
+body{margin:0;background:#fff;color:var(--ink);
   font-family:Inter,system-ui,sans-serif;font-size:16px;line-height:1.6;
   font-optical-sizing:auto;-webkit-font-smoothing:antialiased;overflow-x:hidden;
   --legia:"Scale VF",Archivo,Inter,system-ui,sans-serif}
-/* faktura pod szkłem: poświaty + ten sam raster kropek co na stronie głównej.
-   Bez tego backdrop-filter nie ma czego rozmyć i panel jest płaską plamą. */
-body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
-  background:
-    radial-gradient(58% 44% at 80% 2%,rgba(11,107,54,.16),transparent 70%),
-    radial-gradient(46% 36% at 2% 46%,rgba(11,107,54,.1),transparent 72%),
-    radial-gradient(72% 52% at 46% 106%,rgba(11,107,54,.12),transparent 72%)}
-body::after{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.85;
-  background-image:radial-gradient(rgba(11,13,12,.1) 1px,transparent 1px);
-  background-size:var(--grid) var(--grid)}
-main,nav,footer{position:relative;z-index:1}
 img{display:block;max-width:100%}
 a{color:inherit;text-decoration:none}
 h1,h2,h3{margin:0;font-weight:500;letter-spacing:-.028em;line-height:1.05}
 p{margin:0}
 .wrap{max-width:var(--tresc);margin:0 auto;padding-inline:var(--bok)}
 
-/* --- materiał: szkło ------------------------------------------------------ */
-.szklo{background:var(--szklo);border:1px solid var(--szklo-brd);
-  -webkit-backdrop-filter:blur(20px) saturate(1.6);backdrop-filter:blur(20px) saturate(1.6);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.9),0 22px 46px -30px rgba(9,32,19,.4)}
+/* --- powierzchnia: biała karta z włosową obwódką ------------------------- */
+.karta{background:#fff;border:1px solid var(--kres);
+  box-shadow:0 16px 36px -30px rgba(11,13,12,.25)}
 
-/* --- nawigacja: stale widoczna, szklana ----------------------------------- */
-.nav{position:sticky;top:0;z-index:50;background:rgba(245,246,244,.72);
-  -webkit-backdrop-filter:blur(20px) saturate(1.5);backdrop-filter:blur(20px) saturate(1.5);
+/* --- nawigacja: przypięty stan nawigacji home (białe tło + blur) --------- */
+.nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.86);
+  -webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);
   border-bottom:1px solid var(--kres)}
 .nav-in{display:flex;align-items:center;gap:26px;height:64px;
   max-width:var(--tresc);margin:0 auto;padding-inline:var(--bok)}
@@ -92,46 +73,46 @@ p{margin:0}
 .nav .cta:hover{background:#333;transform:translateY(-1px)}
 :where(a,button):focus-visible{outline:2px solid var(--ink);outline-offset:3px;border-radius:6px}
 
-/* --- przyciski ------------------------------------------------------------ */
+/* --- przyciski: pigułki home --------------------------------------------- */
 .btn{display:inline-flex;align-items:center;gap:10px;height:48px;padding:0 22px;border-radius:999px;
   font-size:15px;font-weight:500;white-space:nowrap;
   transition:background-color .3s var(--ease),transform .3s var(--ease),border-color .3s var(--ease)}
 .btn-pelny{background:#262626;color:#fff}
 .btn-pelny:hover{background:#333;transform:translateY(-1px)}
-.btn-szklo{background:rgba(255,255,255,.66);color:var(--ink);border:1px solid rgba(11,13,12,.16);
-  -webkit-backdrop-filter:blur(16px) saturate(1.5);backdrop-filter:blur(16px) saturate(1.5)}
-.btn-szklo:hover{background:rgba(255,255,255,.92);border-color:rgba(11,13,12,.3);transform:translateY(-1px)}
+.btn-ghost{background:#fff;color:var(--ink);border:1px solid rgba(11,13,12,.18)}
+.btn-ghost:hover{border-color:rgba(11,13,12,.4);transform:translateY(-1px)}
 .btn svg{transition:transform .3s var(--ease)}
 .btn:hover svg{transform:translate(3px,-3px)}
 
-/* --- hero podstrony: dwie kolumny ----------------------------------------- */
+/* --- hero podstrony: dwie kolumny ---------------------------------------- */
 .pg-hero{padding:clamp(48px,7vw,96px) 0 clamp(40px,6vw,72px)}
 .pg-hero .wrap{display:grid;grid-template-columns:1.04fr .96fr;gap:clamp(28px,4vw,64px);align-items:center}
-.kick{display:inline-flex;align-items:center;gap:10px;height:32px;padding:0 14px;border-radius:999px;
-  background:rgba(255,255,255,.7);border:1px solid rgba(11,13,12,.12);
-  -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
-  font-size:12.5px;font-weight:500;letter-spacing:.04em;text-transform:uppercase;
-  color:var(--tekst)}
-.kick b{font-family:var(--legia);font-weight:700;font-size:13px;color:var(--ink)}
-.pg-hero h1{margin:22px 0 0;max-width:15ch;font-size:clamp(2.4rem,5.6vw,4.4rem)}
+/* etykieta jak card-lab na kartach home — tekst, nie pigułka */
+.kick{display:inline-flex;align-items:baseline;gap:10px;
+  font-size:13px;font-weight:500;letter-spacing:.01em;color:var(--tekst2)}
+.kick b{font-family:var(--legia);font-weight:700;font-size:14px;color:var(--ink)}
+.pg-hero h1{margin:18px 0 0;max-width:15ch;font-size:clamp(2.4rem,5.6vw,4.4rem)}
 .pg-lead{margin-top:20px;max-width:52ch;font-size:clamp(17px,1.4vw,19px);line-height:1.62;
   color:var(--tekst)}
 .pg-akcje{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
 
-/* zdjęcie + szklana listwa faktów zachodząca na jego dolny róg */
-.pg-foto{position:relative;padding-bottom:34px}
-.pg-foto>img{width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:24px;
+/* zdjęcie = anatomia karty „Zakresu opieki": radius 28, gradient dołem,
+   biały tekst na fotografii; fakty grają rolę card-txt z linią włosową */
+.pg-foto{position:relative}
+.pg-foto>img{width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:28px;
   object-position:50% 45%;
-  box-shadow:0 40px 70px -44px rgba(9,32,19,.7)}
-.pg-foto::after{content:"";position:absolute;inset:0 0 34px;border-radius:24px;pointer-events:none;
-  box-shadow:inset 0 0 0 1px rgba(11,13,12,.08)}
-.fakty{position:absolute;left:clamp(-40px,-2.4vw,-16px);right:clamp(24px,3vw,44px);bottom:0;z-index:2;
-  display:grid;grid-template-columns:repeat(3,1fr);gap:1px;overflow:hidden;border-radius:18px;
-  background:rgba(11,13,12,.08)}
-.fakty div{padding:14px 16px 16px;background:rgba(255,255,255,.78)}
+  box-shadow:0 30px 60px -38px rgba(11,13,12,.5)}
+.pg-foto::after{content:"";position:absolute;inset:0;border-radius:28px;pointer-events:none;
+  background:linear-gradient(to bottom,rgba(8,14,10,.18) 0%,rgba(8,14,10,0) 26%,
+             rgba(8,14,10,0) 46%,rgba(8,14,10,.62) 74%,rgba(8,14,10,.94) 100%)}
+.fakty{position:absolute;left:clamp(18px,2.4vw,30px);right:clamp(18px,2.4vw,30px);bottom:clamp(16px,2.2vw,26px);
+  z-index:2;margin:0;display:grid;grid-template-columns:repeat(3,1fr)}
+.fakty div{padding:2px 16px}
+.fakty div:first-child{padding-left:0}
+.fakty div+div{border-left:1px solid rgba(255,255,255,.26)}
 .fakty dt{font-size:11.5px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;
-  color:var(--tekst2)}
-.fakty dd{margin:5px 0 0;font-size:15px;line-height:1.3;color:var(--ink)}
+  color:rgba(255,255,255,.78)}
+.fakty dd{margin:5px 0 0;font-size:15px;line-height:1.35;color:#fff}
 
 /* --- wspólna szpica sekcji ------------------------------------------------ */
 .sek{padding:clamp(48px,6.5vw,88px) 0;border-top:1px solid var(--kres)}
@@ -139,25 +120,23 @@ p{margin:0}
 .sek-head h2{font-size:clamp(1.9rem,3.4vw,2.9rem);text-wrap:balance}
 .sek-head p{margin-top:14px;max-width:52ch;font-size:17px;color:var(--tekst)}
 
-/* --- zakres: kafle szklane ------------------------------------------------ */
+/* --- zakres: białe kafle z włosową obwódką -------------------------------- */
 .kafle{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:36px}
 .kafel{position:relative;padding:26px 24px 28px;border-radius:20px;
-  transition:transform .45s var(--ease),background-color .45s var(--ease),
-             border-color .45s var(--ease),box-shadow .45s var(--ease)}
-.kafel:hover{transform:translateY(-4px);background:rgba(255,255,255,.95);
-  border-color:rgba(11,13,12,.16);box-shadow:inset 0 1px 0 rgba(255,255,255,.9),0 26px 50px -28px rgba(9,32,19,.45)}
-.kafel i{display:block;width:34px;height:34px;margin-bottom:18px;border-radius:10px;
-  background:rgba(11,13,12,.05);border:1px solid rgba(11,13,12,.12);
-  font-family:var(--legia);font-weight:700;font-style:normal;font-size:13px;
-  line-height:32px;text-align:center;color:var(--tekst)}
+  transition:transform .45s var(--ease),border-color .45s var(--ease),box-shadow .45s var(--ease)}
+.kafel:hover{transform:translateY(-4px);border-color:rgba(11,13,12,.22);
+  box-shadow:0 26px 48px -30px rgba(11,13,12,.3)}
+/* numer krojem Legii — jak inicjały kart zespołu na home */
+.kafel i{display:block;margin-bottom:16px;font-family:var(--legia);font-style:normal;
+  font-weight:700;font-size:13px;color:var(--tekst2)}
 .kafel h3{font-size:19px;letter-spacing:-.018em;line-height:1.25}
 .kafel p{margin-top:10px;font-size:14.5px;line-height:1.6;color:var(--tekst)}
 
-/* --- opis: proza + szklana kolumna „dla kogo" ----------------------------- */
+/* --- opis: proza + kolumna „dla kogo" ------------------------------------- */
 .opis-grid{display:grid;grid-template-columns:1fr 360px;gap:clamp(28px,4vw,64px);align-items:start}
 .proza p{max-width:62ch;font-size:clamp(16.5px,1.25vw,18px);line-height:1.72;color:var(--tekst)}
 .proza p+p{margin-top:1.15em}
-.cytat{margin:34px 0;padding:26px 28px;border-radius:20px;border-left:2px solid var(--ink);
+.cytat{margin:34px 0;padding:6px 0 6px 26px;border-left:2px solid var(--ink);
   font-size:clamp(18px,1.8vw,22px);line-height:1.42;letter-spacing:-.018em;color:var(--ink)}
 .dla-kogo{position:sticky;top:88px;padding:26px 26px 28px;border-radius:20px}
 .dla-kogo h3{font-size:17px;letter-spacing:-.012em}
@@ -169,50 +148,53 @@ p{margin:0}
   border-radius:50%;background:var(--ink);opacity:.7}
 .dla-kogo li:first-child::before{top:.5em}
 
-/* --- przebieg: numerowane wiersze ----------------------------------------- */
-.kroki{margin-top:36px;display:grid;gap:12px}
+/* --- przebieg: wiersze z kreskowaną linią (język sekcji „etapy" z home) --- */
+.kroki{margin-top:22px}
 .krok{display:grid;grid-template-columns:74px 1fr;gap:clamp(16px,2.4vw,40px);align-items:center;
-  padding:22px 26px;border-radius:18px}
-.krok b{font-family:var(--legia);font-weight:700;font-size:clamp(26px,3vw,38px);line-height:1;
-  color:rgba(11,13,12,.5)}   /* numer kroku niesie kolejność, więc musi przejść 3:1 */
+  padding:26px 8px;border-top:1px dashed rgba(11,13,12,.24)}
+.krok b{display:flex;align-items:center;justify-content:center;width:58px;height:58px;
+  border-radius:50%;border:1px solid rgba(11,13,12,.2);
+  font-family:var(--legia);font-weight:700;font-size:17px;color:var(--ink)}
 .krok h3{font-size:19px;letter-spacing:-.016em}
 .krok p{margin-top:7px;font-size:14.5px;line-height:1.6;color:var(--tekst);max-width:60ch}
 
-/* --- pas kontaktu: zdjęcie pod jasnym rozmyciem --------------------------- */
+/* --- pas kontaktu: ciemne zdjęcie + szkło, jak sekcja kontaktu na home ---- */
 .kont{position:relative;margin:clamp(48px,6.5vw,88px) auto 0;max-width:calc(var(--tresc) - 2px);
-  border-radius:28px;overflow:hidden;border:1px solid var(--kres)}
+  border-radius:28px;overflow:hidden}
 .kont>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 42%}
-/* Pierwsza wersja prała zdjęcie gradientem do 97%, żeby ciemny tekst przeszedł —
-   fotografii nie było wtedy widać wcale. Teraz zdjęcie zostaje czytelne pod
-   lekkim welonem, a kontrast niosą DWA szklane panele leżące na nim. To ten sam
-   materiał co reszta strony, tylko wreszcie ma pod spodem coś do rozmycia. */
 .kont::after{content:"";position:absolute;inset:0;
-  background:linear-gradient(105deg,rgba(245,246,244,.42) 0%,rgba(245,246,244,.3) 55%,
-             rgba(245,246,244,.2) 100%)}
+  background:linear-gradient(105deg,rgba(5,10,7,.92) 0%,rgba(5,10,7,.7) 55%,rgba(5,10,7,.42) 100%)}
 .kont-in{position:relative;z-index:2;display:grid;grid-template-columns:1.15fr .85fr;
-  gap:clamp(20px,2.4vw,34px);align-items:stretch;padding:clamp(18px,2.2vw,30px)}
-.kont-tekst{display:flex;flex-direction:column;justify-content:center;
-  padding:clamp(26px,3.4vw,46px);border-radius:22px}
+  gap:clamp(24px,3.4vw,56px);align-items:center;padding:clamp(34px,4.6vw,62px);color:#fff}
 .kont-in h2{font-size:clamp(1.8rem,3.2vw,2.7rem);max-width:18ch}
-.kont-in p{margin-top:16px;max-width:44ch;font-size:16.5px;line-height:1.6;color:var(--tekst)}
-.kont-karta{display:flex;align-items:center;padding:clamp(26px,3vw,34px);border-radius:22px}
-.kont-karta dl{width:100%}
+.kont-in p{margin-top:16px;max-width:44ch;font-size:16.5px;line-height:1.6;color:rgba(255,255,255,.88)}
+/* ciemne szkło — biały tekst na nim trzyma kontrast na jasnych partiach zdjęcia */
+.kont-karta{padding:26px;border-radius:20px;background:rgba(5,10,7,.38);
+  border:1px solid rgba(255,255,255,.22);
+  -webkit-backdrop-filter:blur(18px) saturate(1.5);backdrop-filter:blur(18px) saturate(1.5);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.14)}
 .kont-karta dl{margin:0;display:grid;gap:14px}
 .kont-karta dt{font-size:11.5px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;
-  color:var(--tekst2)}
-.kont-karta dd{margin:3px 0 0;font-size:16px}
-.kont-karta dd a{border-bottom:1px solid rgba(11,13,12,.28);transition:border-color .25s var(--ease)}
-.kont-karta dd a:hover{border-color:var(--ink)}
+  color:rgba(255,255,255,.75)}
+.kont-karta dd{margin:3px 0 0;font-size:16px;color:#fff}
+.kont-karta dd a{border-bottom:1px solid rgba(255,255,255,.35);transition:border-color .25s var(--ease)}
+.kont-karta dd a:hover{border-color:#fff}
 .kont-akcje{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
+/* pigułki na ciemnym: biała pełna (jak card-cta na kartach home) + szklany ghost */
+.kont .btn-pelny{background:#fff;color:#000}
+.kont .btn-pelny:hover{background:#E9E9E6}
+.kont .btn-ghost{background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.3);
+  -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+.kont .btn-ghost:hover{background:rgba(255,255,255,.2);border-color:rgba(255,255,255,.5)}
+.kont :where(a,button):focus-visible{outline-color:#fff}
 
 /* --- pozostałe usługi ----------------------------------------------------- */
 .inne{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:32px}
 .inna{display:flex;flex-direction:column;justify-content:space-between;gap:26px;min-height:150px;
   padding:20px;border-radius:18px;
-  transition:transform .45s var(--ease),background-color .45s var(--ease),
-             border-color .45s var(--ease),box-shadow .45s var(--ease)}
-.inna:hover{transform:translateY(-4px);background:rgba(255,255,255,.95);
-  border-color:rgba(11,13,12,.16);box-shadow:inset 0 1px 0 rgba(255,255,255,.9),0 26px 50px -28px rgba(9,32,19,.45)}
+  transition:transform .45s var(--ease),border-color .45s var(--ease),box-shadow .45s var(--ease)}
+.inna:hover{transform:translateY(-4px);border-color:rgba(11,13,12,.22);
+  box-shadow:0 26px 48px -30px rgba(11,13,12,.3)}
 .inna span{font-family:var(--legia);font-weight:700;font-size:13px;color:var(--tekst2)}
 .inna b{font-size:16.5px;font-weight:500;letter-spacing:-.014em;line-height:1.25}
 .inna em{display:block;margin-top:8px;font-style:normal;font-size:13px;color:var(--tekst2)}
@@ -235,22 +217,22 @@ footer.site span:last-child{margin-left:auto}
   .dla-kogo{position:static}
   .kafle{grid-template-columns:repeat(2,1fr)}
   .inne{grid-template-columns:repeat(3,1fr)}
-  .fakty{left:0;right:0}
   .pg-foto>img{aspect-ratio:16/11}
 }
 @media(max-width:720px){
-  :root{--grid:132px}
   .nav-menu{display:none}
   .kafle,.inne{grid-template-columns:1fr}
-  .krok{grid-template-columns:1fr;gap:10px;align-items:start}
-  .fakty{grid-template-columns:1fr}
-  .fakty div{display:flex;align-items:baseline;gap:10px;padding:11px 14px}
-  .fakty dd{margin:0}
+  .krok{grid-template-columns:58px 1fr;gap:14px;align-items:start}
+  /* fakty schodzą pod zdjęcie — gradient znika, tekst wraca do ciemnego */
+  .pg-foto::after{content:none}
+  .fakty{position:static;margin-top:12px;grid-template-columns:1fr}
+  .fakty div{padding:10px 2px;border-left:0;border-top:1px solid var(--kres);
+    display:flex;align-items:baseline;gap:10px}
+  .fakty div:first-child{border-top:0;padding-left:2px}
+  .fakty dt{color:var(--tekst2)}
+  .fakty dd{margin:0;color:var(--ink)}
   .btn{width:100%;justify-content:center}
   footer.site span:last-child{margin-left:0}
-  /* panele idą jeden pod drugim i same niosą kontrast — welon tylko wycisza zdjęcie */
-  .kont::after{background:linear-gradient(180deg,rgba(245,246,244,.34) 0%,
-               rgba(245,246,244,.26) 100%)}
 }
 @media(prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
@@ -292,12 +274,12 @@ footer.site span:last-child{margin-left:auto}
           <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
             <path d="M3 10 10 3M4.6 3H10v5.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
           </svg></a>
-        <a class="btn btn-szklo" href="tel:+48223182000">22 318 20 00</a>
+        <a class="btn btn-ghost" href="tel:+48223182000">22 318 20 00</a>
       </div>
     </div>
     <div class="pg-foto" data-rv>
       <img src="../img/c1-ortopedia.png" alt="Ortopedia — Champions Health">
-      <dl class="fakty szklo"><div><dt>Obrazowanie</dt><dd>USG i RTG na miejscu</dd></div>
+      <dl class="fakty"><div><dt>Obrazowanie</dt><dd>USG i RTG na miejscu</dd></div>
       <div><dt>Rozpoznanie</dt><dd>W trakcie wizyty</dd></div>
       <div><dt>Ścieżka</dt><dd>Ustalona od razu</dd></div></dl>
     </div>
@@ -310,12 +292,12 @@ footer.site span:last-child{margin-left:auto}
       <h2>Co obejmuje ten zakres</h2>
       <p>Sześć elementów, które składają się na prowadzenie w tym obszarze. Nie musisz korzystać ze wszystkich — plan układamy pod to, z czym przychodzisz.</p>
     </div>
-    <div class="kafle"><article class="kafel szklo" data-rv><i>01</i><h3>Konsultacja ortopedyczna</h3><p>Badanie kliniczne stawu lub odcinka kręgosłupa i postawienie rozpoznania.</p></article>
-      <article class="kafel szklo" data-rv><i>02</i><h3>USG narządu ruchu</h3><p>Badanie wykonywane przez lekarza w gabinecie, w trakcie tej samej wizyty.</p></article>
-      <article class="kafel szklo" data-rv><i>03</i><h3>RTG</h3><p>Zdjęcia bez zewnętrznej rejestracji i bez drugiego terminu.</p></article>
-      <article class="kafel szklo" data-rv><i>04</i><h3>Kwalifikacja do zabiegu</h3><p>Decyzja, czy operacja jest potrzebna — i co się stanie, jeśli jej nie będzie.</p></article>
-      <article class="kafel szklo" data-rv><i>05</i><h3>Opieka pooperacyjna</h3><p>Kontrole gojenia i przekazanie do rehabilitacji bez przerwy w prowadzeniu.</p></article>
-      <article class="kafel szklo" data-rv><i>06</i><h3>Druga opinia</h3><p>Ocena rozpoznania i planu leczenia postawionego gdzie indziej.</p></article></div>
+    <div class="kafle"><article class="kafel karta" data-rv><i>01</i><h3>Konsultacja ortopedyczna</h3><p>Badanie kliniczne stawu lub odcinka kręgosłupa i postawienie rozpoznania.</p></article>
+      <article class="kafel karta" data-rv><i>02</i><h3>USG narządu ruchu</h3><p>Badanie wykonywane przez lekarza w gabinecie, w trakcie tej samej wizyty.</p></article>
+      <article class="kafel karta" data-rv><i>03</i><h3>RTG</h3><p>Zdjęcia bez zewnętrznej rejestracji i bez drugiego terminu.</p></article>
+      <article class="kafel karta" data-rv><i>04</i><h3>Kwalifikacja do zabiegu</h3><p>Decyzja, czy operacja jest potrzebna — i co się stanie, jeśli jej nie będzie.</p></article>
+      <article class="kafel karta" data-rv><i>05</i><h3>Opieka pooperacyjna</h3><p>Kontrole gojenia i przekazanie do rehabilitacji bez przerwy w prowadzeniu.</p></article>
+      <article class="kafel karta" data-rv><i>06</i><h3>Druga opinia</h3><p>Ocena rozpoznania i planu leczenia postawionego gdzie indziej.</p></article></div>
   </div>
 </section>
 
@@ -325,9 +307,9 @@ footer.site span:last-child{margin-left:auto}
       <p>Największą stratą czasu po urazie nie jest samo leczenie, tylko odstępy między jego etapami: tydzień do ortopedy, dwa tygodnie do obrazowania, kolejny tydzień na odczytanie wyniku. Diagnostyka stoi u nas w tym samym gabinecie, w którym odbywa się konsultacja — dlatego rozpoznanie i decyzja o dalszej drodze zapadają w trakcie jednej wizyty.</p>
       <p>Ortopedia jest tu punktem rozstrzygającym, a nie końcowym. Po ustaleniu rozpoznania od razu wiadomo, czy prowadzi ono do zabiegu, do rehabilitacji, czy do zmiany sposobu trenowania — i kto z zespołu przejmuje Cię na następnym etapie.</p>
       <p>Jeżeli masz już wynik badania z innego ośrodka, przynieś go. Druga opinia jest pełnoprawnym powodem wizyty i nie wymaga powtarzania całej diagnostyki od zera.</p>
-      <blockquote class="cytat szklo">Wynik badania to nie jest koniec wizyty. To jest moment, w którym zapada decyzja.</blockquote>
+      <blockquote class="cytat">Wynik badania to nie jest koniec wizyty. To jest moment, w którym zapada decyzja.</blockquote>
     </div>
-    <aside class="dla-kogo szklo" data-rv>
+    <aside class="dla-kogo karta" data-rv>
       <h3>Dla kogo</h3>
       <ul><li>Świeży uraz — skręcenie, naderwanie, uraz kolana lub barku</li>
         <li>Ból przeciążeniowy, który nie ustępuje mimo odpoczynku</li>
@@ -339,17 +321,17 @@ footer.site span:last-child{margin-left:auto}
 <section class="sek">
   <div class="wrap">
     <div class="sek-head" data-rv><h2>Jak to wygląda w praktyce</h2></div>
-    <div class="kroki"><article class="krok szklo" data-rv><b>01</b><div><h3>Zgłoszenie</h3><p>Opisujesz koordynatorowi, co się stało i od kiedy boli.</p></div></article>
-      <article class="krok szklo" data-rv><b>02</b><div><h3>Badanie kliniczne</h3><p>Ortopeda ocenia staw, zakres ruchu i stabilność.</p></div></article>
-      <article class="krok szklo" data-rv><b>03</b><div><h3>Obrazowanie</h3><p>USG lub RTG w tym samym gabinecie, jeśli badanie tego wymaga.</p></div></article>
-      <article class="krok szklo" data-rv><b>04</b><div><h3>Decyzja i przekazanie</h3><p>Wychodzisz z rozpoznaniem i z ustalonym następnym krokiem.</p></div></article></div>
+    <div class="kroki"><article class="krok" data-rv><b>01</b><div><h3>Zgłoszenie</h3><p>Opisujesz koordynatorowi, co się stało i od kiedy boli.</p></div></article>
+      <article class="krok" data-rv><b>02</b><div><h3>Badanie kliniczne</h3><p>Ortopeda ocenia staw, zakres ruchu i stabilność.</p></div></article>
+      <article class="krok" data-rv><b>03</b><div><h3>Obrazowanie</h3><p>USG lub RTG w tym samym gabinecie, jeśli badanie tego wymaga.</p></div></article>
+      <article class="krok" data-rv><b>04</b><div><h3>Decyzja i przekazanie</h3><p>Wychodzisz z rozpoznaniem i z ustalonym następnym krokiem.</p></div></article></div>
   </div>
 </section>
 
 <section class="kont" id="kontakt">
   <img src="../img/kontakt.png" alt="" aria-hidden="true">
   <div class="kont-in">
-    <div class="kont-tekst szklo" data-rv>
+    <div class="kont-tekst" data-rv>
       <h2>Zacznij od rozmowy z koordynatorem</h2>
       <p>Piętnaście minut wystarczy, żeby ustalić, czy „Ortopedia” to zakres, którego
         potrzebujesz — a jeśli nie, skierujemy Cię do właściwego. Bez skierowania i bez kolejki.</p>
@@ -358,10 +340,10 @@ footer.site span:last-child{margin-left:auto}
           <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
             <path d="M3 10 10 3M4.6 3H10v5.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
           </svg></a>
-        <a class="btn btn-szklo" href="tel:+48223182000">Zadzwoń: 22 318 20 00</a>
+        <a class="btn btn-ghost" href="tel:+48223182000">Zadzwoń: 22 318 20 00</a>
       </div>
     </div>
-    <div class="kont-karta szklo" data-rv>
+    <div class="kont-karta" data-rv>
       <dl>
         <div><dt>Telefon</dt><dd><a href="tel:+48223182000">22 318 20 00</a></dd></div>
         <div><dt>E-mail</dt><dd><a href="mailto:info@legia.pl">info@legia.pl</a></dd></div>
@@ -375,11 +357,11 @@ footer.site span:last-child{margin-left:auto}
 <section class="sek">
   <div class="wrap">
     <div class="sek-head" data-rv><h2>Pozostałe zakresy opieki</h2></div>
-    <div class="inne"><a class="inna szklo" href="medycyna-sportowa.html" data-rv><span>01</span><div><b>Medycyna sportowa</b><em>Prowadzenie</em></div></a>
-      <a class="inna szklo" href="fizjoterapia.html" data-rv><span>03</span><div><b>Fizjoterapia i rehabilitacja</b><em>Powrót do sprawności</em></div></a>
-      <a class="inna szklo" href="dietetyka.html" data-rv><span>04</span><div><b>Dietetyka i suplementacja</b><em>Żywienie</em></div></a>
-      <a class="inna szklo" href="trening.html" data-rv><span>05</span><div><b>Trening merytoryczny</b><em>Motoryka</em></div></a>
-      <a class="inna szklo" href="edukacja.html" data-rv><span>06</span><div><b>Edukacja i szkolenie</b><em>Wiedza</em></div></a></div>
+    <div class="inne"><a class="inna karta" href="medycyna-sportowa.html" data-rv><span>01</span><div><b>Medycyna sportowa</b><em>Prowadzenie</em></div></a>
+      <a class="inna karta" href="fizjoterapia.html" data-rv><span>03</span><div><b>Fizjoterapia i rehabilitacja</b><em>Powrót do sprawności</em></div></a>
+      <a class="inna karta" href="dietetyka.html" data-rv><span>04</span><div><b>Dietetyka i suplementacja</b><em>Żywienie</em></div></a>
+      <a class="inna karta" href="trening.html" data-rv><span>05</span><div><b>Trening merytoryczny</b><em>Motoryka</em></div></a>
+      <a class="inna karta" href="edukacja.html" data-rv><span>06</span><div><b>Edukacja i szkolenie</b><em>Wiedza</em></div></a></div>
   </div>
 </section>
 

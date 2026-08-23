@@ -87,9 +87,9 @@ for (const u of uslugi) {
           .map(i => i.getAttribute('src')),
         linki: [...document.querySelectorAll('.inna')].map(a => a.getAttribute('href')),
         h1: document.querySelector('h1')?.textContent.trim(),
-        // kontrast opisu kafla na szkle — najciemniejszy tekst na stronie
         para: kafel ? [st(kafel.querySelector('p')).color, st(kafel).backgroundColor] : null,
-        szklo: kafel ? st(kafel).backdropFilter : '',
+        // szkło zostało tylko na ciemnym pasie kontaktu — jak na home
+        szklo: st(document.querySelector('.kont-karta'))?.backdropFilter ?? '',
       };
     });
 
@@ -100,19 +100,16 @@ for (const u of uslugi) {
     if (konsola.length) zle(`konsola @${w}`, konsola.slice(0, 3));
     if (sieć.length) zle(`4xx/5xx @${w}`, sieć.slice(0, 3));
     if (r.h1 !== u.tytul) zle(`h1 @${w}`, r.h1);
-    if (!/blur/.test(r.szklo)) zle(`kafel bez szkła @${w}`, r.szklo);
+    if (!/blur/.test(r.szklo)) zle(`pas kontaktu bez szkła @${w}`, r.szklo);
     if (r.linki.length !== uslugi.length - 1) zle(`linki do rodzeństwa @${w}`, r.linki.length);
     for (const l of r.linki)
       if (!existsSync(join(tu, l))) zle(`martwy link @${w}`, l);
 
     // kontrast liczymy raz — na szkle tło elementu jest półprzezroczyste, więc
     // realnym tłem jest czerń strony; bierzemy ostrzejszy z dwóch wariantów
-    // Tło kafla jest półprzezroczyste, więc realnym podłożem jest korpus strony.
-    // Bierzemy ostrzejszy z dwóch wariantów: czysty korpus i korpus przygaszony
-    // kropką rastra — kropki są rozsiane po całej stronie i mogą wypaść pod tekstem.
+    // kafel stoi na czystej bieli i sam jest biały — podkład to #fff
     if (w === 1440 && r.para) {
-      const podklad = t => `rgb(${[.72 * 255 + .28 * t, .72 * 255 + .28 * t, .72 * 255 + .28 * t]})`;
-      const k = Math.min(kontrast(r.para[0], podklad(245)), kontrast(r.para[0], podklad(222)));
+      const k = kontrast(r.para[0], 'rgb(255,255,255)');
       if (k < 4.5) zle(`kontrast opisu kafla ${k.toFixed(2)}:1`);
       else console.log(`  kontrast opisu kafla ${k.toFixed(2)}:1`);
     }

@@ -22,16 +22,16 @@ for (const u of uslugi) {
     faktyHtml: u.fakty.map(([k, v]) =>
       `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('\n      '),
     zakresHtml: u.zakres.map(([t, o], i) =>
-      `<article class="kafel szklo" data-rv><i>${String(i + 1).padStart(2, '0')}</i>` +
+      `<article class="kafel karta" data-rv><i>${String(i + 1).padStart(2, '0')}</i>` +
       `<h3>${t}</h3><p>${o}</p></article>`).join('\n      '),
     opisHtml: u.opis.map(p => `<p>${p}</p>`).join('\n      '),
     dlaKogoHtml: u.dlaKogo.map(l => `<li>${l}</li>`).join('\n        '),
     przebiegHtml: u.przebieg.map(([t, o], i) =>
-      `<article class="krok szklo" data-rv><b>${String(i + 1).padStart(2, '0')}</b>` +
+      `<article class="krok" data-rv><b>${String(i + 1).padStart(2, '0')}</b>` +
       `<div><h3>${t}</h3><p>${o}</p></div></article>`).join('\n      '),
     // pozostałe pięć usług — kolejność zachowana, bieżąca wypada
     inneHtml: uslugi.filter(x => x.slug !== u.slug).map(x =>
-      `<a class="inna szklo" href="${x.slug}.html" data-rv><span>${x.nr}</span>` +
+      `<a class="inna karta" href="${x.slug}.html" data-rv><span>${x.nr}</span>` +
       `<div><b>${x.tytul}</b><em>${x.dzial}</em></div></a>`).join('\n      '),
   };
 
