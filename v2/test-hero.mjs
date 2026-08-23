@@ -155,13 +155,16 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
       pojawily: s2.classList.contains('widoczne'),
       ile: ks.length,
       // w układzie pierścienia: jeden przerywany okrąg, kropki na nim
-      okragJest: pier ? !!okrag && +okrag.getAttribute('r') > 100 : !okrag,
-      naOkregu: !pier || ks.every(k => {
-        const r = k.getBoundingClientRect();
-        const dx = (r.left + r.width / 2) - (S.left + +okrag.getAttribute('cx'));
-        const dy = (r.top + r.height / 2) - (S.top + +okrag.getAttribute('cy'));
-        return Math.abs(Math.hypot(dx, dy) - +okrag.getAttribute('r')) < 3;
-      }),
+      okragJest: pier ? !!okrag && /^M .* A /.test(okrag.getAttribute('d') || '') : !okrag,
+      // wszystkie kropki w równej odległości od wspólnego środka = leżą na jednym okręgu
+      naOkregu: !pier || (() => {
+        const sr = ks.map(k => { const r = k.getBoundingClientRect();
+          return [r.left + r.width / 2, r.top + r.height / 2]; });
+        const cx2 = sr.reduce((a2, q) => a2 + q[0], 0) / sr.length;
+        const cy2 = sr.reduce((a2, q) => a2 + q[1], 0) / sr.length;
+        const d2 = sr.map(q => Math.hypot(q[0] - cx2, q[1] - cy2));
+        return Math.max(...d2) - Math.min(...d2) < 6;
+      })(),
       etykietyWKadrze: !pier || ks.every(k => w(k.querySelector('.krag-etykieta'))),
       // podpis nie może wchodzić w nagłówek sekcji
       bezKolizji: !pier || !ks.some(k => hit(k.querySelector('.krag-etykieta').getBoundingClientRect(), h2)),
