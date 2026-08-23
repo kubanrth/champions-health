@@ -83,6 +83,10 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
       // nagłówek Revolut-style nie może nachodzić na karty
       naglowekNadKartami: document.querySelector('.deal-head').getBoundingClientRect().bottom
                         <= m.top + 1,
+      // Revolut składa całą sekcję jedną wagą (Aeonik Medium 500) — u nas Inter
+      jednaWaga: ['.deal-head h2', '.card-in h3', '.card-cta', '.card-lab']
+        .every(sel => { const c = getComputedStyle(document.querySelector(sel));
+          return c.fontWeight === '500' && c.fontFamily.startsWith('Inter'); }),
       // metryki akapitu 1:1 z revolut.com (18/24 w bloku 600 px, dwa wiersze)
       akapitJakRevolut: (() => { const pa = document.querySelector('.deal-head p'), c = getComputedStyle(pa);
         const zwezony = innerWidth < 500 || innerHeight <= 820;
@@ -128,7 +132,7 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
 
   const mOk = przed.spoczynek && przed.pelnyKadr && po.zwiniete && po.trafiaWKarte
            && po.kartaWUwadze && po.kartaNaWierzchu && po.kartaPelneKrycie
-           && po.heroOddane && po.etykietaWidoczna && po.naglowekNadKartami && po.akapitJakRevolut && po.lukRozlozony && po.napisyBiale && wroc.cofniete && wroc.pelnyKadr;
+           && po.heroOddane && po.etykietaWidoczna && po.naglowekNadKartami && po.akapitJakRevolut && po.jednaWaga && po.lukRozlozony && po.napisyBiale && wroc.cofniete && wroc.pelnyKadr;
   console.log(`${w}×${h} przejście`, mOk ? 'ok' : 'BŁĄD ' + JSON.stringify({ przed, po, wroc }));
   if (!mOk) process.exitCode = 1;
 
