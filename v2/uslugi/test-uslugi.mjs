@@ -95,7 +95,7 @@ for (const u of uslugi) {
           .map(i => i.getAttribute('src')),
         linki: [...document.querySelectorAll('.inna')].map(a => a.getAttribute('href')),
         h1: document.querySelector('h1')?.textContent.trim(),
-        para: kafel ? [st(kafel.querySelector('p')).color, st(kafel).backgroundColor] : null,
+        para: kafel ? [st(kafel.querySelector('p')).color, st(kafel.closest('section')).backgroundColor] : null,
         // szkło zostało tylko na ciemnym pasie kontaktu — jak na home
         szklo: st(document.querySelector('.kont-karta'))?.backdropFilter ?? '',
       };
@@ -142,7 +142,7 @@ for (const u of uslugi) {
 console.log('\n— kontrast tekstu (piksele, ortopedia @1440)');
 {
   const ROLE = [
-    ['.pg-lead', 'lead heroju'], ['.kick', 'pigułka działu'],
+    ['.pg-lead', 'lead heroju'],
     ['.kafel p', 'opis kafla'], ['.kafel i', 'numer kafla'],
     ['.fakty dt', 'etykieta faktu'], ['.fakty dd', 'wartość faktu'],
     ['.claim-line', 'wielka linia'],

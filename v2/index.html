@@ -356,28 +356,18 @@ a{color:inherit;text-decoration:none}
    stawu, a pod nią opis. Ten sam język, co wjazd nagłówka na starcie strony. */
 /* sama kropka ma 13 px — powiększamy cel wskaźnika, nie punkt */
 .jt::before{content:"";position:absolute;inset:-13px;border-radius:50%}
-.jt-wys{position:absolute;top:6.5px;left:6.5px;width:var(--wys,clamp(200px,21vw,290px));
-  pointer-events:none}
+.jt-wys{position:absolute;top:calc(6.5px + var(--dy,0px));left:6.5px;
+  width:calc(var(--wys,clamp(200px,21vw,290px)) + var(--odsun,0px));pointer-events:none}
+/* pionowy odcinek odnośnika — używa go tylko bark, który musi wyjść nad ramię */
+.jt-pion{position:absolute;left:6.5px;bottom:6.5px;width:1px;
+  height:calc(0px - var(--dy,0px));background:rgba(255,255,255,.9);
+  box-shadow:0 0 8px rgba(255,255,255,.4);
+  transform:scaleY(0);transform-origin:bottom center;transition:transform .3s var(--rev)}
+.jt:hover .jt-pion,.jt:focus-visible .jt-pion,.jt.on .jt-pion{transform:scaleY(1)}
 /* po wejściu na punkt można przejechać myszą na tekst — opis nie ucieknie */
 .jt:hover .jt-wys{pointer-events:auto}
 
-/* Punkty leżą na jego ciele, więc opis trafia na jasną koszulkę albo ramię
-   (surowo 1,2–3,4:1). To nie jest karta: przyciemnienie wygasa w poziomie
-   z obu stron, a maska zdejmuje je u góry i u dołu — nie ma ani jednej
-   prostej krawędzi, tylko cień przy kropce. */
-.jt-wys::before{content:"";position:absolute;z-index:-1;
-  left:-46px;right:-76px;top:-86px;bottom:-132px;
-  background:linear-gradient(90deg,rgba(4,10,14,0) 0%,rgba(4,10,14,.42) 7%,rgba(4,10,14,.86) 17%,
-    rgba(4,10,14,.84) 80%,rgba(4,10,14,.3) 93%,rgba(4,10,14,0) 100%);
-  -webkit-mask-image:linear-gradient(180deg,rgba(0,0,0,0) 0%,#000 20%,#000 78%,rgba(0,0,0,0) 100%);
-  mask-image:linear-gradient(180deg,rgba(0,0,0,0) 0%,#000 20%,#000 78%,rgba(0,0,0,0) 100%);
-  opacity:0;transform:scaleX(.6);transform-origin:left center;
-  transition:opacity .5s var(--rev),transform .55s var(--rev)}
-.jt.w-lewo .jt-wys::before{left:-76px;right:-46px;transform-origin:right center;
-  background:linear-gradient(270deg,rgba(4,10,14,0) 0%,rgba(4,10,14,.42) 7%,rgba(4,10,14,.86) 17%,
-    rgba(4,10,14,.84) 80%,rgba(4,10,14,.3) 93%,rgba(4,10,14,0) 100%)}
-.jt:hover .jt-wys::before,.jt:focus-visible .jt-wys::before,.jt.on .jt-wys::before{
-  opacity:1;transform:none}
+
 .jt.w-lewo .jt-wys{left:auto;right:6.5px;text-align:right}
 
 .jt-kreska{position:absolute;top:0;left:13px;right:0;height:1px;
@@ -387,8 +377,10 @@ a{color:inherit;text-decoration:none}
 .jt.w-lewo .jt-kreska{left:0;right:13px;transform-origin:right center}
 
 /* nazwa nad kreską, opis pod kreską — oba wynurzają się z niej */
-.jt-nazwa,.jt-opis{position:absolute;left:15px;right:0;overflow:hidden}
-.jt.w-lewo .jt-nazwa,.jt.w-lewo .jt-opis{left:0;right:15px}
+/* tekst siedzi na KOŃCU kreski — dzięki temu trafia w ciemne miejsce zdjęcia
+   i nie potrzebuje żadnej podkładki pod spodem */
+.jt-nazwa,.jt-opis{position:absolute;left:calc(15px + var(--odsun,0px));right:0;overflow:hidden}
+.jt.w-lewo .jt-nazwa,.jt.w-lewo .jt-opis{left:0;right:calc(15px + var(--odsun,0px))}
 .jt-nazwa{bottom:9px}
 .jt-opis{top:9px}
 .jt-nazwa i,.jt-opis i{display:block;font-style:normal;
@@ -396,16 +388,21 @@ a{color:inherit;text-decoration:none}
 .jt-nazwa i{transform:translateY(105%)}
 .jt-opis i{transform:translateY(-105%);opacity:0}
 
-.jt-nazwa i{font-family:var(--legia);font-stretch:75%;text-transform:uppercase;
-  font-size:clamp(15px,1.25vw,19px);font-weight:700;letter-spacing:.02em;line-height:1.1;color:#fff}
-.jt-opis i{padding-top:2px;font-size:clamp(12.5px,.98vw,14px);line-height:1.5;
-  font-weight:450;color:rgba(255,255,255,.94)}
+/* krój jak w reszcie strony — bez osobnego, wąskiego fontu */
+.jt-nazwa i{font-size:clamp(17px,1.35vw,21px);font-weight:600;letter-spacing:-.02em;
+  line-height:1.15;color:#fff;text-shadow:0 1px 10px rgba(4,10,14,.92),0 0 2px rgba(4,10,14,.8)}
+.jt-opis i{padding-top:3px;font-size:clamp(13px,1.02vw,15px);line-height:1.5;
+  font-weight:450;color:rgba(255,255,255,.96);
+  text-shadow:0 1px 10px rgba(4,10,14,.92),0 0 2px rgba(4,10,14,.8)}
 
 .jt:hover .jt-kreska,.jt:focus-visible .jt-kreska,.jt.on .jt-kreska{transform:scaleX(1)}
 .jt:hover .jt-nazwa i,.jt:focus-visible .jt-nazwa i,.jt.on .jt-nazwa i,
 .jt:hover .jt-opis i,.jt:focus-visible .jt-opis i,.jt.on .jt-opis i{transform:none;opacity:1}
 .jt:hover .jt-nazwa i,.jt:focus-visible .jt-nazwa i,.jt.on .jt-nazwa i{transition-delay:.16s}
 .jt:hover .jt-opis i,.jt:focus-visible .jt-opis i,.jt.on .jt-opis i{transition-delay:.24s}
+.jt.ma-pion:hover .jt-kreska,.jt.ma-pion.on .jt-kreska{transition-delay:.22s}
+.jt.ma-pion:hover .jt-nazwa i,.jt.ma-pion.on .jt-nazwa i{transition-delay:.4s}
+.jt.ma-pion:hover .jt-opis i,.jt.ma-pion.on .jt-opis i{transition-delay:.48s}
 
 @media(prefers-reduced-motion:reduce){
   .jt-kreska,.jt-nazwa i,.jt-opis i,.morph,.morph>img,.morph-in,
@@ -418,15 +415,18 @@ a{color:inherit;text-decoration:none}
    od miejsca lądowania aż po kreskę i przycina, więc tekst WYJEŻDŻA Z LINII.
    --kx/--kt/--kh liczy JS tym samym przelicznikiem `cover` co pozycje kropek. */
 .hero-copy{position:absolute;z-index:4;right:clamp(24px,3.4vw,52px);
-  left:var(--kx,50%);top:var(--kt,20%);height:var(--kh,auto);
-  overflow:hidden;pointer-events:none;text-align:right}
-.hero-copy h1{transform:translateY(var(--kh,60px));opacity:0;
-  transition:transform 1.05s var(--rev),opacity .5s var(--rev)}
-.hero.tekst .hero-copy h1{transform:none;opacity:1}
+  left:var(--kx,50%);top:var(--kt,20%);pointer-events:none;text-align:right}
 
-.hero-copy h1{margin:0 0 0 auto;font-size:clamp(1.8rem,4.6vw,4.5rem);line-height:1.06;
+
+.hero-copy h1{margin:0 0 0 auto;font-size:clamp(1.8rem,4.25vw,4.2rem);line-height:1.06;
   letter-spacing:-.028em;font-weight:500}
-.hero.morphed .hero-copy h1{opacity:0;transform:translateY(-40px)}
+/* każdy wiersz wynurza się z własnej maski, drugi ćwierć taktu później */
+.hero-copy h1 .w{display:block;overflow:hidden}
+.hero-copy h1 .w i{display:block;font-style:normal;transform:translateY(106%);
+  transition:transform .85s var(--rev)}
+.hero.tekst .hero-copy h1 .w i{transform:none}
+.hero.tekst .hero-copy h1 .w+.w i{transition-delay:.1s}
+.hero.morphed .hero-copy h1 .w i{transform:translateY(-106%)}
 
 /* drugi blok: mniejsze zdanie + duży przycisk (wzór: myhealthprac.com) */
 .hero-dol{position:absolute;z-index:4;right:clamp(24px,3.4vw,52px);
@@ -453,7 +453,7 @@ a{color:inherit;text-decoration:none}
   /* przy tym przybliżeniu ciemne pole wypada poza kadr — nagłówek idzie
      w ciemny pas nad sylwetką: wciąż nad linią i wciąż bez przyciemnienia */
   .hero-copy{left:24px;right:24px;top:clamp(92px,15svh,150px);height:auto;overflow:visible}
-  .hero-copy h1 br.lam{display:none}   /* tu tekst łamie się sam, do szerokości kadru */
+  .hero-copy h1 .w{display:inline}     /* tu tekst łamie się sam, do szerokości kadru */
   .hero-copy h1{transform:translateY(40px)}
 }
 @media(max-width:760px){
@@ -665,49 +665,49 @@ h2{margin:0;font-size:clamp(2.1rem,4.6vw,3.6rem);line-height:1.05;letter-spacing
 .post:hover h3 a{background-size:100% 1px}
 .post p{margin:10px 0 0;max-width:36ch;font-size:15px;line-height:22px;color:var(--muted-d)}
 
-/* --- kontakt: zdjęcie w tle, dane po lewej, formularz po prawej ----------- */
-.kontakt{position:relative;overflow:hidden;background:#07100C;color:#fff;isolation:isolate}
-.kontakt-tlo{position:absolute;inset:0;z-index:0;width:100%;height:100%;
-  object-fit:cover;object-position:30% 50%}
-.kontakt::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
-  background:linear-gradient(100deg,rgba(5,12,9,.86) 0%,rgba(5,12,9,.6) 34%,rgba(5,12,9,.3) 66%,rgba(5,12,9,.14) 100%)}
-.kontakt-in{position:relative;z-index:2;display:grid;gap:clamp(2.4rem,4vw,5rem);
-  grid-template-columns:minmax(0,1.05fr) minmax(320px,.95fr);align-items:start;
-  padding:clamp(4.5rem,9vw,8rem) clamp(24px,3.4vw,52px)}
-/* pod lewą kolumną leży sam zawodnik — gradient sekcji tego nie wyciszy,
-   więc kolumna dostaje własne, miękko wygasające przyciemnienie */
-.kontakt-lewo{position:relative}
-.kontakt-lewo::before{content:"";position:absolute;z-index:-1;
-  inset:-40px -80px -40px calc(-1 * clamp(24px,3.4vw,52px));
-  background:linear-gradient(to right,rgba(4,10,7,.93) 0%,rgba(4,10,7,.9) 58%,rgba(4,10,7,.62) 82%,rgba(4,10,7,0) 100%)}
-.kontakt-lewo h2{max-width:16ch;font-size:clamp(2.4rem,5.4vw,4.6rem);line-height:1.0;
+/* --- kontakt: płaska czerń, dane w wierszach z przerywaną kreską, formularz
+   bez szkła. Rytm wierszy i przerywana kreska jak w myhealthprac (#personal-
+   professional), pola na tyle widoczne, żeby było wiadomo, gdzie się klika. --- */
+.kontakt{position:relative;background:#070B09;color:#fff;
+  border-top:1px solid rgba(255,255,255,.10)}
+.kontakt-in{display:grid;gap:clamp(2.6rem,5vw,6rem);
+  grid-template-columns:minmax(0,1fr) minmax(340px,.88fr);align-items:stretch;
+  width:var(--wrap);max-width:100%;margin:0 auto;
+  padding:clamp(4.5rem,9vw,7.5rem) 24px}
+.kontakt-lewo{display:flex;flex-direction:column}
+.kontakt-lewo h2{margin:0;max-width:15ch;font-size:clamp(2.1rem,3.6vw,3.24rem);line-height:1.06;
   letter-spacing:-.028em;font-weight:500}
-.kontakt-lead{margin:1.4rem 0 0;max-width:46ch;font-size:18px;line-height:26px;color:rgba(255,255,255,.82)}
-.kontakt-dane{margin:clamp(2rem,3.4vw,3rem) 0 0;display:grid;gap:18px 40px;
-  grid-template-columns:repeat(auto-fit,minmax(170px,1fr));max-width:25rem}
-.kontakt-dane dt{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.5)}
-.kontakt-dane dd{margin:5px 0 0;font-size:18px;font-weight:500;letter-spacing:-.01em}
+.kontakt-lead{margin:1.3rem 0 0;max-width:44ch;font-size:17px;line-height:26px;color:rgba(255,255,255,.7)}
+/* dane kontaktowe: wiersz = etykieta z lewej, wartość z prawej, kreska u góry */
+.kontakt-dane{margin:clamp(2.2rem,3.6vw,3.2rem) 0 0;max-width:30rem}
+@media(min-width:901px){.kontakt-dane{margin-top:auto;padding-top:clamp(2.2rem,3.6vw,3.2rem)}}
+.kontakt-dane div{display:flex;justify-content:space-between;align-items:baseline;gap:24px;
+  padding:16px 0;border-top:1px dashed rgba(255,255,255,.24)}
+.kontakt-dane div:last-child{border-bottom:1px dashed rgba(255,255,255,.24)}
+.kontakt-dane dt{font-size:14px;font-weight:400;color:rgba(255,255,255,.6)}
+.kontakt-dane dd{margin:0;font-size:17px;font-weight:500;letter-spacing:-.01em;text-align:right}
 .kontakt-dane a{background-image:linear-gradient(currentColor,currentColor);background-size:0 1px;
   background-repeat:no-repeat;background-position:0 100%;transition:background-size .4s var(--ease)}
 .kontakt-dane a:hover{background-size:100% 1px}
-.kontakt-form{padding:clamp(22px,2.4vw,32px);border-radius:22px;
-  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);
-  -webkit-backdrop-filter:blur(18px) saturate(1.3);backdrop-filter:blur(18px) saturate(1.3);
-  display:grid;gap:14px}
-.form-tytul{margin:0 0 4px;font-size:20px;font-weight:500;letter-spacing:-.02em}
-.kontakt-form label{display:grid;gap:7px;font-size:13px;letter-spacing:.01em;color:rgba(255,255,255,.7)}
-.kontakt-form input,.kontakt-form textarea{width:100%;padding:13px 15px;border-radius:12px;
-  border:1px solid rgba(255,255,255,.18);background:rgba(8,16,12,.45);color:#fff;
-  font:inherit;font-size:15px;resize:vertical;
+.kontakt-form{display:grid;gap:16px;padding-top:20px;
+  border-top:1px dashed rgba(255,255,255,.24)}
+.form-tytul{margin:0 0 2px;font-size:16px;font-weight:500;letter-spacing:-.01em}
+.kontakt-form label{display:grid;gap:8px;font-size:14px;color:rgba(255,255,255,.78)}
+.kontakt-form input,.kontakt-form textarea{width:100%;padding:14px 16px;border-radius:14px;
+  /* .34 dawało 2,68:1 wobec tła pola — poniżej progu 3:1 dla elementów UI */
+  border:1px solid rgba(255,255,255,.45);background:#0C120F;color:#fff;
+  font:inherit;font-size:16px;resize:vertical;
   transition:border-color .3s var(--ease),background-color .3s var(--ease)}
-.kontakt-form input:focus,.kontakt-form textarea:focus{outline:0;border-color:rgba(255,255,255,.6);
-  background:rgba(8,16,12,.7)}
+.kontakt-form input:hover,.kontakt-form textarea:hover{border-color:rgba(255,255,255,.66)}
+.kontakt-form input:focus,.kontakt-form textarea:focus{outline:0;border-color:#fff;background:#101815}
 .kontakt-form input:user-invalid,.kontakt-form textarea:user-invalid{border-color:#FF8A8A}
-.kontakt-form .btn{margin-top:4px;justify-content:center}
-.form-nota{margin:0;font-size:12.5px;line-height:1.45;color:#FFB4B4}
-.form-nota.ok{color:rgba(255,255,255,.72)}
+.kontakt-form .btn{margin-top:6px;justify-content:center;width:100%}
+.form-nota{margin:0;font-size:13px;line-height:1.5;color:rgba(255,255,255,.55)}
+.form-nota.ok{color:#fff}
 @media(max-width:900px){
-  .kontakt-in{grid-template-columns:1fr}
+  .kontakt-in{grid-template-columns:1fr;gap:2.6rem}
+  .kontakt-lewo h2{max-width:18ch}
+  .kontakt-dane{max-width:none}
 }
 
 /* FAQ 1:1 z revolut.com/esim: wyśrodkowany nagłówek 51,79/500, wiersze
@@ -744,10 +744,41 @@ h2{margin:0;font-size:clamp(2.1rem,4.6vw,3.6rem);line-height:1.05;letter-spacing
 .btn-w:hover{transform:translateY(-2px);background:#E9E9E6}
 .btn-o{border:1px solid rgba(255,255,255,.32);color:#fff}
 .btn-o:hover{transform:translateY(-2px);background:rgba(255,255,255,.08)}
-footer.site{border-top:1px solid rgba(255,255,255,.10);padding:38px 0 30px}
-footer.site .wrap{display:flex;flex-wrap:wrap;gap:20px;justify-content:space-between;align-items:center;
-  font-size:14px;color:rgba(255,255,255,.55)}
-footer.site img{height:26px}
+/* Stopka: pas marki + trzy kolumny linków, pod nimi przerywana kreska i wiersz
+   prawny. Układ i przerywana kreska zdjęte z myhealthprac.com; ich skala (label
+   12,24 px, link 11,52 px przy body 14) przeliczona na naszą (body 16). */
+footer.site{border-top:1px solid rgba(255,255,255,.10);padding:76px 0 26px}
+.ft-siatka{display:grid;gap:clamp(28px,4vw,64px);
+  grid-template-columns:minmax(230px,1.5fr) 1fr 1fr 1.15fr}
+.ft-marka img{height:30px}
+.ft-marka p{margin:20px 0 0;max-width:32ch;font-size:15px;line-height:1.55;color:rgba(255,255,255,.6)}
+.ft-kol h3{margin:0 0 18px;font-size:12.5px;font-weight:500;color:rgba(255,255,255,.5)}
+.ft-kol ul{margin:0;padding:0;list-style:none;display:grid;gap:11px}
+.ft-kol li{font-size:14.5px;font-weight:500;color:rgba(255,255,255,.86)}
+.ft-kol a{transition:color .3s var(--ease)}
+.ft-kol a:hover{color:#fff;text-decoration:underline;text-underline-offset:4px}
+.ft-kol .ft-cicho{color:rgba(255,255,255,.55)}
+.ft-dol{margin-top:clamp(48px,7vw,80px);padding-top:22px;
+  border-top:1px dashed rgba(255,255,255,.28);
+  display:flex;flex-wrap:wrap;gap:14px;justify-content:space-between;align-items:center;
+  font-size:13px;color:rgba(255,255,255,.5)}
+.ft-dol a{color:rgba(255,255,255,.72);transition:color .3s var(--ease)}
+.ft-dol a:hover{color:#fff;text-decoration:underline;text-underline-offset:4px}
+footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-radius:3px}
+@media(max-width:900px){
+  /* dwie kolumny: „Zakres opieki" (6 pozycji) zajmuje dwa wiersze, więc „Kontakt"
+     wchodzi pod „Klinikę" zamiast zostawiać pustą komórkę po prawej */
+  .ft-siatka{grid-template-columns:1fr 1fr;gap:34px 30px;align-items:start}
+  .ft-marka{grid-column:1/-1}
+  .ft-marka p{max-width:46ch}
+  .ft-uslugi{grid-row:span 2}
+}
+@media(max-width:560px){
+  footer.site{padding:56px 0 24px}
+  .ft-siatka{grid-template-columns:1fr;gap:30px}
+  .ft-uslugi{grid-row:auto}
+  .ft-kol ul{gap:10px}
+}
 
 @media(max-width:900px){
     }
@@ -793,8 +824,9 @@ footer.site img{height:26px}
     </div>
   
   
-    <button class="jt j-bark" data-jt data-kier="lewo" data-ix="36.5" data-iy="29.5" aria-label="Staw ramienny: Stabilność łopatki decyduje o tym, ile wytrzyma sam staw — od niej zaczynamy ocenę barku.">
+    <button class="jt j-bark" data-jt data-dy="-15.6" data-kier="lewo" data-ix="38.2" data-iy="30.8" aria-label="Staw ramienny: Stabilność łopatki decyduje o tym, ile wytrzyma sam staw — od niej zaczynamy ocenę barku.">
       <span class="jt-dot"></span>
+      <span class="jt-pion" aria-hidden="true"></span>
       <span class="jt-wys" aria-hidden="true">
         <span class="jt-nazwa"><i>Staw ramienny</i></span>
         <span class="jt-kreska"></span>
@@ -802,32 +834,36 @@ footer.site img{height:26px}
       </span>
     </button>
 
-    <button class="jt j-lokiec" data-jt data-ix="36.5" data-iy="29.5" data-ix2="44.7" data-iy2="47" aria-label="Staw łokciowy: Ból po zewnętrznej stronie bierze się zwykle z przeciążenia przyczepów prostowników nadgarstka, nie z samego stawu.">
+    <button class="jt j-lokiec" data-jt data-odsun="10" data-ix="38.2" data-iy="30.8" data-ix2="43.9" data-iy2="50.2" aria-label="Staw łokciowy: Ból po zewnętrznej stronie bierze się zwykle z przeciążenia przyczepów prostowników nadgarstka, nie z samego stawu.">
       <span class="jt-dot"></span>
+      <span class="jt-pion" aria-hidden="true"></span>
       <span class="jt-wys" aria-hidden="true">
         <span class="jt-nazwa"><i>Staw łokciowy</i></span>
         <span class="jt-kreska"></span>
         <span class="jt-opis"><i>Ból po zewnętrznej stronie bierze się zwykle z przeciążenia przyczepów prostowników nadgarstka, nie z samego stawu.</i></span>
       </span>
     </button>
-    <button class="jt j-biodro" data-jt data-ix="28.0" data-iy="52.0" aria-label="Staw biodrowy: Ograniczona rotacja przenosi obciążenie na kręgosłup lędźwiowy i pachwinę.">
+    <button class="jt j-biodro" data-jt data-odsun="17.5" data-ix="28.0" data-iy="52.0" aria-label="Staw biodrowy: Ograniczona rotacja przenosi obciążenie na kręgosłup lędźwiowy i pachwinę.">
       <span class="jt-dot"></span>
+      <span class="jt-pion" aria-hidden="true"></span>
       <span class="jt-wys" aria-hidden="true">
         <span class="jt-nazwa"><i>Staw biodrowy</i></span>
         <span class="jt-kreska"></span>
         <span class="jt-opis"><i>Ograniczona rotacja przenosi obciążenie na kręgosłup lędźwiowy i pachwinę.</i></span>
       </span>
     </button>
-    <button class="jt j-kolano" data-jt data-ix="22.0" data-iy="62.0" aria-label="Staw kolanowy · ACL: Po rekonstrukcji ACL o powrocie decyduje symetria siły uda, nie kalendarz.">
+    <button class="jt j-kolano" data-jt data-ix="16.9" data-iy="68.0" aria-label="Staw kolanowy · ACL: Po rekonstrukcji ACL o powrocie decyduje symetria siły uda, nie kalendarz.">
       <span class="jt-dot"></span>
+      <span class="jt-pion" aria-hidden="true"></span>
       <span class="jt-wys" aria-hidden="true">
         <span class="jt-nazwa"><i>Staw kolanowy · ACL</i></span>
         <span class="jt-kreska"></span>
         <span class="jt-opis"><i>Po rekonstrukcji ACL o powrocie decyduje symetria siły uda, nie kalendarz.</i></span>
       </span>
     </button>
-    <button class="jt j-skok" data-jt data-ix="8.5" data-iy="77.5" aria-label="Staw skokowo-goleniowy: Zbyt małe zgięcie grzbietowe zmienia mechanikę kolana i podnosi ryzyko urazu.">
+    <button class="jt j-skok" data-jt data-ix="7.0" data-iy="81.8" aria-label="Staw skokowo-goleniowy: Zbyt małe zgięcie grzbietowe zmienia mechanikę kolana i podnosi ryzyko urazu.">
       <span class="jt-dot"></span>
+      <span class="jt-pion" aria-hidden="true"></span>
       <span class="jt-wys" aria-hidden="true">
         <span class="jt-nazwa"><i>Staw skokowo-goleniowy</i></span>
         <span class="jt-kreska"></span>
@@ -836,7 +872,8 @@ footer.site img{height:26px}
     </button>
   
     <div class="hero-copy" data-kopia>
-    <h1>Kontuzje, które znamy z boiska,<br class="lam">nie z podręczników</h1>
+    <h1><span class="w"><i>Kontuzje, które znamy z</i></span>
+        <span class="w"><i>boiska, nie z podręczników</i></span></h1>
   </div>
   <div class="hero-dol">
     <p>Ortopedia, medycyna sportowa i rehabilitacja — prowadzone przez sztab medyczny
@@ -1417,7 +1454,6 @@ footer.site img{height:26px}
 </section>
 
 <section class="kontakt" id="kontakt">
-  <img class="kontakt-tlo" src="img/kontakt.png" alt="" aria-hidden="true">
   <div class="kontakt-in">
     <div class="kontakt-lewo">
       <h2 class="reveal" data-reveal>Zacznij od rozmowy z koordynatorem</h2>
@@ -1446,17 +1482,58 @@ footer.site img{height:26px}
         <textarea name="tresc" rows="3"></textarea>
       </label>
       <button class="btn btn-w" type="submit">Wyślij zgłoszenie</button>
-      <p class="form-nota" data-form-nota role="status">Formularz demonstracyjny — nie wysyła
-        jeszcze danych. Do podpięcia po stronie klienta.</p>
+      <p class="form-nota" data-form-nota role="status">Formularz demonstracyjny. Nie wysyła jeszcze
+        danych, podpięcie zostaje po stronie klienta.</p>
     </form>
   </div>
 </section>
 
 <footer class="site">
   <div class="wrap">
-    <img src="img/logo_LCH_white.svg" alt="Champions Health">
-    <span>ul. Łazienkowska 3, 00-449 Warszawa · 22 318 20 00</span>
-    <span>© 2026 Champions Health · Legia Warszawa S.A.</span>
+    <div class="ft-siatka">
+      <div class="ft-marka">
+        <img src="img/logo_LCH_white.svg" alt="Champions Health">
+        <p>Klinika medycyny sportowej i rehabilitacji przy Legii Warszawa. Ten sam sztab,
+          który prowadzi pierwszą drużynę i Akademię.</p>
+      </div>
+
+      <nav class="ft-kol ft-uslugi" aria-labelledby="ft-opieka">
+        <h3 id="ft-opieka">Zakres opieki</h3>
+        <ul>
+          <li><a href="uslugi/medycyna-sportowa.html">Medycyna sportowa</a></li>
+          <li><a href="uslugi/ortopedia.html">Ortopedia</a></li>
+          <li><a href="uslugi/fizjoterapia.html">Fizjoterapia i rehabilitacja</a></li>
+          <li><a href="uslugi/dietetyka.html">Dietetyka i suplementacja</a></li>
+          <li><a href="uslugi/trening.html">Trening merytoryczny</a></li>
+          <li><a href="uslugi/edukacja.html">Edukacja i szkolenie</a></li>
+        </ul>
+      </nav>
+
+      <nav class="ft-kol" aria-labelledby="ft-klinika">
+        <h3 id="ft-klinika">Klinika</h3>
+        <ul>
+          <li><a href="#sciezka">Jak to działa</a></li>
+          <li><a href="#zespol">Zespół</a></li>
+          <li><a href="#blog">Wiedza</a></li>
+          <li><a href="#faq">Najczęstsze pytania</a></li>
+        </ul>
+      </nav>
+
+      <div class="ft-kol">
+        <h3 id="ft-kontakt">Kontakt</h3>
+        <ul aria-labelledby="ft-kontakt">
+          <li><a href="tel:+48223182000">22 318 20 00</a></li>
+          <li><a href="mailto:info@legia.pl">info@legia.pl</a></li>
+          <li class="ft-cicho">ul. Łazienkowska 3, 00-449 Warszawa</li>
+          <li class="ft-cicho">Pon.–pt. 8:00–20:00</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="ft-dol">
+      <span>© 2026 Champions Health · Legia Warszawa S.A.</span>
+      <a href="#top">Wróć na górę</a>
+    </div>
   </div>
 </footer>
 
@@ -1571,6 +1648,8 @@ footer.site img{height:26px}
     sec.classList.toggle('rozwiniete', teraz);
     if (sec.__rozloz) sec.__rozloz(teraz ? 1 : 0);  // karty wjeżdżają w tym samym ruchu
     if (sec.__zamroz) sec.__zamroz(teraz);          // slider stoi, dopóki hero leci
+    // powrót na samą górę = wjazd gra od nowa (po tym, jak kadr wróci na miejsce)
+    if (!teraz && hero.__odtworz) setTimeout(() => { if (scrollY <= PROG) hero.__odtworz(); }, 220);
   };
   addEventListener('scroll', sprawdz, { passive: true });
   addEventListener('resize', () => { if (zwiniete) ustawCel(); });
@@ -1778,6 +1857,11 @@ footer.site img{height:26px}
       j.style.top  = y.toFixed(1) + 'px';
       // Kierunek wysuwki: bark ma wychodzić w lewo, ale przy wąskim kadrze
       // tam się nie mieści — wtedy wygrywa strona, w której tekst zostaje w kadrze.
+      // odsunięcie tekstu wzdłuż kreski i podniesienie odnośnika — w % obrazu,
+      // żeby trzymały się tego samego miejsca zdjęcia przy każdym kadrze
+      j.style.setProperty('--odsun', (w * (+j.dataset.odsun || 0) / 100).toFixed(1) + 'px');
+      j.style.setProperty('--dy', (h * (+j.dataset.dy || 0) / 100).toFixed(1) + 'px');
+      j.classList.toggle('ma-pion', !!(+j.dataset.dy));
       const wys = j.querySelector('.jt-wys').offsetWidth;
       const lewoOk = x - wys - 24 > 0, prawoOk = x + wys + 24 < H.width;
       j.classList.toggle('w-lewo',
@@ -1791,22 +1875,18 @@ footer.site img{height:26px}
     // musi więc sięgać od jednego do drugiego.
     const kopia = hero.querySelector('.hero-copy'), naglowek = kopia.querySelector('h1');
     if (H.width > 900) {
-      // górny (długi) wiersz leży wyżej, gdzie ciemne pole zaczyna się już od 36%
-      hero.style.setProperty('--kx', (ox + w * 0.36).toFixed(1) + 'px');
+      // ciemne pole nad dłonią zaczyna się od 48% szerokości kadru
+      hero.style.setProperty('--kx', (ox + w * 0.48).toFixed(1) + 'px');
       const nawFloor = (document.querySelector('.nav')?.getBoundingClientRect().bottom || 0) + 18;
       // Dół tekstu tuż nad dłonią (34,5%), ale górny — dłuższy — wiersz nie może
       // zejść poniżej 27% wysokości: tam ciemne pole zwęża się z 36% do 48%
       // szerokości i długi wiersz wjechałby na sylwetkę.
-      const wiersz = parseFloat(getComputedStyle(naglowek).lineHeight);
-      let dol = Math.min(oy + h * 0.345, oy + h * 0.27 + wiersz);
+      let dol = oy + h * 0.345;                        // tuż nad jego dłonią
       let gora = dol - naglowek.offsetHeight;
       if (gora < nawFloor) gora = nawFloor;            // krótkie okno: nie wchodzimy pod nawigację
-      const kreska = oy + h * (+hero.querySelector('.j-lokiec').dataset.iy2) / 100;
       kopia.style.setProperty('--kt', gora.toFixed(1) + 'px');
-      kopia.style.setProperty('--kh', Math.max(0, kreska - gora).toFixed(1) + 'px');
     } else {
       kopia.style.removeProperty('--kt');
-      kopia.style.removeProperty('--kh');
     }
   };
   place();
@@ -1818,8 +1898,11 @@ footer.site img{height:26px}
   const tor = hero.querySelector('[data-tor] path');
   const KOLEJ = ['j-skok', 'j-kolano', 'j-biodro', 'j-lokiec'];
 
+  let bieg = 0;                                   // token przerywa poprzednie odtworzenie
+
   const wjazd = () => {
     place();                       // krój już wczytany — wysokość nagłówka jest ostateczna
+    const moj = ++bieg;
     const H = hero.getBoundingClientRect();
     const pkt = KOLEJ.map(c => {
       const el = hero.querySelector('.' + c);
@@ -1827,65 +1910,88 @@ footer.site img{height:26px}
     });
     if (pkt.some(q => !Number.isFinite(q.x))) return;
 
-    // druga pozycja czwartej kropki (łokieć) — liczona tym samym przelicznikiem co reszta
     const ost = pkt[3].el;
     const k = Math.max(H.width / IW, H.height / IH), w = IW * k, h = IH * k;
     const lokiec = { x: (H.width - w) / 2 + w * (+ost.dataset.ix2) / 100,
                      y: (H.height - h) / 2 + h * (+ost.dataset.iy2) / 100 };
-    const ucieczka = { x: H.width + 160, y: lokiec.y };
-
+    const ucieczka = { x: H.width + 180, y: lokiec.y };
     const wszystkie = [...pkt, lokiec, ucieczka];
+
     tor.setAttribute('d', 'M ' + wszystkie.map(q => `${q.x.toFixed(1)} ${q.y.toFixed(1)}`).join(' L '));
     const dl = tor.getTotalLength();
-    tor.style.strokeDasharray = dl;
-    tor.style.strokeDashoffset = dl;
-    hero.classList.add('wjazd');
-
-    let bieg = 0;
+    let bieg2 = 0;
     const progi = wszystkie.map((q, i) => {
-      if (i) bieg += Math.hypot(q.x - wszystkie[i - 1].x, q.y - wszystkie[i - 1].y);
-      return bieg;
+      if (i) bieg2 += Math.hypot(q.x - wszystkie[i - 1].x, q.y - wszystkie[i - 1].y);
+      return bieg2;
     });
 
-    // nagłówek siada nad poziomym odcinkiem, czyli na wysokości łokcia
-    hero.style.setProperty('--ky', lokiec.y.toFixed(1) + 'px');
+    // Kreska to krótka smuga: ogon goni głowę, więc widać SKOK od kropki do kropki,
+    // a nie rosnącą łamaną. Dopiero na ostatnim odcinku ogon staje na łokciu
+    // i linia się ROZCIĄGA — nagłówek czeka, aż przykryje swoją szerokość.
+    const SMUGA = 116;
+    const rysuj = (glowa, ogon) => {
+      tor.style.strokeDasharray = Math.max(0, glowa - ogon).toFixed(1) + ' ' + (dl + 600);
+      tor.style.strokeDashoffset = (-ogon).toFixed(1);
+    };
+    rysuj(0, 0);
+    hero.classList.add('wjazd');
 
-    // szybko po stawach, potem zjazd na łokieć, na końcu długa ucieczka w prawo
+    const prawaTekstu = hero.querySelector('.hero-copy h1').getBoundingClientRect().right - H.left;
+    const celTekstu = progi[4] + Math.max(60, prawaTekstu - lokiec.x);
+
     const etapy = [
-      { do: progi[1], czas: 155, pauza: 55 },   // kostka → kolano
-      { do: progi[2], czas: 155, pauza: 55 },   // → biodro
-      { do: progi[3], czas: 175, pauza: 400 },  // → bark (tu siada kropka)
-      { do: progi[4], czas: 480, pauza: 0 },    // bark → łokieć (kropka zjeżdża)
-      { do: progi[5], czas: 900, pauza: 0 },    // ucieczka za ekran
+      { do: progi[1], czas: 125, pauza: 40, kotwica: false },  // kostka → kolano
+      { do: progi[2], czas: 125, pauza: 40, kotwica: false },  // → biodro
+      { do: progi[3], czas: 130, pauza: 90, kotwica: false },  // → bark
+      { do: progi[4], czas: 300, pauza: 0,  kotwica: false },  // bark → łokieć
+      { do: progi[5], czas: 720, pauza: 0,  kotwica: true },   // rozciąganie w prawo
     ];
 
     pkt[0].el.classList.add('zapalony');
     let etap = 0, t0 = null, od = 0;
     const krok = ts => {
+      if (moj !== bieg) return;                    // ktoś odpalił animację od nowa
       if (t0 === null) t0 = ts;
       const e = etapy[etap];
       const u = Math.min(1, (ts - t0) / e.czas);
-      const g = u < .5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2;
-      tor.style.strokeDashoffset = (dl - (od + (e.do - od) * g)).toFixed(1);
-      if (etap === 4 && u > .2) hero.classList.add('tekst');   // napis wyjeżdża nad uciekającą linią
+      const g = etap === 4 ? 1 - Math.pow(1 - u, 3)
+                           : (u < .5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2);
+      const glowa = od + (e.do - od) * g;
+      rysuj(glowa, e.kotwica ? progi[4] : Math.max(0, glowa - SMUGA));
+      if (e.kotwica && glowa >= celTekstu) hero.classList.add('tekst');
       if (u < 1) return requestAnimationFrame(krok);
       od = e.do;
       if (etap < 3 && pkt[etap + 1]) pkt[etap + 1].el.classList.add('zapalony');
-      if (etap === 2) {                          // czoło doszło do barku → kropka rusza w dół
+      if (etap === 2) {                            // smuga doszła do barku → kropka rusza w dół
         ost.classList.add('wedruje');
-        setTimeout(() => {
+        requestAnimationFrame(() => {
           ost.style.left = lokiec.x.toFixed(1) + 'px';
           ost.style.top = lokiec.y.toFixed(1) + 'px';
-        }, 250);
+        });
       }
       etap++; t0 = null;
-      if (etap < etapy.length) setTimeout(() => requestAnimationFrame(krok), e.pauza);
-      else setTimeout(() => {
-        hero.classList.add('bezkreski');                 // kropki zostają same
+      if (etap < etapy.length) return setTimeout(() => requestAnimationFrame(krok), e.pauza);
+      setTimeout(() => {
+        if (moj !== bieg) return;
+        hero.classList.add('bezkreski');                          // kropki zostają same
         hero.querySelector('.j-bark').classList.add('zapalony');  // bark wraca
-      }, 140);
+      }, 120);
     };
     requestAnimationFrame(krok);
+  };
+
+  // powrót scrollem na samą górę odtwarza wjazd od początku
+  hero.__odtworz = () => {
+    if (matchMedia('(prefers-reduced-motion:reduce)').matches) return;
+    bieg++;
+    hero.classList.remove('wjazd', 'tekst', 'bezkreski');
+    const ost = hero.querySelector('.j-lokiec');
+    ost.classList.remove('wedruje');
+    ost.style.left = ''; ost.style.top = '';
+    joints.forEach(j => j.classList.remove('zapalony', 'on'));
+    place();
+    tor.style.strokeDasharray = '0 9999';
+    requestAnimationFrame(() => requestAnimationFrame(wjazd));
   };
 
   if (matchMedia('(prefers-reduced-motion:reduce)').matches) {

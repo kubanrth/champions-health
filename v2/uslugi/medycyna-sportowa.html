@@ -74,30 +74,38 @@ p{margin:0}
 .btn-pelny:hover{background:#333;transform:translateY(-1px)}
 .btn-ghost{background:#fff;color:var(--ink);border:1px solid rgba(11,13,12,.18)}
 .btn-ghost:hover{border-color:rgba(11,13,12,.4);transform:translateY(-1px)}
+.btn-szeroki{padding:0 30px}
 .btn svg{transition:transform .3s var(--ease)}
 .btn:hover svg{transform:translate(3px,-3px)}
 
-/* --- hero produktowy: wyśrodkowany nagłówek + pełna karta ze zdjęciem ----- */
-.pg-hero{padding:clamp(44px,6vw,80px) 0 clamp(48px,6.5vw,88px)}
-.pg-hero .wrap{text-align:center}
-.kick{display:inline-flex;align-items:baseline;gap:10px;
-  font-size:13px;font-weight:500;letter-spacing:.01em;color:var(--tekst2)}
-.kick b{font-family:var(--legia);font-weight:700;font-size:14px;color:var(--ink)}
-.pg-hero h1{margin:16px auto 0;max-width:16ch;font-size:clamp(2.6rem,6vw,4.8rem);line-height:1.02}
-.pg-lead{margin:18px auto 0;max-width:46ch;font-size:18px;line-height:24px;color:var(--tekst)}
-.pg-akcje{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin-top:28px}
-
-/* karta ze zdjęciem = karta „Zakresu opieki" w skali strony */
-.pg-foto{max-width:var(--tresc);margin:clamp(36px,5vw,56px) auto 0;padding-inline:var(--bok)}
-.pg-kadr{position:relative;border-radius:28px;overflow:hidden;
-  box-shadow:0 30px 60px -38px rgba(11,13,12,.5)}
-.pg-kadr>img{width:100%;aspect-ratio:16/7;object-fit:cover;object-position:38% 40%}
-.pg-kadr::after{content:"";position:absolute;inset:0;pointer-events:none;
-  background:linear-gradient(to bottom,rgba(8,14,10,.14) 0%,rgba(8,14,10,0) 24%,
-             rgba(8,14,10,0) 52%,rgba(8,14,10,.58) 76%,rgba(8,14,10,.92) 100%)}
-.fakty{position:absolute;left:clamp(18px,2.6vw,34px);right:clamp(18px,2.6vw,34px);
-  bottom:clamp(16px,2.2vw,26px);z-index:2;margin:0;
-  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));max-width:760px}
+/* --- hero: zdjęcie na pełny ekran, tekst do lewej na scrimie (układ
+   podstron produktowych Revoluta, materiał jak hero na home) -------------- */
+.pg-hero{position:relative;display:flex;flex-direction:column;
+  min-height:calc(100svh - 64px);color:#fff;overflow:hidden}
+.pg-tlo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+/* scrim: cięższy po lewej pod tekstem + dolny pod listwę faktów */
+.pg-hero::before{content:"";position:absolute;inset:0;background:
+  linear-gradient(100deg,rgba(5,9,7,.86) 0%,rgba(5,9,7,.62) 44%,
+                  rgba(5,9,7,.26) 72%,rgba(5,9,7,.1) 100%),
+  linear-gradient(to top,rgba(5,9,7,.72),transparent 32%)}
+/* .wrap ma margin:0 auto — w kolumnowym flexie poziome auto-marginesy
+   WYŁĄCZAJĄ stretch i pudełko kurczy się do treści. Stąd jawne width:100%. */
+.pg-tresc{position:relative;z-index:2;width:100%;margin-block:auto;
+  padding-block:clamp(40px,6vw,72px)}
+.pg-hero h1{margin:0;max-width:14ch;font-size:clamp(2.6rem,5.4vw,4.6rem);line-height:1.02}
+.pg-lead{margin:18px 0 0;max-width:46ch;font-size:18px;line-height:24px;
+  color:rgba(255,255,255,.86)}
+.pg-akcje{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
+/* pigułki na zdjęciu: biała pełna + szklany ghost — jak w pasie kontaktu */
+.pg-hero .btn-pelny{background:#fff;color:#000}
+.pg-hero .btn-pelny:hover{background:#E9E9E6}
+.pg-hero .btn-ghost{background:rgba(255,255,255,.12);color:#fff;
+  border-color:rgba(255,255,255,.3);
+  -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+.pg-hero .btn-ghost:hover{background:rgba(255,255,255,.2);border-color:rgba(255,255,255,.5)}
+.pg-hero :where(a,button):focus-visible{outline-color:#fff}
+.pg-dol{position:relative;z-index:2;width:100%;padding-bottom:clamp(20px,3vw,36px)}
+.fakty{margin:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));max-width:760px}
 .fakty div{padding:2px 18px}
 .fakty div:first-child{padding-left:0}
 .fakty div+div{border-left:1px solid rgba(255,255,255,.26)}
@@ -110,21 +118,22 @@ p{margin:0}
 .sek-head{max-width:660px}
 .sek-head h2{font-size:clamp(1.9rem,3.4vw,2.9rem);text-wrap:balance}
 
-/* --- zakres: tile'e Revoluta — szare wypełnienie, zero obrysów ------------ */
-.kafle{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:36px}
-.kafel{position:relative;padding:26px 24px 30px;border-radius:20px;background:var(--plyta);
-  transition:transform .45s var(--ease),box-shadow .45s var(--ease)}
-.kafel:hover{transform:translateY(-4px);box-shadow:0 26px 48px -30px rgba(11,13,12,.35)}
-/* pierwszy kafel szeroki i ciemny, ostatni na całą szerokość — rytm 2+1 / 3 / 1,
-   bez osieroconego kafla w ostatnim rzędzie */
-.kafel:first-child{grid-column:1/span 2;background:var(--ink);color:#fff}
-.kafel:last-child{grid-column:1/-1}
-.kafel:first-child p{color:rgba(255,255,255,.78)}
-.kafel:first-child i{color:rgba(255,255,255,.6)}
-.kafel i{display:block;margin-bottom:16px;font-family:var(--legia);font-style:normal;
-  font-weight:700;font-size:13px;color:var(--tekst2)}
-.kafel h3{font-size:19px;letter-spacing:-.018em;line-height:1.25}
-.kafel p{margin-top:10px;font-size:14.5px;line-height:1.6;color:var(--tekst)}
+/* --- zakres: układ wg myhealthprac (sekcja „Designed for You", zmierzona
+   z DOM przy 1440: tło #F1F1F1, lewa kolumna nagłówek+sub, prawa kolumna
+   wierszy ikona 32px → tytuł 18/500/−.288 → opis 13,7/18,5 na 363px,
+   rytm ~124px, BEZ pudełek i BEZ linii — kontrast niesie samo powietrze).
+   W roli ikon numery krojem Legii, jak na home. --------------------------- */
+.zakres{background:var(--plyta)}
+.zakres-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(32px,5vw,88px);
+  align-items:start}
+.zakres-head h2{max-width:12ch;font-size:clamp(2.2rem,4.2vw,3.6rem);text-wrap:balance}
+.zakres-head p{margin-top:18px;max-width:40ch;font-size:15px;line-height:1.6;color:var(--tekst)}
+.kafle{display:grid;gap:clamp(28px,3.2vw,44px)}
+.kafel{display:grid;grid-template-columns:44px 1fr;gap:20px;align-items:start;max-width:480px}
+.kafel i{font-family:var(--legia);font-style:normal;font-weight:700;font-size:15px;
+  line-height:1.55;color:var(--ink)}
+.kafel h3{font-size:18.5px;letter-spacing:-.018em;line-height:1.3}
+.kafel p{margin-top:8px;font-size:14.5px;line-height:1.6;color:var(--tekst)}
 
 /* --- wielka linia + proza + „dla kogo" ------------------------------------ */
 .claim-line{max-width:22ch;font-size:clamp(1.9rem,3.8vw,3.2rem);line-height:1.15;
@@ -216,27 +225,19 @@ footer.site span:last-child{margin-left:auto}
 /* --- węższe ekrany -------------------------------------------------------- */
 @media(max-width:1080px){
   .opis-grid,.kont-in{grid-template-columns:1fr}
-  .kafle{grid-template-columns:repeat(2,1fr)}
-  .kafel:first-child{grid-column:1/span 2}
-  .kafel:last-child{grid-column:1/-1}
+  .zakres-grid{grid-template-columns:1fr;gap:36px}
   .inne{grid-template-columns:repeat(3,1fr)}
   .pg-kadr>img{aspect-ratio:16/9}
 }
 @media(max-width:720px){
   .nav-menu{display:none}
-  .kafle,.inne{grid-template-columns:1fr}
-  .kafel:first-child,.kafel:last-child{grid-column:auto}
-  .pg-kadr{border-radius:20px}
-  .pg-kadr>img{aspect-ratio:4/3}
-  /* fakty schodzą pod zdjęcie wewnątrz karty — bez gradientu, ciemny tekst */
-  .pg-kadr::after{content:none}
-  .fakty{position:static;max-width:none;grid-template-columns:1fr;
-    background:#fff;padding:6px 16px 10px}
-  .fakty div{padding:10px 2px;border-left:0;border-top:1px solid var(--kres);
+  .kafel{grid-template-columns:36px 1fr;gap:14px}
+  /* fakty w jednej kolumnie, dalej na zdjęciu — dolny scrim je trzyma */
+  .fakty{grid-template-columns:1fr}
+  .fakty div{padding:9px 2px;border-left:0;border-top:1px solid rgba(255,255,255,.24);
     display:flex;align-items:baseline;gap:10px}
   .fakty div:first-child{border-top:0;padding-left:2px}
-  .fakty dt{color:var(--tekst2)}
-  .fakty dd{margin:0;color:var(--ink)}
+  .fakty dd{margin:0}
   .btn{width:100%;justify-content:center}
   .inna{width:min(84vw,460px)}
   footer.site span:last-child{margin-left:0}
@@ -271,8 +272,8 @@ footer.site span:last-child{margin-left:auto}
 <main>
 
 <header class="pg-hero">
-  <div class="wrap">
-    <span class="kick" data-rv><b>01</b>Prowadzenie</span>
+  <img class="pg-tlo" src="../img/sprint-sharp.png" alt="" style="object-position:38% 40%">
+  <div class="wrap pg-tresc">
     <h1 data-rv>Medycyna sportowa</h1>
     <p class="pg-lead" data-rv>Badania kwalifikacyjne, prowadzenie przez cały sezon i decyzja o powrocie do gry — w tym samym standardzie, w którym prowadzimy pierwszą drużynę.</p>
     <div class="pg-akcje" data-rv>
@@ -280,28 +281,28 @@ footer.site span:last-child{margin-left:auto}
         <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
           <path d="M3 10 10 3M4.6 3H10v5.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
         </svg></a>
-      <a class="btn btn-ghost" href="tel:+48223182000">22 318 20 00</a>
+      <a class="btn btn-ghost btn-szeroki" href="tel:+48223182000">Zadzwoń: 22 318 20 00</a>
     </div>
   </div>
-  <div class="pg-foto" data-rv>
-    <div class="pg-kadr">
-      <img src="../img/sprint-sharp.png" alt="Medycyna sportowa, Champions Health">
-      <dl class="fakty"><div><dt>Skierowanie</dt><dd>Niepotrzebne</dd></div>
+  <div class="wrap pg-dol">
+    <dl class="fakty"><div><dt>Skierowanie</dt><dd>Niepotrzebne</dd></div>
       <div><dt>Diagnostyka</dt><dd>Na miejscu</dd></div>
       <div><dt>Zespół</dt><dd>Ten sam co w klubie</dd></div></dl>
-    </div>
   </div>
 </header>
 
-<section class="sek">
-  <div class="wrap">
-    <div class="sek-head" data-rv><h2>Co obejmuje ten zakres</h2></div>
-    <div class="kafle"><article class="kafel" data-rv><i>01</i><h3>Badania kwalifikacyjne do sportu</h3><p>Komplet badań dopuszczających do treningu i zawodów, zamknięty w jednej wizycie.</p></article>
-      <article class="kafel" data-rv><i>02</i><h3>Prowadzenie przez sezon</h3><p>Kontrola obciążeń, urazów i regeneracji — od okresu przygotowawczego po ostatnią kolejkę.</p></article>
-      <article class="kafel" data-rv><i>03</i><h3>Decyzja o powrocie do gry</h3><p>Oparta na kryteriach i testach, nie na kalendarzu i nie na samopoczuciu.</p></article>
-      <article class="kafel" data-rv><i>04</i><h3>Konsultacja po urazie</h3><p>Ustalenie rozpoznania, ścieżki leczenia i tego, kto prowadzi Cię dalej.</p></article>
-      <article class="kafel" data-rv><i>05</i><h3>Orzeczenia i dokumentacja</h3><p>Zaświadczenia dla klubu, federacji i ubezpieczyciela — bez odsyłania po pieczątki.</p></article>
-      <article class="kafel" data-rv><i>06</i><h3>Koordynacja specjalistów</h3><p>Jedna osoba spina ortopedię, fizjoterapię, żywienie i trening w jeden plan.</p></article></div>
+<section class="sek zakres">
+  <div class="wrap zakres-grid">
+    <div class="zakres-head" data-rv>
+      <h2>Co obejmuje ten zakres</h2>
+      <p>Plan układamy pod to, z czym przychodzisz. Nie musisz korzystać ze wszystkiego.</p>
+    </div>
+    <div class="kafle"><article class="kafel" data-rv><i>01</i><div><h3>Badania kwalifikacyjne do sportu</h3><p>Komplet badań dopuszczających do treningu i zawodów, zamknięty w jednej wizycie.</p></div></article>
+      <article class="kafel" data-rv><i>02</i><div><h3>Prowadzenie przez sezon</h3><p>Kontrola obciążeń, urazów i regeneracji — od okresu przygotowawczego po ostatnią kolejkę.</p></div></article>
+      <article class="kafel" data-rv><i>03</i><div><h3>Decyzja o powrocie do gry</h3><p>Oparta na kryteriach i testach, nie na kalendarzu i nie na samopoczuciu.</p></div></article>
+      <article class="kafel" data-rv><i>04</i><div><h3>Konsultacja po urazie</h3><p>Ustalenie rozpoznania, ścieżki leczenia i tego, kto prowadzi Cię dalej.</p></div></article>
+      <article class="kafel" data-rv><i>05</i><div><h3>Orzeczenia i dokumentacja</h3><p>Zaświadczenia dla klubu, federacji i ubezpieczyciela — bez odsyłania po pieczątki.</p></div></article>
+      <article class="kafel" data-rv><i>06</i><div><h3>Koordynacja specjalistów</h3><p>Jedna osoba spina ortopedię, fizjoterapię, żywienie i trening w jeden plan.</p></div></article></div>
   </div>
 </section>
 

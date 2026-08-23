@@ -46,9 +46,12 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
         wKadrze: wKadrze(rn) && wKadrze(ro) && wKadrze(kr),
         kropkaNaTekscie: zachodzi(d, rn) || zachodzi(d, ro),
         opisNiepusty: nz.textContent.trim().length > 0 && op.textContent.trim().length > 0,
-        krojLegii: getComputedStyle(nz).fontFamily.includes('Archivo'),
+        krojStrony: getComputedStyle(nz).fontFamily.split(',')[0].trim()
+          === getComputedStyle(document.body).fontFamily.split(',')[0].trim(),
         // to ma NIE być karta: żadnych zaokrągleń, ramki ani panelu z blurem
         bezKarty: wys.borderRadius === '0px' && wys.borderTopWidth === '0px'
+                  && wys.backgroundImage === 'none'
+                  && ['rgba(0, 0, 0, 0)', 'transparent', ''].includes(wys.backgroundColor)
                   && (wys.backdropFilter === 'none' || wys.backdropFilter === ''),
         kropkaBiala: (() => { const c = getComputedStyle(j.querySelector('.jt-dot'));
           return c.borderRadius === '50%' && c.backgroundColor === 'rgb(255, 255, 255)'; })(),
@@ -59,7 +62,7 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
   }
   const zle = out.filter(o => !o.ukryty && (!o.kreskaWysunieta || !o.nazwaNad || !o.opisPod
                                             || !o.wKadrze || o.kropkaNaTekscie || !o.opisNiepusty
-                                            || !o.krojLegii || !o.bezKarty || !o.kropkaBiala));
+                                            || !o.krojStrony || !o.bezKarty || !o.kropkaBiala));
   const ok = !zle.length && !errs.length && przepelnienie === 0;
   console.log(`${w}×${h}`, ok ? 'ok' : 'BŁĄD ' + JSON.stringify({ zle, errs, przepelnienie }));
   if (!ok) process.exitCode = 1;
@@ -79,8 +82,13 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
         if (t.classList?.contains('hero') && t.classList.contains('tekst') && !window.__t) {
           window.__t = 1; window.__log.push(['tekst', performance.now()]);
           const tor = document.querySelector('[data-tor] path');
-          // napis wyjeżdża, gdy kreska JESZCZE biegnie w prawo
-          window.__wtedy = { offset: parseFloat(tor.style.strokeDashoffset),
+          // napis wychodzi dopiero, gdy kreska jest rozciągnięta na jego szerokość
+          const lok = document.querySelector('.j-lokiec').getBoundingClientRect();
+          const h1r = document.querySelector('.hero-copy h1').getBoundingClientRect();
+          window.__wtedy = {
+            // prawy koniec kreski w chwili wjazdu tekstu vs prawa krawędź nagłówka
+            koniecKreski: lok.x + lok.width / 2 + parseFloat(tor.style.strokeDasharray),
+            prawaNaglowka: h1r.right,
             widocznaKreska: +getComputedStyle(tor.parentNode).opacity > .5 }; }
       }});
       addEventListener('DOMContentLoaded', () =>
@@ -131,13 +139,14 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
       && czasy['j-kolano'] - czasy['j-skok'] > 90
       && czasy['j-biodro'] - czasy['j-kolano'] > 90
       && czasy['j-lokiec'] - czasy['j-biodro'] > 90
-      && czasy['j-lokiec'] - czasy['j-skok'] < 1000
+      && czasy['j-lokiec'] - czasy['j-skok'] < 700
       // 4. kropka zapala się na barku i dopiero potem zjeżdża w dół na łokieć
       && kopia.start && kopia.koniec[1] - kopia.start[1] > 60
       && Math.abs(kopia.koniec[0] - kopia.start[0]) > 40
       // napis wyjeżdża, gdy kreska jeszcze ucieka w prawo
       && czasy['tekst'] > czasy['j-lokiec'] + 500
-      && kopia.wtedy && kopia.wtedy.offset > 1 && kopia.wtedy.widocznaKreska
+      && kopia.wtedy && kopia.wtedy.widocznaKreska
+      && kopia.wtedy.koniecKreski >= kopia.wtedy.prawaNaglowka - 8
       // na końcu zostają same kropki
       && kopia.kreskaZnikla && kopia.kropekWidocznych === 5
       && kopia.widoczna && kopia.nadBarkiem && kopia.wKadrze
@@ -145,7 +154,25 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
                       && kopia.luz > 40 && kopia.podNawigacja > 8))
       && kopia.bezPrzyciemnienia
       && /Kontuzje/.test(kopia.tekst);
+    // zjazd w dół (hero zwija się w kartę) i powrót na górę = wjazd gra od nowa
+    await q.evaluate(() => scrollTo(0, 900));
+    await new Promise(r => setTimeout(r, 1500));
+    const zwinal = await q.evaluate(() => document.querySelector('.hero').classList.contains('morphed'));
+    await q.evaluate(() => scrollTo(0, 0));
+    await new Promise(r => setTimeout(r, 700));
+    const odNowa = await q.evaluate(() => ({
+      gra: !document.querySelector('.hero').classList.contains('bezkreski'),
+      zapalonych: document.querySelectorAll('.jt.zapalony').length }));
+    await new Promise(r => setTimeout(r, 2600));
+    const poPowtorce = await q.evaluate(() => ({
+      zapalonych: document.querySelectorAll('.jt.zapalony').length,
+      tekst: document.querySelector('.hero').classList.contains('tekst') }));
+    const powtorka = zwinal && odNowa.gra && odNowa.zapalonych < 5
+                     && poPowtorce.zapalonych === 5 && poPowtorce.tekst;
     console.log(`${w}×${h} wjazd hero`, wOk ? 'ok' : 'BŁĄD ' + JSON.stringify({ kolej, czasy, kopia }));
+    console.log(`${w}×${h} powtórka wjazdu`, powtorka ? 'ok'
+      : 'BŁĄD ' + JSON.stringify({ zwinal, odNowa, poPowtorce }));
+    if (!powtorka) process.exitCode = 1;
     if (!wOk) process.exitCode = 1;
     await q.close();
   }
@@ -484,7 +511,19 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
     return {
       // dane po lewej, formularz po prawej (na wąskim ekranie jeden pod drugim)
       uklad: innerWidth < 901 || form.left > lewo.left,
-      tlo: !!document.querySelector('.kontakt-tlo'),
+      // zdjęcie w tle wypadło (rozmyty kadr + dwa przyciemnienia = mgła);
+      // pilnujemy tego, co je zastąpiło: cztery wiersze danych z przerywaną kreską
+      wiersze: document.querySelectorAll('.kontakt-dane div').length === 4
+        && getComputedStyle(document.querySelector('.kontakt-dane div')).borderTopStyle === 'dashed',
+      // pola muszą być widoczne — obramowanie kontra tło pola min. 3:1 (WCAG dla UI)
+      poleWidoczne: (() => {
+        const i = document.querySelector('.kontakt-form input'), cs = getComputedStyle(i);
+        const L = c => { const n = c.match(/[\d.]+/g).map(Number), a = n.length > 3 ? n[3] : 1;
+          const [r, g, b] = n.slice(0, 3).map(v => { v = v * a / 255; return v <= .03928 ? v / 12.92 : ((v + .055) / 1.055) ** 2.4; });
+          return .2126 * r + .7152 * g + .0722 * b; };
+        const lo = Math.min(L(cs.borderTopColor), L(cs.backgroundColor)), hi = Math.max(L(cs.borderTopColor), L(cs.backgroundColor));
+        return (hi + .05) / (lo + .05) >= 3 && i.getBoundingClientRect().height >= 44;
+      })(),
       pustyBlokuje: /Uzupełnij/.test(prz),
       wypelnionyPrzechodzi: /Dziękujemy/.test(nota.textContent),
       etykiety: [...document.querySelectorAll('.kontakt-form input,.kontakt-form textarea')]
@@ -492,7 +531,7 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
     };
   }, pusty);
   const bkOk = blog.ile === 3 && blog.miedzy && blog.komplet
-            && kontakt.uklad && kontakt.tlo && kontakt.pustyBlokuje
+            && kontakt.uklad && kontakt.wiersze && kontakt.poleWidoczne && kontakt.pustyBlokuje
             && kontakt.wypelnionyPrzechodzi && kontakt.etykiety;
   console.log(`${w}×${h} blog+kontakt`, bkOk ? 'ok' : 'BŁĄD ' + JSON.stringify({ blog, kontakt }));
   if (!bkOk) process.exitCode = 1;

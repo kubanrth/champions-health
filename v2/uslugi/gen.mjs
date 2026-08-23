@@ -23,7 +23,7 @@ for (const u of uslugi) {
       `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('\n      '),
     zakresHtml: u.zakres.map(([t, o], i) =>
       `<article class="kafel" data-rv><i>${String(i + 1).padStart(2, '0')}</i>` +
-      `<h3>${t}</h3><p>${o}</p></article>`).join('\n      '),
+      `<div><h3>${t}</h3><p>${o}</p></div></article>`).join('\n      '),
     opisHtml: `<p>${u.opis[0]}</p>`,   // reszta akapitów czeka w dane.json, strona bierze jeden
     dlaKogoHtml: u.dlaKogo.map(l => `<li>${l}</li>`).join('\n        '),
     // pozostałe pięć usług jako karty w anatomii slidera z home
