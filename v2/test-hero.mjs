@@ -310,25 +310,57 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
         await p.mouse.wheel({ deltaY: zn * Math.max(4, Math.round(Math.abs(sila) * Math.pow(.93, i))) });
       await new Promise(r => setTimeout(r, 1700));
     };
+    // rejestrator drgań: liczy zmiany kierunku taśmy klatka po klatce
+    await p.evaluate(() => {
+      const tr = document.querySelector('[data-track]');
+      window.__pr = []; window.__rec = false;
+      const t = () => {
+        if (window.__rec) { const m = /translate3d\((-?[\d.]+)px/.exec(tr.style.transform);
+          window.__pr.push(m ? parseFloat(m[1]) : 0); }
+        requestAnimationFrame(t);
+      };
+      requestAnimationFrame(t);
+    });
+    const nagraj = () => p.evaluate(() => { window.__pr = []; window.__rec = true; });
+    const zwroty = () => p.evaluate(() => { window.__rec = false;
+      const v = window.__pr; let n = 0, kier = 0;
+      for (let i = 1; i < v.length; i++) { const d = v[i] - v[i - 1];
+        if (Math.abs(d) < 0.7) continue; const k = Math.sign(d);
+        if (kier && k !== kier) n++; kier = k; }
+      return n; });
     await doGory();
     await p.mouse.move(Math.round(w / 2), Math.round(h / 2));
-    await rzut(160);
-    const zHero = await karta();
-    const wDol = [];
-    for (let i = 0; i < 3; i++) { await rzut(160); wDol.push(await karta()); }
+    await nagraj(); await rzut(160);
+    const zHero = await karta(); const drgaWejscie = await zwroty();
+    const wDol = [], drgania = [];
+    for (let i = 0; i < 3; i++) { await nagraj(); await rzut(160);
+      wDol.push(await karta()); drgania.push(await zwroty()); }
     const wGore = [];
-    for (let i = 0; i < 3; i++) { await rzut(-160); wGore.push(await karta()); }
+    for (let i = 0; i < 3; i++) { await nagraj(); await rzut(-160);
+      wGore.push(await karta()); drgania.push(await zwroty()); }
+    // nagła zmiana kierunku w środku gestu — tu taśma potrafiła się trząść
+    await nagraj();
+    for (let i = 0; i < 20; i++) await p.mouse.wheel({ deltaY: 240 });
+    for (let i = 0; i < 20; i++) await p.mouse.wheel({ deltaY: -240 });
+    await new Promise(r => setTimeout(r, 1800));
+    const drgaZwrot = await zwroty();
     // gwałtowny rzut z hero też ma wylądować na karcie 01
     await doGory();
+    await nagraj();
     for (let i = 0; i < 80; i++) await p.mouse.wheel({ deltaY: 600 });
     await new Promise(r => setTimeout(r, 1800));
     const poSzarpnieciu = await karta();
+    drgania.push(await zwroty());
     const opOk = zHero === 1
       && JSON.stringify(wDol) === JSON.stringify([2, 3, 4])
       && JSON.stringify(wGore) === JSON.stringify([3, 2, 1])
-      && poSzarpnieciu === 1;
+      && poSzarpnieciu === 1
+      // Taśma nie może drgać. Jeden zwrot jest dopuszczalny — wypada na granicy
+      // zmiany kierunku serii (dojazd poprzedniego gestu kontra nowy). Drganie
+      // z dwustronnej kotwicy dawało 2–5 zwrotów w jednym geście.
+      && drgaWejscie === 0 && drgania.every(n => n <= 1) && drgaZwrot <= 2;
     console.log(`${w}×${h} rzut = karta`, opOk ? 'ok'
-      : 'BŁĄD ' + JSON.stringify({ zHero, wDol, wGore, poSzarpnieciu }));
+      : 'BŁĄD ' + JSON.stringify({ zHero, wDol, wGore, poSzarpnieciu, drgaWejscie, drgania, drgaZwrot }));
     if (!opOk) process.exitCode = 1;
     await doGory();
   }

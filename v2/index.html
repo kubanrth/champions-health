@@ -1011,6 +1011,8 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
   const postep = () => {
     if (zamrozone && performance.now() < zamrozone) return 0;   // hero leci do karty 01
     if (zamrozone) zamrozone = 0;
+    const g = sec.__celGestu && sec.__celGestu();
+    if (g !== null && g !== undefined) return N > 1 ? g / (N - 1) : 0;
     const r = sec.getBoundingClientRect();
     const wstep = window.innerHeight * WSTEP;
     const span = sec.offsetHeight - window.innerHeight - wstep;
@@ -1018,12 +1020,14 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
   };
 
   const NA_KARTE = 380;                    // ms na przejechanie jednej karty
-  let pokazany = 0, ostTs = 0;
+  let pokazany = 0, ostTs = 0, szybkoDo = 0;   // skok z kliknięcia jedzie bez limitu
   const draw = ts => {
     raf = null;
     const cel = postep();
     const dt = ostTs ? Math.min(64, ts - ostTs) : 16; ostTs = ts;
-    const limit = dt / (NA_KARTE * (N - 1));            // maks. przyrost postępu
+    // Limit prędkości dotyczy ruchu ze scrolla. Świadomy skok (klik w kartę)
+    // ma dojechać od razu — inaczej przejście o trzy karty trwa ponad dwie sekundy.
+    const limit = ts < szybkoDo ? 1 : dt / (NA_KARTE * (N - 1));
     const d = cel - pokazany;
     pokazany += Math.abs(d) <= limit ? d : Math.sign(d) * limit;
     const p = pokazany;
@@ -1066,6 +1070,7 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
     const span = sec.offsetHeight - window.innerHeight - wstep;
     const top = sec.getBoundingClientRect().top + scrollY + wstep + (i / (N - 1)) * span;
     if (sec.__pomin) sec.__pomin(900);      // to skok celowy — kotwica ma nie przeszkadzać
+    szybkoDo = performance.now() + 1400;    // i taśma jedzie bez dławienia
     window.scrollTo({ top: Math.ceil(top) + 1, behavior: 'smooth' });
   };
   cards.forEach((c, i) => c.addEventListener('click', e => {
@@ -1074,13 +1079,19 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
   sec.__doKarty = doKarty;
 
   // --- jeden rzut = jedna karta -------------------------------------------
-  // Pozycja taśmy jest pochodną scrolla, więc mocny rzut przerzucał kilka kart
-  // naraz. Zamiast dławić kółko (co blokowało też ruch w górę) kotwiczymy
-  // stronę na karcie DOCELOWEJ na czas gestu. Gest = seria zdarzeń przerwana
-  // ciszą 180 ms, więc rozpęd trackpada nie ma znaczenia: ile byś nie pchnął,
-  // wjedzie jedna karta. Działa tak samo w dół i w górę, a poza krańcami talii
-  // oddaje sterowanie, żeby dało się z niej wyjechać. Dotyk i klawiatura
-  // korzystają z tego samego mechanizmu — nie przechwytujemy żadnych zdarzeń.
+  // Gest = seria zdarzeń przewijania przerwana ciszą 180 ms. Na czas gestu
+  // wyznaczamy KARTĘ DOCELOWĄ (sąsiednią), a potem pilnujemy dwóch rzeczy:
+  //
+  //  1. taśma celuje w tę kartę, a NIE w surową pozycję scrolla — dzięki temu
+  //     drgania scrolla (rozpęd kontra korekta) nie przenoszą się na obraz;
+  //  2. stronę przycinamy JEDNOSTRONNIE: nie pozwalamy przejechać poza cel
+  //     w kierunku gestu, ale nigdy nie ciągniemy jej wstecz. Poprzednia,
+  //     dwustronna kotwica szarpała się z użytkownikiem przy zmianie kierunku
+  //     i to ona powodowała drganie kart w lewo-prawo.
+  //
+  // Zmiana kierunku natychmiast kończy gest, więc zawrócenie jest darmowe.
+  // Poza krańcami talii kotwica milczy — da się z niej normalnie wyjechać.
+  let celGestu = null;                      // indeks karty, w którą celuje gest
   if (!reduce.matches) {
     const wstepPx = () => window.innerHeight * WSTEP;
     const spanPx = () => sec.offsetHeight - window.innerHeight - wstepPx();
@@ -1089,10 +1100,11 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
     const idx = y => y < sec.offsetTop + wstepPx() - 2 ? -1
       : Math.max(0, Math.min(N - 1, Math.round(((y - sec.offsetTop - wstepPx()) / spanPx()) * (N - 1))));
 
-    let gest = false, cel = 0, ostatni = 0, wlasny = false, poprzedniY = window.scrollY, pomin = 0;
+    let cel = 0, kierGestu = 0, ostatni = 0, wlasny = false,
+        poprzedniY = window.scrollY, ostY = window.scrollY, pomin = 0;
     sec.__pomin = ms => { pomin = performance.now() + ms; };   // skok z klikniętej karty
 
-    // Kotwiczymy WYŁĄCZNIE ruch z palca: kółko i dotyk. Bez tego mechanizm
+    // Reagujemy WYŁĄCZNIE na ruch z palca: kółko i dotyk. Bez tego mechanizm
     // łapał też skoki programowe (linki w menu, `scrollTo`) i ściągał stronę
     // z powrotem do talii.
     let gestOd = 0;
@@ -1100,27 +1112,54 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
     addEventListener('wheel', znacz, { passive: true });
     addEventListener('touchmove', znacz, { passive: true });
 
+    // `dosun` = gest wygasł sam (cisza). Dosuwamy wtedy stronę dokładnie na
+    // kartę, żeby po przełączeniu celu z „karta" na „pozycja ze scrolla" obie
+    // wartości się zgadzały — inaczej taśma cofała się o włos (drgnięcie).
+    // Przy ZAWRÓCENIU nie dosuwamy, bo to by się biło z użytkownikiem.
+    const koniecGestu = dosun => {
+      if (dosun && celGestu !== null) {
+        pomin = performance.now() + 700;
+        window.scrollTo({ top: yKarty(celGestu), behavior: 'smooth' });
+      }
+      celGestu = null; kierGestu = 0; poprzedniY = window.scrollY;
+    };
+
     addEventListener('scroll', () => {
-      if (wlasny) { wlasny = false; return; }
-      const t = performance.now();
+      if (wlasny) { wlasny = false; ostY = window.scrollY; return; }
+      const t = performance.now(), y = window.scrollY;
       if (t - gestOd > 220 || t < pomin) {          // nie gest — nie ruszamy
-        gest = false; poprzedniY = window.scrollY; ostatni = t; return;
+        koniecGestu(false); ostY = y; ostatni = t; kick(); return;
       }
-      if (!gest || t - ostatni > 180) {              // nowy gest
-        const kier = Math.sign(window.scrollY - poprzedniY) || 1;
+      const ruch = y - ostY;
+      // Zawrócenie kończy gest — ale próg 30 px jest konieczny: strona ma
+      // `scroll-behavior:smooth`, więc nawet natychmiastowa korekta potrafi
+      // oddać kilka pikseli w drugą stronę, a to wyglądało jak zmiana kierunku.
+      if (celGestu !== null && Math.abs(ruch) > 30 && Math.sign(ruch) !== kierGestu) koniecGestu(false);
+      if (celGestu === null || t - ostatni > 180) {  // nowy gest
+        const kier = Math.sign(ruch) || Math.sign(y - poprzedniY) || 1;
         const doKtorej = idx(poprzedniY) + kier;
-        gest = doKtorej >= 0 && doKtorej <= N - 1;   // poza talią puszczamy dalej
-        if (gest) cel = yKarty(doKtorej);
+        if (doKtorej >= 0 && doKtorej <= N - 1) { celGestu = doKtorej; kierGestu = kier; cel = yKarty(doKtorej); }
+        else { celGestu = null; kierGestu = 0; }     // poza talią puszczamy dalej
       }
-      ostatni = t;
-      if (gest && Math.abs(window.scrollY - cel) > 2) { wlasny = true; window.scrollTo(0, cel); }
+      ostatni = t; ostY = y;
+      // przycięcie jednostronne — tylko przed przestrzeleniem celu
+      if (celGestu !== null && (kierGestu > 0 ? y > cel : y < cel)) {
+        // `behavior:'instant'` OBOWIĄZKOWO — bez tego globalne
+        // `html{scroll-behavior:smooth}` animuje korektę przez kilka klatek,
+        // a każda z nich wraca tu jako osobne zdarzenie. To właśnie one biły
+        // się z rozpędem użytkownika i powodowały drganie kart w lewo-prawo.
+        wlasny = true; window.scrollTo({ top: cel, behavior: 'instant' }); ostY = cel;
+      }
+      kick();
     }, { passive: true });
 
     setInterval(() => {
-      if (gest && performance.now() - ostatni > 180) { gest = false; poprzedniY = window.scrollY; }
-      if (!gest) poprzedniY = window.scrollY;
+      if (celGestu !== null && performance.now() - ostatni > 180) { koniecGestu(true); kick(); }
+      if (celGestu === null) poprzedniY = window.scrollY;
     }, 60);
   }
+  // taśma celuje w kartę gestu; poza gestem — w pozycję wyliczoną ze scrolla
+  sec.__celGestu = () => celGestu;
 
   // (chip z rotacją usunięty 2026-08-22 — tekst leży wprost na karcie)
 
