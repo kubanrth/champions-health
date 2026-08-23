@@ -317,8 +317,17 @@ a{color:inherit;text-decoration:none}
   transition:opacity .8s var(--rev)}
 .hero.morphed .morph::after{opacity:1}
 
+/* nagłówek kładzie się na jasnej koszulce (kontrast surowy 1.08:1) — przyciemnienie
+   zaczepione o górną krawędź kadru, żeby nie było widocznego prostokąta pod tekstem */
+.hero::before{content:"";position:absolute;inset:0;z-index:3;pointer-events:none;opacity:0;
+  transition:opacity .9s var(--rev);
+  background:linear-gradient(to bottom,rgba(4,10,14,.74) 0%,rgba(4,10,14,.7) 40%,
+             rgba(4,10,14,.42) 56%,rgba(4,10,14,.12) 68%,rgba(4,10,14,0) 78%)}
+.hero.tekst::before{opacity:1}
+.hero.morphed::before{opacity:0}
+
 .hero::after{content:"";position:absolute;inset:0;z-index:3;pointer-events:none;
-  background:linear-gradient(to top,rgba(20,32,26,.72) 0%,rgba(20,32,26,.12) 42%,rgba(20,32,26,0) 70%);
+  background:linear-gradient(to top,rgba(12,20,17,.84) 0%,rgba(12,20,17,.46) 26%,rgba(12,20,17,.1) 48%,rgba(12,20,17,0) 66%);
   transition:opacity .7s var(--rev)}
 .hero.morphed::after{opacity:0}
 .hero.morphed .jt{opacity:0;pointer-events:none}
@@ -327,7 +336,9 @@ a{color:inherit;text-decoration:none}
 /* punkt na stawie — zwykła biała kropka */
 .jt{position:absolute;z-index:4;width:13px;height:13px;margin:-6.5px 0 0 -6.5px;padding:0;
   border:0;background:none;cursor:pointer;color:inherit;font:inherit;text-align:left;
-  opacity:0;transition:opacity .45s var(--rev)}
+  opacity:0;transition:opacity .35s var(--rev)}
+/* czwarta kropka zjeżdża z barku na łokieć — stąd przejście na pozycji */
+.jt.wedruje{transition:opacity .35s var(--rev),left .5s var(--rev),top .5s var(--rev)}
 .hero.wjazd .jt{opacity:1}
 .jt-dot{position:absolute;inset:0;border-radius:50%;background:#fff;
   box-shadow:0 0 0 1px rgba(6,14,10,.35),0 0 18px rgba(255,255,255,.5);
@@ -338,8 +349,8 @@ a{color:inherit;text-decoration:none}
 
 /* kreska wędrująca po stawach przy starcie strony */
 .jt-tor{position:absolute;inset:0;z-index:3;pointer-events:none;overflow:visible}
-.jt-tor{transition:opacity .8s var(--rev) .25s}
-.hero.tekst .jt-tor{opacity:0}
+.jt-tor{transition:opacity .7s var(--rev)}
+.hero.bezkreski .jt-tor{opacity:0}
 .jt-tor path{fill:none;stroke:rgba(255,255,255,.9);stroke-width:1.6;
   stroke-linecap:round;stroke-linejoin:round;
   filter:drop-shadow(0 0 6px rgba(255,255,255,.45))}
@@ -372,16 +383,12 @@ a{color:inherit;text-decoration:none}
 
 /* treść hero — nagłówek nad poziomym odcinkiem kreski, dosunięty do lewej */
 .hero-copy{position:absolute;z-index:4;left:clamp(24px,3.4vw,52px);
-  bottom:calc(100% - var(--ky,50%) + 22px);width:min(58%,760px);pointer-events:none;
+  bottom:calc(100% - var(--ky,50%) + 22px);width:min(72%,1000px);pointer-events:none;
   opacity:0;transform:translateY(26px);
   transition:opacity .7s var(--rev),transform .9s var(--rev)}
 .hero.tekst .hero-copy{opacity:1;transform:none}
-/* nagłówek kładzie się na jasnej koszulce — potrzebuje własnego, wygasającego tła */
-.hero-copy::before{content:"";position:absolute;z-index:-1;
-  inset:-46px -22% -34px calc(-1 * clamp(24px,3.4vw,52px));
-  background:linear-gradient(100deg,rgba(4,10,14,.96) 0%,rgba(4,10,14,.93) 58%,
-             rgba(4,10,14,.7) 82%,rgba(4,10,14,0) 100%)}
-.hero-copy h1{margin:0;font-size:clamp(1.8rem,4.9vw,4.4rem);line-height:1.04;
+
+.hero-copy h1{margin:0;max-width:24ch;font-size:clamp(1.8rem,4.4vw,4rem);line-height:1.06;
   letter-spacing:-.028em;font-weight:500;text-wrap:balance}
 .hero.morphed .hero-copy{opacity:0;transform:translateY(-40px)}
 
@@ -393,7 +400,7 @@ a{color:inherit;text-decoration:none}
 .hero.tekst .hero-dol{opacity:1;transform:none}
 .hero.morphed .hero-dol{opacity:0;transform:translateY(-24px)}
 .hero-dol p{margin:0 0 1.2rem;font-size:clamp(.98rem,1.25vw,1.15rem);line-height:1.5;
-  color:rgba(255,255,255,.84)}
+  color:rgba(255,255,255,.95)}
 /* pastylka 1:1 z referencji: 52 px wysokości, padding 4/4/4/20, koło 46 px */
 .pigulka{display:inline-flex;align-items:center;gap:18px;height:52px;padding:4px 4px 4px 22px;
   border-radius:999px;background:#F1F1F1;color:#1F1F1F;
@@ -407,7 +414,11 @@ a{color:inherit;text-decoration:none}
 .pigulka:hover .pigulka-kolo svg{transform:translate(14px,-14px)}
 
 @media(max-width:760px){
-  .hero-copy{left:24px;right:24px;width:auto;bottom:auto;top:auto}
+  /* kropki i kreska są tu schowane, więc nagłówek nie ma się o co zaczepić —
+     dostaje własny punkt pod nawigacją, a blok z CTA zostaje przy dole */
+  .hero-copy{left:24px;right:24px;width:auto;max-width:none;bottom:auto;
+             top:clamp(92px,15svh,150px)}
+  .hero-copy h1{max-width:none}
   .hero-dol{right:24px;left:24px;width:auto;text-align:left}
 }
 
@@ -728,7 +739,7 @@ footer.site img{height:26px}
     </div>
   
   
-    <button class="jt j-lokiec" data-jt data-ix="44.7" data-iy="47" aria-label="Staw łokciowy: Ból po zewnętrznej stronie bierze się zwykle z przeciążenia przyczepów prostowników nadgarstka, nie z samego stawu.">
+    <button class="jt j-lokiec" data-jt data-ix="36.5" data-iy="29.5" data-ix2="44.7" data-iy2="47" aria-label="Staw łokciowy: Ból po zewnętrznej stronie bierze się zwykle z przeciążenia przyczepów prostowników nadgarstka, nie z samego stawu.">
       <span class="jt-dot"></span>
       <span class="jt-card"><b>Zgięcie + rotacja przedramienia</b><strong>Staw łokciowy</strong><span>Ból po zewnętrznej stronie bierze się zwykle z przeciążenia przyczepów prostowników nadgarstka, nie z samego stawu.</span></span>
     </button>
@@ -1679,7 +1690,8 @@ footer.site img{height:26px}
     const k = Math.max(H.width / IW, H.height / IH), w = IW * k, h = IH * k;
     const ox = (H.width - w) / 2, oy = (H.height - h) / 2;
     joints.forEach(j => {
-      const x = ox + w * (+j.dataset.ix) / 100, y = oy + h * (+j.dataset.iy) / 100;
+      const doc = j.classList.contains('wedruje') ? ['ix2', 'iy2'] : ['ix', 'iy'];
+      const x = ox + w * (+j.dataset[doc[0]]) / 100, y = oy + h * (+j.dataset[doc[1]]) / 100;
       j.hidden = false;                       // ukryty element nie ma wymiarów — mierzymy odsłonięty
       j.style.left = x.toFixed(1) + 'px';
       j.style.top  = y.toFixed(1) + 'px';
@@ -1694,12 +1706,11 @@ footer.site img{height:26px}
   place();
 
   // --- wjazd: kreska wędruje po stawach, zapalając kolejne punkty ----------
-  // Ścieżka: kostka → kolano → biodro → bark, a na końcu poziomy wybieg
-  // w prawo, nad którym wyjeżdża nagłówek. Rysowanie przez stroke-dashoffset,
-  // punkty zapalane w chwili, gdy czoło kreski mija ich odległość na ścieżce.
+  // Ścieżka: kostka → kolano → biodro → BARK (tam siada czwarta kropka), potem
+  // czoło schodzi na ŁOKIEĆ — i kropka zjeżdża razem z nim — a na koniec linia
+  // ucieka poza prawą krawędź, a nad nią wyjeżdża nagłówek.
   const tor = hero.querySelector('[data-tor] path');
   const KOLEJ = ['j-skok', 'j-kolano', 'j-biodro', 'j-lokiec'];
-  const CZAS_TORU = 2200;
 
   const wjazd = () => {
     const H = hero.getBoundingClientRect();
@@ -1709,56 +1720,70 @@ footer.site img{height:26px}
     });
     if (pkt.some(q => !Number.isFinite(q.x))) return;
 
-    const koniec = { x: H.width, y: pkt[3].y };            // wybieg w prawo od barku
-    const wszystkie = [...pkt, koniec];
-    tor.setAttribute('d', 'M ' + wszystkie.map(q => `${q.x.toFixed(1)} ${q.y.toFixed(1)}`).join(' L '));
+    // druga pozycja czwartej kropki (łokieć) — liczona tym samym przelicznikiem co reszta
+    const ost = pkt[3].el;
+    const k = Math.max(H.width / IW, H.height / IH), w = IW * k, h = IH * k;
+    const lokiec = { x: (H.width - w) / 2 + w * (+ost.dataset.ix2) / 100,
+                     y: (H.height - h) / 2 + h * (+ost.dataset.iy2) / 100 };
+    const ucieczka = { x: H.width + 160, y: lokiec.y };
 
+    const wszystkie = [...pkt, lokiec, ucieczka];
+    tor.setAttribute('d', 'M ' + wszystkie.map(q => `${q.x.toFixed(1)} ${q.y.toFixed(1)}`).join(' L '));
     const dl = tor.getTotalLength();
     tor.style.strokeDasharray = dl;
     tor.style.strokeDashoffset = dl;
     hero.classList.add('wjazd');
 
-    // odległość na ścieżce do każdego stawu → moment zapalenia punktu
     let bieg = 0;
     const progi = wszystkie.map((q, i) => {
       if (i) bieg += Math.hypot(q.x - wszystkie[i - 1].x, q.y - wszystkie[i - 1].y);
       return bieg;
     });
 
-    // nagłówek kotwiczy się na barku, tam gdzie zaczyna się poziomy wybieg
-    hero.style.setProperty('--kx', pkt[3].x.toFixed(1) + 'px');
-    hero.style.setProperty('--ky', pkt[3].y.toFixed(1) + 'px');
+    // nagłówek siada nad poziomym odcinkiem, czyli na wysokości łokcia
+    hero.style.setProperty('--ky', lokiec.y.toFixed(1) + 'px');
 
-    // Odcinek po odcinku, z pauzą przy każdym punkcie — jednolity ease przez
-    // całą ścieżkę zapalał stawy w 350 ms, bo poziomy wybieg to 60% długości.
-    const HOP = 430, PAUZA = 200, WYBIEG = 760;
-    const etapy = [];
-    for (let i = 1; i < wszystkie.length; i++)
-      etapy.push({ od: progi[i - 1], do: progi[i],
-                   czas: i === wszystkie.length - 1 ? WYBIEG : HOP,
-                   pauza: i === wszystkie.length - 1 ? 0 : PAUZA });
+    // szybko po stawach, potem zjazd na łokieć, na końcu długa ucieczka w prawo
+    const etapy = [
+      { do: progi[1], czas: 155, pauza: 55 },   // kostka → kolano
+      { do: progi[2], czas: 155, pauza: 55 },   // → biodro
+      { do: progi[3], czas: 175, pauza: 400 },  // → bark (tu siada kropka)
+      { do: progi[4], czas: 480, pauza: 0 },    // bark → łokieć (kropka zjeżdża)
+      { do: progi[5], czas: 900, pauza: 0 },    // ucieczka za ekran
+    ];
 
     pkt[0].el.classList.add('zapalony');
-    let etap = 0, t0 = null;
+    let etap = 0, t0 = null, od = 0;
     const krok = ts => {
       if (t0 === null) t0 = ts;
       const e = etapy[etap];
       const u = Math.min(1, (ts - t0) / e.czas);
-      const g = u < .5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2;   // ease-in-out
-      tor.style.strokeDashoffset = (dl - (e.od + (e.do - e.od) * g)).toFixed(1);
+      const g = u < .5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2;
+      tor.style.strokeDashoffset = (dl - (od + (e.do - od) * g)).toFixed(1);
+      if (etap === 4 && u > .2) hero.classList.add('tekst');   // napis wyjeżdża nad uciekającą linią
       if (u < 1) return requestAnimationFrame(krok);
-      if (pkt[etap + 1]) pkt[etap + 1].el.classList.add('zapalony');
+      od = e.do;
+      if (etap < 3 && pkt[etap + 1]) pkt[etap + 1].el.classList.add('zapalony');
+      if (etap === 2) {                          // czoło doszło do barku → kropka rusza w dół
+        ost.classList.add('wedruje');
+        setTimeout(() => {
+          ost.style.left = lokiec.x.toFixed(1) + 'px';
+          ost.style.top = lokiec.y.toFixed(1) + 'px';
+        }, 250);
+      }
       etap++; t0 = null;
       if (etap < etapy.length) setTimeout(() => requestAnimationFrame(krok), e.pauza);
-      else hero.classList.add('tekst');
+      else setTimeout(() => hero.classList.add('bezkreski'), 140);  // kropki zostają same
     };
     requestAnimationFrame(krok);
   };
 
   if (matchMedia('(prefers-reduced-motion:reduce)').matches) {
-    hero.classList.add('wjazd', 'tekst');
+    hero.classList.add('wjazd', 'tekst', 'bezkreski');
     joints.forEach(j => j.classList.add('zapalony'));
     const bk = hero.querySelector('.j-lokiec');
+    bk.classList.add('wedruje');   // bez animacji kropka od razu stoi na łokciu
+    place();
     hero.style.setProperty('--kx', bk.style.left);
     hero.style.setProperty('--ky', bk.style.top);
   } else {

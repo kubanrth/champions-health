@@ -57,9 +57,16 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
       const obs = new MutationObserver(ms => { for (const m of ms) {
         const t = m.target;
         if (t.classList?.contains('jt') && t.classList.contains('zapalony') && !t.__z) {
-          t.__z = 1; window.__log.push([t.className.split(' ')[1], performance.now()]); }
+          t.__z = 1; window.__log.push([t.className.split(' ')[1], performance.now()]);
+          // czwarta kropka musi ZAPALIĆ SIĘ NA BARKU, dopiero potem zjechać na łokieć
+          if (t.classList.contains('j-lokiec'))
+            window.__start = [parseFloat(t.style.left), parseFloat(t.style.top)]; }
         if (t.classList?.contains('hero') && t.classList.contains('tekst') && !window.__t) {
-          window.__t = 1; window.__log.push(['tekst', performance.now()]); }
+          window.__t = 1; window.__log.push(['tekst', performance.now()]);
+          const tor = document.querySelector('[data-tor] path');
+          // napis wyjeżdża, gdy kreska JESZCZE biegnie w prawo
+          window.__wtedy = { offset: parseFloat(tor.style.strokeDashoffset),
+            widocznaKreska: +getComputedStyle(tor.parentNode).opacity > .5 }; }
       }});
       addEventListener('DOMContentLoaded', () =>
         obs.observe(document.body, { subtree: true, attributes: true, attributeFilter: ['class'] }));
@@ -76,6 +83,11 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
       const H = document.querySelector('.hero').getBoundingClientRect();
       return { widoczna: +getComputedStyle(c).opacity > 0.9,
         nadBarkiem: r.bottom <= bk.top + 2,
+        start: window.__start, wtedy: window.__wtedy,
+        koniec: [parseFloat(bk.left ?? 0) || bk.x + bk.width / 2, bk.y + bk.height / 2],
+        kreskaZnikla: +getComputedStyle(document.querySelector('.jt-tor')).opacity < .1,
+        kropekWidocznych: [...document.querySelectorAll('.jt')]
+          .filter(j => +getComputedStyle(j).opacity > .5).length,
         wKadrze: r.top >= -1 && r.right <= H.width + 1,
         tekst: c.querySelector('h1').textContent.trim() };
     });
@@ -83,10 +95,19 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
       // kolejność zapalania: kostka → kolano → biodro → bark
       && JSON.stringify(kolej) === JSON.stringify(['j-skok', 'j-kolano', 'j-biodro', 'j-lokiec'])
       // każdy kolejny punkt wyraźnie po poprzednim, nie wszystkie naraz
-      && czasy['j-kolano'] - czasy['j-skok'] > 250
-      && czasy['j-biodro'] - czasy['j-kolano'] > 250
-      && czasy['j-lokiec'] - czasy['j-biodro'] > 250
-      && czasy['tekst'] > czasy['j-lokiec'] + 300
+      // punkty jeden po drugim, ale szybko — cała czwórka poniżej sekundy
+      && czasy['j-kolano'] - czasy['j-skok'] > 90
+      && czasy['j-biodro'] - czasy['j-kolano'] > 90
+      && czasy['j-lokiec'] - czasy['j-biodro'] > 90
+      && czasy['j-lokiec'] - czasy['j-skok'] < 1000
+      // 4. kropka zapala się na barku i dopiero potem zjeżdża w dół na łokieć
+      && kopia.start && kopia.koniec[1] - kopia.start[1] > 60
+      && Math.abs(kopia.koniec[0] - kopia.start[0]) > 40
+      // napis wyjeżdża, gdy kreska jeszcze ucieka w prawo
+      && czasy['tekst'] > czasy['j-lokiec'] + 500
+      && kopia.wtedy && kopia.wtedy.offset > 1 && kopia.wtedy.widocznaKreska
+      // na końcu zostają same kropki
+      && kopia.kreskaZnikla && kopia.kropekWidocznych === 4
       && kopia.widoczna && kopia.nadBarkiem && kopia.wKadrze
       && /Kontuzje/.test(kopia.tekst);
     console.log(`${w}×${h} wjazd hero`, wOk ? 'ok' : 'BŁĄD ' + JSON.stringify({ kolej, czasy, kopia }));
