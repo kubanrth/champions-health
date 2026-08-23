@@ -136,44 +136,61 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
   console.log(`${w}×${h} przejście`, mOk ? 'ok' : 'BŁĄD ' + JSON.stringify({ przed, po, wroc }));
   if (!mOk) process.exitCode = 1;
 
-  // --- pierścień kroków wokół ramienia ------------------------------------
+  // --- pierścień punktów wokół ramienia ------------------------------------
   await p.evaluate(() => document.querySelector('.ring').scrollIntoView({ block: 'center' }));
   await new Promise(r => setTimeout(r, 2200));
   const ring = await p.evaluate(() => {
-    const s = document.querySelector('.ring'), S = s.getBoundingClientRect();
-    const ks = [...s.querySelectorAll('[data-krag]')];
-    const pier = matchMedia('(min-width:901px)').matches;
-    const dh = parseFloat(getComputedStyle(s).getPropertyValue('--dh'));
+    const s2 = document.querySelector('.ring'), S = s2.getBoundingClientRect();
+    const ks = [...s2.querySelectorAll('[data-krag]')].filter(k => !k.hidden);
+    const pier = matchMedia('(min-width:761px)').matches;
+    const okrag = s2.querySelector('.ring-okrag');
+    const h2 = s2.querySelector('.ring-copy h2').getBoundingClientRect();
+    const hit = (a2, b2) => Math.min(a2.bottom, b2.bottom) - Math.max(a2.top, b2.top) > 0
+                         && Math.min(a2.right, b2.right) - Math.max(a2.left, b2.left) > 0;
+    const w = e => { const r = e.getBoundingClientRect();
+      return r.left - S.left >= -1 && r.right - S.left <= S.width + 1
+          && r.top - S.top >= -1 && r.bottom - S.top <= S.height + 1; };
     return {
       uklad: pier ? 'pierścień' : 'lista',
-      pojawily: s.classList.contains('widoczne'),
-      // w pierścieniu łuki muszą być narysowane, w liście ich nie ma
-      lukiZgodne: pier ? s.querySelectorAll('.ring-lines circle').length > 40
-                       : s.querySelectorAll('.ring-lines circle').length === 0,
-      // krąg musi zmieścić się w sekcji także po powiększeniu
-      wKadrze: ks.every(k => { const r = k.getBoundingClientRect();
-        const zapas = pier ? (dh - r.width) / 2 : 0;
-        return r.left - zapas >= S.left - 1 && r.right + zapas <= S.right + 1; }),
-      // na liście opisy są widoczne od razu, w pierścieniu dopiero po najechaniu
-      opisy: pier ? ks.every(k => +getComputedStyle(k.querySelector('.krag-txt')).opacity < 0.1)
-                  : ks.every(k => +getComputedStyle(k.querySelector('.krag-txt')).opacity > 0.9),
+      pojawily: s2.classList.contains('widoczne'),
+      ile: ks.length,
+      // w układzie pierścienia: jeden przerywany okrąg, kropki na nim
+      okragJest: pier ? !!okrag && +okrag.getAttribute('r') > 100 : !okrag,
+      naOkregu: !pier || ks.every(k => {
+        const r = k.getBoundingClientRect();
+        const dx = (r.left + r.width / 2) - (S.left + +okrag.getAttribute('cx'));
+        const dy = (r.top + r.height / 2) - (S.top + +okrag.getAttribute('cy'));
+        return Math.abs(Math.hypot(dx, dy) - +okrag.getAttribute('r')) < 3;
+      }),
+      etykietyWKadrze: !pier || ks.every(k => w(k.querySelector('.krag-etykieta'))),
+      // podpis nie może wchodzić w nagłówek sekcji
+      bezKolizji: !pier || !ks.some(k => hit(k.querySelector('.krag-etykieta').getBoundingClientRect(), h2)),
+      // ramię leży NAD pierścieniem, żeby część okręgu chowała się za nim
+      ramieNadKropkami: !pier || +getComputedStyle(s2.querySelector('.ring-reka')).zIndex
+                              > +getComputedStyle(ks[0]).zIndex,
+      kierunki: !pier || ks.every(k => k.classList.contains('w-lewo')
+                                    || k.classList.contains('w-prawo')
+                                    || k.classList.contains('w-gore')),
       tresc: ks.every(k => k.querySelector('.krag-lab').textContent.trim()
                         && k.querySelector('.krag-txt').textContent.trim()),
+      lead: !!s2.querySelector('.ring-lead'),
     };
   });
   let rozwija = true;
   if (ring.uklad === 'pierścień') {
-    const kb = await (await p.$('.krag')).boundingBox();
+    const kb = await (await p.$('[data-krag]:not([hidden])')).boundingBox();
     await p.mouse.move(kb.x + kb.width / 2, kb.y + kb.height / 2);
-    await new Promise(r => setTimeout(r, 900));
+    await new Promise(r => setTimeout(r, 800));
     rozwija = await p.evaluate(() => {
-      const k = document.querySelector('.krag');
-      const dh = parseFloat(getComputedStyle(document.querySelector('.ring')).getPropertyValue('--dh'));
-      return k.getBoundingClientRect().width > dh - 6
-          && +getComputedStyle(k.querySelector('.krag-txt')).opacity > 0.9;
+      const t = document.querySelector('[data-krag]:not([hidden]) .krag-txt');
+      return +getComputedStyle(t).opacity > 0.9 && t.getBoundingClientRect().height > 15;
     });
+    await p.mouse.move(4, 4);
+    await new Promise(r => setTimeout(r, 300));
   }
-  const rOk = ring.pojawily && ring.lukiZgodne && ring.wKadrze && ring.opisy && ring.tresc && rozwija;
+  const rOk = ring.pojawily && ring.ile === 5 && ring.okragJest && ring.naOkregu
+           && ring.etykietyWKadrze && ring.bezKolizji && ring.ramieNadKropkami
+           && ring.kierunki && ring.tresc && ring.lead && rozwija;
   console.log(`${w}×${h} pierścień`, rOk ? 'ok' : 'BŁĄD ' + JSON.stringify({ ring, rozwija }));
   if (!rOk) process.exitCode = 1;
 
@@ -183,19 +200,18 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
   await p.click('#faq .q');
   await new Promise(r => setTimeout(r, 800));
   const faq = await p.evaluate(() => {
-    const h = getComputedStyle(document.querySelector('.faq-head h2'));
+    const h2 = getComputedStyle(document.querySelector('.faq-head h2'));
     const q = getComputedStyle(document.querySelector('.q'));
     const wiersz = document.querySelector('.qa');
     const odp = document.querySelector('.qa.on .a');
     return {
-      // zmierzone u nich: nagłówek 51,79/500 wyśrodkowany, pytanie 24/500, tor 1000 px
       // rozmiary referencyjne dotyczą 1440 — niżej mają prawo maleć
-      naglowek: h.fontWeight === '500' && h.textAlign === 'center'
-             && (innerWidth < 1300 || Math.abs(parseFloat(h.fontSize) - 51.79) < 6),
+      naglowek: h2.fontWeight === '500' && h2.textAlign === 'center'
+             && (innerWidth < 1300 || Math.abs(parseFloat(h2.fontSize) - 51.79) < 6),
       pytanie: q.fontWeight === '500'
             && (innerWidth < 1300 || Math.abs(parseFloat(q.fontSize) - 24) < 3),
-      tor: Math.abs(document.querySelector('.faq').getBoundingClientRect().width - 1000) < 40
-        || innerWidth < 1100,
+      tor: innerWidth < 1100
+        || Math.abs(document.querySelector('.faq').getBoundingClientRect().width - 1000) < 40,
       wloskowaLinia: getComputedStyle(wiersz).borderBottomWidth === '1px',
       rozwija: odp && odp.getBoundingClientRect().height > 20,
       // otwarty wiersz to minus, nie obrócony plus

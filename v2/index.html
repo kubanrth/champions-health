@@ -226,82 +226,91 @@ a{color:inherit;text-decoration:none}
   .reveal .char{transform:none;transition:none}
 }
 
-/* --- „Jak pomagamy": okręgi wokół ramienia ---------------------------------
-   Wzór z inspiracji: cienkie okręgi na zdjęciu, spięte kropkowanymi łukami.
-   Pozycje w % ZDJĘCIA (jak stawy w heroju) — object-fit:cover przycina inaczej
-   przy każdej proporcji okna. Kropki łuków generuje JS z krzywej Béziera, żeby
-   dało się je zapalać po kolei: krąg → kropki biegną do następnego → krąg.   */
-.ring{--d:132px;--dh:212px;--rev:cubic-bezier(.35,0,0,1);
+/* --- „Jak pomagamy": pierścień punktów wokół ramienia ---------------------
+   Wzór z inspiracji: przerywany okrąg, na nim zwykłe kropki, podpisy na
+   zewnątrz. Ramię zawodnika leży NA pierścieniu (osobny wycinek z tą samą
+   kanwą co baner), więc część okręgu chowa się za nim. Po najechaniu podpis
+   wyjeżdża na zewnątrz — kropki z lewej w lewo, z prawej w prawo.        */
+.ring{--r:min(28vw,310px);--kropka:14px;--rev:cubic-bezier(.35,0,0,1);
   position:relative;min-height:100svh;overflow:hidden;background:#07100C;isolation:isolate}
-.ring-bg{position:absolute;inset:0;z-index:0;width:100%;height:100%;
+.ring-bg,.ring-reka{position:absolute;inset:0;width:100%;height:100%;
   object-fit:cover;object-position:50% 50%}
+.ring-bg{z-index:0}
+.ring-reka{z-index:5;pointer-events:none}      /* ramię przykrywa pierścień */
+.ring-promien{position:absolute;width:var(--r);height:0;visibility:hidden;pointer-events:none}
 .ring::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
   background:linear-gradient(100deg,rgba(7,16,12,.94) 0%,rgba(7,16,12,.72) 30%,rgba(7,16,12,.1) 58%,rgba(7,16,12,0) 78%)}
 .ring-lines{position:absolute;inset:0;z-index:2;pointer-events:none;overflow:visible}
-.ring-lines circle{fill:rgba(255,255,255,.82);opacity:0;
-  transition:opacity .32s var(--rev) var(--od,0ms)}
-.ring.widoczne .ring-lines circle{opacity:1}
+.ring-okrag{fill:none;stroke:rgba(255,255,255,.5);stroke-width:1.5;
+  stroke-dasharray:2 12;stroke-linecap:round;
+  opacity:0;transition:opacity .9s var(--rev) .1s}
+.ring.widoczne .ring-okrag{opacity:1}
 
-.ring-copy{position:relative;z-index:3;width:100%;margin:0;
-  padding:clamp(4rem,11svh,7.5rem) clamp(24px,3.4vw,52px)}
+.ring-copy{position:relative;z-index:6;width:100%;margin:0;
+  padding:clamp(4rem,11svh,7.5rem) clamp(24px,3.4vw,52px);pointer-events:none}
 .ring-copy h2{max-width:12ch;font-size:clamp(3rem,7vw,6rem);line-height:1.02;
   letter-spacing:-.035em;font-weight:500}
+.ring-lead{margin:1.4rem 0 0;max-width:34ch;font-size:18px;line-height:26px;
+  color:rgba(255,255,255,.78)}
 
-/* krąg */
-.krag{position:absolute;z-index:4;width:var(--d);height:var(--d);
-  margin:calc(var(--d) / -2) 0 0 calc(var(--d) / -2);padding:14px;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
-  border:1px solid rgba(255,255,255,.62);border-radius:50%;
-  background:rgba(7,16,12,.52);-webkit-backdrop-filter:blur(9px);backdrop-filter:blur(9px);
-  color:#fff;font:inherit;text-align:center;cursor:pointer;
-  opacity:0;transform:scale(.55);
-  transition:opacity .5s var(--rev) calc(var(--i) * 260ms),
-             transform .7s var(--rev) calc(var(--i) * 260ms),
-             width .5s var(--rev),height .5s var(--rev),
-             background-color .4s var(--rev),border-color .4s var(--rev)}
+/* punkt na pierścieniu */
+.krag{position:absolute;z-index:4;width:var(--kropka);height:var(--kropka);
+  margin:calc(var(--kropka) / -2) 0 0 calc(var(--kropka) / -2);padding:0;
+  border:0;background:none;color:#fff;font:inherit;text-align:left;cursor:pointer;
+  opacity:0;transform:scale(.4);
+  transition:opacity .5s var(--rev) calc(var(--i) * 130ms + .35s),
+             transform .6s var(--rev) calc(var(--i) * 130ms + .35s)}
 .ring.widoczne .krag{opacity:1;transform:none}
-.krag-n{font-family:ui-monospace,Menlo,monospace;font-size:10px;letter-spacing:.2em;
-  color:rgba(255,255,255,.5)}
-.krag-lab{font-family:var(--legia);font-stretch:75%;font-weight:700;font-size:16px;
-  line-height:1.05;text-transform:uppercase;letter-spacing:.005em;text-wrap:balance}
-.krag-txt{max-width:150px;font-family:Mulish,sans-serif;font-size:11.5px;line-height:1.4;
-  color:rgba(255,255,255,.86);
-  opacity:0;max-height:0;overflow:hidden;
-  transition:opacity .35s var(--rev),max-height .5s var(--rev)}
-.krag:hover,.krag:focus-visible,.krag.on{width:var(--dh);height:var(--dh);
-  background:rgba(7,16,12,.7);border-color:rgba(255,255,255,.9)}
-.krag:hover .krag-txt,.krag:focus-visible .krag-txt,.krag.on .krag-txt{opacity:1;max-height:120px}
-.krag:focus-visible{outline:2px solid #fff;outline-offset:5px}
+.krag-kropka{position:absolute;inset:0;border-radius:50%;background:#fff;
+  box-shadow:0 0 0 1px rgba(7,16,12,.5),0 0 16px rgba(255,255,255,.45);
+  transition:transform .35s var(--rev)}
+.krag:hover .krag-kropka,.krag:focus-visible .krag-kropka,.krag.on .krag-kropka{transform:scale(1.35)}
+.krag:focus-visible{outline:2px solid #fff;outline-offset:8px;border-radius:50%}
 
-/* wąski kadr wycina ramię i większość kręgów wypadłaby poza zdjęcie —
-   zamiast pierścienia prosta lista pod bannerem */
-@media(max-width:900px){
+/* podpis na zewnątrz pierścienia; kierunek ustala JS klasą w-lewo / w-prawo */
+.krag-etykieta{position:absolute;top:50%;width:max-content;max-width:min(300px,32vw);
+  transform:translateY(-50%);pointer-events:none}
+.krag.w-prawo .krag-etykieta{left:calc(var(--kropka) + 14px);text-align:left}
+.krag.w-lewo .krag-etykieta{right:calc(var(--kropka) + 14px);text-align:right}
+.krag.w-gore .krag-etykieta{top:auto;bottom:calc(var(--kropka) + 14px);
+  left:50%;right:auto;transform:translateX(-50%);text-align:center}
+.krag-n{display:block;font-family:ui-monospace,Menlo,monospace;font-size:10px;
+  letter-spacing:.2em;color:rgba(255,255,255,.55)}
+.krag-lab{display:block;margin-top:3px;font-size:15px;font-weight:500;letter-spacing:.06em;
+  text-transform:uppercase;white-space:nowrap;text-shadow:0 1px 12px rgba(7,16,12,.9)}
+.krag-txt{display:block;margin-top:8px;font-size:13px;line-height:1.45;
+  color:rgba(255,255,255,.9);text-shadow:0 1px 10px rgba(7,16,12,.95);
+  opacity:0;max-height:0;overflow:hidden;
+  transition:opacity .4s var(--rev),max-height .5s var(--rev),transform .5s var(--rev)}
+.krag.w-prawo .krag-txt{transform:translateX(-14px)}
+.krag.w-lewo .krag-txt{transform:translateX(14px)}
+.krag:hover .krag-txt,.krag:focus-visible .krag-txt,.krag.on .krag-txt{
+  opacity:1;max-height:140px;transform:none}
+
+@media(max-width:1000px){
+  .ring{--r:min(32vw,250px)}
+  .krag-etykieta{max-width:min(220px,38vw)}
+  .krag-lab{font-size:13px}
+}
+/* wąski kadr wycina ramię — pierścień nie ma się o co zaczepić */
+@media(max-width:760px){
   .ring{min-height:0;display:flex;flex-direction:column}
   .ring-copy{order:-1;padding-bottom:2rem}
-  .ring-copy>*{max-width:none}
   .ring-bg{position:relative;height:46svh}
-  .ring-lines{display:none}
+  .ring-reka,.ring-lines{display:none}
   .ring::after{background:linear-gradient(to bottom,rgba(7,16,12,.55),rgba(7,16,12,.1) 40%,rgba(7,16,12,.9))}
   .krag{position:relative;margin:0 24px 10px;padding:15px 17px;width:auto;height:auto;
-    display:grid;grid-template-columns:auto 1fr;gap:3px 13px;align-items:start;
-    border-radius:16px;text-align:left;opacity:1;transform:none;cursor:default}
+    display:grid;border:1px solid rgba(255,255,255,.16);border-radius:16px;
+    opacity:1;transform:none;cursor:default}
   .krag:first-of-type{margin-top:22px}
   .krag:last-of-type{margin-bottom:clamp(3rem,8svh,5rem)}
-  .krag-n{grid-row:span 2;padding-top:3px}
-  .krag-txt{max-width:none;opacity:1;max-height:none}
-  .krag:hover,.krag.on{width:auto;height:auto;background:rgba(7,16,12,.52);border-color:rgba(255,255,255,.62)}
-}
-/* niskie okno: mniej miejsca w pionie — mniejszy nagłówek i mniejsze kręgi,
-   inaczej powiększony krąg wchodzi w wielki napis */
-@media(max-height:820px){
-  .ring{--d:112px;--dh:176px}
-  .ring-copy{padding-block:clamp(2.6rem,7svh,5rem)}
-  .ring-copy h2{font-size:clamp(2.4rem,5.4vw,4rem)}
-  .krag-lab{font-size:14px}
-  .krag-txt{font-size:11px}
+  .krag-kropka{display:none}
+  .krag-etykieta{position:relative;top:auto;left:auto;right:auto;bottom:auto;
+    transform:none!important;max-width:none;width:auto;text-align:left!important}
+  .krag-txt{opacity:1;max-height:none;margin-top:6px}
 }
 @media(prefers-reduced-motion:reduce){
-  .ring-lines circle,.krag{transition:none}
+  .ring-okrag,.krag,.krag-txt,.krag-kropka{transition:none}
 }
 
 /* --- hero: STAWY ----------------------------------------------------------
@@ -479,7 +488,7 @@ a{color:inherit;text-decoration:none}
 .deal-stage{position:sticky;top:0;height:100svh;overflow:hidden;
   /* zapas u góry na nawigację — nagłówek sekcji nie może pod nią wjechać */
   display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding-top:calc(var(--pill-h) + 2 * var(--nav-pad) + 10px)}
+  padding-top:calc(var(--pill-h) / 2)}
 /* zapas u góry na doczepioną nawigację */
 .claim,.ring,.tm{scroll-margin-top:72px}
 /* nagłówek sekcji 1:1 z Revoluta („Your salary, reimagined"): duży wyśrodkowany
@@ -603,7 +612,7 @@ h2{margin:0;font-size:clamp(2.1rem,4.6vw,3.6rem);line-height:1.05;letter-spacing
 
 /* --- FAQ ---------------------------------------------------------------- */
 /* --- blog ---------------------------------------------------------------- */
-.blog{background:#fff;color:#0A0A0A}
+.blog{background:#fff;color:#0A0A0A;padding-bottom:clamp(2.6rem,4vw,4rem)}
 .blog-head{padding:0 clamp(24px,3.4vw,52px)}
 .blog-head h2{max-width:none;font-size:clamp(2.4rem,6vw,5.4rem);line-height:1.0;
   letter-spacing:-.025em;font-weight:500}
@@ -621,7 +630,7 @@ h2{margin:0;font-size:clamp(2.1rem,4.6vw,3.6rem);line-height:1.05;letter-spacing
   background-repeat:no-repeat;background-position:0 100%;transition:background-size .45s var(--ease)}
 .post:hover h3 a{background-size:100% 1px}
 .post p{margin:10px 0 0;max-width:36ch;font-size:15px;line-height:22px;color:var(--muted-d)}
-.blog-nota{margin:clamp(2rem,4vw,3rem) 0 0;padding:0 clamp(24px,3.4vw,52px);font-size:14px;color:#A31212}
+.blog-nota{margin:clamp(1.5rem,2.6vw,2rem) 0 0;padding:0 clamp(24px,3.4vw,52px);font-size:14px;color:#A31212}
 
 /* --- kontakt: zdjęcie w tle, dane po lewej, formularz po prawej ----------- */
 .kontakt{position:relative;overflow:hidden;background:#07100C;color:#fff;isolation:isolate}
@@ -670,7 +679,7 @@ h2{margin:0;font-size:clamp(2.1rem,4.6vw,3.6rem);line-height:1.05;letter-spacing
 
 /* FAQ 1:1 z revolut.com/esim: wyśrodkowany nagłówek 51,79/500, wiersze
    1000 px z pytaniem 24/500 i kółkiem +/− po prawej, włosowa linia pod spodem */
-.faq-sec{background:#fff;color:#0A0A0A}
+.faq-sec{background:#fff;color:#0A0A0A;padding-top:clamp(2.6rem,4vw,4rem)}
 .faq-head{text-align:center}
 .faq-head h2{margin:0 auto;max-width:none;font-size:clamp(2.1rem,3.6vw,3.24rem);
   line-height:1.0;letter-spacing:-.0116em;font-weight:500}
@@ -965,39 +974,59 @@ footer.site img{height:26px}
 
 <section class="ring" id="sciezka">
   <img class="ring-bg" src="img/ring-banner.png" alt="Zawodnik Legii Warszawa rozciągający ramię przed treningiem">
+  <img class="ring-reka" src="img/ring-reka.png" alt="" aria-hidden="true">
   <svg class="ring-lines" aria-hidden="true"></svg>
-  <button class="krag" data-krag data-ix="44" data-iy="52" style="--i:0"
+  <span class="ring-promien" data-promien aria-hidden="true"></span>
+  <button class="krag" data-krag data-kat="216" style="--i:0"
           aria-label="Koordynator: Jeden opiekun pacjenta planuje, umawia i pilnuje terminów. Nie odbijasz się między rejestracjami.">
-    <span class="krag-n">01</span>
-    <span class="krag-lab">Koordynator</span>
-    <span class="krag-txt">Jeden opiekun pacjenta planuje, umawia i pilnuje terminów. Nie odbijasz się między rejestracjami.</span>
+    <span class="krag-kropka"></span>
+    <span class="krag-etykieta">
+      <span class="krag-n">01</span>
+      <span class="krag-lab">Koordynator</span>
+      <span class="krag-txt">Jeden opiekun pacjenta planuje, umawia i pilnuje terminów. Nie odbijasz się między rejestracjami.</span>
+    </span>
   </button>
-  <button class="krag" data-krag data-ix="62" data-iy="36" style="--i:1"
+  <button class="krag" data-krag data-kat="288" style="--i:1"
           aria-label="Diagnoza: Wywiad, badanie, diagnostyka obrazowa i funkcjonalna, decyzja o ścieżce leczenia.">
-    <span class="krag-n">02</span>
-    <span class="krag-lab">Diagnoza</span>
-    <span class="krag-txt">Wywiad, badanie, diagnostyka obrazowa i funkcjonalna, decyzja o ścieżce leczenia.</span>
+    <span class="krag-kropka"></span>
+    <span class="krag-etykieta">
+      <span class="krag-n">02</span>
+      <span class="krag-lab">Diagnoza</span>
+      <span class="krag-txt">Wywiad, badanie, diagnostyka obrazowa i funkcjonalna, decyzja o ścieżce leczenia.</span>
+    </span>
   </button>
-  <button class="krag" data-krag data-ix="80" data-iy="52" style="--i:2"
+  <button class="krag" data-krag data-kat="0" style="--i:2"
           aria-label="Realizacja: Leczenie i rehabilitacja u nas, zabiegi u partnerów. Informacja idzie za Tobą.">
-    <span class="krag-n">03</span>
-    <span class="krag-lab">Realizacja</span>
-    <span class="krag-txt">Leczenie i rehabilitacja u nas, zabiegi u partnerów. Informacja idzie za Tobą.</span>
+    <span class="krag-kropka"></span>
+    <span class="krag-etykieta">
+      <span class="krag-n">03</span>
+      <span class="krag-lab">Realizacja</span>
+      <span class="krag-txt">Leczenie i rehabilitacja u nas, zabiegi u partnerów. Informacja idzie za Tobą.</span>
+    </span>
   </button>
-  <button class="krag" data-krag data-ix="80" data-iy="86" style="--i:3"
+  <button class="krag" data-krag data-kat="72" style="--i:3"
           aria-label="Testy kontrolne: Obiektywne kryteria progresu i gotowości do powrotu — liczby, nie przeczucie.">
-    <span class="krag-n">04</span>
-    <span class="krag-lab">Testy kontrolne</span>
-    <span class="krag-txt">Obiektywne kryteria progresu i gotowości do powrotu — liczby, nie przeczucie.</span>
+    <span class="krag-kropka"></span>
+    <span class="krag-etykieta">
+      <span class="krag-n">04</span>
+      <span class="krag-lab">Testy kontrolne</span>
+      <span class="krag-txt">Obiektywne kryteria progresu i gotowości do powrotu — liczby, nie przeczucie.</span>
+    </span>
   </button>
-  <button class="krag" data-krag data-ix="44" data-iy="86" style="--i:4"
+  <button class="krag" data-krag data-kat="144" style="--i:4"
           aria-label="Profilaktyka: Zalecenia treningowe, praca nad motoryką i kontrole okresowe.">
-    <span class="krag-n">05</span>
-    <span class="krag-lab">Profilaktyka</span>
-    <span class="krag-txt">Zalecenia treningowe, praca nad motoryką i kontrole okresowe.</span>
+    <span class="krag-kropka"></span>
+    <span class="krag-etykieta">
+      <span class="krag-n">05</span>
+      <span class="krag-lab">Profilaktyka</span>
+      <span class="krag-txt">Zalecenia treningowe, praca nad motoryką i kontrole okresowe.</span>
+    </span>
   </button>
   <div class="ring-copy">
     <h2 class="reveal" data-reveal>Jak pomagamy?</h2>
+    <p class="ring-lead">Łączymy wiedzę specjalistów z zespołu medycznego Legii Warszawa
+      z nowoczesną diagnostyką — żeby osoby aktywne dbały o zdrowie, zapobiegały urazom
+      i rozwijały pełnię możliwości.</p>
   </div>
 </section>
 
@@ -1593,62 +1622,62 @@ footer.site img{height:26px}
       'odsłanianie: podział zmienił treść');
 })();
 
-// --- „Jak pomagamy": okręgi wokół ramienia --------------------------------
-// Pozycje w % ZDJĘCIA (jak stawy w heroju) — object-fit:cover przycina inaczej
-// przy każdej proporcji okna. Kropki łuków liczone z krzywej Béziera i zapalane
-// po kolei, więc pierścień „rysuje się" wokół ramienia: krąg → kropki → krąg.
+// --- „Jak pomagamy": pierścień punktów wokół ramienia -----------------------
+// Punkty leżą na jednym okręgu (kąt w data-kat), środek liczony w % ZDJĘCIA
+// i przeliczany przez object-fit:cover — inaczej przy każdej proporcji okna
+// zjeżdżałby z ramienia. Ramię jest osobną warstwą NAD pierścieniem, więc
+// część okręgu chowa się za nim. Podpis wyjeżdża na zewnątrz: kropki z lewej
+// połowy w lewo, z prawej w prawo, górna do góry.
 (() => {
   const sec = document.querySelector('.ring');
   if (!sec) return;
   const svg = sec.querySelector('.ring-lines');
-  const kregi = [...sec.querySelectorAll('[data-krag]')];
+  const sonda = sec.querySelector('[data-promien]');
+  const kropki = [...sec.querySelectorAll('[data-krag]')];
   const IW = 2000, IH = 1125;                      // ring-banner.png
+  const SX = 50, SY = 58;                          // środek pierścienia w % zdjęcia (ramię)
   const NS = 'http://www.w3.org/2000/svg';
+  const pierscien = matchMedia('(min-width:761px)');
 
-  const pierscien = matchMedia('(min-width:901px)');
   const rysuj = () => {
-    if (!pierscien.matches) {                    // układ listy — bez pozycjonowania i łuków
-      kregi.forEach(el => { el.style.left = ''; el.style.top = ''; });
+    if (!pierscien.matches) {
+      kropki.forEach(el => { el.style.left = el.style.top = ''; el.hidden = false;
+        el.classList.remove('w-lewo', 'w-prawo', 'w-gore'); });
       svg.textContent = '';
       return;
     }
     const S = sec.getBoundingClientRect();
     const k = Math.max(S.width / IW, S.height / IH), w = IW * k, h = IH * k;
-    const ox0 = (S.width - w) / 2, oy0 = (S.height - h) / 2;
-    // zapas na powiększony krąg — przy wąskim kadrze inaczej wychodzi poza sekcję
-    const zapas = parseFloat(getComputedStyle(sec).getPropertyValue('--dh')) / 2 + 8;
-    const P = kregi.map(el => {
-      const x = Math.min(Math.max(ox0 + w * (+el.dataset.ix) / 100, zapas), S.width - zapas);
-      const y = Math.min(Math.max(oy0 + h * (+el.dataset.iy) / 100, zapas), S.height - zapas);
-      el.style.left = x.toFixed(1) + 'px';
-      el.style.top = y.toFixed(1) + 'px';
-      return { x, y };
-    });
+    const cx = (S.width - w) / 2 + w * SX / 100;
+    const cy = (S.height - h) / 2 + h * SY / 100;
+    // --r to min()/clamp() — getPropertyValue oddaje surowy zapis, nie piksele,
+    // więc górną granicę promienia czytamy z szerokości sondy...
+    const gora = sonda.offsetWidth;
+    // ...a potem ścieśniamy go tak, żeby najszerszy podpis zmieścił się w kadrze
+    const podpis = Math.max(...kropki.map(el =>
+      el.querySelector('.krag-etykieta').offsetWidth)) + 26;
+    const R = Math.max(120, Math.min(gora, S.width / 2 - podpis, S.height / 2 - 105));
+
     svg.setAttribute('viewBox', `0 0 ${Math.round(S.width)} ${Math.round(S.height)}`);
     svg.textContent = '';
-    const r = kregi[0].offsetWidth / 2 + 13;        // kropki zaczynają się poza kręgiem
-    const cx = P.reduce((a, p) => a + p.x, 0) / P.length;   // środek pierścienia —
-    const cy = P.reduce((a, p) => a + p.y, 0) / P.length;   // łuki wyginają się od niego
-    for (let i = 0; i < P.length - 1; i++) {
-      const a = P[i], b = P[i + 1];
-      const dx = b.x - a.x, dy = b.y - a.y, len = Math.hypot(dx, dy);
-      if (len < 2 * r) continue;
-      const ax = a.x + dx / len * r, ay = a.y + dy / len * r;
-      const bx = b.x - dx / len * r, by = b.y - dy / len * r;
-      const mx = (ax + bx) / 2, my = (ay + by) / 2;
-      const vx = mx - cx, vy = my - cy, vl = Math.hypot(vx, vy) || 1;
-      const qx = mx + vx / vl * len * 0.18, qy = my + vy / vl * len * 0.18;
-      const n = Math.max(3, Math.round(len / 13));
-      for (let j = 0; j <= n; j++) {
-        const t = j / n, u = 1 - t;
-        const c = document.createElementNS(NS, 'circle');
-        c.setAttribute('cx', (u * u * ax + 2 * u * t * qx + t * t * bx).toFixed(1));
-        c.setAttribute('cy', (u * u * ay + 2 * u * t * qy + t * t * by).toFixed(1));
-        c.setAttribute('r', '1.7');
-        c.style.setProperty('--od', (i * 260 + 160 + j * 16) + 'ms');
-        svg.appendChild(c);
-      }
-    }
+    const okrag = document.createElementNS(NS, 'circle');
+    okrag.setAttribute('class', 'ring-okrag');
+    okrag.setAttribute('cx', cx.toFixed(1));
+    okrag.setAttribute('cy', cy.toFixed(1));
+    okrag.setAttribute('r', R.toFixed(1));
+    svg.appendChild(okrag);
+
+    kropki.forEach(el => {
+      const kat = (+el.dataset.kat) * Math.PI / 180;
+      const x = cx + R * Math.cos(kat), y = cy + R * Math.sin(kat);
+      el.style.left = x.toFixed(1) + 'px';
+      el.style.top = y.toFixed(1) + 'px';
+      const cos = Math.cos(kat);
+      el.classList.toggle('w-gore', Math.abs(cos) < 0.25);
+      el.classList.toggle('w-lewo', cos <= -0.25);
+      el.classList.toggle('w-prawo', cos >= 0.25);
+      el.hidden = x < 20 || x > S.width - 20 || y < 20 || y > S.height - 20;
+    });
   };
   rysuj();
   addEventListener('resize', rysuj);
@@ -1661,18 +1690,18 @@ footer.site img{height:26px}
   }, { threshold: 0.35 }).observe(sec);
 
   // dotyk: opis przełączany dotknięciem, jeden naraz
-  kregi.forEach(el => el.addEventListener('click', () => {
+  kropki.forEach(el => el.addEventListener('click', () => {
     const otwarty = el.classList.contains('on');
-    kregi.forEach(o => o.classList.remove('on'));
+    kropki.forEach(o => o.classList.remove('on'));
     el.classList.toggle('on', !otwarty);
   }));
 
-  // self-check: każdy krok ma komplet treści i leży w kadrze zdjęcia
-  for (const el of kregi)
-    console.assert(+el.dataset.ix > 0 && +el.dataset.ix < 100
-                && +el.dataset.iy > 0 && +el.dataset.iy < 100
-                && el.querySelector('.krag-txt').textContent.trim(),
-      'krok bez treści albo poza kadrem: ' + el.getAttribute('aria-label'));
+  // self-check: każdy krok ma komplet treści i kąt na okręgu
+  for (const el of kropki)
+    console.assert(Number.isFinite(+el.dataset.kat)
+                && el.querySelector('.krag-lab')?.textContent.trim()
+                && el.querySelector('.krag-txt')?.textContent.trim(),
+      'krok bez treści albo bez kąta: ' + el.getAttribute('aria-label'));
 })();
 
 // --- hero: stawy ----------------------------------------------------------
