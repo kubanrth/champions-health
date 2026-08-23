@@ -323,6 +323,49 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
   console.log(`${w}×${h} zespół`, zOk ? 'ok' : 'BŁĄD ' + JSON.stringify({ zBaza, zPetla, zStrzalka, zOkno, zZamk }));
   if (!zOk) process.exitCode = 1;
 
+  // --- blog + kontakt ------------------------------------------------------
+  const blog = await p.evaluate(() => {
+    const s2 = document.querySelector('#blog');
+    const posty = [...s2.querySelectorAll('.post')];
+    const zespol = document.querySelector('#zespol').getBoundingClientRect().top;
+    const faq = document.querySelector('#faq').getBoundingClientRect().top;
+    const b2 = s2.getBoundingClientRect().top;
+    return { ile: posty.length,
+      // blog ma leżeć między zespołem a FAQ
+      miedzy: b2 > zespol && b2 < faq,
+      komplet: posty.every(a => a.querySelector('img') && a.querySelector('h3 a')
+                             && a.querySelector('p').textContent.trim().length > 30) };
+  });
+  await p.evaluate(() => document.querySelector('#kontakt').scrollIntoView({ block: 'start' }));
+  await new Promise(r => setTimeout(r, 1200));
+  await p.click('.kontakt-form button[type=submit]');
+  await new Promise(r => setTimeout(r, 400));
+  const pusty = await p.evaluate(() => document.querySelector('[data-form-nota]').textContent);
+  await p.type('[name=imie]', 'Jan Kowalski');
+  await p.type('[name=tel]', '600100200');
+  await p.type('[name=email]', 'jan@example.com');
+  await p.click('.kontakt-form button[type=submit]');
+  await new Promise(r => setTimeout(r, 400));
+  const kontakt = await p.evaluate(prz => {
+    const nota = document.querySelector('[data-form-nota]');
+    const lewo = document.querySelector('.kontakt-lewo').getBoundingClientRect();
+    const form = document.querySelector('.kontakt-form').getBoundingClientRect();
+    return {
+      // dane po lewej, formularz po prawej (na wąskim ekranie jeden pod drugim)
+      uklad: innerWidth < 901 || form.left > lewo.left,
+      tlo: !!document.querySelector('.kontakt-tlo'),
+      pustyBlokuje: /Uzupełnij/.test(prz),
+      wypelnionyPrzechodzi: /Dziękujemy/.test(nota.textContent),
+      etykiety: [...document.querySelectorAll('.kontakt-form input,.kontakt-form textarea')]
+        .every(i => i.closest('label')),
+    };
+  }, pusty);
+  const bkOk = blog.ile === 3 && blog.miedzy && blog.komplet
+            && kontakt.uklad && kontakt.tlo && kontakt.pustyBlokuje
+            && kontakt.wypelnionyPrzechodzi && kontakt.etykiety;
+  console.log(`${w}×${h} blog+kontakt`, bkOk ? 'ok' : 'BŁĄD ' + JSON.stringify({ blog, kontakt }));
+  if (!bkOk) process.exitCode = 1;
+
   await p.close();
 }
 await b.close();

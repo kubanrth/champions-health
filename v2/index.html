@@ -242,11 +242,10 @@ a{color:inherit;text-decoration:none}
   transition:opacity .32s var(--rev) var(--od,0ms)}
 .ring.widoczne .ring-lines circle{opacity:1}
 
-.ring-copy{position:relative;z-index:3;width:min(var(--nav-w),100%);margin:0 auto;
-  padding:clamp(4rem,11svh,7.5rem) 24px}
+.ring-copy{position:relative;z-index:3;width:100%;margin:0;
+  padding:clamp(4rem,11svh,7.5rem) clamp(24px,3.4vw,52px)}
 .ring-copy h2{max-width:12ch;font-size:clamp(3rem,7vw,6rem);line-height:1.02;
   letter-spacing:-.035em;font-weight:500}
-.ring-copy .lead{max-width:26rem}
 
 /* krąg */
 .krag{position:absolute;z-index:4;width:var(--d);height:var(--d);
@@ -603,6 +602,72 @@ h2{margin:0;font-size:clamp(2.1rem,4.6vw,3.6rem);line-height:1.05;letter-spacing
 /* --- zespół ------------------------------------------------------------- */
 
 /* --- FAQ ---------------------------------------------------------------- */
+/* --- blog ---------------------------------------------------------------- */
+.blog{background:#fff;color:#0A0A0A}
+.blog-head{padding:0 clamp(24px,3.4vw,52px)}
+.blog-head h2{max-width:none;font-size:clamp(2.4rem,6vw,5.4rem);line-height:1.0;
+  letter-spacing:-.025em;font-weight:500}
+.blog-head .lead{margin-top:1.4rem;max-width:56ch;font-size:clamp(1.08rem,1.5vw,1.45rem);
+  line-height:1.45;color:var(--muted-d)}
+.blog-siatka{margin-top:clamp(2.6rem,5vw,4rem);padding:0 clamp(24px,3.4vw,52px);
+  display:grid;gap:clamp(20px,2.4vw,34px);grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.post-foto{display:block;aspect-ratio:16/11;border-radius:16px;overflow:hidden;background:#151515}
+.post-foto img{width:100%;height:100%;object-fit:cover;transition:transform .6s var(--ease)}
+.post:hover .post-foto img{transform:scale(1.04)}
+.post-meta{display:block;margin-top:18px;font-size:13px;font-weight:500;color:var(--muted-d)}
+.post h3{margin:8px 0 0;max-width:20ch;font-size:clamp(1.3rem,1.9vw,1.75rem);line-height:1.15;
+  letter-spacing:-.022em;font-weight:500}
+.post h3 a{background-image:linear-gradient(currentColor,currentColor);background-size:0 1px;
+  background-repeat:no-repeat;background-position:0 100%;transition:background-size .45s var(--ease)}
+.post:hover h3 a{background-size:100% 1px}
+.post p{margin:10px 0 0;max-width:36ch;font-size:15px;line-height:22px;color:var(--muted-d)}
+.blog-nota{margin:clamp(2rem,4vw,3rem) 0 0;padding:0 clamp(24px,3.4vw,52px);font-size:14px;color:#A31212}
+
+/* --- kontakt: zdjęcie w tle, dane po lewej, formularz po prawej ----------- */
+.kontakt{position:relative;overflow:hidden;background:#07100C;color:#fff;isolation:isolate}
+.kontakt-tlo{position:absolute;inset:0;z-index:0;width:100%;height:100%;
+  object-fit:cover;object-position:30% 50%}
+.kontakt::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:linear-gradient(100deg,rgba(5,12,9,.86) 0%,rgba(5,12,9,.6) 34%,rgba(5,12,9,.3) 66%,rgba(5,12,9,.14) 100%)}
+.kontakt-in{position:relative;z-index:2;display:grid;gap:clamp(2.4rem,4vw,5rem);
+  grid-template-columns:minmax(0,1.05fr) minmax(320px,.95fr);align-items:start;
+  padding:clamp(4.5rem,9vw,8rem) clamp(24px,3.4vw,52px)}
+/* pod lewą kolumną leży sam zawodnik — gradient sekcji tego nie wyciszy,
+   więc kolumna dostaje własne, miękko wygasające przyciemnienie */
+.kontakt-lewo{position:relative}
+.kontakt-lewo::before{content:"";position:absolute;z-index:-1;
+  inset:-40px -80px -40px calc(-1 * clamp(24px,3.4vw,52px));
+  background:linear-gradient(to right,rgba(4,10,7,.93) 0%,rgba(4,10,7,.9) 58%,rgba(4,10,7,.62) 82%,rgba(4,10,7,0) 100%)}
+.kontakt-lewo h2{max-width:16ch;font-size:clamp(2.4rem,5.4vw,4.6rem);line-height:1.0;
+  letter-spacing:-.028em;font-weight:500}
+.kontakt-lead{margin:1.4rem 0 0;max-width:46ch;font-size:18px;line-height:26px;color:rgba(255,255,255,.82)}
+.kontakt-dane{margin:clamp(2rem,3.4vw,3rem) 0 0;display:grid;gap:18px 40px;
+  grid-template-columns:repeat(auto-fit,minmax(170px,1fr));max-width:25rem}
+.kontakt-dane dt{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.5)}
+.kontakt-dane dd{margin:5px 0 0;font-size:18px;font-weight:500;letter-spacing:-.01em}
+.kontakt-dane a{background-image:linear-gradient(currentColor,currentColor);background-size:0 1px;
+  background-repeat:no-repeat;background-position:0 100%;transition:background-size .4s var(--ease)}
+.kontakt-dane a:hover{background-size:100% 1px}
+.kontakt-form{padding:clamp(22px,2.4vw,32px);border-radius:22px;
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);
+  -webkit-backdrop-filter:blur(18px) saturate(1.3);backdrop-filter:blur(18px) saturate(1.3);
+  display:grid;gap:14px}
+.form-tytul{margin:0 0 4px;font-size:20px;font-weight:500;letter-spacing:-.02em}
+.kontakt-form label{display:grid;gap:7px;font-size:13px;letter-spacing:.01em;color:rgba(255,255,255,.7)}
+.kontakt-form input,.kontakt-form textarea{width:100%;padding:13px 15px;border-radius:12px;
+  border:1px solid rgba(255,255,255,.18);background:rgba(8,16,12,.45);color:#fff;
+  font:inherit;font-size:15px;resize:vertical;
+  transition:border-color .3s var(--ease),background-color .3s var(--ease)}
+.kontakt-form input:focus,.kontakt-form textarea:focus{outline:0;border-color:rgba(255,255,255,.6);
+  background:rgba(8,16,12,.7)}
+.kontakt-form input:user-invalid,.kontakt-form textarea:user-invalid{border-color:#FF8A8A}
+.kontakt-form .btn{margin-top:4px;justify-content:center}
+.form-nota{margin:0;font-size:12.5px;line-height:1.45;color:#FFB4B4}
+.form-nota.ok{color:rgba(255,255,255,.72)}
+@media(max-width:900px){
+  .kontakt-in{grid-template-columns:1fr}
+}
+
 /* FAQ 1:1 z revolut.com/esim: wyśrodkowany nagłówek 51,79/500, wiersze
    1000 px z pytaniem 24/500 i kółkiem +/− po prawej, włosowa linia pod spodem */
 .faq-sec{background:#fff;color:#0A0A0A}
@@ -932,9 +997,7 @@ footer.site img{height:26px}
     <span class="krag-txt">Zalecenia treningowe, praca nad motoryką i kontrole okresowe.</span>
   </button>
   <div class="ring-copy">
-    <h2>Jak pomagamy?</h2>
-    <p class="lead">Jeden zespół prowadzi Cię od diagnozy do pełnych obciążeń —
-      bez odsyłania na zewnątrz i tłumaczenia wszystkiego od nowa.</p>
+    <h2 class="reveal" data-reveal>Jak pomagamy?</h2>
   </div>
 </section>
 
@@ -1160,6 +1223,41 @@ footer.site img{height:26px}
   </div>
 </dialog>
 
+<section class="sec blog" id="blog">
+  <div class="blog-head">
+    <h2 class="reveal" data-reveal>Wiedza, nie domysły</h2>
+    <p class="lead">Krótkie teksty o tym, jak prowadzimy powrót do sportu — pisane przez ten sam
+      sztab, który robi to na co dzień.</p>
+  </div>
+  <div class="blog-siatka">
+      <article class="post">
+        <a class="post-foto" href="#kontakt" aria-label="Powrót po rekonstrukcji ACL">
+          <img src="img/c1-ortopedia.png" alt="" loading="lazy">
+        </a>
+        <span class="post-meta">Rehabilitacja · 8 min czytania</span>
+        <h3><a href="#kontakt">Powrót po rekonstrukcji ACL</a></h3>
+        <p>Dlaczego o powrocie decyduje symetria siły uda, a nie liczba tygodni od operacji.</p>
+      </article>
+      <article class="post">
+        <a class="post-foto" href="#kontakt" aria-label="Ile naprawdę znaczy sen w profilaktyce urazów">
+          <img src="img/c2-medycyna.png" alt="" loading="lazy">
+        </a>
+        <span class="post-meta">Profilaktyka · 6 min czytania</span>
+        <h3><a href="#kontakt">Ile naprawdę znaczy sen w profilaktyce urazów</a></h3>
+        <p>Poniżej siedmiu godzin ryzyko urazu rośnie prawie dwukrotnie. Co z tym zrobić w sezonie.</p>
+      </article>
+      <article class="post">
+        <a class="post-foto" href="#kontakt" aria-label="Testy przed powrotem do gry">
+          <img src="img/c3-fizjoterapia.png" alt="" loading="lazy">
+        </a>
+        <span class="post-meta">Diagnostyka · 5 min czytania</span>
+        <h3><a href="#kontakt">Testy przed powrotem do gry</a></h3>
+        <p>Zestaw prób, który stosujemy u zawodników — i jak wygląda u amatora.</p>
+      </article>
+  </div>
+  <p class="blog-nota">Przykładowe tematy — treści do napisania po stronie klienta.</p>
+</section>
+
 <section class="sec faq-sec" id="faq">
   <div class="wrap">
     <div class="faq-head rv">
@@ -1190,15 +1288,39 @@ footer.site img{height:26px}
   </div>
 </section>
 
-<section class="sec end dotted" id="kontakt">
-  <div class="wrap rv">
-    <span class="eyebrow">Pierwszy krok</span>
-    <h2>Zacznij od rozmowy z koordynatorem</h2>
-    <p class="lead">Piętnaście minut wystarczy, żeby ustalić, czego potrzebujesz i ile to zajmie. Bez skierowania i bez kolejki.</p>
-    <div class="row">
-      <a class="btn btn-w" href="tel:+48223182000">Zadzwoń: 22 318 20 00</a>
-      <a class="btn btn-o" href="mailto:info@legia.pl">Napisz do nas</a>
+<section class="kontakt" id="kontakt">
+  <img class="kontakt-tlo" src="img/kontakt.png" alt="" aria-hidden="true">
+  <div class="kontakt-in">
+    <div class="kontakt-lewo">
+      <h2 class="reveal" data-reveal>Zacznij od rozmowy z koordynatorem</h2>
+      <p class="kontakt-lead">Piętnaście minut wystarczy, żeby ustalić, czego potrzebujesz
+        i ile to zajmie. Bez skierowania i bez kolejki.</p>
+      <dl class="kontakt-dane">
+        <div><dt>Telefon</dt><dd><a href="tel:+48223182000">22 318 20 00</a></dd></div>
+        <div><dt>E-mail</dt><dd><a href="mailto:info@legia.pl">info@legia.pl</a></dd></div>
+        <div><dt>Godziny</dt><dd>Pon.–pt. 8:00–20:00</dd></div>
+        <div><dt>Adres</dt><dd>ul. Łazienkowska 3, Warszawa</dd></div>
+      </dl>
     </div>
+
+    <form class="kontakt-form" data-form novalidate>
+      <p class="form-tytul">Umów wizytę</p>
+      <label>Imię i nazwisko
+        <input name="imie" type="text" autocomplete="name" required>
+      </label>
+      <label>Telefon
+        <input name="tel" type="tel" autocomplete="tel" required>
+      </label>
+      <label>E-mail
+        <input name="email" type="email" autocomplete="email" required>
+      </label>
+      <label>Czego dotyczy wizyta?
+        <textarea name="tresc" rows="3"></textarea>
+      </label>
+      <button class="btn btn-w" type="submit">Wyślij zgłoszenie</button>
+      <p class="form-nota" data-form-nota role="status">Formularz demonstracyjny — nie wysyła
+        jeszcze danych. Do podpięcia po stronie klienta.</p>
+    </form>
   </div>
 </section>
 
@@ -1237,12 +1359,42 @@ footer.site img{height:26px}
 
 
 <script>
+// --- formularz kontaktowy: walidacja po stronie przeglądarki ---------------
+// Nie ma jeszcze dokąd wysyłać — pilnujemy tylko, żeby nie dało się wysłać
+// pustego zgłoszenia i żeby komunikat trafiał do czytnika (role="status").
+(() => {
+  const form = document.querySelector('[data-form]');
+  if (!form) return;
+  const nota = form.querySelector('[data-form-nota]');
+  const bazowy = nota.textContent;
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    if (!form.checkValidity()) {
+      nota.classList.remove('ok');
+      nota.textContent = 'Uzupełnij imię, telefon i poprawny adres e-mail.';
+      form.querySelector(':invalid')?.focus();
+      return;
+    }
+    nota.classList.add('ok');
+    nota.textContent = 'Dziękujemy — to wersja demonstracyjna, zgłoszenie nie zostało wysłane.';
+  });
+  form.addEventListener('input', () => {
+    if (nota.textContent !== bazowy) { nota.classList.remove('ok'); nota.textContent = bazowy; }
+  });
+
+  // self-check: pola wymagane muszą mieć etykietę
+  for (const pole of form.querySelectorAll('input,textarea'))
+    console.assert(pole.closest('label'), 'formularz: pole bez etykiety — ' + pole.name);
+})();
+
 // --- nawigacja: chowa się po zejściu z banera, niżej wraca doczepiona -------
 (() => {
   const nav = document.querySelector('.nav');
   if (!nav) return;
   const SCHOWAJ = 65;                       // ten sam próg co zwinięcie hero
-  const POKAZ = () => innerHeight * 1.1;    // niżej pasek wraca i zostaje
+  // pasek wraca dopiero, gdy talia dojeżdża do ostatniej karty — nie w jej środku
+  const POKAZ = () => { const d = document.querySelector('.deal');
+    return d ? d.offsetTop + d.offsetHeight - innerHeight * 1.15 : innerHeight * 1.1; };
   let stan = '';
   const licz = () => {
     const y = scrollY;
