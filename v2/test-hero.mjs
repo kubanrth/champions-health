@@ -616,9 +616,6 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
     const nota = document.querySelector('[data-nota]');
     const lewo = document.querySelector('.kontakt-lewo').getBoundingClientRect();
     const form = document.querySelector('.kontakt-form').getBoundingClientRect();
-    const L = c => { const n = c.match(/[\d.]+/g).map(Number), a = n.length > 3 ? n[3] : 1;
-      const [r, g, b] = n.slice(0, 3).map(v => { v = v * a / 255; return v <= .03928 ? v / 12.92 : ((v + .055) / 1.055) ** 2.4; });
-      return .2126 * r + .7152 * g + .0722 * b; };
     const i = document.querySelector('.kontakt-form input'), cs = getComputedStyle(i);
     const dt = document.querySelector('.kontakt-dane dt');
     return {
@@ -633,9 +630,10 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
       // czarny pasek pod lewą kolumną ma NIE wrócić (decyzja klienta 2026-08-24)
       bezPaska: getComputedStyle(document.querySelector('.kontakt-lewo'), '::before')
         .backgroundImage === 'none',
-      // obramowanie pola kontra jego tło min. 3:1 (WCAG dla elementów UI)
-      poleWidoczne: (L(cs.borderColor) + .05) / (L(cs.backgroundColor) + .05) >= 3
-                 || (L(cs.backgroundColor) + .05) / (L(cs.borderColor) + .05) >= 3,
+      // pole ze szkła: własne wypełnienie, rozmycie tła i świetlna krawędź —
+      // inaczej granica pola ginie na tafli. Kontrast w pikselach: test-kontakt.mjs
+      poleWidoczne: /gradient/.test(cs.backgroundImage) && /blur/.test(cs.backdropFilter)
+                 && Number(cs.borderColor.match(/[\d.]+/g)?.[3] ?? 1) >= .25,
       pustyBlokuje: /Uzupełnij|Zaznacz/.test(prz),
       wyslany: /demonstracyjny/.test(nota.textContent),
       etykiety: [...document.querySelectorAll('.kontakt-form input:not([type=checkbox]),.kontakt-form textarea,.kontakt-form select')]

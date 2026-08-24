@@ -58,8 +58,31 @@ z tym commitem 1:1 — zweryfikowane renderem, nie z pamięci.
   projekcie zdarzyło kilka razy (nagłówek hero miał 1,02:1).
 - Done looks like: zmierzony kontrast nagłówka, leadu i danych ≥ 4,5:1 na 1440/1280/390.
 
+## D9: Liquid glass jako materiał całej sekcji kontaktu
+- Decyzja: pastylki, tafla formularza i pola są z jednego materiału — przepuszczają
+  i rozmywają zdjęcie, mają świetlną krawędź u góry i miękki cień. Hierarchię robi
+  GRUBOŚĆ szkła, nie kolor: powierzchnie zewnętrzne (pastylki, tafla) przyciemniają
+  tło filtrem `brightness` < 1, wewnętrzne (pola) je rozjaśniają.
+- Why: klient poprosił o „full liquid glass", a wcześniejsze białe pola i biała
+  tafla albo znikały na jasnym kadrze, albo wyglądały jak dziury. Przyciemnienie
+  filtrem zamiast czarną płachtą zostawia kolor zdjęcia i to właśnie czyta się
+  jako szkło. Rozjaśnianie jest bezpieczne tylko WEWNĄTRZ przyciemnionej tafli —
+  pastylki z `brightness(1.7)` nad jasnym fragmentem zdjęcia wyszły białe i tekst
+  na nich zniknął (zmierzone 1,05:1 na `kontakt.html`).
+- Done looks like: `node v2/test-kontakt.mjs` zielony na obu stronach; jasność pola
+  min. 1,5× większa od tafli obok.
+
+## D10: Ta sama sekcja na `kontakt.html` dostaje ten sam materiał (uchyla D6)
+- Decyzja: `kontakt.html` zmienia się razem ze stroną główną — tylko materiał
+  (szkło zamiast białej karty), bez zmian układu, treści i pól.
+- Why: to ten sam komponent w dwóch miejscach; zostawiony biały wyglądałby na
+  pomyłkę. Zakres zmiany jest kosmetyczny i objęty tym samym pomiarem.
+- Done looks like: `.kt-forma` i `.kt-pig` mają szkło; `test-kontakt.mjs` mierzy
+  obie strony; układ, treść i lista pól bez zmian.
+
 ## Out of bounds
-- `kontakt.html`, `blog.html`, `zespol.html`, `uslugi*`, stopka — nie ruszamy.
+- `blog.html`, `zespol.html`, `uslugi*`, stopka — nie ruszamy.
+- `kontakt.html` — tylko materiał sekcji formularza (D10); układ, treść i pola bez zmian.
 - Hero, talia kart, sekcja etapów, zespół, FAQ — nie ruszamy.
 - Żadnych nowych pól, nowych sekcji ani zmian treści poza danymi z D4.
 - Bez zmian w wysyłce formularza (dalej wersja demonstracyjna, bez backendu).

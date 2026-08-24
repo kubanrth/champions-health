@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kontakt | Champions Health</title>
+<meta name="description" content="Umów wizytę w Champions Health: telefon 22 318 20 00, Legionistów 3 w Książenicach, formularz kontaktowy.">
+<link rel="icon" href="img/logo_LCH.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Inter:opsz,wght@14..32,400..700&display=swap" rel="stylesheet">
+<!-- Styl bazowy = kopia stylu z zespol.html. Formularz demonstracyjny:
+     walidacja w przeglądarce, wysyłka do podpięcia po stronie klienta. -->
+<style>
+/* ==========================================================================
+   Podstrona usługi w języku podstron PRODUKTOWYCH Revoluta, spójna z home
+   (Inter 500, tracking −.028em, krzywa .35/0/0/1, pigułki #262626 i biała).
+   Kompozycja: wyśrodkowany nagłówek → pełnowymiarowa karta ze zdjęciem
+   (anatomia kart „Zakresu opieki" w skali strony) → kafle na szarym
+   wypełnieniu bez obrysów (sygnatura tile'ów Revoluta) → wielka linia
+   nad prozą → ciemny pas kontaktu (jak sekcja kontaktu na home).
+   Szkło zostaje tylko na ciemnym zdjęciu — tam, gdzie jest na home.
+   ========================================================================== */
+:root{
+  --ink:#0B0D0C;
+  --tekst:rgba(11,13,12,.72);
+  --tekst2:rgba(11,13,12,.6);
+  --kres:rgba(11,13,12,.1);
+  --plyta:#F5F5F3;            /* szare wypełnienie kafli — tile Revoluta */
+  --ease:cubic-bezier(.22,.8,.25,1);
+  --rev:cubic-bezier(.35,0,0,1);
+  --tresc:1180px;
+  --bok:clamp(20px,4vw,64px);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:#fff;color:var(--ink);
+  font-family:Inter,system-ui,sans-serif;font-size:16px;line-height:1.6;
+  font-optical-sizing:auto;-webkit-font-smoothing:antialiased;overflow-x:hidden;
+  --legia:"Scale VF",Archivo,Inter,system-ui,sans-serif}
+img{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+h1,h2,h3{margin:0;font-weight:500;letter-spacing:-.028em;line-height:1.05}
+p{margin:0}
+.wrap{max-width:var(--tresc);margin:0 auto;padding-inline:var(--bok)}
+
+/* --- nawigacja 1:1 ze strony głównej (Modernic Nav Bar: treść 1100,
+   pigułka 37, linki 16 / odstęp 30, podkreślenie rosnące od lewej).
+   Na jasnej podstronie nawigacja stoi NA STAŁE w stanie „przypięta"
+   z home: białe tło + blur + ciemne linki + odwrócone białe logo. -------- */
+.nav{--nav-w:1100px;--pill-h:37px;--link:16px;--gap:30px;--pill:#262626;--pill-hover:#333;
+  position:fixed;top:0;left:0;right:0;z-index:300;padding:12px 24px;
+  background:rgba(255,255,255,.9);
+  -webkit-backdrop-filter:blur(14px) saturate(1.4);backdrop-filter:blur(14px) saturate(1.4);
+  box-shadow:0 1px 0 rgba(10,10,10,.09)}
+.nav-in{width:var(--nav-w);max-width:100%;margin:0 auto;height:var(--pill-h);
+  display:flex;align-items:center}
+.brand{flex:none;display:flex;align-items:center;margin-right:21px}
+.brand img{height:24px;width:auto}   /* na jasnym tle oryginał, bez odwracania barw */
+.menu{display:flex;align-items:center;gap:var(--gap);min-width:0;overflow-x:auto;scrollbar-width:none}
+.menu::-webkit-scrollbar{display:none}
+.menu a{position:relative;font-size:var(--link);font-weight:500;letter-spacing:-.01em;white-space:nowrap;
+  color:#0A0A0A;padding:3px 0;transition:opacity .3s var(--ease)}
+.menu a::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1.5px;background:#0A0A0A;
+  transform:scaleX(0);transform-origin:left;transition:transform .4s var(--ease)}
+.menu a:hover{opacity:.78}
+.menu a:hover::after{transform:scaleX(1)}
+.menu a:focus-visible{outline:2px solid #0A0A0A;outline-offset:4px;border-radius:3px}
+.nav .cta{margin-left:auto;flex:none;height:var(--pill-h);padding:0 16px;border-radius:999px;
+  background:var(--pill);color:#fff;font-size:var(--link);font-weight:500;letter-spacing:-.01em;
+  display:inline-flex;align-items:center;white-space:nowrap;
+  transition:background-color .35s var(--ease),transform .35s var(--ease)}
+.nav .cta:hover{background:var(--pill-hover);transform:translateY(-1px)}
+.nav .cta:active{transform:translateY(0)}
+section[id]{scroll-margin-top:90px}
+:where(a,button):focus-visible{outline:2px solid var(--ink);outline-offset:3px;border-radius:6px}
+
+/* --- pigułki home --------------------------------------------------------- */
+.btn{display:inline-flex;align-items:center;gap:10px;height:48px;padding:0 22px;border-radius:999px;
+  font-size:15px;font-weight:500;white-space:nowrap;
+  transition:background-color .3s var(--ease),transform .3s var(--ease),border-color .3s var(--ease)}
+.btn-pelny{background:#262626;color:#fff}
+.btn-pelny:hover{background:#333;transform:translateY(-1px)}
+.btn-ghost{background:#fff;color:var(--ink);border:1px solid rgba(11,13,12,.18)}
+.btn-ghost:hover{border-color:rgba(11,13,12,.4);transform:translateY(-1px)}
+.btn-szeroki{padding:0 30px}
+.btn svg{transition:transform .3s var(--ease)}
+.btn:hover svg{transform:translate(3px,-3px)}
+
+/* --- hero: zdjęcie na pełny ekran, tekst do lewej na scrimie (układ
+   podstron produktowych Revoluta, materiał jak hero na home) -------------- */
+.pg-hero{position:relative;display:flex;flex-direction:column;
+  min-height:calc(100svh - 64px);color:#fff;overflow:hidden}
+.pg-tlo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+/* scrim: cięższy po lewej pod tekstem + dolny pod listwę faktów */
+.pg-hero::before{content:"";position:absolute;inset:0;background:
+  linear-gradient(100deg,rgba(5,9,7,.86) 0%,rgba(5,9,7,.62) 44%,
+                  rgba(5,9,7,.26) 72%,rgba(5,9,7,.1) 100%),
+  linear-gradient(to top,rgba(5,9,7,.72),transparent 32%)}
+/* .wrap ma margin:0 auto — w kolumnowym flexie poziome auto-marginesy
+   WYŁĄCZAJĄ stretch i pudełko kurczy się do treści. Stąd jawne width:100%. */
+.pg-tresc{position:relative;z-index:2;width:100%;margin-block:auto;
+  padding-block:clamp(40px,6vw,72px)}
+.pg-hero h1{margin:0;max-width:14ch;font-size:clamp(2.6rem,5.4vw,4.6rem);line-height:1.02}
+.pg-lead{margin:18px 0 0;max-width:46ch;font-size:18px;line-height:24px;
+  color:rgba(255,255,255,.86)}
+.pg-akcje{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
+/* pigułki na zdjęciu: biała pełna + szklany ghost — jak w pasie kontaktu */
+.pg-hero .btn-pelny{background:#fff;color:#000}
+.pg-hero .btn-pelny:hover{background:#E9E9E6}
+.pg-hero .btn-ghost{background:rgba(255,255,255,.12);color:#fff;
+  border-color:rgba(255,255,255,.3);
+  -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+.pg-hero .btn-ghost:hover{background:rgba(255,255,255,.2);border-color:rgba(255,255,255,.5)}
+.pg-hero :where(a,button):focus-visible{outline-color:#fff}
+.pg-dol{position:relative;z-index:2;width:100%;padding-bottom:clamp(20px,3vw,36px)}
+.fakty{margin:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));max-width:760px}
+.fakty div{padding:2px 18px}
+.fakty div:first-child{padding-left:0}
+.fakty div+div{border-left:1px solid rgba(255,255,255,.26)}
+.fakty dt{font-size:11.5px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;
+  color:rgba(255,255,255,.78)}
+.fakty dd{margin:5px 0 0;font-size:15px;line-height:1.35;color:#fff}
+
+/* --- wspólna szpica sekcji ------------------------------------------------ */
+.sek{padding:clamp(48px,6.5vw,88px) 0;border-top:1px solid var(--kres)}
+.sek-head{max-width:660px}
+.sek-head h2{font-size:clamp(1.9rem,3.4vw,2.9rem);text-wrap:balance}
+
+/* --- zakres: układ wg myhealthprac (sekcja „Designed for You", zmierzona
+   z DOM przy 1440: tło #F1F1F1, lewa kolumna nagłówek+sub, prawa kolumna
+   wierszy ikona 32px → tytuł 18/500/−.288 → opis 13,7/18,5 na 363px,
+   rytm ~124px, BEZ pudełek i BEZ linii — kontrast niesie samo powietrze).
+   W roli ikon numery krojem Legii, jak na home. --------------------------- */
+.zakres{background:var(--plyta)}
+.zakres-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(32px,5vw,88px);
+  align-items:start}
+.zakres-head h2{max-width:12ch;font-size:clamp(2.2rem,4.2vw,3.6rem);text-wrap:balance}
+.zakres-head p{margin-top:18px;max-width:40ch;font-size:15px;line-height:1.6;color:var(--tekst)}
+.kafle{display:grid;gap:clamp(28px,3.2vw,44px)}
+.kafel{display:grid;grid-template-columns:44px 1fr;gap:20px;align-items:start;max-width:480px}
+.kafel i{font-family:var(--legia);font-style:normal;font-weight:700;font-size:15px;
+  line-height:1.55;color:var(--ink)}
+.kafel h3{font-size:18.5px;letter-spacing:-.018em;line-height:1.3}
+.kafel p{margin-top:8px;font-size:14.5px;line-height:1.6;color:var(--tekst)}
+
+/* --- wielka linia + proza + „dla kogo" ------------------------------------ */
+.claim-line{max-width:22ch;font-size:clamp(1.9rem,3.8vw,3.2rem);line-height:1.15;
+  letter-spacing:-.025em;font-weight:500;text-wrap:balance}
+.opis-grid{display:grid;grid-template-columns:1fr 360px;gap:clamp(28px,4vw,64px);
+  align-items:start;margin-top:clamp(28px,4vw,48px)}
+.proza p{max-width:600px;font-size:18px;line-height:1.65;color:var(--tekst)}
+.proza p+p{margin-top:1.15em}
+.dla-kogo h3{font-size:17px;letter-spacing:-.012em}
+.dla-kogo ul{margin:10px 0 0;padding:0;list-style:none}
+.dla-kogo li{padding:14px 0;font-size:14.5px;line-height:1.55;
+  color:var(--tekst);border-top:1px solid var(--kres)}
+.dla-kogo li:first-child{border-top:0}
+
+/* --- pas kontaktu: ciemne zdjęcie + szkło (jak kontakt na home) ----------- */
+.kont{position:relative;margin:clamp(48px,6.5vw,88px) auto 0;max-width:calc(var(--tresc) - 2px);
+  border-radius:28px;overflow:hidden}
+.kont>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 42%}
+.kont::after{content:"";position:absolute;inset:0;
+  background:linear-gradient(105deg,rgba(5,10,7,.92) 0%,rgba(5,10,7,.7) 55%,rgba(5,10,7,.42) 100%)}
+.kont-in{position:relative;z-index:2;display:grid;grid-template-columns:1.15fr .85fr;
+  gap:clamp(24px,3.4vw,56px);align-items:center;padding:clamp(34px,4.6vw,62px);color:#fff}
+.kont-in h2{font-size:clamp(2rem,3.6vw,3.1rem);max-width:16ch}
+.kont-in p{margin-top:16px;max-width:44ch;font-size:16.5px;line-height:1.6;color:rgba(255,255,255,.88)}
+.kont-karta{padding:26px;border-radius:20px;background:rgba(5,10,7,.38);
+  border:1px solid rgba(255,255,255,.22);
+  -webkit-backdrop-filter:blur(18px) saturate(1.5);backdrop-filter:blur(18px) saturate(1.5);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.14)}
+.kont-karta dl{margin:0;display:grid;gap:14px}
+.kont-karta dt{font-size:11.5px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;
+  color:rgba(255,255,255,.75)}
+.kont-karta dd{margin:3px 0 0;font-size:16px;color:#fff}
+.kont-karta dd a{border-bottom:1px solid rgba(255,255,255,.35);transition:border-color .25s var(--ease)}
+.kont-karta dd a:hover{border-color:#fff}
+.kont-akcje{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
+.kont .btn-pelny{background:#fff;color:#000}
+.kont .btn-pelny:hover{background:#E9E9E6}
+.kont .btn-ghost{background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.3);
+  -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+.kont .btn-ghost:hover{background:rgba(255,255,255,.2);border-color:rgba(255,255,255,.5)}
+.kont :where(a,button):focus-visible{outline-color:#fff}
+
+/* --- pozostałe usługi: pas kart w anatomii slidera „Zakresu opieki" z home.
+   Zamiast scroll-jackingu (to podstrona, nie scena) natywny poziomy scroll
+   ze snapem + szklane strzałki jak przy zespole na home. ------------------- */
+.inne-pas{position:relative;margin-top:32px}
+.inne{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x proximity;
+  margin-inline:calc(50% - 50vw);padding:4px calc(50vw - 50% + var(--bok)) 10px;
+  scrollbar-width:none}
+.inne::-webkit-scrollbar{display:none}
+.inna{position:relative;flex:none;width:min(72vw,460px);aspect-ratio:16/10;
+  border-radius:28px;overflow:hidden;scroll-snap-align:start;background:#151515;
+  display:flex;flex-direction:column;align-items:flex-start;padding:clamp(20px,2.4vw,28px);
+  color:#fff;transition:transform .45s var(--ease),box-shadow .45s var(--ease)}
+.inna:hover{transform:translateY(-4px);box-shadow:0 30px 56px -32px rgba(11,13,12,.55)}
+.inna>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+/* ten sam gradient co karty talii na home */
+.inna::after{content:"";position:absolute;inset:0;
+  background:linear-gradient(to bottom,rgba(8,14,10,.86) 0%,rgba(8,14,10,.6) 34%,
+             rgba(8,14,10,.28) 56%,rgba(8,14,10,.92) 88%,rgba(8,14,10,.96) 100%)}
+.inna span{position:relative;z-index:2;font-size:13px;font-weight:500;
+  letter-spacing:.01em;color:rgba(255,255,255,.85)}
+.inna b{position:relative;z-index:2;margin-top:6px;max-width:14ch;
+  font-size:clamp(20px,2vw,26px);font-weight:500;letter-spacing:-.022em;line-height:1.1;
+  text-wrap:balance}
+/* szklane strzałki — jak przy pasie zespołu na home */
+.pas-strzalka{position:absolute;top:50%;transform:translateY(-50%);z-index:3;
+  width:48px;height:48px;border-radius:50%;border:0;cursor:pointer;color:#fff;
+  background:rgba(255,255,255,.28);
+  -webkit-backdrop-filter:blur(18px) saturate(1.5);backdrop-filter:blur(18px) saturate(1.5);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.4),0 8px 24px rgba(0,0,0,.18);
+  display:grid;place-items:center;transition:background-color .3s var(--ease)}
+.pas-strzalka:hover{background:rgba(255,255,255,.45)}
+.pas-strzalka.w-lewo{left:calc(-1 * clamp(8px,1vw,14px))}
+.pas-strzalka.w-prawo{right:calc(-1 * clamp(8px,1vw,14px))}
+
+/* --- stopka --------------------------------------------------------------- */
+footer.site{border-top:1px solid var(--kres);padding:44px 0 28px;
+  font-size:13.5px;color:var(--tekst2)}
+footer.site .wrap{display:flex;flex-wrap:wrap;align-items:center;gap:18px}
+footer.site img{height:26px}
+footer.site span:last-child{margin-left:auto}
+
+/* --- wjazd ---------------------------------------------------------------- */
+[data-rv]{opacity:0;transform:translateY(22px);
+  transition:opacity .8s var(--rev),transform .8s var(--rev)}
+[data-rv].in{opacity:1;transform:none}
+
+/* --- węższe ekrany -------------------------------------------------------- */
+@media(max-width:1080px){
+  .opis-grid,.kont-in{grid-template-columns:1fr}
+  .zakres-grid{grid-template-columns:1fr;gap:36px}
+  .inne{grid-template-columns:repeat(3,1fr)}
+  .pg-kadr>img{aspect-ratio:16/9}
+}
+@media(max-width:720px){
+  .nav-menu{display:none}
+  .kafel{grid-template-columns:36px 1fr;gap:14px}
+  /* fakty w jednej kolumnie, dalej na zdjęciu — dolny scrim je trzyma */
+  .fakty{grid-template-columns:1fr}
+  .fakty div{padding:9px 2px;border-left:0;border-top:1px solid rgba(255,255,255,.24);
+    display:flex;align-items:baseline;gap:10px}
+  .fakty div:first-child{border-top:0;padding-left:2px}
+  .fakty dd{margin:0}
+  .btn{width:100%;justify-content:center}
+  .inna{width:min(84vw,460px)}
+  footer.site span:last-child{margin-left:0}
+}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  [data-rv]{opacity:1;transform:none}
+}
+
+/* --- zespół 1:1 z komponentu Framer „Team Member Pro" (Design Foundry),
+   zmierzone z teammemberpro.framer.website przy 1440:
+     tło #F1F1EE · siatka 4 kolumny, margines i odstęp 20 px
+     karta zdjęcia 335×376, radius 20 · podpis: nazwisko 16/500 #101410
+     — włosowa linia — rola 14/400 #6C716B
+     hover: nakładka #0F0F0F radius 20, tekst 22/31,9 #F4F4F0 wchodzi
+     SŁOWO PO SŁOWIE, meta na dole nad linią rgba(244,244,240,.22),
+     zdjęcie skaluje się 1,05
+   U nas: inicjały krojem Legii zamiast zdjęć (realni lekarze — fotografii
+   nie wolno podmienić stockiem), w nakładce zamiast cytatu realne fakty
+   z materiałów klienta albo jawne „w przygotowaniu". ---------------------- */
+.tm-head{padding:calc(61px + clamp(44px,6vw,76px)) 0 clamp(28px,4vw,48px);text-align:center}
+.tm-head h1{margin:0 auto;max-width:18ch;font-size:clamp(2.4rem,4.6vw,3.75rem);
+  line-height:1.05;text-wrap:balance}
+.tm-head p{margin:18px auto 0;max-width:600px;font-size:18px;line-height:24px;color:var(--tekst)}
+.tm-head .btn{margin-top:26px}
+.tm-sek{background:#F1F1EE;padding:20px 20px clamp(48px,6vw,72px)}
+.tm-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.tm-karta{position:relative;cursor:pointer}
+.tm-kadr{position:relative;aspect-ratio:335/376;border-radius:20px;overflow:hidden;
+  display:grid;place-items:center;color:#fff;
+  background:linear-gradient(160deg,#161a17,#0B0D0C)}
+.tm-kadr::before{content:"";position:absolute;inset:0;
+  background:radial-gradient(90% 70% at 50% 0%,rgba(11,107,54,.28),transparent 70%)}
+.tm-kadr>b{position:relative;z-index:1;font-family:var(--legia);font-weight:700;
+  font-size:clamp(40px,4.4vw,64px);letter-spacing:.02em;
+  transition:transform .8s var(--ease)}
+.tm-karta:hover .tm-kadr>b,.tm-karta.on .tm-kadr>b{transform:scale(1.05)}
+.tm-kadr>span{position:absolute;bottom:13px;z-index:1;font-size:10.5px;font-weight:500;
+  letter-spacing:.07em;text-transform:uppercase;color:rgba(255,255,255,.45)}
+/* nakładka hover — anatomia 1:1, wjazd słowo po słowie */
+/* nakładka = przezroczysta kieszeń przycinająca; ciemny panel WJEŻDŻA od dołu
+   spod krawędzi karty (sam transform — bez malowania klatka po klatce),
+   krzywą Revoluta. Słowa startują dopiero, gdy panel jest już prawie na
+   miejscu (bazowe 160 ms), a przy zjeździe gasną bez opóźnień — razem z nim. */
+.tm-nakladka{position:absolute;inset:0;z-index:2;border-radius:20px;overflow:hidden;
+  pointer-events:none}
+/* CHOREOGRAFIA (życzenie klienta): wejście = najpierw znika podpis, POTEM
+   wjeżdża panel, na końcu słowa; zjazd = panel spada od razu, podpis wraca
+   dopiero, gdy panel jest już na dole. Sekwencję robi transition-delay
+   zależny od stanu: w spoczynku (= przy zjeździe) panel ma delay 0, podpis
+   .38s; w stanie hover odwrotnie — podpis 0, panel .22s. */
+.tm-panel{display:flex;flex-direction:column;height:100%;padding:18px;
+  border-radius:20px;background:#0F0F0F;
+  transform:translateY(103%);transition:transform .5s var(--rev) 0s}
+.tm-karta:hover .tm-nakladka,.tm-karta.on .tm-nakladka,
+.tm-karta:focus-visible .tm-nakladka{pointer-events:auto}
+.tm-karta:hover .tm-panel,.tm-karta.on .tm-panel,
+.tm-karta:focus-visible .tm-panel{transform:none;transition:transform .65s var(--rev) .22s}
+/* pigułka na panelu — biała, jak na ciemnych powierzchniach home */
+.tm-panel .btn{align-self:flex-start;height:42px;padding:0 18px;margin:auto 0 12px;
+  background:#fff;color:#000}
+.tm-panel .btn:hover{background:#E9E9E6}
+.tm-panel .btn:focus-visible{outline-color:#fff}
+/* podpis rozsuwa się na boki: nazwisko w lewo, rola w prawo, linia zwija się
+   do środka — lustrzany ruch do wjazdu panelu */
+.tm-pods b{transition:opacity .35s var(--rev) .38s,transform .35s var(--rev) .38s}
+.tm-pods i{transform-origin:center;transition:transform .4s var(--rev) .38s}
+.tm-pods span{transition:opacity .35s var(--rev) .38s,transform .35s var(--rev) .38s}
+.tm-karta:hover .tm-pods b,.tm-karta.on .tm-pods b,.tm-karta:focus-visible .tm-pods b{
+  opacity:0;transform:translateX(-12px);transition-delay:0s}
+.tm-karta:hover .tm-pods i,.tm-karta.on .tm-pods i,.tm-karta:focus-visible .tm-pods i{
+  transform:scaleX(0);transition-delay:0s}
+.tm-karta:hover .tm-pods span,.tm-karta.on .tm-pods span,.tm-karta:focus-visible .tm-pods span{
+  opacity:0;transform:translateX(12px);transition-delay:0s}
+.tm-cytat{margin:0;font-size:clamp(16px,1.45vw,21px);line-height:1.45;color:#F4F4F0}
+.tm-cytat span{display:inline-block;opacity:0;transform:translateY(10px);
+  transition:opacity .45s var(--ease),transform .45s var(--ease);transition-delay:0s}
+.tm-karta:hover .tm-cytat span,.tm-karta.on .tm-cytat span,
+.tm-karta:focus-visible .tm-cytat span{opacity:1;transform:none;
+  transition-delay:calc(.5s + var(--i)*26ms)}
+.tm-meta{padding-top:12px;border-top:1px solid rgba(244,244,240,.22);
+  font-size:13.5px;color:rgba(244,244,240,.65)}
+/* podpis: nazwisko — linia — rola */
+.tm-pods{display:flex;align-items:baseline;gap:12px;margin-top:14px;padding-inline:2px}
+.tm-pods b{font-size:16px;font-weight:500;letter-spacing:0;color:#101410;white-space:nowrap}
+.tm-pods i{flex:1;height:1px;min-width:24px;align-self:center;background:rgba(16,20,16,.16)}
+.tm-pods span{font-size:14px;color:#6C716B;white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis;max-width:58%}
+.tm-karta:focus-visible{outline:2px solid var(--ink);outline-offset:3px;border-radius:20px}
+@media(max-width:1080px){.tm-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:760px){
+  .nav{--nav-w:100%;--gap:20px;--link:15px;padding-inline:20px}
+  .brand{margin-right:16px}
+  .brand img{height:22px}
+  .nav .cta{padding:0 14px}
+}
+@media(max-width:600px){.tm-grid{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){
+  .tm-cytat span,.tm-kadr>b,.tm-panel,.tm-pods b,.tm-pods i,.tm-pods span{transition:none}
+}
+
+/* --- strona kontaktu: formularz na tle meczowego zdjęcia (kontakt-tlo.jpg,
+   obrócone do poziomu, EXIF zdjęty). Identyfikacja jak reszta podstron:
+   Inter 500, pigułki home, radius 28/12, włosowe linie, krzywa Revoluta.
+   Lewa kolumna: nagłówek + dane w wierszach na scrimie; prawa: BIAŁA karta
+   formularza (Revolut: etykieta nad polem, pola h50 radius 12, pełna ciemna
+   pigułka na całą szerokość). ---------------------------------------------- */
+.kt-sek{position:relative;display:flex;align-items:center;
+  min-height:calc(100svh - 61px);padding:clamp(28px,4.6vw,64px) 0;overflow:hidden}
+.kt-tlo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 38%}
+.kt-sek::before{content:"";position:absolute;inset:0;background:
+  linear-gradient(to top,rgba(5,9,7,.5),transparent 55%),
+  linear-gradient(100deg,rgba(5,9,7,.88) 0%,rgba(5,9,7,.66) 46%,rgba(5,9,7,.38) 74%,rgba(5,9,7,.3) 100%)}
+.kt-grid{position:relative;z-index:2;width:100%;display:grid;
+  grid-template-columns:1fr minmax(440px,580px);gap:clamp(24px,3.6vw,64px);
+  align-items:center;color:#fff}
+.kt-grid h1{max-width:14ch;font-size:clamp(2.3rem,4.4vw,3.75rem);line-height:1.04}
+.kt-lead{margin:16px 0 0;max-width:42ch;font-size:18px;line-height:24px;color:rgba(255,255,255,.85)}
+/* Liquid glass — ten sam materiał co w sekcji kontaktu na stronie głównej:
+   przepuszcza i rozmywa zdjęcie, świetlna krawędź u góry, miękki cień.
+   Hierarchię robi GRUBOŚĆ szkła, nie kolor: tafla formularza przyciemnia tło
+   filtrem (zdjęcie prześwituje kolorem), pola je rozjaśniają, więc świecą
+   jaśniej niż tafla i nie wyglądają jak dziury. */
+.kt-pigulki{display:flex;flex-wrap:wrap;gap:12px;margin:clamp(24px,3vw,40px) 0 0;max-width:560px}
+.kt-pig{display:inline-flex;align-items:center;gap:10px;height:48px;padding:0 20px;
+  border-radius:999px;white-space:nowrap;color:#fff;
+  background:linear-gradient(180deg,rgba(255,255,255,.16),rgba(255,255,255,.06));
+  border:1px solid rgba(255,255,255,.3);
+  -webkit-backdrop-filter:blur(16px) saturate(1.7) brightness(.4);
+  backdrop-filter:blur(16px) saturate(1.7) brightness(.4);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.4),0 18px 34px -22px rgba(0,0,0,.6)}
+.kt-pig span{font-size:11px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;
+  color:rgba(255,255,255,.82)}
+.kt-pig b{font-size:15px;font-weight:500}
+a.kt-pig{transition:border-color .3s var(--ease),transform .3s var(--ease)}
+a.kt-pig:hover{border-color:rgba(255,255,255,.5);transform:translateY(-1px)}
+/* karta formularza */
+.kt-forma{color:#fff;border-radius:28px;padding:clamp(24px,2.6vw,36px);
+  background:linear-gradient(155deg,rgba(255,255,255,.11),rgba(255,255,255,.035));
+  border:1px solid rgba(255,255,255,.18);
+  -webkit-backdrop-filter:blur(30px) saturate(1.8) brightness(.22);
+  backdrop-filter:blur(30px) saturate(1.8) brightness(.22);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.28),0 46px 90px -46px rgba(0,0,0,.75)}
+.kt-forma h2{font-size:22px;letter-spacing:-.02em}
+.kt-forma p.kt-pod{margin:6px 0 0;font-size:14px;color:rgba(255,255,255,.78)}
+.kt-pole{margin-top:16px}
+.kt-pole label{display:block;margin-bottom:6px;font-size:13.5px;font-weight:500;
+  color:rgba(255,255,255,.9)}
+.kt-pole input,.kt-pole textarea,.kt-pole select{width:100%;font:inherit;font-size:15px;color:#fff;
+  background:linear-gradient(180deg,rgba(255,255,255,.22),rgba(255,255,255,.1));
+  border:1px solid rgba(255,255,255,.3);border-radius:14px;
+  -webkit-backdrop-filter:blur(6px) saturate(1.6) brightness(1.3);
+  backdrop-filter:blur(6px) saturate(1.6) brightness(1.3);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.38);
+  transition:border-color .25s var(--ease),box-shadow .25s var(--ease)}
+.kt-pole input{height:50px;padding:0 14px}
+.kt-pole textarea{min-height:96px;padding:12px 14px;resize:vertical}
+.kt-pole input::placeholder,.kt-pole textarea::placeholder{color:rgba(255,255,255,.72)}
+/* Chrome wstawia przy autouzupełnianiu własne, lawendowe tło i samego
+   `background` nie respektuje — nadpisujemy je cieniem wewnętrznym w kolorze
+   zmierzonym z wyrenderowanego pola */
+.kt-pole input:-webkit-autofill,
+.kt-pole input:-webkit-autofill:hover,
+.kt-pole input:-webkit-autofill:focus{
+  -webkit-box-shadow:0 0 0 1000px rgb(100,92,91) inset,inset 0 1px 0 rgba(255,255,255,.38);
+  -webkit-text-fill-color:#fff;caret-color:#fff}
+.kt-pole select{height:50px;padding:0 40px 0 14px;appearance:none;-webkit-appearance:none;cursor:pointer;
+  background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 5.2 7 9l4-3.8" stroke="%23ffffff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>'),
+    linear-gradient(180deg,rgba(255,255,255,.22),rgba(255,255,255,.1));
+  background-repeat:no-repeat,no-repeat;background-position:right 14px center,0 0}
+.kt-pole select:invalid{color:rgba(255,255,255,.72)}   /* placeholder w kolorze podpowiedzi */
+/* natywna lista rozwijana rysuje się poza szkłem — tam wracamy do jasnego tła */
+.kt-pole option{color:#0B0D0C;background:#fff}
+.kt-pole input:hover,.kt-pole textarea:hover,.kt-pole select:hover{border-color:rgba(255,255,255,.46)}
+.kt-pole input:focus,.kt-pole textarea:focus,.kt-pole select:focus{outline:none;
+  border-color:rgba(255,255,255,.8);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.42),0 0 0 3px rgba(255,255,255,.2)}
+.kt-zgoda{display:flex;align-items:flex-start;gap:10px;margin-top:18px;
+  font-size:13px;line-height:1.55;color:rgba(255,255,255,.9)}
+.kt-zgoda input{flex:none;width:18px;height:18px;margin-top:2px;accent-color:#fff;
+  background:#fff;border:0;border-radius:4px}
+.kt-forma .btn{width:100%;justify-content:center;margin-top:20px;height:50px}
+/* na szkle przycisk musi być jedyną pełną powierzchnią — inaczej ginie */
+.kt-forma .btn-pelny{background:#fff;color:#000}
+.kt-forma .btn-pelny:hover{background:#E9E9E6}
+/* bez rozmycia tła (starsza przeglądarka, wyłączona przezroczystość) szkło
+   zostaje samą półprzezroczystą bielą i tekst ginie — wtedy pełne wypełnienie */
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  .kt-pig{background-color:rgba(6,13,10,.86)}
+  .kt-forma{background-color:rgba(6,13,10,.92)}
+}
+.kt-nota{margin:12px 0 0;font-size:13px;line-height:1.5;color:rgba(255,255,255,.8)}
+.kt-nota:empty{display:none}
+/* --- mapa + dojazd: karta mapy w promieniu 28 jak reszta kart; mapa
+   w odcieniach szarości, kolor wraca na hover — neutralna, nie „googlowa".
+   Wskazówki dojazdu bez zmyślonych linii i minut: konkrety, które są pewne,
+   plus akcje prowadzące do nawigacji. ------------------------------------- */
+.dojazd{padding:clamp(48px,6.5vw,88px) 0}
+.dojazd h2{max-width:14ch;font-size:clamp(1.9rem,3.4vw,2.9rem);text-wrap:balance}
+.dojazd .lead2{margin:14px 0 0;max-width:52ch;font-size:17px;line-height:1.6;color:var(--tekst)}
+.dojazd-grid{display:grid;grid-template-columns:1.25fr .75fr;gap:clamp(20px,3vw,44px);
+  margin-top:clamp(24px,3.4vw,40px);align-items:stretch}
+.mapa{position:relative;border-radius:28px;overflow:hidden;min-height:420px;
+  box-shadow:0 30px 60px -38px rgba(11,13,12,.5);background:var(--plyta)}
+.mapa iframe{position:absolute;inset:0;width:100%;height:100%;border:0;
+  filter:grayscale(1) contrast(1.02);transition:filter .5s var(--ease)}
+.mapa:hover iframe{filter:none}
+.wskazowki{display:flex;flex-direction:column}
+.wsk{padding:18px 0;border-top:1px dashed rgba(11,13,12,.24)}
+.wsk:first-child{border-top:0;padding-top:4px}
+.wsk h3{font-size:17px;letter-spacing:-.014em}
+.wsk p{margin:6px 0 0;font-size:14.5px;line-height:1.6;color:var(--tekst)}
+.wsk-akcje{display:flex;flex-wrap:wrap;gap:10px;margin-top:auto;padding-top:18px}
+.wsk-akcje .btn{height:44px}
+@media(max-width:960px){
+  .dojazd-grid{grid-template-columns:1fr}
+  .mapa{min-height:340px}
+}
+
+@media(max-width:960px){
+  .kt-grid{grid-template-columns:1fr;gap:26px}
+  .kt-pigulki{max-width:none}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-in">
+    <a class="brand" href="index.html" aria-label="Champions Health — strona główna">
+      <img src="img/logo_LCH.svg" alt="Champions Health">
+    </a>
+    <div class="menu">
+      <a href="index.html#opieka">Usługi</a>
+      <a href="zespol.html">Zespół</a>
+      <a href="blog.html">Blog</a>
+      <a href="kontakt.html" aria-current="page">Kontakt</a>
+    </div>
+    <a class="cta" href="#formularz">Umów wizytę</a>
+  </div>
+</nav>
+
+<main>
+
+<section class="kt-sek" id="formularz">
+  <img class="kt-tlo" src="img/kontakt-tlo.jpg" alt="" aria-hidden="true">
+  <div class="wrap kt-grid">
+    <div>
+      <h1 data-rv>Zacznij od rozmowy z koordynatorem</h1>
+      <p class="kt-lead" data-rv>Piętnaście minut wystarczy, żeby ustalić, czego potrzebujesz.
+        Bez skierowania i bez kolejki.</p>
+      <div class="kt-pigulki" data-rv>
+        <a class="kt-pig" href="tel:+48223182000"><span>Telefon</span><b>22 318 20 00</b></a>
+        <a class="kt-pig" href="mailto:info@championshealth.pl"><span>E-mail</span><b>info@championshealth.pl</b></a>
+        <span class="kt-pig"><span>Godziny</span><b>Pon.–pt. 8:00–20:00</b></span>
+        <span class="kt-pig"><span>Adres</span><b>Legionistów 3, Książenice</b></span>
+      </div>
+    </div>
+    <form class="kt-forma" data-forma novalidate data-rv>
+      <h2>Umów wizytę</h2>
+      <p class="kt-pod">Oddzwonimy tego samego dnia roboczego.</p>
+      <div class="kt-pole">
+        <label for="kt-imie">Imię i nazwisko</label>
+        <input id="kt-imie" name="imie" type="text" autocomplete="name" required>
+      </div>
+      <div class="kt-pole">
+        <label for="kt-tel">Telefon</label>
+        <input id="kt-tel" name="tel" type="tel" autocomplete="tel" required>
+      </div>
+      <div class="kt-pole">
+        <label for="kt-mail">E-mail</label>
+        <input id="kt-mail" name="email" type="email" autocomplete="email" required>
+      </div>
+      <div class="kt-pole">
+        <label for="kt-temat">Temat zgłoszenia</label>
+        <select id="kt-temat" name="temat" required>
+          <option value="" selected disabled hidden>Wybierz temat zgłoszenia</option>
+          <option>Medycyna sportowa</option>
+          <option>Ortopedia</option>
+          <option>Fizjoterapia i rehabilitacja</option>
+          <option>Dietetyka i suplementacja</option>
+          <option>Trening merytoryczny</option>
+          <option>Edukacja i szkolenie</option>
+          <option>Inny temat</option>
+        </select>
+      </div>
+      <div class="kt-pole">
+        <label for="kt-spec">Preferowany specjalista</label>
+        <select id="kt-spec" name="specjalista" required>
+          <option value="" selected disabled hidden>Preferowany specjalista</option>
+          <option>Bez preferencji</option>
+          <optgroup label="Lekarze">
+            <option>Filip Latawiec</option>
+            <option>Mateusz Dłutowski</option>
+            <option>Szymon Gałczyński</option>
+            <option>Piotr Modzelewski</option>
+            <option>Marcin Tusiński</option>
+          </optgroup>
+          <optgroup label="Fizjoterapeuci">
+            <option>Dominika Daros</option>
+            <option>Przemysław Domański</option>
+            <option>Łukasz Gembarzewski</option>
+            <option>Jakub Grodzki</option>
+            <option>Sandra Heronimek</option>
+            <option>Daniel Komar</option>
+            <option>Giovanni Mangano</option>
+            <option>Dominik Ofat</option>
+            <option>Kamil Pasoń</option>
+          </optgroup>
+        </select>
+      </div>
+      <div class="kt-pole">
+        <label for="kt-tresc">Wiadomość</label>
+        <textarea id="kt-tresc" name="tresc" rows="3"></textarea>
+      </div>
+      <label class="kt-zgoda">
+        <input id="kt-rodo" type="checkbox" required>
+        <span>Wysyłając formularz wyrażam zgodę na przetwarzanie moich danych osobowych
+          przez Champions Health zgodnie z Polityką Prywatności.</span>
+      </label>
+      <button class="btn btn-pelny" type="submit">Wyślij zgłoszenie
+        <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
+          <path d="M3 10 10 3M4.6 3H10v5.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg></button>
+      <p class="kt-nota" data-nota role="status" aria-live="polite"></p>
+    </form>
+  </div>
+</section>
+
+<section class="dojazd" id="dojazd">
+  <div class="wrap">
+    <h2 data-rv>Jak do nas trafić</h2>
+    <p class="lead2" data-rv>Klinika działa na terenie Legia Training Center w Książenicach —
+      ośrodka treningowego Legii Warszawa pod Grodziskiem Mazowieckim.</p>
+    <div class="dojazd-grid">
+      <div class="mapa" data-rv>
+        <iframe title="Mapa dojazdu do Champions Health — Legia Training Center, ul. Legionistów 3, Książenice"
+          loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen
+          src="https://maps.google.com/maps?q=Legia%20Training%20Center%2C%20Legionist%C3%B3w%203%2C%20Ksi%C4%85%C5%BCenice&z=14&hl=pl&output=embed"></iframe>
+      </div>
+      <div class="wskazowki" data-rv>
+        <div class="wsk">
+          <h3>Samochodem</h3>
+          <p>W nawigacji wpisz „Legia Training Center" albo ul. Legionistów 3, Książenice.
+            Zostaw auto na parkingu ośrodka.</p>
+        </div>
+        <div class="wsk">
+          <h3>Komunikacją</h3>
+          <p>Połączenia zmieniają się z rozkładem, więc najpewniej zaplanować przejazd
+            w Mapach Google — podpowiedzą aktualną kolej i autobusy.</p>
+        </div>
+        <div class="wsk">
+          <h3>Pierwszy raz u nas?</h3>
+          <p>Zadzwoń po wjeździe na teren ośrodka — koordynator pokieruje Cię
+            prosto do kliniki.</p>
+        </div>
+        <div class="wsk-akcje">
+          <a class="btn btn-pelny" target="_blank" rel="noopener"
+             href="https://www.google.com/maps/dir/?api=1&destination=Legia+Training+Center,+Legionist%C3%B3w+3,+Ksi%C4%85%C5%BCenice">Wyznacz trasę
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
+              <path d="M3 10 10 3M4.6 3H10v5.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg></a>
+          <a class="btn btn-ghost" target="_blank" rel="noopener"
+             href="https://www.google.com/maps/dir/?api=1&destination=Legia+Training+Center,+Legionist%C3%B3w+3,+Ksi%C4%85%C5%BCenice&travelmode=transit">Zaplanuj połączenie</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <img src="img/logo_LCH.svg" alt="Champions Health">
+    <span>Legia Training Center · ul. Legionistów 3, 05-825 Książenice · 22 318 20 00</span>
+    <span>© 2026 Champions Health · Legia Warszawa S.A.</span>
+  </div>
+</footer>
+
+<script>
+const rv = document.querySelectorAll('[data-rv]');
+if (matchMedia('(prefers-reduced-motion:reduce)').matches) {
+  rv.forEach(e => e.classList.add('in'));
+} else {
+  const io = new IntersectionObserver((wpisy, o) => {
+    wpisy.forEach(w => {
+      if (!w.isIntersecting) return;
+      const r = [...w.target.parentElement.querySelectorAll('[data-rv]')].indexOf(w.target);
+      w.target.style.transitionDelay = Math.min(r, 4) * 70 + 'ms';
+      w.target.classList.add('in');
+      o.unobserve(w.target);
+    });
+  }, { threshold: .12, rootMargin: '0px 0px -8% 0px' });
+  rv.forEach(e => io.observe(e));
+}
+
+// walidacja w przeglądarce; wysyłka do podpięcia po stronie klienta
+const forma = document.querySelector('[data-forma]');
+const nota = forma.querySelector('[data-nota]');
+forma.addEventListener('submit', e => {
+  e.preventDefault();
+  if (!forma.checkValidity()) {
+    const zle = forma.querySelector(':invalid');
+    zle.focus();
+    nota.textContent = zle.id === 'kt-rodo'
+      ? 'Zaznacz zgodę na przetwarzanie danych.'
+      : 'Uzupełnij zaznaczone pole: ' +
+        forma.querySelector(`label[for="${zle.id}"]`).textContent.toLowerCase() + '.';
+    return;
+  }
+  nota.textContent = 'Formularz demonstracyjny — wysyłka zostanie podpięta po stronie kliniki. Na razie zadzwoń: 22 318 20 00.';
+});
+</script>
+</body>
+</html>
