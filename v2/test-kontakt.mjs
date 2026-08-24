@@ -30,20 +30,24 @@ const WCIECIE = { wpis: 15, wybor: 15 };
 const lum = (r, g, b) => { const f = v => (v /= 255) <= .03928 ? v / 12.92 : ((v + .055) / 1.055) ** 2.4;
   return .2126 * f(r) + .7152 * f(g) + .0722 * f(b); };
 
-const kontrast = (a, b, [x0, y0, x1, y1]) => {          // a = z tekstem, b = bez
-  let tlo = 0, litera = 0, zmian = 0;
+const kontrast = (a, b, [x0, y0, x1, y1], ciemny) => {  // a = z tekstem, b = bez
+  // jasny tekst: rdzeń litery i najgorsze tło to wartości NAJJAŚNIEJSZE,
+  // ciemny tekst: odwrotnie — inaczej łapiemy piksel brzegowy antyaliasingu
+  const gorzej = (p, q) => ciemny ? Math.min(p, q) : Math.max(p, q);
+  let tlo = ciemny ? 1 : 0, litera = ciemny ? 1 : 0, zmian = 0;
   for (let y = Math.max(0, y0); y < Math.min(b.height, y1); y++)
     for (let x = Math.max(0, x0); x < Math.min(b.width, x1); x++) {
       const i = (y * b.width + x) * 4;
-      tlo = Math.max(tlo, lum(b.data[i], b.data[i + 1], b.data[i + 2]));
+      tlo = gorzej(tlo, lum(b.data[i], b.data[i + 1], b.data[i + 2]));
       if (a.data[i] !== b.data[i] || a.data[i + 1] !== b.data[i + 1] || a.data[i + 2] !== b.data[i + 2]) {
-        zmian++; litera = Math.max(litera, lum(a.data[i], a.data[i + 1], a.data[i + 2]));
+        zmian++; litera = gorzej(litera, lum(a.data[i], a.data[i + 1], a.data[i + 2]));
       }
     }
   return zmian < 10 ? null : (Math.max(litera, tlo) + .05) / (Math.min(litera, tlo) + .05);
 };
 
-const pomiar = async (p, S, sel, m) => {
+const CIEMNY = new Set(['pigDt', 'pigDd']);            // biała pastylka, ciemny tekst
+const pomiar = async (p, S, sel, m, ciemny) => {
   const box = await p.evaluate((sel, m) => {
     const e = document.querySelector(sel); if (!e) return null;
     e.scrollIntoView({ block: 'center', behavior: 'instant' });
@@ -59,7 +63,7 @@ const pomiar = async (p, S, sel, m) => {
   await new Promise(r => setTimeout(r, 150));
   const bez = PNG.sync.read(await p.screenshot());
   await p.evaluate(() => document.getElementById('przezr').remove());
-  return kontrast(zTekstem, bez, box);
+  return kontrast(zTekstem, bez, box, ciemny);
 };
 
 const b = await puppeteer.launch();
@@ -81,7 +85,7 @@ for (const S of STRONY)
     }, S);
     const wynik = [];
     for (const [k, sel] of Object.entries(S.pola)) {
-      const v = await pomiar(p, S, sel, WCIECIE[k]);
+      const v = await pomiar(p, S, sel, WCIECIE[k], CIEMNY.has(k));
       if (v == null) { zle++; wynik.push(`${k}: BRAK`); continue; }
       if (v < PROG[k]) zle++;
       wynik.push(`${k} ${v.toFixed(2)}:1${v < PROG[k] ? ' ZA MAŁO' : ''}`);
@@ -90,5 +94,27 @@ for (const S of STRONY)
     console.log(`${(S.url || 'index') + ' ' + w}×${h}`, (zly ? 'BŁĄD  ' : 'ok    ') + wynik.join('  '));
     await p.close();
   }
+// Bezpieczniki wjazdu. Stan początkowy („schowane") chowa prawdziwe dane
+// kontaktowe, więc obie drogi wyjścia muszą działać: bez JS-u klasa `.anim`
+// nigdy nie powstaje, a przy zredukowanym ruchu wjazd jest wyłączony.
+const widoczne = async (bezJs) => {
+  const p = await b.newPage();
+  await p.setViewport({ width: 1440, height: 900 });
+  if (bezJs) await p.setJavaScriptEnabled(false);
+  else await p.emulateMediaFeatures([{ name: 'prefers-reduced-motion', value: 'reduce' }]);
+  await p.goto(BAZA, { waitUntil: 'networkidle0' });
+  await p.evaluate(() => document.querySelector('#kontakt').scrollIntoView({ block: 'start' }));
+  await new Promise(r => setTimeout(r, 300));
+  const o = await p.evaluate(() => ['.kontakt-form', '.kontakt-pole', '.kontakt-dane div',
+    '.kontakt-lead'].map(s => Number(getComputedStyle(document.querySelector(s)).opacity)));
+  await p.close();
+  return o;
+};
+for (const [nazwa, bezJs] of [['bez JS', true], ['zredukowany ruch', false]]) {
+  const o = await widoczne(bezJs);
+  const ok = o.every(v => v === 1);
+  if (!ok) zle++;
+  console.log(`moduł widoczny (${nazwa})`, ok ? 'ok' : 'BŁĄD ' + JSON.stringify(o));
+}
 await b.close();
 if (zle) process.exitCode = 1;

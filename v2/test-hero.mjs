@@ -597,8 +597,28 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
       komplet: posty.every(a => a.querySelector('img') && a.querySelector('h3 a')
                              && a.querySelector('p').textContent.trim().length > 30) };
   });
+  // Wjazd modułu: bez `.pokaz` moduł jest schowany, po odsłonięciu — pełny.
+  // Stan „przed" sprawdzamy zdejmując klasę, a nie pozycją scrolla: wcześniejsze
+  // bloki testu przewijają całą stronę, więc sekcja bywa już odsłonięta.
+  const przedWjazdem = await p.evaluate(() => {
+    // przejścia muszą być na chwilę wyłączone: po zdjęciu klasy element zaczyna
+    // WRACAĆ do zera i przez pierwsze klatki dalej raportuje ~1
+    document.head.insertAdjacentHTML('beforeend',
+      '<style id="bezTr">.kontakt,.kontakt *{transition:none!important}</style>');
+    const sek = document.querySelector('.kontakt'), bylo = sek.classList.contains('pokaz');
+    sek.classList.remove('pokaz');
+    const o = getComputedStyle(document.querySelector('.kontakt-form')).opacity;
+    if (bylo) sek.classList.add('pokaz');
+    document.getElementById('bezTr').remove();
+    return o;
+  });
   await p.evaluate(() => document.querySelector('#kontakt').scrollIntoView({ block: 'start' }));
-  await new Promise(r => setTimeout(r, 1200));
+  await new Promise(r => setTimeout(r, 1600));
+  const poWjezdzie = await p.evaluate(() => {
+    const o = s => getComputedStyle(document.querySelector(s)).opacity;
+    return { karta: o('.kontakt-form'), pole: o('.kontakt-pole'),
+             pastylka: o('.kontakt-dane div'), lead: o('.kontakt-lead') };
+  });
   // pusty formularz nie może przejść — jest też wymagana zgoda RODO
   await p.click('.kontakt-form button[type=submit]');
   await new Promise(r => setTimeout(r, 400));
@@ -612,7 +632,7 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
   await p.click('#kt-rodo');
   await p.click('.kontakt-form button[type=submit]');
   await new Promise(r => setTimeout(r, 400));
-  const kontakt = await p.evaluate(prz => {
+  const kontakt = await p.evaluate(({ prz, przed, po }) => {
     const nota = document.querySelector('[data-nota]');
     const lewo = document.querySelector('.kontakt-lewo').getBoundingClientRect();
     const form = document.querySelector('.kontakt-form').getBoundingClientRect();
@@ -635,14 +655,17 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
       poleWidoczne: /gradient/.test(cs.backgroundImage) && /blur/.test(cs.backdropFilter)
                  && Number(cs.borderColor.match(/[\d.]+/g)?.[3] ?? 1) >= .25,
       pustyBlokuje: /Uzupełnij|Zaznacz/.test(prz),
+      // progi, nie równości: w trakcie przejścia przeglądarka zwraca wartość
+      // interpolowaną („0.000138"), więc porównanie do '0'/'1' zawsze fałszuje
+      wjazd: Number(przed) < .05 && Object.values(po).every(v => Number(v) > .9),
       wyslany: /demonstracyjny/.test(nota.textContent),
       etykiety: [...document.querySelectorAll('.kontakt-form input:not([type=checkbox]),.kontakt-form textarea,.kontakt-form select')]
         .every(e => e.id && document.querySelector(`label[for="${e.id}"]`)),
     };
-  }, pusty);
+  }, { prz: pusty, przed: przedWjazdem, po: poWjezdzie });
   const bkOk = blog.ile === 3 && blog.miedzy && blog.komplet
             && kontakt.uklad && kontakt.dane && kontakt.tlo && kontakt.bezPaska
-            && kontakt.poleWidoczne && kontakt.pustyBlokuje && kontakt.wyslany
+            && kontakt.poleWidoczne && kontakt.pustyBlokuje && kontakt.wyslany && kontakt.wjazd
             && kontakt.etykiety;
   console.log(`${w}×${h} blog+kontakt`, bkOk ? 'ok' : 'BŁĄD ' + JSON.stringify({ blog, kontakt }));
   if (!bkOk) process.exitCode = 1;

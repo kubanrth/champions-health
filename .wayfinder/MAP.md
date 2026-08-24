@@ -80,6 +80,25 @@ z tym commitem 1:1 — zweryfikowane renderem, nie z pamięci.
 - Done looks like: `.kt-forma` i `.kt-pig` mają szkło; `test-kontakt.mjs` mierzy
   obie strony; układ, treść i lista pól bez zmian.
 
+## D11: Pastylki zostają białe, szkło jest tylko materiałem formularza
+- Decyzja: dane kontaktowe to białe pastylki z ciemnym tekstem (obie strony);
+  szkło zostaje na tafli formularza i polach.
+- Why: wybór klienta. Ma to też twardą zaletę: pełna biel trzyma kontrast
+  niezależnie od tego, co akurat świeci na zdjęciu (5,1:1 i 19,5:1, te same na
+  każdej szerokości i na obu stronach), i odcina blok danych od karty formularza.
+- Done looks like: `.kontakt-dane div` i `.kt-pig` mają `background` `#fff`; pomiar
+  kontrastu pastylek nie zmienia się między szerokościami.
+
+## D12: Wjazd modułu kontaktu
+- Decyzja: po wejściu sekcji w kadr moduł wjeżdża z rozjazdem — nagłówek znak po
+  znaku (istniejący mechanizm `data-reveal`), potem lead, cztery pastylki po kolei,
+  tafla formularza i na końcu pola. Ruch jedzie na `translate`/`scale`, nie na
+  `transform`, żeby hover pastylki nie dziedziczył opóźnienia wjazdu.
+- Why: prośba klienta („ładna animacja pojawiania się całego modułu"); rozjazd
+  prowadzi wzrok od nagłówka do formularza zamiast wywalać wszystko naraz.
+- Done looks like: `wjazd` w `test-hero.mjs` zielony; bez JS-u i przy
+  `prefers-reduced-motion:reduce` moduł jest w pełni widoczny (AK27).
+
 ## Out of bounds
 - `blog.html`, `zespol.html`, `uslugi*`, stopka — nie ruszamy.
 - `kontakt.html` — tylko materiał sekcji formularza (D10); układ, treść i pola bez zmian.

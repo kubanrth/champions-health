@@ -1,6 +1,6 @@
 # ANSWER KEY — powrót do starego designu formularza
 
-**Stan: 25/25 zaliczone** (przegląd 2026-08-24, weryfikacja wykonana, nie deklarowana).
+**Stan: 27/27 zaliczone** (przegląd 2026-08-24, weryfikacja wykonana, nie deklarowana).
 
 - [x] AK1: sekcja `#kontakt` na stronie głównej ma zdjęcie w tle `.kontakt-tlo` — VERIFY: `document.querySelector('#kontakt .kontakt-tlo')` niepuste i `complete && naturalWidth>0`
 - [x] AK2: zdjęcie w tle to `kontakt-tlo.jpg` — VERIFY: `.kontakt-tlo` ma `src` kończący się `kontakt-tlo.jpg`
@@ -18,7 +18,7 @@
 - [x] AK14: układ dwukolumnowy na desktopie, jednokolumnowy na wąskim — VERIFY: przy 1440 `.kontakt-form` left > `.kontakt-lewo` left; przy 390 `gridTemplateColumns` to jedna wartość
 - [x] AK15: brak przewijania poziomego — VERIFY: `scrollWidth - innerWidth <= 0` na 1440, 1280, 820, 390
 - [x] AK16: konsola bez błędów i bez 404 — VERIFY: nasłuch `pageerror`, `console.error` i odpowiedzi ≥ 400 przy wejściu na stronę główną
-- [x] AK17 (zmieniony, D10): `kontakt.html` ma ten sam materiał co strona główna — VERIFY: `kontakt.html` dalej ma `.kt-sek` i `.kt-forma` (bez `.kontakt-form`), a `.kt-forma` i `.kt-pig` mają `backdropFilter` z `blur` i `brightness` < 1
+- [x] AK17 (zmieniony, D10+D11): `kontakt.html` ma ten sam materiał co strona główna — VERIFY: `kontakt.html` dalej ma `.kt-sek` i `.kt-forma` (bez `.kontakt-form`); `.kt-forma` ma `backdropFilter` z `blur` i `brightness` < 1, a `.kt-pig` jest białe (`backgroundColor === 'rgb(255, 255, 255)'`), tak samo jak `.kontakt-dane div`
 - [x] AK18: reszta strony bez regresji — VERIFY: `node v2/test-hero.mjs` kończy się 36 × „ok" i bez linii „BŁĄD"
 - [x] AK19: brak nowych sekcji i pól ponad spec — VERIFY: w `#kontakt` nie ma elementów `.kt-pig`, `.kon-baner` ani dodatkowych `input` poza wymienionymi w AK10
 - [x] AK20: nagłówek lewej kolumny mieści się w dwóch wierszach na desktopie (jak na zrzucie) — VERIFY: przy 1440 i 1280 `h2.getBoundingClientRect().height / lineHeight` zaokrąglone = 2
@@ -26,4 +26,6 @@
 - [x] AK22: autouzupełnianie nie wstawia własnego tła — VERIFY: w obu arkuszach jest reguła `input:-webkit-autofill` z `-webkit-box-shadow` w kolorze zmierzonym z wyrenderowanego szkła (`rgb(100,92,91)`) i `-webkit-text-fill-color:#fff`
 - [x] AK23: cały tekst sekcji ≥ 4,5:1 (tytuł karty ≥ 3:1) na obu stronach — VERIFY: `node v2/test-kontakt.mjs` kończy się kodem 0; mierzy tytuł, etykietę, wpisany tekst, listę wyboru, zgodę RODO i obie linie pastylki na 1440/1280/390 dla `index` i `kontakt.html`
 - [x] AK24: bez rozmycia tła sekcja dalej jest czytelna — VERIFY: w obu arkuszach jest `@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px)))` ustawiający pełne `background-color` tafli i pastylek
+- [x] AK26: cały moduł wjeżdża z rozjazdem, nie pojawia się skokiem — VERIFY: bez klasy `.pokaz` (przy wyłączonych przejściach) `.kontakt-form` ma `opacity` < .05; po wejściu sekcji w kadr `.kontakt-form`, `.kontakt-pole`, `.kontakt-dane div` i `.kontakt-lead` mają `opacity` > .9; sprawdzenie `wjazd` w `test-hero.mjs`
+- [x] AK27: stan początkowy wjazdu nie może ukryć danych kontaktowych na stałe — VERIFY: `test-kontakt.mjs` wchodzi na stronę bez JS-u i z `prefers-reduced-motion:reduce`; w obu przypadkach cztery elementy modułu mają `opacity` równe 1
 - [x] AK25: pomiar kontrastu jest odporny na animacje i na krawędź szkła — VERIFY: `test-kontakt.mjs` zamraża animacje przed zrzutami i wcina pudełko pola o 15 px; trzy kolejne uruchomienia dają ten sam wynik
