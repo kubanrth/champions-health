@@ -180,9 +180,13 @@ p{margin:0}
    Zamiast scroll-jackingu (to podstrona, nie scena) natywny poziomy scroll
    ze snapem + szklane strzałki jak przy zespole na home. ------------------- */
 .inne-pas{position:relative;margin-top:32px}
+/* Pas był wypuszczany na całą szerokość okna ujemnym marginesem, a lewy
+   padding miał go z powrotem wyrównać do kontenera. Nie działało: przy
+   `scroll-snap-align:start` przeglądarka dosuwa pierwszą kartę do początku
+   scrollportu i ten padding pomija — karta lądowała na x=0, przyklejona do
+   krawędzi ekranu. Pas siedzi teraz po prostu w kontenerze. */
 .inne{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x proximity;
-  margin-inline:calc(50% - 50vw);padding:4px calc(50vw - 50% + var(--bok)) 10px;
-  scrollbar-width:none}
+  padding:4px 0 10px;scrollbar-width:none}
 .inne::-webkit-scrollbar{display:none}
 .inna{position:relative;flex:none;width:min(72vw,460px);aspect-ratio:16/10;
   border-radius:28px;overflow:hidden;scroll-snap-align:start;background:#151515;
@@ -207,8 +211,10 @@ p{margin:0}
   box-shadow:inset 0 1px 0 rgba(255,255,255,.4),0 8px 24px rgba(0,0,0,.18);
   display:grid;place-items:center;transition:background-color .3s var(--ease)}
 .pas-strzalka:hover{background:rgba(255,255,255,.45)}
-.pas-strzalka.w-lewo{left:calc(-1 * clamp(8px,1vw,14px))}
-.pas-strzalka.w-prawo{right:calc(-1 * clamp(8px,1vw,14px))}
+.pas-strzalka.w-lewo{left:12px}
+.pas-strzalka.w-prawo{right:12px}
+/* na dotyku pas przewija się palcem, a strzałki lądowały na tytule karty */
+@media(max-width:760px){.pas-strzalka{display:none}}
 
 /* --- stopka --------------------------------------------------------------- */
 footer.site{border-top:1px solid var(--kres);padding:44px 0 28px;
