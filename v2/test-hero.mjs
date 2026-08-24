@@ -650,10 +650,11 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
       // czarny pasek pod lewą kolumną ma NIE wrócić (decyzja klienta 2026-08-24)
       bezPaska: getComputedStyle(document.querySelector('.kontakt-lewo'), '::before')
         .backgroundImage === 'none',
-      // pole ze szkła: własne wypełnienie, rozmycie tła i świetlna krawędź —
-      // inaczej granica pola ginie na tafli. Kontrast w pikselach: test-kontakt.mjs
+      // pole ze szkła bez ramki: granicę robi własne wypełnienie i zagłębienie,
+      // więc sprawdzamy, że oba są na miejscu i że nie wróciła obwódka.
+      // Sam kontrast granicy mierzy w pikselach test-kontakt.mjs
       poleWidoczne: /gradient/.test(cs.backgroundImage) && /blur/.test(cs.backdropFilter)
-                 && Number(cs.borderColor.match(/[\d.]+/g)?.[3] ?? 1) >= .25,
+                 && /inset/.test(cs.boxShadow) && cs.borderTopWidth === '0px',
       pustyBlokuje: /Uzupełnij|Zaznacz/.test(prz),
       // progi, nie równości: w trakcie przejścia przeglądarka zwraca wartość
       // interpolowaną („0.000138"), więc porównanie do '0'/'1' zawsze fałszuje

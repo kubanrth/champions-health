@@ -99,6 +99,18 @@ z tym commitem 1:1 — zweryfikowane renderem, nie z pamięci.
 - Done looks like: `wjazd` w `test-hero.mjs` zielony; bez JS-u i przy
   `prefers-reduced-motion:reduce` moduł jest w pełni widoczny (AK27).
 
+## D13: Bez obwódek — granicę robi wypełnienie, wnętrze pola ma odwrotną polaryzację
+- Decyzja: tafla i pola tracą białą ramkę i świetlną krawędź. Pola stają się
+  JASNYMI studzienkami z ciemnym tekstem; granicę wyznacza kontrast wypełnienia
+  (4,6–7,0:1) plus miękkie zagłębienie u góry. Kwadracik zgody dostaje tę samą
+  materię, z pełną bielą i ciemną fajką po zaznaczeniu.
+- Why: prośba klienta („usuń tę białą ramkę"). Bez ramki granica pola musi wynikać
+  z czegoś innego — WCAG 1.4.11 wymaga 3:1 dla elementów sterujących. Białe litery
+  potrzebują ciemnego pola, a widoczna granica — jasnego; przy jednym kadrze obie
+  rzeczy naraz się nie mieszczą, więc wnętrze pola ma odwrotną polaryzację niż tafla.
+- Done looks like: `borderTopWidth` = 0 na tafli i polach; `granica` ≥ 3:1
+  w `test-kontakt.mjs`; tekst w polu i podpowiedź listy ≥ 4,5:1.
+
 ## Out of bounds
 - `blog.html`, `zespol.html`, `uslugi*`, stopka — nie ruszamy.
 - `kontakt.html` — tylko materiał sekcji formularza (D10); układ, treść i pola bez zmian.

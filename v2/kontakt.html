@@ -383,49 +383,63 @@ a.kt-pig{transition:background-color .3s var(--ease),transform .3s var(--ease)}
 a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
 /* karta formularza */
 .kt-forma{color:#fff;border-radius:28px;padding:clamp(24px,2.6vw,36px);
-  background:linear-gradient(155deg,rgba(255,255,255,.11),rgba(255,255,255,.035));
-  border:1px solid rgba(255,255,255,.18);
-  -webkit-backdrop-filter:blur(30px) saturate(1.8) brightness(.22);
-  backdrop-filter:blur(30px) saturate(1.8) brightness(.22);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.28),0 46px 90px -46px rgba(0,0,0,.75)}
+  background:linear-gradient(155deg,rgba(255,255,255,.1),rgba(255,255,255,.03));
+  -webkit-backdrop-filter:blur(30px) saturate(1.9) brightness(.33);
+  backdrop-filter:blur(30px) saturate(1.9) brightness(.33);
+  box-shadow:0 46px 90px -46px rgba(0,0,0,.75)}
 .kt-forma h2{font-size:22px;letter-spacing:-.02em}
 .kt-forma p.kt-pod{margin:6px 0 0;font-size:14px;color:rgba(255,255,255,.78)}
 .kt-pole{margin-top:16px}
 .kt-pole label{display:block;margin-bottom:6px;font-size:13.5px;font-weight:500;
   color:rgba(255,255,255,.9)}
-.kt-pole input,.kt-pole textarea,.kt-pole select{width:100%;font:inherit;font-size:15px;color:#fff;
-  background:linear-gradient(180deg,rgba(255,255,255,.22),rgba(255,255,255,.1));
-  border:1px solid rgba(255,255,255,.3);border-radius:14px;
-  -webkit-backdrop-filter:blur(6px) saturate(1.6) brightness(1.3);
-  backdrop-filter:blur(6px) saturate(1.6) brightness(1.3);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.38);
-  transition:border-color .25s var(--ease),box-shadow .25s var(--ease)}
+/* Pola: jasne szklane studzienki z ciemnym tekstem, bez ramki. Białe litery
+   wymagają ciemnego pola, a widoczna granica bez obwódki — jasnego; przy jednym
+   kadrze obie rzeczy naraz się nie mieszczą, więc wnętrze ma odwrotną polaryzację
+   niż tafla. Granicę robi kontrast wypełnienia (7,2:1), nie kreska. */
+.kt-pole input,.kt-pole textarea,.kt-pole select{width:100%;font:inherit;font-size:15px;
+  color:#0B0D0C;border:0;border-radius:14px;
+  background:linear-gradient(180deg,rgba(255,255,255,.66),rgba(255,255,255,.52));
+  -webkit-backdrop-filter:blur(8px) saturate(1.6);backdrop-filter:blur(8px) saturate(1.6);
+  box-shadow:inset 0 2px 5px -2px rgba(0,0,0,.35);
+  transition:background-color .25s var(--ease),box-shadow .25s var(--ease)}
 .kt-pole input{height:50px;padding:0 14px}
 .kt-pole textarea{min-height:96px;padding:12px 14px;resize:vertical}
-.kt-pole input::placeholder,.kt-pole textarea::placeholder{color:rgba(255,255,255,.72)}
+.kt-pole input::placeholder,.kt-pole textarea::placeholder{color:#2F3230}
 /* Chrome wstawia przy autouzupełnianiu własne, lawendowe tło i samego
    `background` nie respektuje — nadpisujemy je cieniem wewnętrznym w kolorze
    zmierzonym z wyrenderowanego pola */
 .kt-pole input:-webkit-autofill,
 .kt-pole input:-webkit-autofill:hover,
 .kt-pole input:-webkit-autofill:focus{
-  -webkit-box-shadow:0 0 0 1000px rgb(100,92,91) inset,inset 0 1px 0 rgba(255,255,255,.38);
-  -webkit-text-fill-color:#fff;caret-color:#fff}
+  -webkit-box-shadow:0 0 0 1000px rgb(168,166,166) inset,inset 0 2px 5px -2px rgba(0,0,0,.35);
+  -webkit-text-fill-color:#0B0D0C;caret-color:#0B0D0C}
 .kt-pole select{height:50px;padding:0 40px 0 14px;appearance:none;-webkit-appearance:none;cursor:pointer;
-  background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 5.2 7 9l4-3.8" stroke="%23ffffff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>'),
-    linear-gradient(180deg,rgba(255,255,255,.22),rgba(255,255,255,.1));
+  background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 5.2 7 9l4-3.8" stroke="%230B0D0C" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>'),
+    linear-gradient(180deg,rgba(255,255,255,.66),rgba(255,255,255,.52));
   background-repeat:no-repeat,no-repeat;background-position:right 14px center,0 0}
-.kt-pole select:invalid{color:rgba(255,255,255,.72)}   /* placeholder w kolorze podpowiedzi */
-/* natywna lista rozwijana rysuje się poza szkłem — tam wracamy do jasnego tła */
+.kt-pole select:invalid{color:#2F3230}   /* placeholder w kolorze podpowiedzi */
 .kt-pole option{color:#0B0D0C;background:#fff}
-.kt-pole input:hover,.kt-pole textarea:hover,.kt-pole select:hover{border-color:rgba(255,255,255,.46)}
-.kt-pole input:focus,.kt-pole textarea:focus,.kt-pole select:focus{outline:none;
-  border-color:rgba(255,255,255,.8);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.42),0 0 0 3px rgba(255,255,255,.2)}
+.kt-pole input:hover,.kt-pole textarea:hover{
+  background:linear-gradient(180deg,rgba(255,255,255,.78),rgba(255,255,255,.64))}
+.kt-pole select:hover{background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 5.2 7 9l4-3.8" stroke="%230B0D0C" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>'),
+    linear-gradient(180deg,rgba(255,255,255,.78),rgba(255,255,255,.64))}
+.kt-pole input:focus-visible,.kt-pole textarea:focus-visible,.kt-pole select:focus-visible{
+  outline:2px solid rgba(255,255,255,.85);outline-offset:2px}
+.kt-pole input:user-invalid,.kt-pole textarea:user-invalid{
+  box-shadow:inset 0 2px 5px -2px rgba(0,0,0,.35),inset 0 0 0 2px #C1121F}
 .kt-zgoda{display:flex;align-items:flex-start;gap:10px;margin-top:18px;
   font-size:13px;line-height:1.55;color:rgba(255,255,255,.9)}
-.kt-zgoda input{flex:none;width:18px;height:18px;margin-top:2px;accent-color:#fff;
-  background:#fff;border:0;border-radius:4px}
+/* własny kwadracik: ta sama materia co pola; natywny `accent-color` daje na
+   szkle płaską białą płytkę */
+.kt-zgoda input{appearance:none;-webkit-appearance:none;flex:none;
+  width:20px;height:20px;margin:1px 0 0;padding:0;border:0;border-radius:7px;cursor:pointer;
+  background:linear-gradient(180deg,rgba(255,255,255,.66),rgba(255,255,255,.52));
+  box-shadow:inset 0 2px 5px -2px rgba(0,0,0,.35);
+  transition:background-color .25s var(--ease),box-shadow .25s var(--ease)}
+.kt-zgoda input:hover{background:linear-gradient(180deg,rgba(255,255,255,.78),rgba(255,255,255,.64))}
+.kt-zgoda input:checked{background:#fff url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2.4 6.3 4.7 8.6 9.6 3.7" stroke="%230B0D0C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>') center/12px no-repeat;
+  box-shadow:none}
+.kt-zgoda input:focus-visible{outline:2px solid rgba(255,255,255,.85);outline-offset:2px}
 .kt-forma .btn{width:100%;justify-content:center;margin-top:20px;height:50px}
 /* na szkle przycisk musi być jedyną pełną powierzchnią — inaczej ginie */
 .kt-forma .btn-pelny{background:#fff;color:#000}

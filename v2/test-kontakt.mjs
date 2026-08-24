@@ -26,6 +26,9 @@ const STRONY = [
 // narożnika wchodzi jeszcze w wcięcie 8 px — wtedy to krawędź, a nie tło pod
 // literami, wychodzi jako najjaśniejszy piksel i pomiar stoi w miejscu.
 const WCIECIE = { wpis: 15, wybor: 15 };
+// Strzałka listy wyboru jest niemal czarna i leży w pudełku pola — bez większego
+// wcięcia z prawej to ona wychodzi jako „najciemniejsze tło pod tekstem".
+const PRAWO = { wybor: 40 };
 
 const lum = (r, g, b) => { const f = v => (v /= 255) <= .03928 ? v / 12.92 : ((v + .055) / 1.055) ** 2.4;
   return .2126 * f(r) + .7152 * f(g) + .0722 * f(b); };
@@ -46,24 +49,44 @@ const kontrast = (a, b, [x0, y0, x1, y1], ciemny) => {  // a = z tekstem, b = be
   return zmian < 10 ? null : (Math.max(litera, tlo) + .05) / (Math.min(litera, tlo) + .05);
 };
 
-const CIEMNY = new Set(['pigDt', 'pigDd']);            // biała pastylka, ciemny tekst
-const pomiar = async (p, S, sel, m, ciemny) => {
-  const box = await p.evaluate((sel, m) => {
+const CIEMNY = new Set(['pigDt', 'pigDd', 'wpis', 'wybor']);  // ciemny tekst na jasnym tle
+const pomiar = async (p, S, sel, m, ciemny, prawo) => {
+  const box = await p.evaluate(([sel, m, prawo]) => {
     const e = document.querySelector(sel); if (!e) return null;
     e.scrollIntoView({ block: 'center', behavior: 'instant' });
     const b = e.getBoundingClientRect();
-    return [Math.round(b.x + m), Math.round(b.y + m), Math.round(b.right - m), Math.round(b.bottom - m)];
-  }, sel, m || 0);
+    return [Math.round(b.x + m), Math.round(b.y + m), Math.round(b.right - prawo), Math.round(b.bottom - m)];
+  }, [sel, m || 0, prawo || m || 0]);
   if (!box) return null;
   await new Promise(r => setTimeout(r, 250));
   const zTekstem = PNG.sync.read(await p.screenshot());
   await p.evaluate(S => document.head.insertAdjacentHTML('beforeend',
-    `<style id="przezr">${S.sek} *{color:transparent!important;-webkit-text-fill-color:transparent!important}
-     ${S.select}{background-image:none!important}</style>`), S);
+    // UWAGA: nie zerujemy tu tła listy wyboru — `background-image:none` zdejmuje
+    // razem ze strzałką całe szklane wypełnienie i pomiar łapie ciemną taflę.
+    // Strzałka jest identyczna na obu zrzutach, a wcięcie 15 px i tak ją wycina.
+    `<style id="przezr">${S.sek} *{color:transparent!important;-webkit-text-fill-color:transparent!important}</style>`), S);
   await new Promise(r => setTimeout(r, 150));
   const bez = PNG.sync.read(await p.screenshot());
   await p.evaluate(() => document.getElementById('przezr').remove());
   return kontrast(zTekstem, bez, box, ciemny);
+};
+
+// Bez ramki granicę pola wyznacza samo wypełnienie — WCAG 1.4.11 wymaga dla
+// elementów sterujących 3:1 wobec sąsiadującej powierzchni. Próbka: wnętrze pola
+// kontra tafla tuż nad nim (odstęp między etykietą a polem to czysta tafla).
+const granica = async (p, sel) => {
+  const pkt = await p.evaluate(sel => {
+    const e = document.querySelector(sel);
+    e.scrollIntoView({ block: 'center', behavior: 'instant' });
+    const b = e.getBoundingClientRect(), x = Math.round(b.right - 30);
+    return { pole: [x, Math.round(b.y + b.height / 2)], tafla: [x, Math.round(b.y - 5)] };
+  }, sel);
+  await new Promise(r => setTimeout(r, 250));
+  const png = PNG.sync.read(await p.screenshot());
+  const L = ([x, y]) => { const i = (y * png.width + x) * 4;
+    return lum(png.data[i], png.data[i + 1], png.data[i + 2]); };
+  const a = L(pkt.pole), c = L(pkt.tafla);
+  return (Math.max(a, c) + .05) / (Math.min(a, c) + .05);
 };
 
 const b = await puppeteer.launch();
@@ -85,11 +108,14 @@ for (const S of STRONY)
     }, S);
     const wynik = [];
     for (const [k, sel] of Object.entries(S.pola)) {
-      const v = await pomiar(p, S, sel, WCIECIE[k], CIEMNY.has(k));
+      const v = await pomiar(p, S, sel, WCIECIE[k], CIEMNY.has(k), PRAWO[k]);
       if (v == null) { zle++; wynik.push(`${k}: BRAK`); continue; }
       if (v < PROG[k]) zle++;
       wynik.push(`${k} ${v.toFixed(2)}:1${v < PROG[k] ? ' ZA MAŁO' : ''}`);
     }
+    const gr = await granica(p, S.pola.wpis);
+    if (gr < 3) zle++;
+    wynik.push(`granica ${gr.toFixed(2)}:1${gr < 3 ? ' ZA MAŁO' : ''}`);
     const zly = wynik.some(t => /ZA MAŁO|BRAK/.test(t));
     console.log(`${(S.url || 'index') + ' ' + w}×${h}`, (zly ? 'BŁĄD  ' : 'ok    ') + wynik.join('  '));
     await p.close();

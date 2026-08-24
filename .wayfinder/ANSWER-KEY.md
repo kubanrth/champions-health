@@ -1,6 +1,6 @@
 # ANSWER KEY — powrót do starego designu formularza
 
-**Stan: 27/27 zaliczone** (przegląd 2026-08-24, weryfikacja wykonana, nie deklarowana).
+**Stan: 29/29 zaliczone** (przegląd 2026-08-24, weryfikacja wykonana, nie deklarowana).
 
 - [x] AK1: sekcja `#kontakt` na stronie głównej ma zdjęcie w tle `.kontakt-tlo` — VERIFY: `document.querySelector('#kontakt .kontakt-tlo')` niepuste i `complete && naturalWidth>0`
 - [x] AK2: zdjęcie w tle to `kontakt-tlo.jpg` — VERIFY: `.kontakt-tlo` ma `src` kończący się `kontakt-tlo.jpg`
@@ -22,10 +22,12 @@
 - [x] AK18: reszta strony bez regresji — VERIFY: `node v2/test-hero.mjs` kończy się 36 × „ok" i bez linii „BŁĄD"
 - [x] AK19: brak nowych sekcji i pól ponad spec — VERIFY: w `#kontakt` nie ma elementów `.kt-pig`, `.kon-baner` ani dodatkowych `input` poza wymienionymi w AK10
 - [x] AK20: nagłówek lewej kolumny mieści się w dwóch wierszach na desktopie (jak na zrzucie) — VERIFY: przy 1440 i 1280 `h2.getBoundingClientRect().height / lineHeight` zaokrąglone = 2
-- [x] AK21: pola są jaśniejsze od tafli, na której leżą — VERIFY: piksel w środku pola vs piksel tafli obok: jasność pola min. 1,5× większa (pomiar na 1440, 1280, 390; wynik 2,3×)
-- [x] AK22: autouzupełnianie nie wstawia własnego tła — VERIFY: w obu arkuszach jest reguła `input:-webkit-autofill` z `-webkit-box-shadow` w kolorze zmierzonym z wyrenderowanego szkła (`rgb(100,92,91)`) i `-webkit-text-fill-color:#fff`
+- [x] AK21 (zmieniony, D13): granicę pola robi wypełnienie, nie ramka — VERIFY: sprawdzenie `granica` w `test-kontakt.mjs`: piksel wnętrza pola vs piksel tafli tuż nad nim ≥ 3:1 (WCAG 1.4.11 dla elementów sterujących); wynik 4,6–7,0:1 na obu stronach
+- [x] AK22: autouzupełnianie nie wstawia własnego tła — VERIFY: w obu arkuszach jest reguła `input:-webkit-autofill` z `-webkit-box-shadow` w kolorze zmierzonym z wyrenderowanego szkła (`rgb(168,166,166)`) i `-webkit-text-fill-color:#0B0D0C`
 - [x] AK23: cały tekst sekcji ≥ 4,5:1 (tytuł karty ≥ 3:1) na obu stronach — VERIFY: `node v2/test-kontakt.mjs` kończy się kodem 0; mierzy tytuł, etykietę, wpisany tekst, listę wyboru, zgodę RODO i obie linie pastylki na 1440/1280/390 dla `index` i `kontakt.html`
 - [x] AK24: bez rozmycia tła sekcja dalej jest czytelna — VERIFY: w obu arkuszach jest `@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px)))` ustawiający pełne `background-color` tafli i pastylek
 - [x] AK26: cały moduł wjeżdża z rozjazdem, nie pojawia się skokiem — VERIFY: bez klasy `.pokaz` (przy wyłączonych przejściach) `.kontakt-form` ma `opacity` < .05; po wejściu sekcji w kadr `.kontakt-form`, `.kontakt-pole`, `.kontakt-dane div` i `.kontakt-lead` mają `opacity` > .9; sprawdzenie `wjazd` w `test-hero.mjs`
 - [x] AK27: stan początkowy wjazdu nie może ukryć danych kontaktowych na stałe — VERIFY: `test-kontakt.mjs` wchodzi na stronę bez JS-u i z `prefers-reduced-motion:reduce`; w obu przypadkach cztery elementy modułu mają `opacity` równe 1
+- [x] AK28: żadnych białych obwódek wokół tafli i pól — VERIFY: `getComputedStyle` dla `.kontakt-form`, `.kt-forma` oraz pól: `borderTopWidth === '0px'`; w `boxShadow` tafli nie ma świetlnej krawędzi (`inset 0 1px 0`), a pola mają zagłębienie (`inset` z ujemnym rozmyciem)
+- [x] AK29: kwadracik zgody jest własny, nie systemowy — VERIFY: `getComputedStyle('.kontakt-zgoda input').appearance === 'none'`, promień 7 px, po zaznaczeniu tło `rgb(255, 255, 255)` z fajką w `background-image`; to samo dla `.kt-zgoda input`
 - [x] AK25: pomiar kontrastu jest odporny na animacje i na krawędź szkła — VERIFY: `test-kontakt.mjs` zamraża animacje przed zrzutami i wcina pudełko pola o 15 px; trzy kolejne uruchomienia dają ten sam wynik
