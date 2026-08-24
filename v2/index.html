@@ -109,19 +109,6 @@ a{color:inherit;text-decoration:none}
   font-size:clamp(1.08rem,1.5vw,1.45rem);line-height:1.45}
 
 /* strzałki na krawędziach pasa — to samo szkło co w sliderze „Zakresu opieki" */
-.tm-arrows{position:absolute;left:0;right:0;top:0;bottom:0;z-index:20;pointer-events:none}
-.tm-arrow{position:absolute;top:64%;transform:translateY(-50%);width:56px;height:56px;
-  border-radius:50%;cursor:pointer;pointer-events:auto;border:0;
-  background:rgba(255,255,255,.34);
-  -webkit-backdrop-filter:blur(18px) saturate(1.5);backdrop-filter:blur(18px) saturate(1.5);
-  box-shadow:inset 0 10px 20px rgba(255,255,255,.18),0 10px 28px -10px rgba(0,0,0,.35);
-  color:#0A0A0A;font-size:24px;line-height:1;display:grid;place-items:center;
-  transition:background-color .3s var(--ease),transform .3s var(--ease)}
-[data-tm-prev]{left:clamp(14px,2.6vw,44px)}
-[data-tm-next]{right:clamp(14px,2.6vw,44px)}
-.tm-arrow:hover{background:rgba(255,255,255,.62);transform:translateY(-50%) scale(1.06)}
-.tm-arrow:active{transform:translateY(-50%) scale(.97)}
-.tm-arrow:focus-visible{outline:2px solid #0A0A0A;outline-offset:3px}
 
 .tm-track{margin-top:clamp(2rem,4vw,3rem);overflow:hidden}
 /* 1:1 z myhealthprac.com: taśma płynie sama (~80 px/s, bez pauzy na hover),
@@ -212,10 +199,7 @@ a{color:inherit;text-decoration:none}
 .reveal .char{display:inline-block;transform:translateY(115%);
   transition:transform .33s cubic-bezier(.25,.46,.45,.94) calc(var(--i) * 16ms)}
 .reveal.pokaz .char{transform:none}
-.claim-logo,.claim-kreska{opacity:0;transform:translateY(14px);
-  transition:opacity .5s cubic-bezier(.25,.46,.45,.94),transform .6s cubic-bezier(.25,.46,.45,.94)}
-.claim.pokaz .claim-logo,.claim.pokaz .claim-kreska{opacity:1;transform:none}
-.claim.pokaz .claim-kreska{transition-delay:.08s}
+
 
 @media(max-width:760px){
   .claim .claim-in{flex-wrap:wrap;gap:14px}
@@ -224,7 +208,7 @@ a{color:inherit;text-decoration:none}
   .claim-kreska{display:none}
 }
 @media(prefers-reduced-motion:reduce){
-  .reveal .char,.claim-logo,.claim-kreska{transform:none;transition:none;opacity:1}
+  .reveal .char{transform:none;transition:none;opacity:1}
 }
 
 /* maska na słowie, znak wyjeżdża spod niej */
@@ -1372,10 +1356,6 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
     <p class="lead">Pięciu lekarzy i dziewięciu fizjoterapeutów, którzy na co dzień prowadzą
       pierwszą drużynę, Legia Ladies i Akademię.</p>
   </div>
-  <div class="tm-arrows">
-    <button class="tm-arrow" data-tm-prev aria-label="Poprzednie osoby">‹</button>
-    <button class="tm-arrow" data-tm-next aria-label="Następne osoby">›</button>
-  </div>
   <div class="tm-track" data-tm-track>
     <div class="tm-belt" data-tm-belt>
       <div class="tm-set" data-tm-set>
@@ -1570,7 +1550,7 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
   <div class="wrap claim-in">
     <img class="claim-logo" src="img/logo_LCH.svg" alt="Champions Health" width="150" height="24">
     <span class="claim-kreska" aria-hidden="true"></span>
-    <p class="claim-txt reveal" data-reveal>Autoryzowany punkt medyczny Legii Warszawa</p>
+    <p class="claim-txt">Autoryzowany punkt medyczny Legii Warszawa</p>
   </div>
 </section>
 
@@ -1948,8 +1928,6 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
   const zestaw = document.querySelector('[data-tm-set]');
   const okno = document.querySelector('[data-wiz]');
   if (!tasma || !okno) return;
-  const wstecz = document.querySelector('[data-tm-prev]');
-  const dalej = document.querySelector('[data-tm-next]');
   const reduce = matchMedia('(prefers-reduced-motion:reduce)').matches;
   const TEMPO = 80;                                 // px/s, zmierzone na referencji
 
@@ -1981,14 +1959,10 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
     klon.remove();
     const krok = () => karty[0].getBoundingClientRect().width + GAP;
     const pas = document.querySelector('[data-tm-track]');
-    wstecz.addEventListener('click', () => pas.scrollBy({ left: -krok(), behavior: 'auto' }));
-    dalej.addEventListener('click', () => pas.scrollBy({ left: krok(), behavior: 'auto' }));
   } else {
     raf = requestAnimationFrame(tick);
     // karta w tył = taśma jedzie w prawo, więc pchnięcie dodatnie
     const skok = () => karty[0].getBoundingClientRect().width + GAP;
-    wstecz.addEventListener('click', () => cel += skok());
-    dalej.addEventListener('click', () => cel -= skok());
     document.addEventListener('visibilitychange', () => { ost = null; });
   }
 

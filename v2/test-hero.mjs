@@ -470,25 +470,23 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
   console.log(`${w}×${h} FAQ`, fOk ? 'ok' : 'BŁĄD ' + JSON.stringify(faq));
   if (!fOk) process.exitCode = 1;
 
-  // --- odsłanianie tekstu znak po znaku ------------------------------------
+  // --- sygnatura Legii: bez animacji (decyzja klienta 2026-08-24) -----------
   await p.evaluate(() => document.querySelector('.claim').scrollIntoView({ block: 'center' }));
-  await new Promise(r => setTimeout(r, 1800));
+  await new Promise(r => setTimeout(r, 1200));
   const rev = await p.evaluate(() => {
-    const el = document.querySelector('.claim [data-reveal]');
-    const slowa = [...el.querySelectorAll('.word')];
-    const znaki = [...el.querySelectorAll('.char')];
-    const lh = parseFloat(getComputedStyle(el).lineHeight) || parseFloat(getComputedStyle(el).fontSize) * 1.04;
+    const el = document.querySelector('.claim-txt');
+    const logo = document.querySelector('.claim-logo');
+    const kreska = document.querySelector('.claim-kreska');
     return {
-      podzielone: znaki.length > 20 && slowa.length > 2,
-      // podział nie może zgubić ani dołożyć znaku
-      trescCala: el.getAttribute('aria-label').replace(/\s+/g, '') === el.textContent.replace(/\s+/g, ''),
-      // znaki to osobne inline-block — bez nowrap słowo łamie się w środku
-      bezLamaniaSlow: slowa.every(w => w.getBoundingClientRect().height < lh * 1.6),
-      pokazane: el.classList.contains('pokaz'),
-      naMiejscu: znaki.every(c => Math.abs(new DOMMatrix(getComputedStyle(c).transform).f) < 0.5),
-      // sygnatura: duża, dosunięta do lewej, do dwóch wierszy
+      // tekst ma stać nieruchomo: bez podziału na znaki i bez `data-reveal`
+      bezAnimacji: el.querySelectorAll('.char').length === 0 && !el.hasAttribute('data-reveal'),
+      // logo i kreska od razu widoczne, nie po wjeździe
+      logoWidoczne: +getComputedStyle(logo).opacity > .95
+        && Math.abs(new DOMMatrix(getComputedStyle(logo).transform).f) < 0.5,
+      kreskaWidoczna: innerWidth < 761 || +getComputedStyle(kreska).opacity > .95,
+      trescCala: el.textContent.trim() === 'Autoryzowany punkt medyczny Legii Warszawa',
+      // układ bez zmian: duża, dosunięta do lewej, jedna linia na całą szerokość
       doLewej: document.querySelector('.claim-in').getBoundingClientRect().left < 80,
-      // jedna linia na całą szerokość — rozmiar musi ustąpić na wąskim oknie
       duza: parseFloat(getComputedStyle(el).fontSize) >= (innerWidth >= 1200 ? 38 : 22),
       jednaLinia: innerWidth < 761 || el.getBoundingClientRect().height
                   < parseFloat(getComputedStyle(el).fontSize) * 1.6,
@@ -500,9 +498,9 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
         return t.left >= c.left - 1 && t.right <= c.right + 1; })(),
     };
   });
-  const revOk = rev.podzielone && rev.trescCala && rev.bezLamaniaSlow && rev.pokazane
-           && rev.naMiejscu && rev.doLewej && rev.duza && rev.jednaLinia && rev.naCalosc && rev.wKadrze;
-  console.log(`${w}×${h} odsłanianie`, revOk ? 'ok' : 'BŁĄD ' + JSON.stringify(rev));
+  const revOk = rev.bezAnimacji && rev.logoWidoczne && rev.kreskaWidoczna && rev.trescCala
+           && rev.doLewej && rev.duza && rev.jednaLinia && rev.naCalosc && rev.wKadrze;
+  console.log(`${w}×${h} sygnatura`, revOk ? 'ok' : 'BŁĄD ' + JSON.stringify(rev));
   if (!revOk) process.exitCode = 1;
 
   // --- zespół: marquee, strzałki, wizytówka --------------------------------
@@ -543,16 +541,13 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
     const m = new DOMMatrix(getComputedStyle(document.querySelector('[data-tm-belt]')).transform);
     return { zawinelo: m.e > -o && m.e <= 0 };
   });
+  // strzałki usunięte (decyzja klienta 2026-08-24) — pas ma jechać sam
   const zStrzalka = await p.evaluate(async () => {
     const s = document.querySelector('.tm');
     const przed = s.__mq.x();
-    document.querySelector('[data-tm-next]').click();
     await new Promise(r => setTimeout(r, 700));
-    const dalej = s.__mq.x() - przed;                 // krok ~-270 + dryf ~-56
-    const przed2 = s.__mq.x();
-    document.querySelector('[data-tm-prev]').click();
-    await new Promise(r => setTimeout(r, 700));
-    return { dalej: +dalej.toFixed(0), wstecz: +(s.__mq.x() - przed2).toFixed(0) };
+    return { brakStrzalek: document.querySelectorAll('.tm-arrow').length === 0,
+             jedzieSam: s.__mq.x() < przed - 20 };
   });
   await p.evaluate(() => {
     const k = [...document.querySelectorAll('.tm-card')]
@@ -581,7 +576,7 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
            && zBaza.naglowekSzeroki && zBaza.naglowekOdslania
            && zBaza.tloBiale && zBaza.napisyNaKarcie && zBaza.kartaDuza && zBaza.sygnaturaPoZespole
            && zBaza.tempo < -60 && zBaza.tempo > -100
-           && zPetla.zawinelo && zStrzalka.dalej < -250 && zStrzalka.wstecz > 120
+           && zPetla.zawinelo && zStrzalka.brakStrzalek && zStrzalka.jedzieSam
            && zOkno.otwarte && zOkno.wKadrze && zOkno.zgodne && zOkno.maCta
            && zZamk.zamkniete && zZamk.fokusWrocil;
   console.log(`${w}×${h} zespół`, zOk ? 'ok' : 'BŁĄD ' + JSON.stringify({ zBaza, zPetla, zStrzalka, zOkno, zZamk }));
