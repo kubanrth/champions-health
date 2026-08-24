@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Blog | Champions Health</title>
-<meta name="description" content="Krótkie teksty o powrocie do sportu, prewencji i diagnostyce — pisane przez sztab medyczny Legii Warszawa.">
+<title>Powrót po rekonstrukcji ACL | Champions Health</title>
+<meta name="description" content="Dlaczego o powrocie do gry po rekonstrukcji ACL decyduje symetria siły uda, a nie kalendarz — z praktyki sztabu medycznego Legii Warszawa.">
 <link rel="icon" href="img/logo_LCH.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Inter:opsz,wght@14..32,400..700&display=swap" rel="stylesheet">
@@ -383,6 +383,75 @@ footer.site span:last-child{margin-left:auto}
   .blog-glowny{grid-template-columns:1fr;gap:20px}
   .blog-glowny .post-foto{order:-1;aspect-ratio:16/11}
 }
+
+/* --- widok wpisu ------------------------------------------------------- */
+/* Kolumna czytania ma ~68 znaków — poza tym wiersz męczy oko. Reszta
+   (zdjęcie, cytat, ramka) celowo wychodzi poza nią, żeby tekst oddychał. */
+.wp{--kol:min(68ch,100%);padding:clamp(28px,4vw,52px) 0 clamp(56px,7vw,96px)}
+.wp-wrap{width:var(--tresc);max-width:100%;margin:0 auto;padding-inline:var(--bok)}
+.wp-wroc{display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:500;
+  color:var(--tekst2);transition:color .25s var(--ease)}
+.wp-wroc:hover{color:var(--ink)}
+.wp-wroc svg{transition:transform .3s var(--ease)}
+.wp-wroc:hover svg{transform:translateX(-3px)}
+
+.wp-meta{margin:clamp(26px,3.4vw,40px) 0 0;font-size:13px;font-weight:500;color:var(--tekst2)}
+.wp h1{margin:12px 0 0;max-width:20ch;font-size:clamp(2.1rem,4.6vw,3.9rem);line-height:1.05;
+  letter-spacing:-.03em;font-weight:500}
+.wp-lead{margin:18px 0 0;max-width:52ch;font-size:clamp(17px,1.5vw,20px);line-height:1.55;
+  color:var(--tekst)}
+
+.wp-autor{display:flex;align-items:center;gap:14px;margin:clamp(24px,3vw,34px) 0 0;
+  padding-top:clamp(20px,2.4vw,28px);border-top:1px solid var(--kres)}
+/* zdjęcia lekarzy leżą w `brief/`, który jest poza repozytorium (repo jest
+   publiczne) — do czasu materiałów od klienta idzie monogram */
+.wp-inicjaly{width:46px;height:46px;flex:none;border-radius:50%;background:var(--ink);color:#fff;
+  display:grid;place-items:center;font-size:14px;font-weight:600;letter-spacing:.02em}
+.wp-autor b{display:block;font-size:15px;font-weight:600;letter-spacing:-.01em}
+.wp-autor div span{display:block;margin-top:2px;font-size:13px;color:var(--tekst2)}
+
+.wp-foto{margin:clamp(30px,4vw,52px) 0 0;border-radius:20px;overflow:hidden;background:var(--plyta)}
+.wp-foto img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover}
+.wp-foto figcaption{padding:12px 2px 0;font-size:13px;color:var(--tekst2)}
+
+.wp-tresc{margin:clamp(34px,4.4vw,56px) 0 0}
+.wp-tresc>*{width:var(--kol)}
+.wp-tresc p{margin:0 0 1.15em;font-size:17px;line-height:1.72;color:var(--tekst)}
+.wp-tresc h2{margin:clamp(34px,3.6vw,48px) 0 .5em;font-size:clamp(1.35rem,2.1vw,1.75rem);
+  line-height:1.2;letter-spacing:-.02em;font-weight:500;color:var(--ink)}
+.wp-tresc ul{margin:0 0 1.3em;padding:0;list-style:none}
+.wp-tresc li{position:relative;margin:0 0 .55em;padding-left:26px;font-size:17px;
+  line-height:1.6;color:var(--tekst)}
+.wp-tresc li::before{content:"";position:absolute;left:6px;top:.72em;width:6px;height:6px;
+  border-radius:50%;background:var(--ink);opacity:.35}
+.wp-tresc strong{color:var(--ink);font-weight:600}
+
+/* cytat wychodzi poza kolumnę czytania — to on ma zatrzymać wzrok */
+.wp-cytat{width:min(84ch,100%);margin:clamp(30px,3.6vw,44px) 0;padding:0 0 0 clamp(20px,2.4vw,30px);
+  border-left:2px solid var(--ink);
+  font-size:clamp(1.15rem,1.9vw,1.5rem);line-height:1.35;letter-spacing:-.02em;color:var(--ink)}
+.wp-cytat p{font-size:inherit;line-height:inherit;color:inherit;margin:0}
+.wp-cytat cite{display:block;margin-top:14px;font-size:13px;font-style:normal;color:var(--tekst2)}
+
+.wp-ramka{width:min(84ch,100%);margin:clamp(30px,3.6vw,44px) 0;padding:clamp(22px,2.6vw,30px);
+  border-radius:18px;background:var(--plyta)}
+.wp-ramka b{display:block;margin-bottom:10px;font-size:13px;font-weight:600;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--tekst2)}
+.wp-ramka p:last-child{margin-bottom:0}
+
+.wp-stopka{margin:clamp(40px,5vw,64px) 0 0;padding-top:clamp(24px,3vw,32px);
+  border-top:1px solid var(--kres)}
+.wp-stopka p{max-width:60ch;font-size:14px;line-height:1.6;color:var(--tekst2)}
+
+/* powiązane wpisy — ta sama siatka co na liście */
+.wp-dalej{padding:clamp(44px,6vw,76px) 0;border-top:1px solid var(--kres)}
+.wp-dalej h2{margin:0 0 clamp(24px,3vw,36px);font-size:clamp(1.3rem,2vw,1.7rem);
+  letter-spacing:-.02em;font-weight:500}
+.wp-siatka{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:clamp(20px,2.4vw,34px)}
+@media(max-width:760px){
+  .wp-cytat,.wp-ramka{width:100%}
+}
 </style>
 </head>
 <body>
@@ -404,79 +473,124 @@ footer.site span:last-child{margin-left:auto}
 
 <main>
 
-<header class="tm-head">
-  <div class="wrap">
-    <h1 data-rv>Wiedza, nie domysły</h1>
-    <p data-rv>Krótkie teksty o tym, jak prowadzimy powrót do sportu — pisane przez ten sam
-      sztab, który robi to na co dzień.</p>
-    <a class="btn btn-pelny" href="#kontakt" data-rv>Umów wizytę
-      <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
-        <path d="M3 10 10 3M4.6 3H10v5.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg></a>
-  </div>
-</header>
+<article class="wp">
+  <div class="wp-wrap">
+    <a class="wp-wroc" href="blog.html">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+        <path d="M8.5 2.5 4 7l4.5 4.5" stroke="currentColor" stroke-width="1.6"
+              stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>Blog</a>
 
-<section class="blog-sek">
-  <div class="wrap">
-    <article class="blog-glowny" data-rv>
+    <p class="wp-meta">Rehabilitacja · 12 sierpnia 2026 · 8 min czytania</p>
+    <h1 data-rv>Powrót po rekonstrukcji ACL</h1>
+    <p class="wp-lead" data-rv>O powrocie do gry nie decyduje data zabiegu ani liczba
+      tygodni w kalendarzu. Decyduje to, czy operowana noga odzyskała siłę i kontrolę
+      porównywalną z drugą — a to sprawdza się testami, nie kalendarzem.</p>
+
+    <div class="wp-autor" data-rv>
+      <span class="wp-inicjaly" aria-hidden="true">KB</span>
       <div>
-        <span class="post-meta">Najnowszy · Rehabilitacja · 8 min czytania</span>
-        <h2><a href="wpis.html">Powrót po rekonstrukcji ACL</a></h2>
-        <p>Dlaczego o powrocie decyduje symetria siły uda, a nie liczba tygodni od operacji.
-          Jak wyglądają kolejne progi i po czym poznać, że ostatni jest naprawdę zaliczony.</p>
+        <b>dr n. med. Krzysztof Bibrowicz</b>
+        <span>Ortopedia i traumatologia narządu ruchu</span>
       </div>
-      <a class="post-foto" href="wpis.html" aria-label="Powrót po rekonstrukcji ACL">
-        <img src="img/c1-ortopedia.png" alt="">
-      </a>
-    </article>
-    <div class="blog-siatka">
+    </div>
+
+    <figure class="wp-foto" data-rv>
+      <img src="img/c3-fizjoterapia.png" alt="Fizjoterapeuta prowadzi test siły uda">
+      <figcaption>Testy izokinetyczne i skoczności — na nich opiera się decyzja o powrocie.</figcaption>
+    </figure>
+
+    <div class="wp-tresc">
+      <p data-rv>Rekonstrukcja więzadła krzyżowego przedniego to zabieg, po którym
+        najtrudniejsza jest nie pierwsza doba, tylko ostatnie trzy miesiące. Wtedy kolano
+        już nie boli, chód wygląda normalnie i pojawia się pokusa, żeby wrócić do zespołu.
+        Problem w tym, że brak bólu nie jest równoznaczny z gotowością.</p>
+
+      <p>W praktyce najczęściej widzimy jedną z dwóch sytuacji: zawodnik wraca za wcześnie,
+        bo skończył się „standardowy" szósty miesiąc, albo wraca za późno, bo nikt nie
+        zmierzył, że jest gotowy już od kilku tygodni. Oba przypadki mają to samo źródło —
+        decyzję podjęto na podstawie czasu, a nie danych.</p>
+
+      <h2>Co mierzymy, zanim powiemy „tak"</h2>
+      <p>Zestaw testów jest u nas ten sam dla zawodnika pierwszej drużyny i dla pacjenta
+        z zewnątrz. Różni się tylko poprzeczka, bo zależy od dyscypliny i pozycji na boisku.</p>
+      <ul>
+        <li><strong>Symetria siły uda</strong> — prostowniki i zginacze, mierzone
+          izokinetycznie. Różnica między nogami poniżej 10%.</li>
+        <li><strong>Testy skoczności</strong> — skok jednonóż w dal, potrójny, boczny.
+          Liczy się nie tylko odległość, ale też jakość lądowania.</li>
+        <li><strong>Kontrola lądowania</strong> — ocena ustawienia kolana przy zeskoku,
+          rejestrowana i porównywana z zapisem sprzed urazu, jeśli taki mamy.</li>
+        <li><strong>Gotowość psychiczna</strong> — kwestionariusz, który wychwytuje strach
+          przed ponownym urazem. To realny czynnik ryzyka, nie miękki dodatek.</li>
+      </ul>
+
+      <div class="wp-cytat" data-rv>
+        <p>Kalendarz mówi, kiedy zawodnik <em>może</em> wrócić. Testy mówią, kiedy
+          <em>powinien</em>. Rozjazd między jednym a drugim potrafi wynosić dwa miesiące
+          — w obie strony.</p>
+        <cite>dr n. med. Krzysztof Bibrowicz</cite>
+      </div>
+
+      <h2>Dlaczego symetria jest ważniejsza niż data</h2>
+      <p>Operowana noga po kilku miesiącach oszczędzania jest po prostu słabsza. Organizm
+        kompensuje to tak sprawnie, że gołym okiem tego nie widać — zawodnik biega, zmienia
+        kierunek, gra w dziadka. Dopiero pomiar pokazuje, że przy dynamicznym hamowaniu
+        obciążenie rozkłada się nierówno, a to właśnie w takich momentach dochodzi do
+        ponownego urazu.</p>
+
+      <p>Dlatego ostatni etap rehabilitacji nie polega na „dochodzeniu do siebie", tylko na
+        celowanym treningu siłowym i pracy nad techniką lądowania. To najbardziej wymagająca
+        część całego procesu i ta, którą najczęściej się skraca.</p>
+
+      <div class="wp-ramka" data-rv>
+        <b>W skrócie</b>
+        <p>Powrót do gry planujemy na podstawie wyników testów, nie liczby tygodni.
+          Jeśli różnica siły między nogami przekracza 10%, ryzyko ponownego urazu rośnie
+          na tyle, że warto poczekać — nawet gdy kolano nie boli i kalendarz mówi co innego.</p>
+      </div>
+
+      <h2>Jak to wygląda u nas</h2>
+      <p>Pacjent po rekonstrukcji trafia pod opiekę jednego koordynatora, który prowadzi go
+        od pierwszej kontroli po test wypuszczający na boisko. Terminy badań ustalamy z góry,
+        a wyniki omawiamy wspólnie — pacjent widzi te same liczby, co my.</p>
+
+      <p>Jeśli jesteś po zabiegu albo dopiero go planujesz, najprościej zacząć od rozmowy.
+        Piętnaście minut wystarczy, żeby ocenić, na jakim etapie jesteś i czego potrzebujesz.</p>
+    </div>
+
+    <div class="wp-stopka">
+      <p>Tekst ma charakter informacyjny i nie zastępuje konsultacji lekarskiej.
+        Decyzję o powrocie do sportu zawsze podejmuje lekarz prowadzący na podstawie
+        badania i wyników testów.</p>
+    </div>
+  </div>
+</article>
+
+<section class="wp-dalej">
+  <div class="wp-wrap">
+    <h2>Czytaj dalej</h2>
+    <div class="wp-siatka">
       <article class="post" data-rv>
-        <a class="post-foto" href="wpis.html" aria-label="Ile naprawdę znaczy sen w profilaktyce urazów">
-          <img src="img/c2-medycyna.png" alt="" loading="lazy">
-        </a>
-        <span class="post-meta">Profilaktyka · 6 min czytania</span>
-        <h3><a href="wpis.html">Ile naprawdę znaczy sen w profilaktyce urazów</a></h3>
-        <p>Poniżej siedmiu godzin ryzyko urazu rośnie prawie dwukrotnie. Co z tym zrobić w sezonie.</p>
-      </article>
-      <article class="post" data-rv>
-        <a class="post-foto" href="wpis.html" aria-label="Testy przed powrotem do gry">
-          <img src="img/c3-fizjoterapia.png" alt="" loading="lazy">
-        </a>
-        <span class="post-meta">Diagnostyka · 5 min czytania</span>
-        <h3><a href="wpis.html">Testy przed powrotem do gry</a></h3>
-        <p>Zestaw prób, który stosujemy u zawodników — i jak wygląda u amatora.</p>
-      </article>
-      <article class="post" data-rv>
-        <a class="post-foto" href="wpis.html" aria-label="Hamstringi: prewencja, która się opłaca">
+        <a class="post-foto" href="wpis.html">
           <img src="img/c5-trening.png" alt="" loading="lazy">
         </a>
         <span class="post-meta">Prewencja · 7 min czytania</span>
         <h3><a href="wpis.html">Hamstringi: prewencja, która się opłaca</a></h3>
-        <p>Jak dawkować pracę ekscentryczną w tygodniu treningowym, żeby chroniła, a nie dobijała.</p>
       </article>
       <article class="post" data-rv>
-        <a class="post-foto" href="wpis.html" aria-label="Talerz w tygodniu meczowym">
+        <a class="post-foto" href="wpis.html">
+          <img src="img/c1-ortopedia.png" alt="" loading="lazy">
+        </a>
+        <span class="post-meta">Diagnostyka · 5 min czytania</span>
+        <h3><a href="wpis.html">Testy przed powrotem do gry</a></h3>
+      </article>
+      <article class="post" data-rv>
+        <a class="post-foto" href="wpis.html">
           <img src="img/c4-dietetyka.png" alt="" loading="lazy">
         </a>
         <span class="post-meta">Żywienie · 5 min czytania</span>
         <h3><a href="wpis.html">Talerz w tygodniu meczowym</a></h3>
-        <p>Co zmienia się w jedzeniu, gdy w weekend gra się mecz, a w środku tygodnia są dwa treningi.</p>
-      </article>
-      <article class="post" data-rv>
-        <a class="post-foto" href="wpis.html" aria-label="Czego szuka lekarz na pierwszej wizycie">
-          <img src="img/c6-edukacja.png" alt="" loading="lazy">
-        </a>
-        <span class="post-meta">Diagnostyka · 4 min czytania</span>
-        <h3><a href="wpis.html">Czego szuka lekarz na pierwszej wizycie</a></h3>
-        <p>Wywiad, badanie i obrazowanie — jak składamy z tego decyzję o dalszym leczeniu.</p>
-      </article>
-      <article class="post" data-rv>
-        <a class="post-foto" href="wpis.html" aria-label="Ból przeciążeniowy nie znika od samej przerwy">
-          <img src="img/etapy.png" alt="" loading="lazy">
-        </a>
-        <span class="post-meta">Trening · 6 min czytania</span>
-        <h3><a href="wpis.html">Ból przeciążeniowy nie znika od samej przerwy</a></h3>
-        <p>Skąd się bierze, dlaczego wraca po każdej pauzie i nad czym naprawdę trzeba popracować.</p>
       </article>
     </div>
   </div>
