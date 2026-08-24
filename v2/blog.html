@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Zespół | Champions Health</title>
-<meta name="description" content="Czternastu specjalistów sztabu medycznego Legii Warszawa: lekarze i fizjoterapeuci, którzy na co dzień prowadzą pierwszą drużynę i Akademię.">
+<title>Blog | Champions Health</title>
+<meta name="description" content="Krótkie teksty o powrocie do sportu, prewencji i diagnostyce — pisane przez sztab medyczny Legii Warszawa.">
 <link rel="icon" href="img/logo_LCH.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Inter:opsz,wght@14..32,400..700&display=swap" rel="stylesheet">
-<!-- Styl bazowy = kopia stylu z uslugi/szablon.html + siatka zespołu 1:1
+<!-- Styl bazowy = kopia <style> z uslugi/szablon.html + siatka zespołu 1:1
      z komponentu Framer „Team Member Pro" (pomiary w notes/champions-health.md).
      Zdjęć, opisów i cytatów lekarzy NIE WOLNO fabrykować — inicjały + fakty
      z materiałów klienta albo jawne „w przygotowaniu". -->
@@ -349,6 +349,40 @@ footer.site span:last-child{margin-left:auto}
 @media(prefers-reduced-motion:reduce){
   .tm-cytat span,.tm-kadr>b,.tm-panel,.tm-pods b,.tm-pods i,.tm-pods span{transition:none}
 }
+
+/* --- blog: karty 1:1 z sekcji #blog na home (foto 16/11 radius 16, meta
+   13/500, tytuł z podkreśleniem rosnącym od lewej, hover-zoom 1.04) w ukła-
+   dzie elevenlabs.io/blog zmierzonym przy 1440: featured u góry (tekst |
+   obraz kwadratowy 588×588), niżej siatka 3 × 370 ze starszymi wpisami. --- */
+.blog-sek{padding-bottom:clamp(48px,6vw,80px)}
+.blog-glowny{display:grid;grid-template-columns:1fr 1.05fr;gap:clamp(28px,4vw,64px);
+  align-items:center;margin-bottom:clamp(40px,5.6vw,72px)}
+.blog-glowny .post-foto{aspect-ratio:1/1}
+.blog-glowny h2{margin:8px 0 0;max-width:16ch;font-size:clamp(1.9rem,3.4vw,2.9rem);
+  line-height:1.08;letter-spacing:-.025em;font-weight:500}
+.blog-glowny h2 a{background-image:linear-gradient(currentColor,currentColor);
+  background-size:0 1px;background-repeat:no-repeat;background-position:0 100%;
+  transition:background-size .45s var(--ease)}
+.blog-glowny:hover h2 a{background-size:100% 1px}
+.blog-glowny>p{margin:14px 0 0;max-width:46ch;font-size:16.5px;line-height:1.6;color:var(--tekst)}
+.blog-siatka{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+  gap:clamp(20px,2.4vw,34px);padding-top:clamp(28px,4vw,44px);
+  border-top:1px solid var(--kres)}
+.post-foto{display:block;aspect-ratio:16/11;border-radius:16px;overflow:hidden;background:#151515}
+.post-foto img{width:100%;height:100%;object-fit:cover;transition:transform .6s var(--ease)}
+.post:hover .post-foto img,.blog-glowny:hover .post-foto img{transform:scale(1.04)}
+.post-meta{display:block;margin-top:18px;font-size:13px;font-weight:500;color:var(--tekst2)}
+.blog-glowny .post-meta{margin-top:0}
+.post h3{margin:8px 0 0;max-width:20ch;font-size:clamp(1.3rem,1.9vw,1.75rem);line-height:1.15;
+  letter-spacing:-.022em;font-weight:500}
+.post h3 a{background-image:linear-gradient(currentColor,currentColor);background-size:0 1px;
+  background-repeat:no-repeat;background-position:0 100%;transition:background-size .45s var(--ease)}
+.post:hover h3 a{background-size:100% 1px}
+.post p{margin:10px 0 0;max-width:36ch;font-size:15px;line-height:22px;color:var(--tekst)}
+@media(max-width:900px){
+  .blog-glowny{grid-template-columns:1fr;gap:20px}
+  .blog-glowny .post-foto{order:-1;aspect-ratio:16/11}
+}
 </style>
 </head>
 <body>
@@ -360,8 +394,8 @@ footer.site span:last-child{margin-left:auto}
     </a>
     <div class="menu">
       <a href="index.html#opieka">Usługi</a>
-      <a href="zespol.html" aria-current="page">Zespół</a>
-      <a href="blog.html">Blog</a>
+      <a href="zespol.html">Zespół</a>
+      <a href="blog.html" aria-current="page">Blog</a>
       <a href="#kontakt">Kontakt</a>
     </div>
     <a class="cta" href="#kontakt">Umów wizytę</a>
@@ -372,9 +406,9 @@ footer.site span:last-child{margin-left:auto}
 
 <header class="tm-head">
   <div class="wrap">
-    <h1 data-rv>Zespół, który zna boisko od szatni</h1>
-    <p data-rv>Ci sami ludzie, którzy na co dzień prowadzą pierwszą drużynę
-      i Akademię Legii Warszawa, przyjmują w klinice.</p>
+    <h1 data-rv>Wiedza, nie domysły</h1>
+    <p data-rv>Krótkie teksty o tym, jak prowadzimy powrót do sportu — pisane przez ten sam
+      sztab, który robi to na co dzień.</p>
     <a class="btn btn-pelny" href="#kontakt" data-rv>Umów wizytę
       <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
         <path d="M3 10 10 3M4.6 3H10v5.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
@@ -382,190 +416,69 @@ footer.site span:last-child{margin-left:auto}
   </div>
 </header>
 
-<section class="tm-sek">
-  <div class="tm-grid">
-      <div class="tm-karta" data-tm tabindex="0" role="button"
-        aria-label="Filip Latawiec, Ortopedia i medycyna sportowa. Były kierownik medyczny Legii Warszawa i Al Jazira FC." aria-expanded="false">
-        <div class="tm-kadr"><b aria-hidden="true">FL</b><span>Zdjęcie w przygotowaniu</span></div>
-        <div class="tm-nakladka" aria-hidden="true"><div class="tm-panel">
-          <p class="tm-cytat"><span style="--i:0">Były</span> <span style="--i:1">kierownik</span> <span style="--i:2">medyczny</span> <span style="--i:3">Legii</span> <span style="--i:4">Warszawa</span> <span style="--i:5">i</span> <span style="--i:6">Al</span> <span style="--i:7">Jazira</span> <span style="--i:8">FC.</span></p>
-          <a class="btn" href="#kontakt" tabindex="-1">Umów wizytę
-            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
-              <path d="M3 10 10 3M4.6 3H10v5.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg></a>
-          <p class="tm-meta">Ortopedia · medycyna sportowa</p></div>
-        </div>
-        <div class="tm-pods"><b>Filip Latawiec</b><i></i><span>Lekarz</span></div>
+<section class="blog-sek">
+  <div class="wrap">
+    <article class="blog-glowny" data-rv>
+      <div>
+        <span class="post-meta">Najnowszy · Rehabilitacja · 8 min czytania</span>
+        <h2><a href="#kontakt">Powrót po rekonstrukcji ACL</a></h2>
+        <p>Dlaczego o powrocie decyduje symetria siły uda, a nie liczba tygodni od operacji.
+          Jak wyglądają kolejne progi i po czym poznać, że ostatni jest naprawdę zaliczony.</p>
       </div>
-      <div class="tm-karta" data-tm tabindex="0" role="button"
-        aria-label="Mateusz Dłutowski, Ortopedia i traumatologia. Lekarz pierwszego zespołu Legii Warszawa od 2024 roku." aria-expanded="false">
-        <div class="tm-kadr"><b aria-hidden="true">MD</b><span>Zdjęcie w przygotowaniu</span></div>
-        <div class="tm-nakladka" aria-hidden="true"><div class="tm-panel">
-          <p class="tm-cytat"><span style="--i:0">Lekarz</span> <span style="--i:1">pierwszego</span> <span style="--i:2">zespołu</span> <span style="--i:3">Legii</span> <span style="--i:4">Warszawa</span> <span style="--i:5">od</span> <span style="--i:6">2024</span> <span style="--i:7">roku.</span></p>
-          <a class="btn" href="#kontakt" tabindex="-1">Umów wizytę
-            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
-              <path d="M3 10 10 3M4.6 3H10v5.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg></a>
-          <p class="tm-meta">Ortopedia · traumatologia</p></div>
-        </div>
-        <div class="tm-pods"><b>Mateusz Dłutowski</b><i></i><span>Lekarz</span></div>
-      </div>
-      <div class="tm-karta" data-tm tabindex="0" role="button"
-        aria-label="Szymon Gałczyński, Medycyna sportowa i rodzinna. Opieka medyczna wydarzeń sportowych, m.in. Tour de Pologne." aria-expanded="false">
-        <div class="tm-kadr"><b aria-hidden="true">SG</b><span>Zdjęcie w przygotowaniu</span></div>
-        <div class="tm-nakladka" aria-hidden="true"><div class="tm-panel">
-          <p class="tm-cytat"><span style="--i:0">Opieka</span> <span style="--i:1">medyczna</span> <span style="--i:2">wydarzeń</span> <span style="--i:3">sportowych,</span> <span style="--i:4">m.in.</span> <span style="--i:5">Tour</span> <span style="--i:6">de</span> <span style="--i:7">Pologne.</span></p>
-          <a class="btn" href="#kontakt" tabindex="-1">Umów wizytę
-            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
-              <path d="M3 10 10 3M4.6 3H10v5.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg></a>
-          <p class="tm-meta">Medycyna sportowa · rodzinna</p></div>
-        </div>
-        <div class="tm-pods"><b>Szymon Gałczyński</b><i></i><span>Lekarz</span></div>
-      </div>
-      <div class="tm-karta" data-tm tabindex="0" role="button"
-        aria-label="Piotr Modzelewski, Akademia Legii i Legia Ladies. Prowadzenie zawodników Akademii Legii Warszawa oraz zespołu Legia Ladies." aria-expanded="false">
-        <div class="tm-kadr"><b aria-hidden="true">PM</b><span>Zdjęcie w przygotowaniu</span></div>
-        <div class="tm-nakladka" aria-hidden="true"><div class="tm-panel">
-          <p class="tm-cytat"><span style="--i:0">Prowadzenie</span> <span style="--i:1">zawodników</span> <span style="--i:2">Akademii</span> <span style="--i:3">Legii</span> <span style="--i:4">Warszawa</span> <span style="--i:5">oraz</span> <span style="--i:6">zespołu</span> <span style="--i:7">Legia</span> <span style="--i:8">Ladies.</span></p>
-          <a class="btn" href="#kontakt" tabindex="-1">Umów wizytę
-            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
-              <path d="M3 10 10 3M4.6 3H10v5.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg></a>
-          <p class="tm-meta">Lekarz · Akademia i Ladies</p></div>
-        </div>
-        <div class="tm-pods"><b>Piotr Modzelewski</b><i></i><span>Lekarz</span></div>
-      </div>
-      <div class="tm-karta" data-tm tabindex="0" role="button"
-        aria-label="Marcin Tusiński, Medycyna sportowa. W sztabie medycznym Legii Warszawa od 2025 roku." aria-expanded="false">
-        <div class="tm-kadr"><b aria-hidden="true">MT</b><span>Zdjęcie w przygotowaniu</span></div>
-        <div class="tm-nakladka" aria-hidden="true"><div class="tm-panel">
-          <p class="tm-cytat"><span style="--i:0">W</span> <span style="--i:1">sztabie</span> <span style="--i:2">medycznym</span> <span style="--i:3">Legii</span> <span style="--i:4">Warszawa</span> <span style="--i:5">od</span> <span style="--i:6">2025</span> <span style="--i:7">roku.</span></p>
-          <a class="btn" href="#kontakt" tabindex="-1">Umów wizytę
-            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
-              <path d="M3 10 10 3M4.6 3H10v5.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg></a>
-          <p class="tm-meta">Medycyna sportowa</p></div>
-        </div>
-        <div class="tm-pods"><b>Marcin Tusiński</b><i></i><span>Lekarz</span></div>
-      </div>
-      <div class="tm-karta" data-tm tabindex="0" role="button"
-        aria-label="Dominika Daros, Fizjoterapeuta. Krótka notka o sposobie pracy jest w przygotowaniu i uzupełni ją zespół kliniki." aria-expanded="false">
-        <div class="tm-kadr"><b aria-hidden="true">DD</b><span>Zdjęcie w przygotowaniu</span></div>
-        <div class="tm-nakladka" aria-hidden="true"><div class="tm-panel">
-          <p class="tm-cytat"><span style="--i:0">Krótka</span> <span style="--i:1">notka</span> <span style="--i:2">o</span> <span style="--i:3">sposobie</span> <span style="--i:4">pracy</span> <span style="--i:5">jest</span> <span style="--i:6">w</span> <span style="--i:7">przygotowaniu</span> <span style="--i:8">i</span> <span style="--i:9">uzupełni</span> <span style="--i:10">ją</span> <span style="--i:11">zespół</span> <span style="--i:12">kliniki.</span></p>
-          <a class="btn" href="#kontakt" tabindex="-1">Umów wizytę
-            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
-              <path d="M3 10 10 3M4.6 3H10v5.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg></a>
-          <p class="tm-meta">Fizjoterapeuta</p></div>
-        </div>
-        <div class="tm-pods"><b>Dominika Daros</b><i></i><span>Fizjoterapeuta</span></div>
-      </div>
-      <div class="tm-karta" data-tm tabindex="0" role="button"
-        aria-label="Przemysław Domański, Fizjoterapeuta. Krótka notka o sposobie pracy jest w przygotowaniu i uzupełni ją zespół kliniki." aria-expanded="false">
-        <div class="tm-kadr"><b aria-hidden="true">PD</b><span>Zdjęcie w przygotowaniu</span></div>
-        <div class="tm-nakladka" aria-hidden="true"><div class="tm-panel">
-          <p class="tm-cytat"><span style="--i:0">Krótka</span> <span style="--i:1">notka</span> <span style="--i:2">o</span> <span style="--i:3">sposobie</span> <span style="--i:4">pracy</span> <span style="--i:5">jest</span> <span style="--i:6">w</span> <span style="--i:7">przygotowaniu</span> <span style="--i:8">i</span> <span style="--i:9">uzupełni</span> <span style="--i:10">ją</span> <span style="--i:11">zespół</span> <span style="--i:12">kliniki.</span></p>
-          <a class="btn" href="#kontakt" tabindex="-1">Umów wizytę
-            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
-              <path d="M3 10 10 3M4.6 3H10v5.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg></a>
-          <p class="tm-meta">Fizjoterapeuta</p></div>
-        </div>
-        <div class="tm-pods"><b>Przemysław Domański</b><i></i><span>Fizjoterapeuta</span></div>
-      </div>
-      <div class="tm-karta" data-tm tabindex="0" role="button"
-        aria-label="Łukasz Gembarzewski, Fizjoterapeuta. Krótka notka o sposobie pracy jest w przygotowaniu i uzupełni ją zespół kliniki." aria-expanded="false">
-        <div class="tm-kadr"><b aria-hidden="true">ŁG</b><span>Zdjęcie w przygotowaniu</span></div>
-        <div class="tm-nakladka" aria-hidden="true"><div class="tm-panel">
-          <p class="tm-cytat"><span style="--i:0">Krótka</span> <span style="--i:1">notka</span> <span style="--i:2">o</span> <span style="--i:3">sposobie</span> <span style="--i:4">pracy</span> <span style="--i:5">jest</span> <span style="--i:6">w</span> <span style="--i:7">przygotowaniu</span> <span style="--i:8">i</span> <span style="--i:9">uzupełni</span> <span style="--i:10">ją</span> <span style="--i:11">zespół</span> <span style="--i:12">kliniki.</span></p>
-          <a class="btn" href="#kontakt" tabindex="-1">Umów wizytę
-            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
-              <path d="M3 10 10 3M4.6 3H10v5.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg></a>
-          <p class="tm-meta">Fizjoterapeuta</p></div>
-        </div>
-        <div class="tm-pods"><b>Łukasz Gembarzewski</b><i></i><span>Fizjoterapeuta</span></div>
-      </div>
-      <div class="tm-karta" data-tm tabindex="0" role="button"
-        aria-label="Jakub Grodzki, Fizjoterapeuta. Krótka notka o sposobie pracy jest w przygotowaniu i uzupełni ją zespół kliniki." aria-expanded="false">
-        <div class="tm-kadr"><b aria-hidden="true">JG</b><span>Zdjęcie w przygotowaniu</span></div>
-        <div class="tm-nakladka" aria-hidden="true"><div class="tm-panel">
-          <p class="tm-cytat"><span style="--i:0">Krótka</span> <span style="--i:1">notka</span> <span style="--i:2">o</span> <span style="--i:3">sposobie</span> <span style="--i:4">pracy</span> <span style="--i:5">jest</span> <span style="--i:6">w</span> <span style="--i:7">przygotowaniu</span> <span style="--i:8">i</span> <span style="--i:9">uzupełni</span> <span style="--i:10">ją</span> <span style="--i:11">zespół</span> <span style="--i:12">kliniki.</span></p>
-          <a class="btn" href="#kontakt" tabindex="-1">Umów wizytę
-            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
-              <path d="M3 10 10 3M4.6 3H10v5.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg></a>
-          <p class="tm-meta">Fizjoterapeuta</p></div>
-        </div>
-        <div class="tm-pods"><b>Jakub Grodzki</b><i></i><span>Fizjoterapeuta</span></div>
-      </div>
-      <div class="tm-karta" data-tm tabindex="0" role="button"
-        aria-label="Sandra Heronimek, Fizjoterapeuta. Krótka notka o sposobie pracy jest w przygotowaniu i uzupełni ją zespół kliniki." aria-expanded="false">
-        <div class="tm-kadr"><b aria-hidden="true">SH</b><span>Zdjęcie w przygotowaniu</span></div>
-        <div class="tm-nakladka" aria-hidden="true"><div class="tm-panel">
-          <p class="tm-cytat"><span style="--i:0">Krótka</span> <span style="--i:1">notka</span> <span style="--i:2">o</span> <span style="--i:3">sposobie</span> <span style="--i:4">pracy</span> <span style="--i:5">jest</span> <span style="--i:6">w</span> <span style="--i:7">przygotowaniu</span> <span style="--i:8">i</span> <span style="--i:9">uzupełni</span> <span style="--i:10">ją</span> <span style="--i:11">zespół</span> <span style="--i:12">kliniki.</span></p>
-          <a class="btn" href="#kontakt" tabindex="-1">Umów wizytę
-            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
-              <path d="M3 10 10 3M4.6 3H10v5.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg></a>
-          <p class="tm-meta">Fizjoterapeuta</p></div>
-        </div>
-        <div class="tm-pods"><b>Sandra Heronimek</b><i></i><span>Fizjoterapeuta</span></div>
-      </div>
-      <div class="tm-karta" data-tm tabindex="0" role="button"
-        aria-label="Daniel Komar, Fizjoterapeuta. Krótka notka o sposobie pracy jest w przygotowaniu i uzupełni ją zespół kliniki." aria-expanded="false">
-        <div class="tm-kadr"><b aria-hidden="true">DK</b><span>Zdjęcie w przygotowaniu</span></div>
-        <div class="tm-nakladka" aria-hidden="true"><div class="tm-panel">
-          <p class="tm-cytat"><span style="--i:0">Krótka</span> <span style="--i:1">notka</span> <span style="--i:2">o</span> <span style="--i:3">sposobie</span> <span style="--i:4">pracy</span> <span style="--i:5">jest</span> <span style="--i:6">w</span> <span style="--i:7">przygotowaniu</span> <span style="--i:8">i</span> <span style="--i:9">uzupełni</span> <span style="--i:10">ją</span> <span style="--i:11">zespół</span> <span style="--i:12">kliniki.</span></p>
-          <a class="btn" href="#kontakt" tabindex="-1">Umów wizytę
-            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
-              <path d="M3 10 10 3M4.6 3H10v5.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg></a>
-          <p class="tm-meta">Fizjoterapeuta</p></div>
-        </div>
-        <div class="tm-pods"><b>Daniel Komar</b><i></i><span>Fizjoterapeuta</span></div>
-      </div>
-      <div class="tm-karta" data-tm tabindex="0" role="button"
-        aria-label="Giovanni Mangano, Fizjoterapeuta. Krótka notka o sposobie pracy jest w przygotowaniu i uzupełni ją zespół kliniki." aria-expanded="false">
-        <div class="tm-kadr"><b aria-hidden="true">GM</b><span>Zdjęcie w przygotowaniu</span></div>
-        <div class="tm-nakladka" aria-hidden="true"><div class="tm-panel">
-          <p class="tm-cytat"><span style="--i:0">Krótka</span> <span style="--i:1">notka</span> <span style="--i:2">o</span> <span style="--i:3">sposobie</span> <span style="--i:4">pracy</span> <span style="--i:5">jest</span> <span style="--i:6">w</span> <span style="--i:7">przygotowaniu</span> <span style="--i:8">i</span> <span style="--i:9">uzupełni</span> <span style="--i:10">ją</span> <span style="--i:11">zespół</span> <span style="--i:12">kliniki.</span></p>
-          <a class="btn" href="#kontakt" tabindex="-1">Umów wizytę
-            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
-              <path d="M3 10 10 3M4.6 3H10v5.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg></a>
-          <p class="tm-meta">Fizjoterapeuta</p></div>
-        </div>
-        <div class="tm-pods"><b>Giovanni Mangano</b><i></i><span>Fizjoterapeuta</span></div>
-      </div>
-      <div class="tm-karta" data-tm tabindex="0" role="button"
-        aria-label="Dominik Ofat, Fizjoterapeuta. Krótka notka o sposobie pracy jest w przygotowaniu i uzupełni ją zespół kliniki." aria-expanded="false">
-        <div class="tm-kadr"><b aria-hidden="true">DO</b><span>Zdjęcie w przygotowaniu</span></div>
-        <div class="tm-nakladka" aria-hidden="true"><div class="tm-panel">
-          <p class="tm-cytat"><span style="--i:0">Krótka</span> <span style="--i:1">notka</span> <span style="--i:2">o</span> <span style="--i:3">sposobie</span> <span style="--i:4">pracy</span> <span style="--i:5">jest</span> <span style="--i:6">w</span> <span style="--i:7">przygotowaniu</span> <span style="--i:8">i</span> <span style="--i:9">uzupełni</span> <span style="--i:10">ją</span> <span style="--i:11">zespół</span> <span style="--i:12">kliniki.</span></p>
-          <a class="btn" href="#kontakt" tabindex="-1">Umów wizytę
-            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
-              <path d="M3 10 10 3M4.6 3H10v5.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg></a>
-          <p class="tm-meta">Fizjoterapeuta</p></div>
-        </div>
-        <div class="tm-pods"><b>Dominik Ofat</b><i></i><span>Fizjoterapeuta</span></div>
-      </div>
-      <div class="tm-karta" data-tm tabindex="0" role="button"
-        aria-label="Kamil Pasoń, Fizjoterapeuta. Krótka notka o sposobie pracy jest w przygotowaniu i uzupełni ją zespół kliniki." aria-expanded="false">
-        <div class="tm-kadr"><b aria-hidden="true">KP</b><span>Zdjęcie w przygotowaniu</span></div>
-        <div class="tm-nakladka" aria-hidden="true"><div class="tm-panel">
-          <p class="tm-cytat"><span style="--i:0">Krótka</span> <span style="--i:1">notka</span> <span style="--i:2">o</span> <span style="--i:3">sposobie</span> <span style="--i:4">pracy</span> <span style="--i:5">jest</span> <span style="--i:6">w</span> <span style="--i:7">przygotowaniu</span> <span style="--i:8">i</span> <span style="--i:9">uzupełni</span> <span style="--i:10">ją</span> <span style="--i:11">zespół</span> <span style="--i:12">kliniki.</span></p>
-          <a class="btn" href="#kontakt" tabindex="-1">Umów wizytę
-            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
-              <path d="M3 10 10 3M4.6 3H10v5.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg></a>
-          <p class="tm-meta">Fizjoterapeuta</p></div>
-        </div>
-        <div class="tm-pods"><b>Kamil Pasoń</b><i></i><span>Fizjoterapeuta</span></div>
-      </div>
+      <a class="post-foto" href="#kontakt" aria-label="Powrót po rekonstrukcji ACL">
+        <img src="img/c1-ortopedia.png" alt="">
+      </a>
+    </article>
+    <div class="blog-siatka">
+      <article class="post" data-rv>
+        <a class="post-foto" href="#kontakt" aria-label="Ile naprawdę znaczy sen w profilaktyce urazów">
+          <img src="img/c2-medycyna.png" alt="" loading="lazy">
+        </a>
+        <span class="post-meta">Profilaktyka · 6 min czytania</span>
+        <h3><a href="#kontakt">Ile naprawdę znaczy sen w profilaktyce urazów</a></h3>
+        <p>Poniżej siedmiu godzin ryzyko urazu rośnie prawie dwukrotnie. Co z tym zrobić w sezonie.</p>
+      </article>
+      <article class="post" data-rv>
+        <a class="post-foto" href="#kontakt" aria-label="Testy przed powrotem do gry">
+          <img src="img/c3-fizjoterapia.png" alt="" loading="lazy">
+        </a>
+        <span class="post-meta">Diagnostyka · 5 min czytania</span>
+        <h3><a href="#kontakt">Testy przed powrotem do gry</a></h3>
+        <p>Zestaw prób, który stosujemy u zawodników — i jak wygląda u amatora.</p>
+      </article>
+      <article class="post" data-rv>
+        <a class="post-foto" href="#kontakt" aria-label="Hamstringi: prewencja, która się opłaca">
+          <img src="img/c5-trening.png" alt="" loading="lazy">
+        </a>
+        <span class="post-meta">Prewencja · 7 min czytania</span>
+        <h3><a href="#kontakt">Hamstringi: prewencja, która się opłaca</a></h3>
+        <p>Jak dawkować pracę ekscentryczną w tygodniu treningowym, żeby chroniła, a nie dobijała.</p>
+      </article>
+      <article class="post" data-rv>
+        <a class="post-foto" href="#kontakt" aria-label="Talerz w tygodniu meczowym">
+          <img src="img/c4-dietetyka.png" alt="" loading="lazy">
+        </a>
+        <span class="post-meta">Żywienie · 5 min czytania</span>
+        <h3><a href="#kontakt">Talerz w tygodniu meczowym</a></h3>
+        <p>Co zmienia się w jedzeniu, gdy w weekend gra się mecz, a w środku tygodnia są dwa treningi.</p>
+      </article>
+      <article class="post" data-rv>
+        <a class="post-foto" href="#kontakt" aria-label="Czego szuka lekarz na pierwszej wizycie">
+          <img src="img/c6-edukacja.png" alt="" loading="lazy">
+        </a>
+        <span class="post-meta">Diagnostyka · 4 min czytania</span>
+        <h3><a href="#kontakt">Czego szuka lekarz na pierwszej wizycie</a></h3>
+        <p>Wywiad, badanie i obrazowanie — jak składamy z tego decyzję o dalszym leczeniu.</p>
+      </article>
+      <article class="post" data-rv>
+        <a class="post-foto" href="#kontakt" aria-label="Ból przeciążeniowy nie znika od samej przerwy">
+          <img src="img/etapy.png" alt="" loading="lazy">
+        </a>
+        <span class="post-meta">Trening · 6 min czytania</span>
+        <h3><a href="#kontakt">Ból przeciążeniowy nie znika od samej przerwy</a></h3>
+        <p>Skąd się bierze, dlaczego wraca po każdej pauzie i nad czym naprawdę trzeba popracować.</p>
+      </article>
+    </div>
   </div>
 </section>
 
@@ -606,7 +519,6 @@ footer.site span:last-child{margin-left:auto}
 </footer>
 
 <script>
-// wjazd nagłówka — ta sama kaskada co na podstronach usług
 const rv = document.querySelectorAll('[data-rv]');
 if (matchMedia('(prefers-reduced-motion:reduce)').matches) {
   rv.forEach(e => e.classList.add('in'));
@@ -622,23 +534,6 @@ if (matchMedia('(prefers-reduced-motion:reduce)').matches) {
   }, { threshold: .12, rootMargin: '0px 0px -8% 0px' });
   rv.forEach(e => io.observe(e));
 }
-
-// nakładka: hover działa z CSS; klik/Enter przełącza (dotyk i klawiatura)
-document.querySelectorAll('[data-tm]').forEach(k => {
-  const przelacz = () => {
-    const on = k.classList.toggle('on');
-    k.setAttribute('aria-expanded', on);
-    k.querySelector('.tm-nakladka').setAttribute('aria-hidden', !on);
-    k.querySelector('.tm-nakladka .btn').tabIndex = on ? 0 : -1;
-  };
-  k.addEventListener('click', e => {
-    if (e.target.closest('a')) return;   // pigułka na nakładce ma nawigować
-    przelacz();
-  });
-  k.addEventListener('keydown', e => {
-    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); przelacz(); }
-  });
-});
 </script>
 </body>
 </html>

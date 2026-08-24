@@ -246,8 +246,8 @@ console.log('\n— wejście z karty na stronie głównej');
   await p.close();
 }
 
-// podstrona zespołu: 14 wizytówek, brak przepełnienia, czysta konsola,
-// wszystkie bloki wjeżdżają, przycisk na wizytówce prowadzi do #kontakt
+// podstrona zespołu: siatka Team Member Pro — 14 kart, nakładka odsłania
+// treść na hover/klik, brak przepełnienia, czysta konsola
 console.log('\n— zespol.html');
 for (const [w, h] of [[1440, 900], [390, 844]]) {
   const p = await przegladarka.newPage();
@@ -265,20 +265,106 @@ for (const [w, h] of [[1440, 900], [390, 844]]) {
   const r = await p.evaluate(() => {
     const wid = document.documentElement.clientWidth;
     return {
-      osoby: document.querySelectorAll('.osoba').length,
+      osoby: document.querySelectorAll('.tm-karta').length,
       przepelnienie: document.documentElement.scrollWidth - wid,
       ukryte: [...document.querySelectorAll('[data-rv]')]
         .filter(e => +getComputedStyle(e).opacity < .9).length,
       kontakt: !!document.querySelector('#kontakt'),
-      cel: document.querySelector('.osoba .btn')?.getAttribute('href'),
-      inicjaly: [...document.querySelectorAll('.osoba-foto b')].every(b => /^[A-ZŁ]{2}$/.test(b.textContent)),
+      cel: document.querySelector('.tm-head .btn')?.getAttribute('href'),
+      inicjaly: [...document.querySelectorAll('.tm-kadr b')].every(b => /^[A-ZŁ]{2}$/.test(b.textContent)),
     };
   });
-  if (r.osoby !== 14) zle(`osób ${r.osoby} @${w}`);
+  if (r.osoby !== 14) zle(`kart ${r.osoby} @${w}`);
   if (r.przepelnienie > 0) zle(`przepełnienie ${r.przepelnienie}px @${w}`);
   if (r.ukryte) zle(`${r.ukryte} bloków nie wjechało @${w}`);
-  if (!r.kontakt || r.cel !== '#kontakt') zle(`CTA wizytówki @${w}`, r.cel);
+  if (!r.kontakt || r.cel !== '#kontakt') zle(`CTA nagłówka @${w}`, r.cel);
   if (!r.inicjaly) zle(`inicjały @${w}`);
+  if (konsola.length) zle(`konsola @${w}`, konsola.slice(0, 3));
+  // nakładka: najazd na pierwszą kartę odsłania słowa i trzyma kontrast
+  if (w === 1440) {
+    // po pętli scrolla strona stoi na dole — karta jest nad kadrem i mouse.move
+    // trafiałby w ujemne współrzędne; najpierw dosuwamy ją do widoku
+    await p.evaluate(() => document.querySelector('.tm-karta')
+      .scrollIntoView({ block: 'center', behavior: 'instant' }));
+    await new Promise(rr => setTimeout(rr, 300));
+    const cel2 = await p.$('.tm-karta');
+    const q = await cel2.boundingBox();
+    await p.mouse.move(q.x + q.width / 2, q.y + q.height / 3);
+    // sekwencja: podpis .3s → panel .22+.65s → słowa od .5s (ostatnie ~1.2s)
+    await new Promise(rr => setTimeout(rr, 1800));
+    const n = await p.evaluate(() => {
+      const k = document.querySelector('.tm-karta');
+      const sl = [...k.querySelectorAll('.tm-cytat span')];
+      const btn = k.querySelector('.tm-nakladka .btn');
+      const q = btn.getBoundingClientRect();
+      // panel wjeżdża transformem — mierzymy realne przesunięcie w pionie
+      const m = new DOMMatrix(getComputedStyle(k.querySelector('.tm-panel')).transform);
+      return { op: Math.abs(m.m42) < 2 ? 1 : 0,
+               widoczne: sl.filter(e => +getComputedStyle(e).opacity > .9).length,
+               razem: sl.length,
+               podpis: +getComputedStyle(k.querySelector('.tm-pods b')).opacity,
+               cel2: btn.getAttribute('href'),
+               // pigułka realnie klikalna, nie przykryta
+               trafia: btn.contains(document.elementFromPoint(q.left + q.width / 2, q.top + q.height / 2)) };
+    });
+    // choreografia: tuż po najechaniu podpis MA znikać, a panel jeszcze stać
+    await p.mouse.move(10, 10);
+    await new Promise(rr => setTimeout(rr, 700));
+    await p.mouse.move(q.x + q.width / 2, q.y + q.height / 3);
+    await new Promise(rr => setTimeout(rr, 120));
+    const wczesnie = await p.evaluate(() => {
+      const k = document.querySelector('.tm-karta');
+      const m = new DOMMatrix(getComputedStyle(k.querySelector('.tm-panel')).transform);
+      return { podpis: +getComputedStyle(k.querySelector('.tm-pods b')).opacity,
+               panelDroga: m.m42 };
+    });
+    // po 120 ms: podpis już w drodze (<0.9), panel jeszcze nie ruszył (delay 220 ms)
+    if (wczesnie.podpis > .9) zle('podpis nie chowa się pierwszy', wczesnie);
+    if (Math.abs(wczesnie.panelDroga) < 300) zle('panel ruszył przed podpisem', wczesnie);
+    await new Promise(rr => setTimeout(rr, 1700));
+    if (n.op < .95) zle('panel nie dojechał na hover', n);
+    else if (n.widoczne !== n.razem) zle('słowa nakładki nie weszły', n);
+    else if (n.podpis > .1) zle('podpis nie znika na hover', n.podpis);
+    else if (n.cel2 !== '#kontakt' || !n.trafia) zle('pigułka nakładki', n);
+    else console.log(`  nakładka: ${n.widoczne}/${n.razem} słów, podpis schowany, pigułka klikalna`);
+  }
+  console.log(`  ${w}×${h} ${bledy ? '' : 'ok'}`);
+  await p.close();
+}
+
+// blog.html: featured + 6 starszych, brak przepełnienia, obrazy, konsola
+console.log('\n— blog.html');
+for (const [w, h] of [[1440, 900], [390, 844]]) {
+  const p = await przegladarka.newPage();
+  await p.setViewport({ width: w, height: h, deviceScaleFactor: 1 });
+  const konsola = [];
+  p.on('console', m => m.type() === 'error' && konsola.push(m.text()));
+  await p.goto('http://localhost:3000/champions-health/v2/blog.html', { waitUntil: 'networkidle2' });
+  await p.evaluate(async () => {
+    const k = Math.round(innerHeight * .8);
+    for (let y = 0; y < document.body.scrollHeight; y += k) {
+      scrollTo({ top: y, behavior: 'instant' }); await new Promise(r => setTimeout(r, 90));
+    }
+    await new Promise(r => setTimeout(r, 900));
+  });
+  const r = await p.evaluate(() => {
+    const wid = document.documentElement.clientWidth;
+    return {
+      glowny: !!document.querySelector('.blog-glowny'),
+      starsze: document.querySelectorAll('.blog-siatka .post').length,
+      przepelnienie: document.documentElement.scrollWidth - wid,
+      ukryte: [...document.querySelectorAll('[data-rv]')]
+        .filter(e => +getComputedStyle(e).opacity < .9).length,
+      obrazy: [...document.images].filter(i => !i.complete || !i.naturalWidth).length,
+      kontakt: !!document.querySelector('#kontakt'),
+    };
+  });
+  if (!r.glowny) zle(`brak wpisu głównego @${w}`);
+  if (r.starsze !== 6) zle(`starszych wpisów ${r.starsze} @${w}`);
+  if (r.przepelnienie > 0) zle(`przepełnienie ${r.przepelnienie}px @${w}`);
+  if (r.ukryte) zle(`${r.ukryte} bloków nie wjechało @${w}`);
+  if (r.obrazy) zle(`obrazy nie wczytane @${w}`, r.obrazy);
+  if (!r.kontakt) zle(`brak #kontakt @${w}`);
   if (konsola.length) zle(`konsola @${w}`, konsola.slice(0, 3));
   console.log(`  ${w}×${h} ${bledy ? '' : 'ok'}`);
   await p.close();
