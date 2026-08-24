@@ -233,8 +233,20 @@ a{color:inherit;text-decoration:none}
 @media(prefers-reduced-motion:reduce){.etapy{transform:none;border-radius:0}}
 .etapy-tlo{position:absolute;inset:0;z-index:0;width:100%;height:100%;
   object-fit:cover;object-position:50% 50%}
-.etapy::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+.etapy::after{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
   background:linear-gradient(180deg,rgba(6,14,9,.86) 0%,rgba(6,14,9,.66) 38%,rgba(6,14,9,.8) 100%)}
+/* Herb jako motyw tła: sam plik to szkło — wnętrze jest przezroczyste, widać
+   tylko krawędzie (białe światła i czarne cienie). Leży NAD przyciemnieniem,
+   inaczej ginie. Płynie po skosie razem ze scrollem: `--h` liczy JS od +1
+   (sekcja jeszcze pod ekranem) do -1 (już nad nim). */
+.etapy-herb{position:absolute;z-index:1;left:50%;top:50%;pointer-events:none;
+  width:min(190vh,1900px);aspect-ratio:1;opacity:.34;
+  background:url(img/herb-glass.png) center/contain no-repeat;
+  transform:translate3d(-50%,-50%,0) rotate(-12deg)
+            translate3d(calc(var(--h,0) * 9vw),calc(var(--h,0) * 15vh),0);
+  will-change:transform}
+@media(prefers-reduced-motion:reduce){.etapy-herb{transform:translate(-50%,-50%) rotate(-13deg)}}
+
 .etapy-in{position:relative;z-index:2;max-width:1440px;margin:0 auto;
   padding:clamp(4rem,9vw,7rem) clamp(24px,3.4vw,52px) clamp(3rem,6vw,5rem)}
 .etapy-naglowek{margin:0 0 clamp(3rem,6vw,5rem);max-width:19ch;
@@ -1256,6 +1268,7 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
 <div class="etapy-ramka">
 <section class="etapy" id="sciezka">
   <img class="etapy-tlo" src="img/etapy.png" alt="" aria-hidden="true">
+  <div class="etapy-herb" aria-hidden="true"></div>
   <div class="etapy-in">
     <h2 class="etapy-naglowek reveal" data-reveal>Opieka, która prowadzi Cię od pierwszej wizyty do pełnej formy</h2>
     <ol class="etapy-lista">
@@ -1938,6 +1951,26 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
   for (const k of karty.slice(0, karty.length / 2))
     console.assert(k.dataset.imie && k.dataset.spec && k.dataset.opis && k.dataset.dosw,
       'zespół: niepełna wizytówka — ' + (k.dataset.imie || k.className));
+})();
+
+// --- herb płynący po skosie w sekcji etapów -------------------------------
+(() => {
+  const sek = document.querySelector('.etapy');
+  const herb = sek?.querySelector('.etapy-herb');
+  if (!herb || matchMedia('(prefers-reduced-motion:reduce)').matches) return;
+  let raf = null;
+  const licz = () => {
+    raf = null;
+    const r = sek.getBoundingClientRect();
+    if (r.bottom < -200 || r.top > innerHeight + 200) return;   // poza kadrem nie liczymy
+    // środek sekcji względem środka ekranu, znormalizowany do [-1, 1]
+    const p = (r.top + r.height / 2 - innerHeight / 2) / ((innerHeight + r.height) / 2);
+    herb.style.setProperty('--h', Math.max(-1, Math.min(1, p)).toFixed(3));
+  };
+  const kolejka = () => { raf ||= requestAnimationFrame(licz); };
+  addEventListener('scroll', kolejka, { passive: true });
+  addEventListener('resize', kolejka);
+  licz();
 })();
 
 // --- odsłanianie tekstu znak po znaku -------------------------------------

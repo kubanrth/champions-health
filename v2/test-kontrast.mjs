@@ -1,11 +1,11 @@
-/* Kontrast sekcji kontaktu, mierzony Z PIKSELI. Szkło przepuszcza zdjęcie, więc
+/* Kontrast sekcji ze szkłem (kontakt + etapy), mierzony Z PIKSELI. Szkło przepuszcza zdjęcie, więc
    o czytelności decyduje to, co akurat jest pod spodem — z samego CSS-a tego nie
    widać. Metoda: dwa zrzuty tej samej klatki (z tekstem i z `color:transparent`),
    rdzeń litery to NAJJAŚNIEJSZY zmieniony piksel (piksele brzegowe antyaliasingu
    są dowolnie blisko tła), tło to najjaśniejszy piksel pola na zrzucie bez tekstu.
    Zrzuty są w obrębie okna, nie `fullPage`: `fullPage` rozciąga okno, a sekcja
    kontaktu ma `min-height:100svh`, więc układ pod spodem by się przesunął.
-   Uruchomienie: node test-kontakt.mjs [bazowy-url] */
+   Uruchomienie: node test-kontrast.mjs [bazowy-url] */
 import puppeteer from 'puppeteer';
 import { PNG } from 'pngjs';
 
@@ -120,6 +120,62 @@ for (const S of STRONY)
     console.log(`${(S.url || 'index') + ' ' + w}×${h}`, (zly ? 'BŁĄD  ' : 'ok    ') + wynik.join('  '));
     await p.close();
   }
+// Sekcja etapów: herb płynie pod tekstem, więc kontrast zależy od pozycji scrolla —
+// mierzymy w kilku miejscach przejazdu, dla nagłówka i dla wiersza przy środku ekranu.
+for (const [w, h] of [[1440, 900], [390, 844]]) {
+  const p = await b.newPage();
+  await p.setViewport({ width: w, height: h, deviceScaleFactor: 1 });
+  await p.goto(BAZA, { waitUntil: 'networkidle0' });
+  const y0 = await p.evaluate(() => document.querySelector('.etapy').getBoundingClientRect().top + scrollY);
+  for (const d of [-250, 0, 120, 400]) {
+    await p.evaluate(y => scrollTo({ top: y, behavior: 'instant' }), y0 + d);
+    await new Promise(r => setTimeout(r, 700));
+    await p.evaluate(() => document.head.insertAdjacentHTML('beforeend',
+      '<style id="mroz">*,*::before,*::after{animation:none!important;transition:none!important}</style>'));
+    await new Promise(r => setTimeout(r, 150));
+    const pola = await p.evaluate(() => {
+      // tylko elementy w pełni widoczne i spod paska nawigacji — inaczej pomiar
+      // łapie jasny pasek albo urwany wiersz zamiast tła pod literami
+      const r = e => { if (!e) return null; const q = e.getBoundingClientRect();
+        if (q.top < 80 || q.bottom > innerHeight - 8) return null;
+        return [Math.round(q.x), Math.round(q.y), Math.round(q.right), Math.round(q.bottom)]; };
+      const srodek = innerHeight / 2;
+      const wiersz = [...document.querySelectorAll('.etap')]
+        .map(e => { const q = e.getBoundingClientRect(); return { e, d: Math.abs(q.top + q.height / 2 - srodek) }; })
+        .sort((a, b) => a.d - b.d)[0]?.e;
+      return { naglowek: r(document.querySelector('.etapy-naglowek')),
+        tytul: r(wiersz?.querySelector('.etap-tytul')), kiedy: r(wiersz?.querySelector('.etap-kiedy')) };
+    });
+    const zTekstem = PNG.sync.read(await p.screenshot());
+    await p.evaluate(() => document.head.insertAdjacentHTML('beforeend',
+      '<style id="pz">.etapy *{color:transparent!important;-webkit-text-fill-color:transparent!important}</style>'));
+    await new Promise(r => setTimeout(r, 150));
+    const bez = PNG.sync.read(await p.screenshot());
+    await p.evaluate(() => { document.getElementById('pz').remove(); document.getElementById('mroz').remove(); });
+    const wynik = Object.entries(pola).map(([k, bb]) => {
+      if (!bb) return `${k} —`;                       // poza kadrem, nie ma czego mierzyć
+      const v = kontrast(zTekstem, bez, bb);
+      if (v == null) { zle++; return `${k}: BRAK`; }
+      if (v < 4.5) zle++;
+      return `${k} ${v.toFixed(2)}:1${v < 4.5 ? ' ZA MAŁO' : ''}`;
+    });
+    const zly = wynik.some(t => /ZA MAŁO|BRAK/.test(t));
+    console.log(`etapy ${w}×${h} @${String(d).padStart(4)}`, (zly ? 'BŁĄD  ' : 'ok    ') + wynik.join('  '));
+  }
+  // herb ma płynąć: `--h` musi się zmienić między górą a dołem przejazdu
+  const h1 = await p.evaluate(y => { scrollTo({ top: y, behavior: 'instant' });
+    return getComputedStyle(document.querySelector('.etapy-herb')).getPropertyValue('--h'); }, y0 - 250);
+  await new Promise(r => setTimeout(r, 300));
+  await p.evaluate(y => scrollTo({ top: y, behavior: 'instant' }), y0 + 700);
+  await new Promise(r => setTimeout(r, 300));
+  const h3 = await p.evaluate(() => getComputedStyle(document.querySelector('.etapy-herb')).getPropertyValue('--h'));
+  const plynie = Math.abs(Number(h1) - Number(h3)) > .15;
+  if (!plynie) zle++;
+  console.log(`herb płynie ${w}×${h}`, plynie ? `ok    ${Number(h1).toFixed(2)} → ${Number(h3).toFixed(2)}`
+    : `BŁĄD  ${h1} → ${h3}`);
+  await p.close();
+}
+
 // Bezpieczniki wjazdu. Stan początkowy („schowane") chowa prawdziwe dane
 // kontaktowe, więc obie drogi wyjścia muszą działać: bez JS-u klasa `.anim`
 // nigdy nie powstaje, a przy zredukowanym ruchu wjazd jest wyłączony.

@@ -69,7 +69,7 @@ z tym commitem 1:1 — zweryfikowane renderem, nie z pamięci.
   jako szkło. Rozjaśnianie jest bezpieczne tylko WEWNĄTRZ przyciemnionej tafli —
   pastylki z `brightness(1.7)` nad jasnym fragmentem zdjęcia wyszły białe i tekst
   na nich zniknął (zmierzone 1,05:1 na `kontakt.html`).
-- Done looks like: `node v2/test-kontakt.mjs` zielony na obu stronach; jasność pola
+- Done looks like: `node v2/test-kontrast.mjs` zielony na obu stronach; jasność pola
   min. 1,5× większa od tafli obok.
 
 ## D10: Ta sama sekcja na `kontakt.html` dostaje ten sam materiał (uchyla D6)
@@ -77,7 +77,7 @@ z tym commitem 1:1 — zweryfikowane renderem, nie z pamięci.
   (szkło zamiast białej karty), bez zmian układu, treści i pól.
 - Why: to ten sam komponent w dwóch miejscach; zostawiony biały wyglądałby na
   pomyłkę. Zakres zmiany jest kosmetyczny i objęty tym samym pomiarem.
-- Done looks like: `.kt-forma` i `.kt-pig` mają szkło; `test-kontakt.mjs` mierzy
+- Done looks like: `.kt-forma` i `.kt-pig` mają szkło; `test-kontrast.mjs` mierzy
   obie strony; układ, treść i lista pól bez zmian.
 
 ## D11: Pastylki zostają białe, szkło jest tylko materiałem formularza
@@ -109,7 +109,17 @@ z tym commitem 1:1 — zweryfikowane renderem, nie z pamięci.
   potrzebują ciemnego pola, a widoczna granica — jasnego; przy jednym kadrze obie
   rzeczy naraz się nie mieszczą, więc wnętrze pola ma odwrotną polaryzację niż tafla.
 - Done looks like: `borderTopWidth` = 0 na tafli i polach; `granica` ≥ 3:1
-  w `test-kontakt.mjs`; tekst w polu i podpowiedź listy ≥ 4,5:1.
+  w `test-kontrast.mjs`; tekst w polu i podpowiedź listy ≥ 4,5:1.
+
+## D14: Herb jako motyw tła sekcji etapów
+- Decyzja: plik klienta `herb glass.png` ląduje w sekcji etapów jako duży motyw tła
+  (szerokość 190vh), NAD przyciemnieniem sekcji, i płynie po skosie razem ze
+  scrollem — 9vw w bok i 15vh w pionie na całym przejeździe, przy `rotate(-12deg)`.
+  Krycie 0,34.
+- Why: prośba klienta. Plik jest szkłem — wnętrze przezroczyste, widać tylko
+  krawędzie — więc pod przyciemnieniem ginął; nad nim czyta się jako tafla herbu.
+- Done looks like: `herb płynie` i blok `etapy` w `test-kontrast.mjs` zielone.
+- Uwaga: to kształt herbu Legii. Zgoda klubu na użycie — po stronie klienta.
 
 ## Out of bounds
 - `blog.html`, `zespol.html`, `uslugi*`, stopka — nie ruszamy.
