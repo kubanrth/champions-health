@@ -1737,11 +1737,13 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
   const sec = document.querySelector('.deal');
   if (!hero || !sec) return;
   const PROG = 65;
-  let zwiniete = null;
+  let zwiniete = null, czasZwiniecia = 0;
 
+  let ostatniCel = '';
   const ustawCel = () => {
     const c = sec.__cel && sec.__cel();
     if (!c) return false;
+    ostatniCel = `${c.x}|${c.y}|${c.w}|${c.h}`;
     hero.style.setProperty('--mx', c.x.toFixed(1) + 'px');
     hero.style.setProperty('--my', c.y.toFixed(1) + 'px');
     hero.style.setProperty('--mw', c.w + 'px');
@@ -1755,6 +1757,7 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
     if (teraz === zwiniete) return;
     if (teraz && !ustawCel()) return;          // bez celu nie zwijamy — lepiej pełny kadr niż skok
     zwiniete = teraz;
+    if (teraz) czasZwiniecia = performance.now();
     if (!teraz && hero.__zeruj) hero.__zeruj();     // kropki gasną razem z rozwinięciem
     hero.classList.toggle('morphed', teraz);
     hero.classList.toggle('oddane', teraz);
@@ -1768,6 +1771,16 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
   };
   sec.__odswiezCel = () => {
     if (!zwiniete) return;
+    const c = sec.__cel && sec.__cel();
+    if (!c) return;
+    // KLUCZOWE: gdy cel się nie zmienił, nie wolno tknąć `transition` —
+    // w trakcie zwijania pasek stoi, a `draw()` leci co klatkę, więc bez tego
+    // warunku klasa `bez-przejscia` kasowała całą animację pomniejszania.
+    if (`${c.x}|${c.y}|${c.w}|${c.h}` === ostatniCel) return;
+    // W TRAKCIE LOTU banera nie wolno ruszać `transition` — inaczej zwijanie
+    // zamienia się w przeskok. Cel aktualizujemy wtedy normalnie, z animacją;
+    // natychmiastowe doklejanie do kafelka włącza się dopiero po locie.
+    if (performance.now() - czasZwiniecia < 1080) { ustawCel(); return; }
     const el = hero.querySelector('.morph');
     if (!el) return;
     el.classList.add('bez-przejscia');

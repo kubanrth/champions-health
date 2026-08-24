@@ -158,6 +158,13 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
     // Kropki muszą zgasnąć zaraz po starcie morfu — inaczej wiszą nad gotową kartą.
     const gasniecie = await q.evaluate(() => new Promise(res => {
       const hero = document.querySelector('.hero'), k = document.querySelector('.j-kolano');
+      // przy okazji nagrywamy szerokość banera — zwijanie ma być ANIMACJĄ,
+      // a nie przeskokiem (raz już się zepsuło przez wyłączanie `transition`)
+      const m = document.querySelector('.morph');
+      window.__szer = [];
+      const rec = () => { window.__szer.push(Math.round(m.getBoundingClientRect().width));
+        if (window.__szer.length < 200) requestAnimationFrame(rec); };
+      requestAnimationFrame(rec);
       const t0 = performance.now(); let morf = null;
       new MutationObserver(() => { if (hero.classList.contains('morphed') && morf === null)
         morf = performance.now(); }).observe(hero, { attributes: true, attributeFilter: ['class'] });
@@ -172,6 +179,7 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
     }));
     await new Promise(r => setTimeout(r, 1500));
     const zwinal = await q.evaluate(() => document.querySelector('.hero').classList.contains('morphed'));
+    const krokiZwijania = await q.evaluate(() => new Set(window.__szer || []).size);
     // przy rozwijaniu nie może mignąć komplet kropek, zanim ruszy powtórka
     // Pierwotny błąd: po powrocie na górę migał KOMPLET zapalonych kropek,
     // zanim ruszyła powtórka. Mierzymy więc stan tuż po rozwinięciu — reset
@@ -217,11 +225,12 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
     await new Promise(r => setTimeout(r, 700));
 
     const powtorka = zwinal && odNowa.gra && odNowa.zapalonych < 5 && powrotOk
+                     && krokiZwijania > 10        // zwijanie to animacja, nie przeskok
                      && poPowtorce.zapalonych === 5 && poPowtorce.tekst
                      && gasniecie < 300 && migniecie <= 1;
     console.log(`${w}×${h} wjazd hero`, wOk ? 'ok' : 'BŁĄD ' + JSON.stringify({ kolej, czasy, kopia }));
     console.log(`${w}×${h} powtórka wjazdu`, powtorka ? 'ok'
-      : 'BŁĄD ' + JSON.stringify({ zwinal, gasniecie, migniecie, powrot, odNowa, poPowtorce }));
+      : 'BŁĄD ' + JSON.stringify({ zwinal, krokiZwijania, gasniecie, migniecie, powrot, odNowa, poPowtorce }));
     if (!powtorka) process.exitCode = 1;
     if (!wOk) process.exitCode = 1;
     await q.close();
