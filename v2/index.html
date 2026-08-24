@@ -1006,7 +1006,53 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
   // Cel wyliczony ze scrolla. Taśma NIE skacze do niego — dochodzi z limitem
   // prędkości (patrz `pokazany`), więc gwałtowny scroll przewija karty płynnie
   // zamiast teleportować o kilka pozycji.
+  // --- blokada na czas zwijania hero --------------------------------------
+  // Zwijanie trwa 1080 ms. Bez blokady mocny rzut przesuwa pasek w trakcie
+  // animacji i baner ląduje tam, gdzie stoi już drugi kafelek. Na czas
+  // zwijania (i tak długo, jak trwa rozpęd) pasek stoi na zerze, a strona jest
+  // przypinana do miejsca postoju karty 01. `behavior:'instant'` jest tu
+  // obowiązkowe — strona ma `scroll-behavior:smooth`, więc zwykłe `scrollTo`
+  // animowałoby korektę przez kilkanaście klatek i te klatki biłyby się
+  // z rozpędem (to była przyczyna drgania kart).
+  let trzymaj = false, trzymajY = 0, morfDo = 0, ostatniRuch = 0, wlasny = false, pomijaj = 0;
+  const przypnij = () => { wlasny = true;
+    window.scrollTo({ top: trzymajY, behavior: 'instant' }); };
+  sec.__pomijaj = ms => { pomijaj = performance.now() + ms; trzymaj = false; };
+  // Blokujemy tylko ruch z palca. End/PageDown, linki kotwicowe i `scrollTo`
+  // nie generują `wheel`/`touchmove`, więc idą bez przeszkód.
+  let gestOd = 0;
+  const znacz = () => { gestOd = performance.now(); };
+  addEventListener('wheel', znacz, { passive: true });
+  addEventListener('touchmove', znacz, { passive: true });
+  sec.__trzymaj = () => {
+    const t = performance.now();
+    if (t < pomijaj || t - gestOd > 250) return;  // skok celowy albo klawiatura
+    trzymajY = Math.round(sec.offsetTop + window.innerHeight * WSTEP * 0.5);
+    trzymaj = true;
+    morfDo = performance.now() + CZAS;
+    ostatniRuch = performance.now();
+    przypnij(); kick();
+  };
+  sec.__pusc = () => { trzymaj = false; };
+  addEventListener('scroll', () => {
+    if (!trzymaj) return;
+    if (wlasny) { wlasny = false; return; }
+    ostatniRuch = performance.now();
+    // Blokada dotyczy WYŁĄCZNIE jazdy w dół — to przejście hero → kafelek 01.
+    // Ruch w górę zwalnia ją natychmiast, żeby dało się swobodnie zawrócić.
+    if (window.scrollY < trzymajY - 4) { trzymaj = false; kick(); return; }
+    if (window.scrollY > trzymajY + 1) { przypnij(); kick(); }
+  }, { passive: true });
+  setInterval(() => {
+    if (!trzymaj) return;
+    const t = performance.now();
+    // puszczamy dopiero, gdy zwijanie się skończyło I ruch ustał
+    if (t > morfDo && t - ostatniRuch > 200) { trzymaj = false; kick(); }
+    else if (t > morfDo + 2500) { trzymaj = false; kick(); }   // bezpiecznik
+  }, 60);
+
   const postep = () => {
+    if (trzymaj) return 0;                   // zwijanie hero — pasek stoi na karcie 01
     const r = sec.getBoundingClientRect();
     const wstep = window.innerHeight * WSTEP;
     const span = sec.offsetHeight - window.innerHeight - wstep;
@@ -1056,6 +1102,7 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
     const wstep = window.innerHeight * WSTEP;
     const span = sec.offsetHeight - window.innerHeight - wstep;
     const top = sec.getBoundingClientRect().top + scrollY + wstep + (i / (N - 1)) * span;
+    sec.__pomijaj(1400);                    // skok celowy — blokada zwijania nie przeszkadza
     window.scrollTo({ top: Math.ceil(top) + 1, behavior: 'smooth' });
   };
   cards.forEach((c, i) => c.addEventListener('click', e => {
@@ -1686,6 +1733,8 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
     hero.classList.toggle('oddane', teraz);
     sec.classList.toggle('rozwiniete', teraz);
     if (sec.__rozloz) sec.__rozloz(teraz ? 1 : 0);  // karty wjeżdżają w tym samym ruchu
+    if (teraz) { if (sec.__trzymaj) sec.__trzymaj(); }   // baner ma trafić w kartę 01
+    else if (sec.__pusc) sec.__pusc();
 
     // powrót na samą górę = wjazd gra od nowa (po tym, jak kadr wróci na miejsce)
     if (!teraz && hero.__odtworz) setTimeout(() => { if (scrollY <= PROG) hero.__odtworz(); }, 220);

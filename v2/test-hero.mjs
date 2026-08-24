@@ -173,13 +173,16 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
     await new Promise(r => setTimeout(r, 1500));
     const zwinal = await q.evaluate(() => document.querySelector('.hero').classList.contains('morphed'));
     // przy rozwijaniu nie może mignąć komplet kropek, zanim ruszy powtórka
+    // Pierwotny błąd: po powrocie na górę migał KOMPLET zapalonych kropek,
+    // zanim ruszyła powtórka. Mierzymy więc stan tuż po rozwinięciu — reset
+    // musi zdążyć w tej samej klatce.
     const migniecie = await q.evaluate(() => new Promise(res => {
       let max = 0; const t0 = performance.now();
       scrollTo(0, 0);
       const tik = () => {
-        max = Math.max(max, [...document.querySelectorAll('.jt')]
-          .filter(j => +getComputedStyle(j).opacity > .08).length);
-        if (performance.now() - t0 > 420) return res(max);
+        max = Math.max(max, [...document.querySelectorAll('.jt.zapalony')]
+          .filter(j => +getComputedStyle(j).opacity > .5).length);
+        if (performance.now() - t0 > 150) return res(max);
         requestAnimationFrame(tik);
       };
       requestAnimationFrame(tik);
@@ -194,7 +197,7 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
       tekst: document.querySelector('.hero').classList.contains('tekst') }));
     const powtorka = zwinal && odNowa.gra && odNowa.zapalonych < 5
                      && poPowtorce.zapalonych === 5 && poPowtorce.tekst
-                     && gasniecie < 300 && migniecie <= 2;
+                     && gasniecie < 300 && migniecie <= 1;
     console.log(`${w}×${h} wjazd hero`, wOk ? 'ok' : 'BŁĄD ' + JSON.stringify({ kolej, czasy, kopia }));
     console.log(`${w}×${h} powtórka wjazdu`, powtorka ? 'ok'
       : 'BŁĄD ' + JSON.stringify({ zwinal, gasniecie, migniecie, odNowa, poPowtorce }));
@@ -323,19 +326,23 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
     };
     await doGory();
     await p.mouse.move(Math.round(w / 2), Math.round(h / 2));
-    const wDol = await jedz(40, 200);
-    const dalej = await jedz(30, 300);
+    // pierwszy gest z samej góry jest pochłonięty przez blokadę zwijania
+    // (baner ma trafić w kafelek 01) — pasek ma wtedy stać na zerze
+    const zwijanie = await jedz(40, 200);
+    const wDol = await jedz(30, 300);
+    const dalej = await jedz(20, 300);
     const wGore = await jedz(30, -300);
     const maxX = await p.evaluate(() => {
       const t = document.querySelector('[data-track]'), st = document.querySelector('.deal-stage');
       return Math.max(0, t.scrollWidth - st.clientWidth); });
     const paskOk =
-      wDol.do > wDol.od && wDol.zwroty === 0        // w dół = pasek w prawo, bez drgań
+      zwijanie.do === 0 && zwijanie.zwroty === 0    // zwijanie: pasek stoi na kafelku 01
+      && wDol.do > wDol.od && wDol.zwroty === 0     // potem w dół = pasek w prawo, bez drgań
       && dalej.do >= wDol.do && dalej.zwroty === 0  // dalej w dół — dalej w prawo
       && Math.round(dalej.do) >= Math.round(maxX) - 2   // dojeżdża do końca talii
       && wGore.do < dalej.do && wGore.zwroty === 0; // w górę = pasek w lewo, bez drgań
     console.log(`${w}×${h} pasek za scrollem`, paskOk ? 'ok'
-      : 'BŁĄD ' + JSON.stringify({ wDol, dalej, wGore, maxX: Math.round(maxX) }));
+      : 'BŁĄD ' + JSON.stringify({ zwijanie, wDol, dalej, wGore, maxX: Math.round(maxX) }));
     if (!paskOk) process.exitCode = 1;
     await doGory();
   }
