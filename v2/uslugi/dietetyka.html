@@ -180,13 +180,16 @@ p{margin:0}
    Zamiast scroll-jackingu (to podstrona, nie scena) natywny poziomy scroll
    ze snapem + szklane strzałki jak przy zespole na home. ------------------- */
 .inne-pas{position:relative;margin-top:32px}
-/* Pas był wypuszczany na całą szerokość okna ujemnym marginesem, a lewy
-   padding miał go z powrotem wyrównać do kontenera. Nie działało: przy
-   `scroll-snap-align:start` przeglądarka dosuwa pierwszą kartę do początku
-   scrollportu i ten padding pomija — karta lądowała na x=0, przyklejona do
-   krawędzi ekranu. Pas siedzi teraz po prostu w kontenerze. */
+/* Pas ma sięgać prawej krawędzi okna, ale pierwsza karta ma stać równo
+   z nagłówkiem. Wypuszczanie go w OBIE strony (ujemny margines + padding
+   kompensujący) nie działa: przy `scroll-snap-align:start` przeglądarka dosuwa
+   kartę do początku scrollportu i ten lewy padding pomija — nie pomaga też
+   `scroll-padding`. Dlatego pas wychodzi poza kadr WYŁĄCZNIE w prawo: lewa
+   krawędź zostaje na kontenerze, więc nie ma czego pomijać. */
 .inne{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x proximity;
-  padding:4px 0 10px;scrollbar-width:none}
+  margin-right:calc(50% - 50vw);
+  padding:4px calc(50vw - 50% + var(--bok)) 10px 0;
+  scrollbar-width:none}
 .inne::-webkit-scrollbar{display:none}
 .inna{position:relative;flex:none;width:min(72vw,460px);aspect-ratio:16/10;
   border-radius:28px;overflow:hidden;scroll-snap-align:start;background:#151515;
@@ -194,15 +197,26 @@ p{margin:0}
   color:#fff;transition:transform .45s var(--ease),box-shadow .45s var(--ease)}
 .inna:hover{transform:translateY(-4px);box-shadow:0 30px 56px -32px rgba(11,13,12,.55)}
 .inna>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-/* ten sam gradient co karty talii na home */
-.inna::after{content:"";position:absolute;inset:0;
-  background:linear-gradient(to bottom,rgba(8,14,10,.86) 0%,rgba(8,14,10,.6) 34%,
-             rgba(8,14,10,.28) 56%,rgba(8,14,10,.92) 88%,rgba(8,14,10,.96) 100%)}
-.inna span{position:relative;z-index:2;font-size:13px;font-weight:500;
-  letter-spacing:.01em;color:rgba(255,255,255,.85)}
-.inna b{position:relative;z-index:2;margin-top:6px;max-width:14ch;
+/* Poprzednia wersja przyciemniała CAŁĄ kartę (.86 u góry, .96 u dołu) i to
+   ona robiła z fotografii czarne plamy. Bez niczego tytuły miały jednak
+   1,02–1,16:1 — biały tekst na jasnym zdjęciu. Zostaje więc wąski cień tylko
+   pod tytułem, wygaszony do zera w połowie wysokości; dół karty czysty. */
+.inna::after{content:"";position:absolute;inset:0 0 auto;height:62%;
+  background:linear-gradient(to bottom,rgba(6,12,8,.78) 0%,rgba(6,12,8,.72) 46%,
+             rgba(6,12,8,.34) 72%,rgba(6,12,8,0) 100%)}
+.inna b{position:relative;z-index:2;max-width:14ch;
   font-size:clamp(20px,2vw,26px);font-weight:500;letter-spacing:-.022em;line-height:1.1;
-  text-wrap:balance}
+  text-wrap:balance;text-shadow:0 1px 14px rgba(6,12,8,.85),0 0 3px rgba(6,12,8,.7)}
+/* pastylka w dolnym lewym rogu — ten sam wzór co główny przycisk w heroju */
+.inna-pill{position:relative;z-index:2;margin-top:auto;display:inline-flex;align-items:center;
+  gap:12px;height:40px;padding:0 5px 0 16px;border-radius:999px;
+  background:#F1F1F1;color:#1F1F1F;font-size:14px;font-weight:500;letter-spacing:-.01em;
+  transition:background-color .3s var(--ease)}
+.inna:hover .inna-pill{background:#fff}
+.inna-pill i{width:30px;height:30px;flex:none;border-radius:50%;background:#1F1F1F;color:#fff;
+  display:grid;place-items:center;overflow:hidden}
+.inna-pill svg{width:14px;height:14px;transition:transform .4s var(--ease)}
+.inna:hover .inna-pill svg{transform:translate(11px,-11px)}
 /* szklane strzałki — jak przy pasie zespołu na home */
 .pas-strzalka{position:absolute;top:50%;transform:translateY(-50%);z-index:3;
   width:48px;height:48px;border-radius:50%;border:0;cursor:pointer;color:#fff;
@@ -360,11 +374,11 @@ footer.site span:last-child{margin-left:auto}
   <div class="wrap">
     <div class="sek-head" data-rv><h2>Pozostałe zakresy opieki</h2></div>
     <div class="inne-pas" data-rv>
-      <div class="inne" data-pas><a class="inna" href="medycyna-sportowa.html"><img src="../img/sprint-sharp.png" alt="" loading="lazy" style="object-position:38% 40%"><span>01 / Prowadzenie</span><b>Medycyna sportowa</b></a>
-      <a class="inna" href="ortopedia.html"><img src="../img/c1-ortopedia.png" alt="" loading="lazy" style="object-position:50% 45%"><span>02 / Diagnostyka</span><b>Ortopedia</b></a>
-      <a class="inna" href="fizjoterapia.html"><img src="../img/c3-fizjoterapia.png" alt="" loading="lazy" style="object-position:50% 40%"><span>03 / Powrót do sprawności</span><b>Fizjoterapia i rehabilitacja</b></a>
-      <a class="inna" href="trening.html"><img src="../img/c5-trening.png" alt="" loading="lazy" style="object-position:50% 45%"><span>05 / Motoryka</span><b>Trening merytoryczny</b></a>
-      <a class="inna" href="edukacja.html"><img src="../img/c6-edukacja.png" alt="" loading="lazy" style="object-position:50% 45%"><span>06 / Wiedza</span><b>Edukacja i szkolenie</b></a></div>
+      <div class="inne" data-pas><a class="inna" href="medycyna-sportowa.html"><img src="../img/sprint-sharp.png" alt="" loading="lazy" style="object-position:38% 40%"><b>Medycyna sportowa</b><span class="inna-pill">Otwórz<i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></i></span></a>
+      <a class="inna" href="ortopedia.html"><img src="../img/c1-ortopedia.png" alt="" loading="lazy" style="object-position:50% 45%"><b>Ortopedia</b><span class="inna-pill">Otwórz<i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></i></span></a>
+      <a class="inna" href="fizjoterapia.html"><img src="../img/c3-fizjoterapia.png" alt="" loading="lazy" style="object-position:50% 40%"><b>Fizjoterapia i rehabilitacja</b><span class="inna-pill">Otwórz<i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></i></span></a>
+      <a class="inna" href="trening.html"><img src="../img/c5-trening.png" alt="" loading="lazy" style="object-position:50% 45%"><b>Trening merytoryczny</b><span class="inna-pill">Otwórz<i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></i></span></a>
+      <a class="inna" href="edukacja.html"><img src="../img/c6-edukacja.png" alt="" loading="lazy" style="object-position:50% 45%"><b>Edukacja i szkolenie</b><span class="inna-pill">Otwórz<i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></i></span></a></div>
       <button class="pas-strzalka w-lewo" data-pas-w aria-label="Poprzednie usługi">
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
           <path d="M10 3 5 8l5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
