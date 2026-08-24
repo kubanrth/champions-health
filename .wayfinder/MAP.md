@@ -121,6 +121,15 @@ z tym commitem 1:1 — zweryfikowane renderem, nie z pamięci.
 - Done looks like: `herb płynie` i blok `etapy` w `test-kontrast.mjs` zielone.
 - Uwaga: to kształt herbu Legii. Zgoda klubu na użycie — po stronie klienta.
 
+## D15: Kierunek lotu — prawy górny róg → lewy dolny (uzupełnia D14)
+- Decyzja: herb powiększony do 230vh, przejazd 26vw w bok i 28vh w pionie,
+  z prawego górnego rogu do lewego dolnego.
+- Why: prośba klienta. Techniczna pułapka: przejazd musi stać PRZED `rotate`
+  w `transform`, bo składanie idzie od prawej — po obrocie herb leciałby wzdłuż
+  własnego skosu, nie po przekątnej ekranu.
+- Done looks like: przy wjeździe sekcji herb jest w prawej górnej części kadru,
+  przy wyjeździe w lewej dolnej; kontrast tekstu dalej ≥ 4,5:1.
+
 ## Out of bounds
 - `blog.html`, `zespol.html`, `uslugi*`, stopka — nie ruszamy.
 - `kontakt.html` — tylko materiał sekcji formularza (D10); układ, treść i pola bez zmian.
