@@ -62,7 +62,11 @@ a{color:inherit;text-decoration:none}
 .nav.przypieta .menu a{color:#0A0A0A}
 .nav.przypieta .menu a::after{background:#0A0A0A}
 .nav.przypieta .menu a:focus-visible{outline-color:#0A0A0A}
-.nav.przypieta .brand img{filter:invert(1)}   /* logo mamy tylko w wersji białej */
+/* invert(1) psuł barwy marki (złota gwiazdka na niebiesko, paski na cyjan
+   i róż) — na jasnym pasku pokazujemy po prostu oryginał */
+.brand img.na-jasnym{display:none}
+.nav.przypieta .brand img.na-ciemnym{display:none}
+.nav.przypieta .brand img.na-jasnym{display:block}
 .nav-in{width:var(--nav-w);max-width:100%;margin:0 auto;height:var(--pill-h);
   display:flex;align-items:center}
 .brand{flex:none;display:flex;align-items:center;margin-right:21px}
@@ -76,11 +80,18 @@ a{color:inherit;text-decoration:none}
 .menu a:hover{opacity:.78}
 .menu a:hover::after{transform:scaleX(1)}
 .menu a:focus-visible{outline:2px solid #fff;outline-offset:4px;border-radius:3px}
+/* Nad banerem pasek jest przezroczysty, a zdjęcie prawie czarne — ciemna
+   pastylka miała względem niego 1,63:1 i po prostu znikała. Nad banerem idzie
+   więc jasna (jak główny przycisk w heroju), a na przypiętym białym pasku
+   wraca ciemna. */
 .cta{margin-left:auto;flex:none;height:var(--pill-h);padding:0 16px;border-radius:999px;
-  background:var(--pill);backdrop-filter:blur(8px);color:#fff;font-size:var(--link);font-weight:500;letter-spacing:-.01em;
+  background:#F1F1F1;color:#1F1F1F;font-size:var(--link);font-weight:500;letter-spacing:-.01em;
   display:inline-flex;align-items:center;white-space:nowrap;
   transition:background-color .35s var(--ease),transform .35s var(--ease)}
-.cta:hover{background:var(--pill-hover);transform:translateY(-1px)}
+.cta:hover{background:#fff;transform:translateY(-1px)}
+.nav.przypieta .cta{background:var(--pill);color:#fff}
+.nav.przypieta .cta:hover{background:var(--pill-hover)}
+.nav.przypieta .cta:focus-visible{outline-color:#0A0A0A}
 .cta:active{transform:translateY(0)}
 .cta:focus-visible{outline:2px solid #fff;outline-offset:3px}
 
@@ -849,7 +860,8 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
     <nav class="nav">
   <div class="nav-in">
     <a class="brand" href="#top" aria-label="Champions Health — strona główna">
-      <img src="img/logo_LCH_na-ciemnym.svg" alt="Champions Health">
+      <img class="na-ciemnym" src="img/logo_LCH_na-ciemnym.svg" alt="Champions Health">
+      <img class="na-jasnym" src="img/logo_LCH.svg" alt="" aria-hidden="true">
     </a>
     <div class="menu">
       <a href="#opieka">Usługi</a>
