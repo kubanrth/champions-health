@@ -6,8 +6,8 @@
 - [x] AK2: zdjęcie w tle to `kontakt-tlo.jpg` — VERIFY: `.kontakt-tlo` ma `src` kończący się `kontakt-tlo.jpg`
 - [x] AK3: lewa kolumna ma nagłówek „Zacznij od rozmowy z koordynatorem" — VERIFY: `.kontakt-lewo h2` textContent równy tej frazie
 - [x] AK4: lead pod nagłówkiem obecny — VERIFY: `.kontakt-lead` textContent zaczyna się od „Piętnaście minut"
-- [x] AK5: dane w siatce dwukolumnowej, 4 pary etykieta/wartość — VERIFY: `.kontakt-dane dt` = 4 i `.kontakt-dane dd` = 4; `getComputedStyle(.kontakt-dane).display === 'grid'`; `gridTemplateColumns` zawiera dwie wartości przy szerokości ≥ 900 px
-- [x] AK6: etykiety danych wersalikami, 12 px, rozstrzelone — VERIFY: `getComputedStyle(.kontakt-dane dt)` → `textTransform==='uppercase'`, `fontSize==='12px'`, `letterSpacing` ≈ 1,68 px
+- [x] AK5: dane w czterech pastylkach — VERIFY: `.kontakt-dane div` = 4, każda o wysokości 48 px i `border-radius` 999px; `.kontakt-dane dt` = 4 i `dd` = 4
+- [x] AK6: mikroetykiety w pastylkach wersalikami — VERIFY: `getComputedStyle(.kontakt-dane dt)` → `textTransform==='uppercase'`, `fontSize==='11px'`
 - [x] AK7: czarny pasek za lewą kolumną usunięty — VERIFY: `getComputedStyle(.kontakt-lewo,'::before').backgroundImage === 'none'`
 - [x] AK8: formularz na szkle — VERIFY: `getComputedStyle(.kontakt-form)` → `backdropFilter` zawiera `blur`, `borderRadius==='22px'`, tło półprzezroczyste białe
 - [x] AK9: dane kontaktowe nowe — VERIFY: `#kontakt` innerHTML zawiera `info@championshealth.pl` i `Legionistów 3, Książenice`, NIE zawiera `info@legia.pl` ani `Łazienkowska`
@@ -22,3 +22,6 @@
 - [x] AK18: reszta strony bez regresji — VERIFY: `node v2/test-hero.mjs` kończy się 36 × „ok" i bez linii „BŁĄD"
 - [x] AK19: brak nowych sekcji i pól ponad spec — VERIFY: w `#kontakt` nie ma elementów `.kt-pig`, `.kon-baner` ani dodatkowych `input` poza wymienionymi w AK10
 - [x] AK20: nagłówek lewej kolumny mieści się w dwóch wierszach na desktopie (jak na zrzucie) — VERIFY: przy 1440 i 1280 `h2.getBoundingClientRect().height / lineHeight` zaokrąglone = 2
+- [x] AK21: pola formularza jasne, nie ciemne — VERIFY: `getComputedStyle('.kontakt-form input').backgroundColor === 'rgb(255, 255, 255)'` i `color` ciemny
+- [x] AK22: autouzupełnianie nie wstawia własnego tła — VERIFY: w arkuszu istnieje reguła `input:-webkit-autofill` z `-webkit-box-shadow` wypełniającym pole na biało
+- [x] AK23: etykiety pól i zgoda RODO ≥ 4,5:1 na tafli — VERIFY: pomiar pikseli (tekst vs tło) na 1280 i 1440

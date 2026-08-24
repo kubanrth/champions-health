@@ -3,10 +3,20 @@
 Wzorzec: commit `0b6c3d2` (v2/index.html), sekcja `.kontakt`. Zrzut od klienta zgadza się
 z tym commitem 1:1 — zweryfikowane renderem, nie z pamięci.
 
+## D8: Dane jako pastylki, pola formularza jasne (korekta 2026-08-24)
+- Decyzja: dane kontaktowe w białych pastylkach (mikroetykieta + wartość w jednym
+  wierszu), a pola formularza na białym tle z ciemnym tekstem. Tafla szkła
+  przyciemniona do `rgba(9,17,13,.46)`.
+- Why: klient: „zamień to na pillsy" i „nie podoba mi się ten ciemny look w środku".
+  Przy jasnych polach biała tafla dawała etykietom 3,7:1 — stąd przyciemnienie tafli,
+  nie pól.
+- Done looks like: 4 pastylki po 48 px wysokości; pola `background:#fff`, tekst
+  `#0B0D0C`; etykiety i zgoda ≥ 4,5:1.
+
 ## D1: Przywracamy układ z 0b6c3d2
 - Decyzja: sekcja kontaktu na stronie głównej wraca do układu: zdjęcie w tle na całą
   sekcję, lewa kolumna (nagłówek + lead + siatka danych 2×2 z wersalikowymi etykietami),
-  prawa kolumna — karta formularza ze szkła.
+  prawa kolumna — karta formularza ze szkła. (Siatka danych zastąpiona pastylkami — patrz D8.)
 - Why: klient wskazał ten wygląd zrzutem i słowami „wracamy do starego designu".
 - Done looks like: sekcja ma `.kontakt-tlo`, `.kontakt-lewo` z `<dl class="kontakt-dane">`
   (4 pary dt/dd) i `.kontakt-form` z rozmyciem tła.
