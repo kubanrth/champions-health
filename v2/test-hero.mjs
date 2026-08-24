@@ -297,71 +297,46 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
            && talia.tekstWidoczny && talia.tekstNiepusty && talia.kartaKlikalna;
   console.log(`${w}×${h} talia`, tOk ? 'ok' : 'BŁĄD ' + JSON.stringify(talia));
 
-  // „jeden rzut = jedna karta" (zgłoszenie klienta 2026-08-24, wzór revolut.com):
-  // z hero zawsze ląduje się na karcie 01 — choćby rzut był maksymalny — a dalej
-  // każdy gest przesuwa dokładnie o jedną, symetrycznie w dół i w górę.
+  // Pasek idzie WPROST za scrollem (zgłoszenie klienta 2026-08-24: „przewijanie
+  // scrolla w dół powinno przesuwać pasek"). Sprawdzamy dwie rzeczy: że jedzie
+  // w tę stronę, w którą przewijasz, i że NIGDY nie drga — czyli w obrębie
+  // jednego kierunku nie zmienia zwrotu ani razu.
   {
     const doGory = () => p.evaluate(() => new Promise(r => { scrollTo(0, 0); setTimeout(r, 1200); }));
-    const karta = () => p.evaluate(() => [...document.querySelectorAll('[data-card]')]
-      .findIndex(c => c.classList.contains('focus')) + 1);
-    const rzut = async sila => {
-      const zn = Math.sign(sila);
-      for (let i = 0; i < 45; i++)
-        await p.mouse.wheel({ deltaY: zn * Math.max(4, Math.round(Math.abs(sila) * Math.pow(.93, i))) });
-      await new Promise(r => setTimeout(r, 1700));
-    };
-    // rejestrator drgań: liczy zmiany kierunku taśmy klatka po klatce
     await p.evaluate(() => {
-      const tr = document.querySelector('[data-track]');
-      window.__pr = []; window.__rec = false;
-      const t = () => {
-        if (window.__rec) { const m = /translate3d\((-?[\d.]+)px/.exec(tr.style.transform);
-          window.__pr.push(m ? parseFloat(m[1]) : 0); }
-        requestAnimationFrame(t);
-      };
-      requestAnimationFrame(t);
+      const t = document.querySelector('[data-track]');
+      window.__v = []; window.__r = false;
+      const f = () => { if (window.__r) { const m = /translate3d\((-?[\d.]+)px/.exec(t.style.transform);
+        window.__v.push(m ? -parseFloat(m[1]) : 0); } requestAnimationFrame(f); };
+      requestAnimationFrame(f);
     });
-    const nagraj = () => p.evaluate(() => { window.__pr = []; window.__rec = true; });
-    const zwroty = () => p.evaluate(() => { window.__rec = false;
-      const v = window.__pr; let n = 0, kier = 0;
-      for (let i = 1; i < v.length; i++) { const d = v[i] - v[i - 1];
-        if (Math.abs(d) < 0.7) continue; const k = Math.sign(d);
-        if (kier && k !== kier) n++; kier = k; }
-      return n; });
+    const jedz = async (n, d) => {
+      await p.evaluate(() => { window.__v = []; window.__r = true; });
+      for (let i = 0; i < n; i++) await p.mouse.wheel({ deltaY: d });
+      await new Promise(r => setTimeout(r, 800));
+      return p.evaluate(() => { window.__r = false; const v = window.__v;
+        let zwroty = 0, k = 0;
+        for (let i = 1; i < v.length; i++) { const dd = v[i] - v[i - 1];
+          if (Math.abs(dd) < 0.7) continue; const s = Math.sign(dd);
+          if (k && s !== k) zwroty++; k = s; }
+        return { od: v[0], do: v[v.length - 1], zwroty }; });
+    };
     await doGory();
     await p.mouse.move(Math.round(w / 2), Math.round(h / 2));
-    await nagraj(); await rzut(160);
-    const zHero = await karta(); const drgaWejscie = await zwroty();
-    const wDol = [], drgania = [];
-    for (let i = 0; i < 3; i++) { await nagraj(); await rzut(160);
-      wDol.push(await karta()); drgania.push(await zwroty()); }
-    const wGore = [];
-    for (let i = 0; i < 3; i++) { await nagraj(); await rzut(-160);
-      wGore.push(await karta()); drgania.push(await zwroty()); }
-    // nagła zmiana kierunku w środku gestu — tu taśma potrafiła się trząść
-    await nagraj();
-    for (let i = 0; i < 20; i++) await p.mouse.wheel({ deltaY: 240 });
-    for (let i = 0; i < 20; i++) await p.mouse.wheel({ deltaY: -240 });
-    await new Promise(r => setTimeout(r, 1800));
-    const drgaZwrot = await zwroty();
-    // gwałtowny rzut z hero też ma wylądować na karcie 01
-    await doGory();
-    await nagraj();
-    for (let i = 0; i < 80; i++) await p.mouse.wheel({ deltaY: 600 });
-    await new Promise(r => setTimeout(r, 1800));
-    const poSzarpnieciu = await karta();
-    drgania.push(await zwroty());
-    const opOk = zHero === 1
-      && JSON.stringify(wDol) === JSON.stringify([2, 3, 4])
-      && JSON.stringify(wGore) === JSON.stringify([3, 2, 1])
-      && poSzarpnieciu === 1
-      // Taśma nie może drgać. Jeden zwrot jest dopuszczalny — wypada na granicy
-      // zmiany kierunku serii (dojazd poprzedniego gestu kontra nowy). Drganie
-      // z dwustronnej kotwicy dawało 2–5 zwrotów w jednym geście.
-      && drgaWejscie === 0 && drgania.every(n => n <= 1) && drgaZwrot <= 2;
-    console.log(`${w}×${h} rzut = karta`, opOk ? 'ok'
-      : 'BŁĄD ' + JSON.stringify({ zHero, wDol, wGore, poSzarpnieciu, drgaWejscie, drgania, drgaZwrot }));
-    if (!opOk) process.exitCode = 1;
+    const wDol = await jedz(40, 200);
+    const dalej = await jedz(30, 300);
+    const wGore = await jedz(30, -300);
+    const maxX = await p.evaluate(() => {
+      const t = document.querySelector('[data-track]'), st = document.querySelector('.deal-stage');
+      return Math.max(0, t.scrollWidth - st.clientWidth); });
+    const paskOk =
+      wDol.do > wDol.od && wDol.zwroty === 0        // w dół = pasek w prawo, bez drgań
+      && dalej.do >= wDol.do && dalej.zwroty === 0  // dalej w dół — dalej w prawo
+      && Math.round(dalej.do) >= Math.round(maxX) - 2   // dojeżdża do końca talii
+      && wGore.do < dalej.do && wGore.zwroty === 0; // w górę = pasek w lewo, bez drgań
+    console.log(`${w}×${h} pasek za scrollem`, paskOk ? 'ok'
+      : 'BŁĄD ' + JSON.stringify({ wDol, dalej, wGore, maxX: Math.round(maxX) }));
+    if (!paskOk) process.exitCode = 1;
     await doGory();
   }
   if (!tOk) process.exitCode = 1;
