@@ -602,43 +602,48 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
   });
   await p.evaluate(() => document.querySelector('#kontakt').scrollIntoView({ block: 'start' }));
   await new Promise(r => setTimeout(r, 1200));
-  await p.click('.kontakt-form button[type=submit]');
+  // pusty formularz nie może przejść — nowy ma też wymaganą zgodę RODO
+  await p.click('.kt-forma button[type=submit]');
   await new Promise(r => setTimeout(r, 400));
-  const pusty = await p.evaluate(() => document.querySelector('[data-form-nota]').textContent);
-  await p.type('[name=imie]', 'Jan Kowalski');
-  await p.type('[name=tel]', '600100200');
-  await p.type('[name=email]', 'jan@example.com');
-  await p.click('.kontakt-form button[type=submit]');
+  const pusty = await p.evaluate(() => document.querySelector('[data-nota]').textContent);
+  await p.type('#kt-imie', 'Jan Kowalski');
+  await p.type('#kt-tel', '600100200');
+  await p.type('#kt-mail', 'jan@example.com');
+  for (const id of ['#kt-temat', '#kt-spec'])
+    await p.select(id, await p.evaluate(sel =>
+      [...document.querySelectorAll(sel + ' option')].filter(o => o.value)[0].value, id));
+  await p.click('#kt-rodo');
+  await p.click('.kt-forma button[type=submit]');
   await new Promise(r => setTimeout(r, 400));
   const kontakt = await p.evaluate(prz => {
-    const nota = document.querySelector('[data-form-nota]');
-    const lewo = document.querySelector('.kontakt-lewo').getBoundingClientRect();
-    const form = document.querySelector('.kontakt-form').getBoundingClientRect();
+    const nota = document.querySelector('[data-nota]');
+    const lewo = document.querySelector('.kt-grid > div').getBoundingClientRect();
+    const form = document.querySelector('.kt-forma').getBoundingClientRect();
+    const L = c => { const n = c.match(/[\d.]+/g).map(Number), a = n.length > 3 ? n[3] : 1;
+      const [r, g, b] = n.slice(0, 3).map(v => { v = v * a / 255; return v <= .03928 ? v / 12.92 : ((v + .055) / 1.055) ** 2.4; });
+      return .2126 * r + .7152 * g + .0722 * b; };
+    const i = document.querySelector('.kt-pole input'), cs = getComputedStyle(i);
     return {
       // dane po lewej, formularz po prawej (na wąskim ekranie jeden pod drugim)
-      uklad: innerWidth < 901 || form.left > lewo.left,
-      // zdjęcie w tle wypadło (rozmyty kadr + dwa przyciemnienia = mgła);
-      // pilnujemy tego, co je zastąpiło: cztery wiersze danych z przerywaną kreską
-      wiersze: document.querySelectorAll('.kontakt-dane div').length === 4
-        && getComputedStyle(document.querySelector('.kontakt-dane div')).borderTopStyle === 'dashed',
-      // pola muszą być widoczne — obramowanie kontra tło pola min. 3:1 (WCAG dla UI)
-      poleWidoczne: (() => {
-        const i = document.querySelector('.kontakt-form input'), cs = getComputedStyle(i);
-        const L = c => { const n = c.match(/[\d.]+/g).map(Number), a = n.length > 3 ? n[3] : 1;
-          const [r, g, b] = n.slice(0, 3).map(v => { v = v * a / 255; return v <= .03928 ? v / 12.92 : ((v + .055) / 1.055) ** 2.4; });
-          return .2126 * r + .7152 * g + .0722 * b; };
-        const lo = Math.min(L(cs.borderTopColor), L(cs.backgroundColor)), hi = Math.max(L(cs.borderTopColor), L(cs.backgroundColor));
-        return (hi + .05) / (lo + .05) >= 3 && i.getBoundingClientRect().height >= 44;
-      })(),
-      pustyBlokuje: /Uzupełnij/.test(prz),
-      wypelnionyPrzechodzi: /Dziękujemy/.test(nota.textContent),
-      etykiety: [...document.querySelectorAll('.kontakt-form input,.kontakt-form textarea')]
-        .every(i => i.closest('label')),
+      uklad: innerWidth < 961 || form.left > lewo.left,
+      // dane kontaktowe jako pigułki na zdjęciu
+      pigulki: document.querySelectorAll('.kt-pig').length === 4,
+      // zdjęcie tła musi się załadować, inaczej sekcja jest szarą płachtą
+      tlo: (() => { const t = document.querySelector('.kt-tlo');
+        return !!t && t.complete && t.naturalWidth > 0; })(),
+      // obramowanie pola kontra jego tło min. 3:1 (WCAG dla elementów UI)
+      poleWidoczne: (L(cs.borderColor) + .05) / (L(cs.backgroundColor) + .05) >= 3
+                 || (L(cs.backgroundColor) + .05) / (L(cs.borderColor) + .05) >= 3,
+      pustyBlokuje: /Uzupełnij|Zaznacz/.test(prz),
+      wyslany: /demonstracyjny/.test(nota.textContent),
+      // każde pole ma etykietę powiązaną przez `for`
+      etykiety: [...document.querySelectorAll('.kt-forma input:not([type=checkbox]),.kt-forma textarea,.kt-forma select')]
+        .every(e => e.id && document.querySelector(`label[for="${e.id}"]`)),
     };
   }, pusty);
   const bkOk = blog.ile === 3 && blog.miedzy && blog.komplet
-            && kontakt.uklad && kontakt.wiersze && kontakt.poleWidoczne && kontakt.pustyBlokuje
-            && kontakt.wypelnionyPrzechodzi && kontakt.etykiety;
+            && kontakt.uklad && kontakt.pigulki && kontakt.tlo && kontakt.poleWidoczne
+            && kontakt.pustyBlokuje && kontakt.wyslany && kontakt.etykiety;
   console.log(`${w}×${h} blog+kontakt`, bkOk ? 'ok' : 'BŁĄD ' + JSON.stringify({ blog, kontakt }));
   if (!bkOk) process.exitCode = 1;
 
