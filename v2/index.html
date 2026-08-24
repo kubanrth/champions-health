@@ -241,18 +241,17 @@ a{color:inherit;text-decoration:none}
   font-size:clamp(2.4rem,6vw,5.4rem);line-height:1.04;letter-spacing:-.025em;font-weight:500}
 
 .etapy-lista{margin:0;padding:0;list-style:none}
-.etap{display:grid;grid-template-columns:70px minmax(150px,1fr) minmax(0,1.5fr);
+.etap{display:grid;grid-template-columns:84px minmax(170px,1fr) minmax(0,1.6fr);
   align-items:start;gap:clamp(20px,3vw,48px);
   padding:clamp(24px,3vw,32px) 0;border-top:1px dashed rgba(241,241,241,.34)}
 .etap:last-child{border-bottom:1px dashed rgba(241,241,241,.34)}
-.etap-ikona{width:70px;height:70px;flex:none;border-radius:50%;display:grid;place-items:center;
+.etap-ikona{width:84px;height:84px;flex:none;border-radius:50%;display:grid;place-items:center;
   border:1px solid rgba(241,241,241,.45);color:#F1F1F1}
-.etap-ikona svg{width:26px;height:26px}
-.etap-kiedy{margin:20px 0 0;font-size:clamp(19px,1.7vw,23.76px);font-weight:500;letter-spacing:-.015em}
-.etap-tresc{margin-top:20px}
-.etap-tytul{margin:0;font-size:clamp(19px,1.7vw,23.76px);font-weight:500;letter-spacing:-.015em}
-.etap-punkty{margin:14px 0 0;padding-left:20px;display:grid;gap:8px;
-  font-size:16px;line-height:1.45;color:rgba(241,241,241,.78)}
+.etap-ikona svg{width:34px;height:34px}
+.etap-kiedy{margin:24px 0 0;font-size:clamp(20px,1.85vw,26.5px);font-weight:500;letter-spacing:-.015em}
+.etap-tresc{margin-top:24px}
+.etap-tytul{margin:0;max-width:44ch;font-size:clamp(20px,1.85vw,26.5px);line-height:1.34;
+  font-weight:500;letter-spacing:-.015em}
 
 /* wejście wierszy przy dojechaniu sekcji — kolejno, z dołu */
 .etap{opacity:0;transform:translateY(24px);
@@ -261,9 +260,9 @@ a{color:inherit;text-decoration:none}
 .etapy.widoczne .etap{opacity:1;transform:none}
 
 @media(max-width:900px){
-  .etap{grid-template-columns:56px 1fr;gap:16px 20px}
-  .etap-ikona{width:56px;height:56px}
-  .etap-ikona svg{width:22px;height:22px}
+  .etap{grid-template-columns:64px 1fr;gap:16px 20px}
+  .etap-ikona{width:64px;height:64px}
+  .etap-ikona svg{width:26px;height:26px}
   .etap-kiedy{margin-top:12px}
   .etap-tresc{grid-column:1 / -1;margin-top:4px}
 }
@@ -1272,77 +1271,52 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
     <ol class="etapy-lista">
       <li class="etap">
         <span class="etap-ikona" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
-               stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2.5" width="12" height="19" rx="2.5"/><path d="M8 18.5h4"/><path d="M13 8.5h6.5a1.5 1.5 0 0 1 1.5 1.5v2.5a1.5 1.5 0 0 1-1.5 1.5H17l-2.2 2v-2H13"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"
+               stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="7.6" r="3.3"/><path d="M3.4 19.6a5.6 5.6 0 0 1 11.2 0"/><path d="M15.8 9.2l1.9 1.9 3.4-3.9"/></svg>
         </span>
         <p class="etap-kiedy">Koordynator</p>
         <div class="etap-tresc">
-          <p class="etap-tytul">Jedna osoba prowadzi Twój proces.</p>
-          <ul class="etap-punkty">
-            <li>Planuje wizyty i pilnuje terminów</li>
-            <li>Zbiera wyniki w jednym miejscu</li>
-            <li>Jest z Tobą od początku do końca</li>
-          </ul>
+          <p class="etap-tytul">Jeden opiekun pacjenta, który planuje, umawia i prowadzi Twój proces.</p>
         </div>
       </li>
       <li class="etap">
         <span class="etap-ikona" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
-               stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="4" width="15" height="17" rx="2.5"/><path d="M9 4V2.8h6V4"/><path d="M12 10v6M9 13h6"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"
+               stroke-linecap="round" stroke-linejoin="round"><path d="M6 3v5.2a4 4 0 0 0 8 0V3"/><path d="M4.4 3h3.2M12.4 3h3.2"/><path d="M10 12.4v2.3a4.6 4.6 0 0 0 9.2 0v-1.1"/><circle cx="19.2" cy="11.2" r="2"/></svg>
         </span>
         <p class="etap-kiedy">Diagnoza</p>
         <div class="etap-tresc">
-          <p class="etap-tytul">Wiemy, z czym mamy do czynienia.</p>
-          <ul class="etap-punkty">
-            <li>Wywiad i badanie funkcjonalne</li>
-            <li>Diagnostyka obrazowa na miejscu</li>
-            <li>Decyzja o ścieżce leczenia</li>
-          </ul>
+          <p class="etap-tytul">Wywiad, badanie, potrzebna diagnostyka obrazowa lub funkcjonalna, decyzja o ścieżce leczenia.</p>
         </div>
       </li>
       <li class="etap">
         <span class="etap-ikona" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
-               stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="4.6" r="2.1"/><path d="M12 8v7M8 11h8M9 21l3-6 3 6"/><path d="M3.5 9.5v4M20.5 9.5v4"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"
+               stroke-linecap="round" stroke-linejoin="round"><path d="M3.6 9.4v5.2M6.8 7.4v9.2M17.2 7.4v9.2M20.4 9.4v5.2"/><path d="M6.8 12h10.4"/></svg>
         </span>
         <p class="etap-kiedy">Realizacja</p>
         <div class="etap-tresc">
-          <p class="etap-tytul">Leczenie i rehabilitacja bez przerw.</p>
-          <ul class="etap-punkty">
-            <li>Zabiegi u nas i u partnerów</li>
-            <li>Praca 1:1 z fizjoterapeutą</li>
-            <li>Ciągłość informacji i celów</li>
-          </ul>
+          <p class="etap-tytul">Leczenie i rehabilitacja u nas oraz ewentualne procedury u partnerów — z ciągłością informacji i celów.</p>
         </div>
       </li>
       <li class="etap">
         <span class="etap-ikona" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
-               stroke-linecap="round" stroke-linejoin="round"><path d="M7.5 2.5v13a3 3 0 0 0 6 0v-13"/><path d="M6 2.5h9"/><path d="M17 8.5v9a3 3 0 0 0 3 3"/><path d="M7.5 10h6"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"
+               stroke-linecap="round" stroke-linejoin="round"><path d="M3.4 20.4h17.2"/><path d="M7 20.4v-4.6M11.6 20.4v-8M16.2 20.4v-5.4M20.8 20.4v-11"/></svg>
         </span>
         <p class="etap-kiedy">Testy kontrolne</p>
         <div class="etap-tresc">
-          <p class="etap-tytul">Liczby zamiast przeczucia.</p>
-          <ul class="etap-punkty">
-            <li>Obiektywne kryteria progresu</li>
-            <li>Testy gotowości do powrotu</li>
-            <li>Zielone światło na podstawie danych</li>
-          </ul>
+          <p class="etap-tytul">Obiektywne kryteria progresu i gotowości do powrotu.</p>
         </div>
       </li>
       <li class="etap">
         <span class="etap-ikona" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
-               stroke-linecap="round" stroke-linejoin="round"><path d="M12 20.5s-7.5-4.6-7.5-9.8A4.2 4.2 0 0 1 12 7.6a4.2 4.2 0 0 1 7.5 3.1c0 5.2-7.5 9.8-7.5 9.8Z"/><path d="M6.5 13h3l1.5-2.5 2 4 1.5-2.5h3"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"
+               stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7.4-3.7 7.4-9.1V5.7L12 3 4.6 5.7v6.2C4.6 17.3 12 21 12 21Z"/><path d="M7.6 12.1h2.2l1.4-2.5 1.9 4.3 1.2-1.8h1.9"/></svg>
         </span>
         <p class="etap-kiedy">Profilaktyka</p>
         <div class="etap-tresc">
-          <p class="etap-tytul">Żeby nie wrócić z tym samym.</p>
-          <ul class="etap-punkty">
-            <li>Zalecenia treningowe i motoryka</li>
-            <li>Edukacja i praca własna</li>
-            <li>Kontrole okresowe</li>
-          </ul>
+          <p class="etap-tytul">Zalecenia treningowe, motoryka, edukacja, kontrole okresowe.</p>
         </div>
       </li>
     </ol>
@@ -2075,11 +2049,11 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
     o.disconnect();
   }, { threshold: 0.25 }).observe(sec);
 
-  // self-check: każdy etap ma komplet — kiedy, tytuł i punkty
+  // self-check: każdy etap ma nazwę, opis i ikonę (punkty wypadły 2026-08-24)
   for (const el of etapy)
     console.assert(el.querySelector('.etap-kiedy')?.textContent.trim()
-                && el.querySelector('.etap-tytul')?.textContent.trim()
-                && el.querySelectorAll('.etap-punkty li').length >= 2,
+                && el.querySelector('.etap-tytul')?.textContent.trim().length > 20
+                && el.querySelector('.etap-ikona svg'),
       'etap bez kompletu treści: ' + (el.querySelector('.etap-kiedy')?.textContent || ''));
 })();
 

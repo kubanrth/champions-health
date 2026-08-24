@@ -421,14 +421,16 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
       nazwy: et.map(e => e.querySelector('.etap-kiedy').textContent.trim()),
       pojawily: sec.classList.contains('widoczne')
              && et.every(e => +getComputedStyle(e).opacity > 0.9),
-      // zmierzone u nich: kreska przerywana nad wierszem, padding 32, kółko 70, tytuł 23,76/500
+      // układ z myhealthprac (kreska przerywana nad wierszem), skala podbita
+      // 2026-08-24: kółko 84, tekst 26,5/500, opisy przepisane z materiału klienta
       kreska: c.borderTopStyle === 'dashed' && c.borderTopWidth === '1px',
-      kolko: Math.abs(ik.width - 70) < 16 && Math.abs(ik.height - ik.width) < 2,
+      kolko: Math.abs(ik.width - 84) < 22 && Math.abs(ik.height - ik.width) < 2,
       tytul: ty.fontWeight === '500'
-          && (innerWidth < 1400 || Math.abs(parseFloat(ty.fontSize) - 23.76) < 2),
+          && (innerWidth < 1400 || Math.abs(parseFloat(ty.fontSize) - 26.5) < 2),
+      // każdy etap: nazwa, pełne zdanie opisu i narysowana ikona
       komplet: et.every(e => e.querySelector('.etap-kiedy').textContent.trim()
-                          && e.querySelector('.etap-tytul').textContent.trim()
-                          && e.querySelectorAll('.etap-punkty li').length >= 3),
+                          && e.querySelector('.etap-tytul').textContent.trim().length > 30
+                          && e.querySelector('.etap-ikona svg path, .etap-ikona svg circle')),
       wKadrze: et.every(e => { const r = e.getBoundingClientRect();
         return r.left - S.left >= -1 && r.right - S.left <= S.width + 1; }),
       tlo: !!sec.querySelector('.etapy-tlo'),
