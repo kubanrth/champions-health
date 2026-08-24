@@ -1854,6 +1854,7 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
     hero.classList.toggle('oddane', teraz);
     sec.classList.toggle('rozwiniete', teraz);
     if (sec.__rozloz) sec.__rozloz(teraz ? 1 : 0);  // karty wjeżdżają w tym samym ruchu
+    if (teraz && hero.__karuzelaStop) hero.__karuzelaStop();   // poza kadrem nic nie migoce
     if (teraz) { if (sec.__trzymaj) sec.__trzymaj(); }   // baner ma trafić w kartę 01
     else if (sec.__pusc) sec.__pusc();
 
@@ -2198,6 +2199,7 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
         if (moj !== bieg) return;
         hero.classList.add('bezkreski');                          // kropki zostają same
         hero.querySelector('.j-bark').classList.add('zapalony');  // bark wraca
+        setTimeout(() => hero.__karuzelaStart && hero.__karuzelaStart(), 900);
       }, 120);
     };
     requestAnimationFrame(krok);
@@ -2214,6 +2216,7 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
     ost.classList.remove('wedruje');
     ost.style.left = ''; ost.style.top = '';
     joints.forEach(j => j.classList.remove('zapalony', 'on'));
+    if (hero.__karuzelaStop) hero.__karuzelaStop();
     place();
     tor.style.strokeDasharray = '0 9999';
   };
@@ -2240,11 +2243,43 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
   addEventListener('resize', place);
 
   // dotyk (i klawiatura przez Enter): karta przełączana kliknięciem, jedna naraz
-  joints.forEach(j => j.addEventListener('click', () => {
-    const otwarta = j.classList.contains('on');
-    joints.forEach(o => o.classList.remove('on'));
-    j.classList.toggle('on', !otwarta);
-  }));
+  // --- karuzela opisów ------------------------------------------------------
+  // Po wjeździe jeden ze stawów sam pokazuje swój opis i co 15 s przechodzi
+  // na kolejny. Wskaźnik ma pierwszeństwo: najechanie wstrzymuje karuzelę,
+  // a kliknięcie wyłącza ją do końca (użytkownik przejął sterowanie).
+  const KARUZELA = 15000;
+  const kolejnosc = ['j-skok', 'j-kolano', 'j-biodro', 'j-lokiec', 'j-bark']
+    .map(k => hero.querySelector('.' + k)).filter(Boolean);
+  let ktory = 0, zegar = null, wylaczona = false;
+
+  const zgasAuto = () => joints.forEach(j => j.classList.remove('on'));
+  const nastepny = () => {
+    if (wylaczona || hero.classList.contains('morphed')) return;
+    if (joints.some(j => j.matches(':hover'))) return;      // czytają — nie przerywamy
+    zgasAuto();
+    kolejnosc[ktory % kolejnosc.length]?.classList.add('on');
+    ktory++;
+  };
+  const startKaruzeli = () => {
+    clearInterval(zegar);
+    if (wylaczona || matchMedia('(prefers-reduced-motion:reduce)').matches) return;
+    nastepny();
+    zegar = setInterval(nastepny, KARUZELA);
+  };
+  hero.__karuzelaStop = () => { clearInterval(zegar); zegar = null; zgasAuto(); };
+  hero.__karuzelaStart = () => { ktory = 0; wylaczona = false; startKaruzeli(); };
+
+  joints.forEach(j => {
+    // najechanie: chowamy podpowiedź automatu, żeby nie było dwóch naraz
+    j.addEventListener('mouseenter', () => { if (!wylaczona) zgasAuto(); });
+    j.addEventListener('click', () => {
+      wylaczona = true;                       // od teraz decyduje użytkownik
+      clearInterval(zegar); zegar = null;
+      const otwarta = j.classList.contains('on');
+      joints.forEach(o => o.classList.remove('on'));
+      j.classList.toggle('on', !otwarta);
+    });
+  });
 
   // self-check: każdy kwadracik musi mieć komplet opisu
   for (const j of joints)
