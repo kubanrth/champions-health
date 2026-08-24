@@ -294,12 +294,23 @@ a{color:inherit;text-decoration:none}
    kontra-skalowania animujemy geometrię kadru: `object-fit:cover` sam
    przekadrowuje, a `object-position` prowadzi zawodnika do środka karty.  */
 .hero{--rev:cubic-bezier(.35,0,0,1)}
+/* Poza banerem hero jest przezroczyste, więc przy rozwijaniu prześwitywała
+   biała sekcja kart — przy szybkim powrocie w górę wyglądało to jak biały
+   pasek u góry. Ciemna podkładka gaśnie przy zwijaniu (żeby odsłonić karty)
+   i wraca przy rozwijaniu, zanim baner zdąży urosnąć. */
+.hero::before{content:"";position:absolute;inset:0;z-index:0;background:#070C09;
+  transition:opacity .5s var(--rev)}
+.hero.morphed::before{opacity:0}
 .morph{position:absolute;z-index:2;left:0;top:0;width:100%;height:100%;
   border-radius:0;overflow:hidden;transform-origin:50% 50%;
   box-shadow:0 2px 4px rgba(0,0,0,0),0 30px 60px -30px rgba(0,0,0,0);
   transition:left 1.08s var(--rev),top 1.08s var(--rev),width 1.08s var(--rev),
              height 1.08s var(--rev),transform 1.08s var(--rev),
              border-radius 1.08s var(--rev),box-shadow 1.08s var(--rev)}
+/* Doklejenie banera do kafelka przy ruchu paska musi być NATYCHMIASTOWE.
+   Z przejściem baner przejeżdżał pół ekranu i przy powrocie w górę wlatywał
+   z lewej strony (a w luce prześwitywało białe tło). */
+.morph.bez-przejscia,.morph.bez-przejscia>img{transition:none}
 .hero.morphed .morph{box-shadow:0 2px 4px rgba(0,0,0,.08),0 26px 50px -28px rgba(0,0,0,.45)}
 .morph>img{width:100%;height:100%;object-fit:cover;object-position:50% 50%;
   transition:object-position 1s var(--rev)}
@@ -1755,7 +1766,15 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
     // powrót na samą górę = wjazd gra od nowa (po tym, jak kadr wróci na miejsce)
     if (!teraz && hero.__odtworz) setTimeout(() => { if (scrollY <= PROG) hero.__odtworz(); }, 220);
   };
-  sec.__odswiezCel = () => { if (zwiniete) ustawCel(); };
+  sec.__odswiezCel = () => {
+    if (!zwiniete) return;
+    const el = hero.querySelector('.morph');
+    if (!el) return;
+    el.classList.add('bez-przejscia');
+    ustawCel();
+    void el.offsetWidth;              // wymuszamy zastosowanie bez animacji
+    el.classList.remove('bez-przejscia');
+  };
   addEventListener('scroll', sprawdz, { passive: true });
   addEventListener('resize', () => { if (zwiniete) ustawCel(); });
   sprawdz();

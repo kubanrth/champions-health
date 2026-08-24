@@ -195,12 +195,33 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
     const poPowtorce = await q.evaluate(() => ({
       zapalonych: document.querySelectorAll('.jt.zapalony').length,
       tekst: document.querySelector('.hero').classList.contains('tekst') }));
-    const powtorka = zwinal && odNowa.gra && odNowa.zapalonych < 5
+    // Powrót w GÓRĘ mocnym ruchem: baner musi startować z kafelka 01, a nie
+    // zza lewej krawędzi, i nie może prześwitywać biała sekcja kart.
+    const powrot = await q.evaluate(() => new Promise(res => {
+      const m = document.querySelector('.morph'), hero = document.querySelector('.hero');
+      let xPrzyRozwinieciu = null, byloZwiniete = hero.classList.contains('morphed');
+      const t0 = performance.now();
+      const f = () => {
+        const zw = hero.classList.contains('morphed');
+        if (byloZwiniete && !zw && xPrzyRozwinieciu === null)
+          xPrzyRozwinieciu = Math.round(m.getBoundingClientRect().x);
+        byloZwiniete = zw;
+        if (performance.now() - t0 > 2200) return res(xPrzyRozwinieciu);
+        requestAnimationFrame(f);
+      };
+      requestAnimationFrame(f);
+      scrollTo(0, 0);
+    }));
+    // baner ma być w kadrze (kafelek 01), nie kilka tysięcy px w lewo
+    const powrotOk = powrot === null || powrot > -80;
+    await new Promise(r => setTimeout(r, 700));
+
+    const powtorka = zwinal && odNowa.gra && odNowa.zapalonych < 5 && powrotOk
                      && poPowtorce.zapalonych === 5 && poPowtorce.tekst
                      && gasniecie < 300 && migniecie <= 1;
     console.log(`${w}×${h} wjazd hero`, wOk ? 'ok' : 'BŁĄD ' + JSON.stringify({ kolej, czasy, kopia }));
     console.log(`${w}×${h} powtórka wjazdu`, powtorka ? 'ok'
-      : 'BŁĄD ' + JSON.stringify({ zwinal, gasniecie, migniecie, odNowa, poPowtorce }));
+      : 'BŁĄD ' + JSON.stringify({ zwinal, gasniecie, migniecie, powrot, odNowa, poPowtorce }));
     if (!powtorka) process.exitCode = 1;
     if (!wOk) process.exitCode = 1;
     await q.close();
