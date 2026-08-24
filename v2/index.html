@@ -680,82 +680,6 @@ h2{margin:0;font-size:clamp(2.1rem,4.6vw,3.6rem);line-height:1.05;letter-spacing
 .post:hover h3 a{background-size:100% 1px}
 .post p{margin:10px 0 0;max-width:36ch;font-size:15px;line-height:22px;color:var(--muted-d)}
 
-/* --- kontakt: płaska czerń, dane w wierszach z przerywaną kreską, formularz
-   bez szkła. Rytm wierszy i przerywana kreska jak w myhealthprac (#personal-
-   professional), pola na tyle widoczne, żeby było wiadomo, gdzie się klika. --- */
-.kontakt{position:relative;overflow:hidden;background:#070B09;color:#fff}
-/* baner: zdjęcie na całą szerokość, wielki nagłówek na czarnej połowie kadru
-   i pastylka z kołem — układ zdjęty z heroju myhealthprac.com */
-.kon-baner{position:relative;isolation:isolate;overflow:hidden;display:flex;align-items:center;
-  min-height:clamp(420px,66svh,680px)}
-.kon-foto{position:absolute;inset:0;z-index:-1;width:100%;height:100%;
-  object-fit:cover;object-position:74% 50%}
-.kon-baner-in{width:100%;padding:clamp(3rem,7vw,5.5rem) clamp(24px,3.4vw,52px)}
-.kon-baner h2{margin:0;max-width:13ch;font-size:clamp(2.4rem,5vw,4.6rem);line-height:1.04;
-  letter-spacing:-.03em;font-weight:500}
-.kon-baner .kontakt-lead{margin:1.5rem 0 2.2rem}
-/* poświaty pod szkłem — dają mu głębię i wypełniają pustkę modułu */
-.kontakt-in{position:relative}
-.kontakt-in::before{content:"";position:absolute;inset:-8% -4%;z-index:0;pointer-events:none;
-  background:
-    radial-gradient(46% 54% at 14% 30%,rgba(126,196,158,.26),transparent 70%),
-    radial-gradient(44% 52% at 78% 26%,rgba(126,196,158,.20),transparent 72%),
-    radial-gradient(40% 48% at 88% 74%,rgba(255,255,255,.16),transparent 72%),
-    radial-gradient(34% 40% at 58% 96%,rgba(126,196,158,.14),transparent 74%)}
-.kontakt-in{display:grid;gap:clamp(2.6rem,5vw,6rem);
-  grid-template-columns:minmax(0,1fr) minmax(340px,.88fr);align-items:stretch;
-  width:var(--wrap);max-width:100%;margin:0 auto;
-  padding:clamp(3.4rem,6vw,5.5rem) 24px clamp(4.5rem,8vw,7rem)}
-/* dane same w kolumnie zostawiały 380 px pustki pod spodem — centrujemy je
-   względem formularza obok */
-.kontakt-lewo{position:relative;z-index:1;display:flex;flex-direction:column;justify-content:center}
-.kontakt-znak{width:auto;height:clamp(38px,3.4vw,52px);margin-bottom:clamp(1.6rem,2.6vw,2.4rem);
-  align-self:flex-start}
-.kontakt-lead{margin:1.3rem 0 0;max-width:40ch;font-size:16px;line-height:25px;color:rgba(255,255,255,.78)}
-/* dane kontaktowe: wiersz = etykieta z lewej, wartość z prawej, kreska u góry */
-.kontakt-dane{margin:0;max-width:30rem}
-.kontakt-dane div{display:flex;justify-content:space-between;align-items:baseline;gap:24px;
-  padding:16px 0;border-top:1px dashed rgba(255,255,255,.24)}
-.kontakt-dane div:last-child{border-bottom:1px dashed rgba(255,255,255,.24)}
-.kontakt-dane dt{font-size:14px;font-weight:400;color:rgba(255,255,255,.6)}
-.kontakt-dane dd{margin:0;font-size:17px;font-weight:500;letter-spacing:-.01em;text-align:right}
-.kontakt-dane a{background-image:linear-gradient(currentColor,currentColor);background-size:0 1px;
-  background-repeat:no-repeat;background-position:0 100%;transition:background-size .4s var(--ease)}
-.kontakt-dane a:hover{background-size:100% 1px}
-/* Szkło pod formularzem. Samo `backdrop-filter` na płaskim tle nic nie daje —
-   dlatego pod spodem leżą dwie rozmyte poświaty (`.kontakt-in::before`),
-   które szkło dopiero rozmywa i przepuszcza. */
-.kontakt-form{position:relative;z-index:1;display:grid;gap:16px;
-  padding:clamp(24px,2.5vw,34px);border-radius:24px;
-  background:rgba(255,255,255,.07);
-  border:1px solid rgba(255,255,255,.16);
-  -webkit-backdrop-filter:blur(20px) saturate(1.2);
-  backdrop-filter:blur(20px) saturate(1.2);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.1),
-             0 30px 60px -34px rgba(0,0,0,.85)}
-.form-tytul{margin:0 0 2px;font-size:16px;font-weight:500;letter-spacing:-.01em}
-.kontakt-form label{display:grid;gap:8px;font-size:14px;color:rgba(255,255,255,.78)}
-.kontakt-form input,.kontakt-form textarea{width:100%;padding:14px 16px;border-radius:14px;
-  /* .34 dawało 2,68:1 wobec tła pola — poniżej progu 3:1 dla elementów UI */
-  border:1px solid rgba(255,255,255,.45);background:#0C120F;color:#fff;
-  font:inherit;font-size:16px;resize:vertical;
-  transition:border-color .3s var(--ease),background-color .3s var(--ease)}
-.kontakt-form input:hover,.kontakt-form textarea:hover{border-color:rgba(255,255,255,.66)}
-.kontakt-form input:focus,.kontakt-form textarea:focus{outline:0;border-color:#fff;background:#101815}
-.kontakt-form input:user-invalid,.kontakt-form textarea:user-invalid{border-color:#FF8A8A}
-.kontakt-form .btn{margin-top:6px;justify-content:center;width:100%}
-.form-nota{margin:0;font-size:13px;line-height:1.5;color:rgba(255,255,255,.68)}
-.form-nota.ok{color:#fff}
-@media(max-width:900px){
-  /* w wąskim kadrze sylwetka wjeżdża pod napis — dopiero tu potrzebne przyciemnienie */
-  .kon-baner::after{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
-    background:linear-gradient(105deg,rgba(4,8,6,.93) 0%,rgba(4,8,6,.78) 52%,rgba(4,8,6,.34) 100%)}
-  .kon-foto{object-position:70% 50%}
-  .kon-baner h2{max-width:16ch}
-  .kontakt-in{grid-template-columns:1fr;gap:2.6rem}
-  .kontakt-dane{max-width:none}
-}
-
 /* FAQ 1:1 z revolut.com/esim: wyśrodkowany nagłówek 51,79/500, wiersze
    1000 px z pytaniem 24/500 i kółkiem +/− po prawej, włosowa linia pod spodem */
 .faq-sec{background:#fff;color:#0A0A0A;padding-top:clamp(2.6rem,4vw,4rem)}
@@ -833,74 +757,65 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
 
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 
-/* === sekcja kontaktu przeniesiona z kontakt.html ========================= */
-/* Tokeny trzymamy NA SEKCJI — strona główna ma inne (`--ink:#000`, brak
-   `--tekst`), więc globalne nadpisanie zepsułoby resztę. */
-.kt-sek{--ink:#0B0D0C;--tekst:rgba(11,13,12,.72);--tekst2:rgba(11,13,12,.6)}
-/* --- strona kontaktu: formularz na tle meczowego zdjęcia (kontakt-tlo.jpg,
-   obrócone do poziomu, EXIF zdjęty). Identyfikacja jak reszta podstron:
-   Inter 500, pigułki home, radius 28/12, włosowe linie, krzywa Revoluta.
-   Lewa kolumna: nagłówek + dane w wierszach na scrimie; prawa: BIAŁA karta
-   formularza (Revolut: etykieta nad polem, pola h50 radius 12, pełna ciemna
-   pigułka na całą szerokość). ---------------------------------------------- */
-.kt-sek{position:relative;display:flex;align-items:center;
-  min-height:calc(100svh - 61px);padding:clamp(28px,4.6vw,64px) 0;overflow:hidden}
-.kt-tlo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 38%}
-.kt-sek::before{content:"";position:absolute;inset:0;background:
-  linear-gradient(to top,rgba(5,9,7,.5),transparent 55%),
-  linear-gradient(100deg,rgba(5,9,7,.88) 0%,rgba(5,9,7,.66) 46%,rgba(5,9,7,.38) 74%,rgba(5,9,7,.3) 100%)}
-.kt-grid{position:relative;z-index:2;width:var(--wrap);max-width:100%;margin:0 auto;display:grid;
-  grid-template-columns:1fr minmax(380px,460px);gap:clamp(28px,4.6vw,80px);
-  align-items:center;color:#fff}
-.kt-grid h1{max-width:14ch;font-size:clamp(2.3rem,4.4vw,3.75rem);line-height:1.04}
-.kt-lead{margin:16px 0 0;max-width:42ch;font-size:18px;line-height:24px;color:rgba(255,255,255,.85)}
-/* dane jako szklane pigułki — ciemne szkło jak w pasie kontaktu na home,
-   więc kontrast nie zależy od tego, co świeci na zdjęciu pod spodem */
-.kt-pigulki{display:flex;flex-wrap:wrap;gap:12px;margin:clamp(24px,3vw,40px) 0 0;max-width:560px}
-.kt-pig{display:inline-flex;align-items:center;gap:10px;height:48px;padding:0 20px;
-  border-radius:999px;white-space:nowrap;color:var(--ink);background:#fff;
-  box-shadow:0 14px 30px -18px rgba(0,0,0,.55)}
-.kt-pig span{font-size:11px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;
-  color:var(--tekst2)}
-.kt-pig b{font-size:15px;font-weight:500}
-a.kt-pig{transition:background-color .3s var(--ease),transform .3s var(--ease)}
-a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
-/* karta formularza */
-.kt-forma{background:#fff;color:var(--ink);border-radius:28px;
-  padding:clamp(24px,2.6vw,36px);box-shadow:0 44px 90px -44px rgba(0,0,0,.65)}
-.kt-forma h2{font-size:22px;letter-spacing:-.02em}
-.kt-forma p.kt-pod{margin:6px 0 0;font-size:14px;color:var(--tekst2)}
-.kt-pole{margin-top:16px}
-.kt-pole label{display:block;margin-bottom:6px;font-size:13.5px;font-weight:500;color:var(--tekst)}
-.kt-pole input,.kt-pole textarea{width:100%;font:inherit;font-size:15px;color:var(--ink);
-  background:#fff;border:1px solid rgba(11,13,12,.16);border-radius:12px;
-  transition:border-color .25s var(--ease),box-shadow .25s var(--ease)}
-.kt-pole input{height:50px;padding:0 14px}
-.kt-pole textarea{min-height:96px;padding:12px 14px;resize:vertical}
-.kt-pole input:hover,.kt-pole textarea:hover{border-color:rgba(11,13,12,.3)}
-.kt-pole select{width:100%;height:50px;padding:0 40px 0 14px;font:inherit;font-size:15px;
-  color:var(--ink);background:#fff;border:1px solid rgba(11,13,12,.16);border-radius:12px;
-  appearance:none;-webkit-appearance:none;cursor:pointer;
-  background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 5.2 7 9l4-3.8" stroke="%230B0D0C" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>');
-  background-repeat:no-repeat;background-position:right 14px center;
-  transition:border-color .25s var(--ease),box-shadow .25s var(--ease)}
-.kt-pole select:hover{border-color:rgba(11,13,12,.3)}
-.kt-pole select:invalid{color:var(--tekst2)}   /* placeholder w kolorze podpowiedzi */
-.kt-pole input:focus,.kt-pole textarea:focus,.kt-pole select:focus{outline:none;
-  border-color:var(--ink);box-shadow:0 0 0 3px rgba(11,13,12,.08)}
-.kt-zgoda{display:flex;align-items:flex-start;gap:10px;margin-top:18px;
-  font-size:13px;line-height:1.55;color:var(--tekst)}
-.kt-zgoda input{flex:none;width:18px;height:18px;margin-top:2px;accent-color:#0B0D0C}
-.kt-forma .btn{width:100%;justify-content:center;margin-top:20px;height:50px}
-.kt-nota{margin:12px 0 0;font-size:13px;line-height:1.5;color:var(--tekst2)}
-.kt-nota:empty{display:none}
-@media(max-width:960px){
-  .kt-grid{grid-template-columns:1fr;gap:26px}
-  .kt-pigulki{max-width:none}
+/* === sekcja kontaktu — powrót do układu z 0b6c3d2 ======================== */
+/* Zdjęcie na całą sekcję, lewa kolumna z nagłówkiem i siatką danych, prawa —
+   karta formularza ze szkła. Względem oryginału: BEZ prostokątnego
+   przyciemnienia pod lewą kolumną (`.kontakt-lewo::before`) — zostaje sama
+   miękka gradacja sekcji, wzmocniona tak, żeby tekst dalej się czytał. */
+.kontakt{position:relative;overflow:hidden;background:#07100C;color:#fff;isolation:isolate}
+.kontakt-tlo{position:absolute;inset:0;z-index:0;width:100%;height:100%;
+  object-fit:cover;object-position:50% 42%}
+.kontakt::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:linear-gradient(100deg,rgba(5,12,9,.94) 0%,rgba(5,12,9,.88) 34%,
+             rgba(5,12,9,.6) 62%,rgba(5,12,9,.32) 100%)}
+.kontakt-in{position:relative;z-index:2;display:grid;gap:clamp(2.4rem,4vw,5rem);
+  grid-template-columns:minmax(0,1.05fr) minmax(320px,.95fr);align-items:start;
+  padding:clamp(4.5rem,9vw,8rem) clamp(24px,3.4vw,52px)}
+.kontakt-lewo{position:relative}
+.kontakt-lewo h2{margin:0;max-width:16ch;font-size:clamp(2.4rem,5.4vw,4.6rem);line-height:1.0;
+  letter-spacing:-.028em;font-weight:500}
+.kontakt-lead{margin:1.4rem 0 0;max-width:46ch;font-size:18px;line-height:26px;
+  color:rgba(255,255,255,.86)}
+.kontakt-dane{margin:clamp(2rem,3.4vw,3rem) 0 0;display:grid;gap:18px 40px;
+  grid-template-columns:repeat(auto-fit,minmax(170px,1fr));max-width:25rem}
+.kontakt-dane dt{font-size:12px;letter-spacing:.14em;text-transform:uppercase;
+  color:rgba(255,255,255,.62)}
+.kontakt-dane dd{margin:5px 0 0;font-size:18px;font-weight:500;letter-spacing:-.01em}
+.kontakt-dane a{background-image:linear-gradient(currentColor,currentColor);background-size:0 1px;
+  background-repeat:no-repeat;background-position:0 100%;transition:background-size .4s var(--ease)}
+.kontakt-dane a:hover{background-size:100% 1px}
+
+.kontakt-form{padding:clamp(22px,2.4vw,32px);border-radius:22px;
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);
+  -webkit-backdrop-filter:blur(18px) saturate(1.3);backdrop-filter:blur(18px) saturate(1.3);
+  display:grid;gap:14px}
+.form-tytul{margin:0 0 4px;font-size:20px;font-weight:500;letter-spacing:-.02em}
+.kontakt-pole{display:grid;gap:7px}
+.kontakt-pole label{font-size:13px;letter-spacing:.01em;color:rgba(255,255,255,.78)}
+.kontakt-form input,.kontakt-form textarea,.kontakt-form select{width:100%;padding:13px 15px;
+  border-radius:12px;border:1px solid rgba(255,255,255,.45);background:rgba(8,16,12,.55);color:#fff;
+  font:inherit;font-size:15px;resize:vertical;
+  transition:border-color .3s var(--ease),background-color .3s var(--ease)}
+.kontakt-form select{appearance:none;-webkit-appearance:none;cursor:pointer;padding-right:40px;
+  background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 5.2 7 9l4-3.8" stroke="%23ffffff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>');
+  background-repeat:no-repeat;background-position:right 14px center}
+.kontakt-form select:invalid{color:rgba(255,255,255,.6)}
+.kontakt-form option{color:#0B0D0C}
+.kontakt-form input:hover,.kontakt-form textarea:hover,.kontakt-form select:hover{
+  border-color:rgba(255,255,255,.66)}
+.kontakt-form input:focus,.kontakt-form textarea:focus,.kontakt-form select:focus{outline:0;
+  border-color:#fff;background:rgba(8,16,12,.78)}
+.kontakt-form input:user-invalid,.kontakt-form textarea:user-invalid{border-color:#FF8A8A}
+.kontakt-zgoda{display:flex;align-items:flex-start;gap:10px;margin-top:2px;
+  font-size:12.5px;line-height:1.5;color:rgba(255,255,255,.8)}
+.kontakt-zgoda input{flex:none;width:18px;height:18px;margin-top:2px;padding:0;
+  accent-color:#fff;background:none;border-radius:4px}
+.kontakt-form .btn{margin-top:4px;justify-content:center;width:100%}
+.form-nota{margin:0;font-size:12.5px;line-height:1.45;color:#FFB4B4}
+.form-nota:empty{display:none}
+@media(max-width:900px){
+  .kontakt-in{grid-template-columns:1fr}
 }
-.kt-forma .btn{gap:10px}
-.kt-sek .btn-pelny{background:#262626;color:#fff}
-.kt-sek .btn-pelny:hover{background:#333;transform:translateY(-1px)}
 </style>
 </head>
 <body>
@@ -1606,87 +1521,67 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
   </div>
 </section>
 
-<section class="kt-sek" id="kontakt">
-  <img class="kt-tlo" src="img/kontakt-tlo.jpg" alt="" aria-hidden="true">
-  <div class="wrap kt-grid">
-    <div>
+<section class="kontakt" id="kontakt">
+  <img class="kontakt-tlo" src="img/kontakt-tlo.jpg" alt="" aria-hidden="true">
+  <div class="kontakt-in">
+    <div class="kontakt-lewo">
       <h2>Zacznij od rozmowy z koordynatorem</h2>
-      <p class="kt-lead">Piętnaście minut wystarczy, żeby ustalić, czego potrzebujesz.
-        Bez skierowania i bez kolejki.</p>
-      <div class="kt-pigulki">
-        <a class="kt-pig" href="tel:+48223182000"><span>Telefon</span><b>22 318 20 00</b></a>
-        <a class="kt-pig" href="mailto:info@championshealth.pl"><span>E-mail</span><b>info@championshealth.pl</b></a>
-        <span class="kt-pig"><span>Godziny</span><b>Pon.–pt. 8:00–20:00</b></span>
-        <span class="kt-pig"><span>Adres</span><b>Legionistów 3, Książenice</b></span>
-      </div>
+      <p class="kontakt-lead">Piętnaście minut wystarczy, żeby ustalić, czego potrzebujesz
+        i ile to zajmie. Bez skierowania i bez kolejki.</p>
+      <dl class="kontakt-dane">
+        <div><dt>Telefon</dt><dd><a href="tel:+48223182000">22 318 20 00</a></dd></div>
+        <div><dt>E-mail</dt><dd><a href="mailto:info@championshealth.pl">info@championshealth.pl</a></dd></div>
+        <div><dt>Godziny</dt><dd>Pon.–pt. 8:00–20:00</dd></div>
+        <div><dt>Adres</dt><dd>Legionistów 3, Książenice</dd></div>
+      </dl>
     </div>
-    <form class="kt-forma" id="formularz" data-forma novalidate>
-      <h3>Umów wizytę</h3>
-      <p class="kt-pod">Oddzwonimy tego samego dnia roboczego.</p>
-      <div class="kt-pole">
+
+    <form class="kontakt-form" id="formularz" data-forma novalidate>
+      <p class="form-tytul">Umów wizytę</p>
+      <div class="kontakt-pole">
         <label for="kt-imie">Imię i nazwisko</label>
         <input id="kt-imie" name="imie" type="text" autocomplete="name" required>
       </div>
-      <div class="kt-pole">
+      <div class="kontakt-pole">
         <label for="kt-tel">Telefon</label>
         <input id="kt-tel" name="tel" type="tel" autocomplete="tel" required>
       </div>
-      <div class="kt-pole">
+      <div class="kontakt-pole">
         <label for="kt-mail">E-mail</label>
         <input id="kt-mail" name="email" type="email" autocomplete="email" required>
       </div>
-      <div class="kt-pole">
+      <div class="kontakt-pole">
         <label for="kt-temat">Temat zgłoszenia</label>
         <select id="kt-temat" name="temat" required>
-          <option value="" selected disabled hidden>Wybierz temat zgłoszenia</option>
-          <option>Medycyna sportowa</option>
-          <option>Ortopedia</option>
+          <option value="" selected disabled>Wybierz temat zgłoszenia</option>
+          <option>Konsultacja ortopedyczna</option>
           <option>Fizjoterapia i rehabilitacja</option>
+          <option>Medycyna sportowa</option>
           <option>Dietetyka i suplementacja</option>
-          <option>Trening merytoryczny</option>
-          <option>Edukacja i szkolenie</option>
           <option>Inny temat</option>
         </select>
       </div>
-      <div class="kt-pole">
+      <div class="kontakt-pole">
         <label for="kt-spec">Preferowany specjalista</label>
         <select id="kt-spec" name="specjalista" required>
-          <option value="" selected disabled hidden>Preferowany specjalista</option>
+          <option value="" selected disabled>Preferowany specjalista</option>
           <option>Bez preferencji</option>
-          <optgroup label="Lekarze">
-            <option>Filip Latawiec</option>
-            <option>Mateusz Dłutowski</option>
-            <option>Szymon Gałczyński</option>
-            <option>Piotr Modzelewski</option>
-            <option>Marcin Tusiński</option>
-          </optgroup>
-          <optgroup label="Fizjoterapeuci">
-            <option>Dominika Daros</option>
-            <option>Przemysław Domański</option>
-            <option>Łukasz Gembarzewski</option>
-            <option>Jakub Grodzki</option>
-            <option>Sandra Heronimek</option>
-            <option>Daniel Komar</option>
-            <option>Giovanni Mangano</option>
-            <option>Dominik Ofat</option>
-            <option>Kamil Pasoń</option>
-          </optgroup>
+          <option>Lekarz ortopeda</option>
+          <option>Fizjoterapeuta</option>
+          <option>Dietetyk</option>
         </select>
       </div>
-      <div class="kt-pole">
+      <div class="kontakt-pole">
         <label for="kt-tresc">Wiadomość</label>
         <textarea id="kt-tresc" name="tresc" rows="3"></textarea>
       </div>
-      <label class="kt-zgoda">
+      <label class="kontakt-zgoda">
         <input id="kt-rodo" type="checkbox" required>
         <span>Wysyłając formularz wyrażam zgodę na przetwarzanie moich danych osobowych
           przez Champions Health zgodnie z Polityką Prywatności.</span>
       </label>
-      <button class="btn btn-pelny" type="submit">Wyślij zgłoszenie
-        <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
-          <path d="M3 10 10 3M4.6 3H10v5.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg></button>
-      <p class="kt-nota" data-nota role="status" aria-live="polite"></p>
+      <button class="btn btn-w" type="submit">Wyślij zgłoszenie</button>
+      <p class="form-nota" data-nota role="status" aria-live="polite"></p>
     </form>
   </div>
 </section>

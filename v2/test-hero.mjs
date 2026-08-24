@@ -599,8 +599,8 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
   });
   await p.evaluate(() => document.querySelector('#kontakt').scrollIntoView({ block: 'start' }));
   await new Promise(r => setTimeout(r, 1200));
-  // pusty formularz nie może przejść — nowy ma też wymaganą zgodę RODO
-  await p.click('.kt-forma button[type=submit]');
+  // pusty formularz nie może przejść — jest też wymagana zgoda RODO
+  await p.click('.kontakt-form button[type=submit]');
   await new Promise(r => setTimeout(r, 400));
   const pusty = await p.evaluate(() => document.querySelector('[data-nota]').textContent);
   await p.type('#kt-imie', 'Jan Kowalski');
@@ -610,37 +610,42 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
     await p.select(id, await p.evaluate(sel =>
       [...document.querySelectorAll(sel + ' option')].filter(o => o.value)[0].value, id));
   await p.click('#kt-rodo');
-  await p.click('.kt-forma button[type=submit]');
+  await p.click('.kontakt-form button[type=submit]');
   await new Promise(r => setTimeout(r, 400));
   const kontakt = await p.evaluate(prz => {
     const nota = document.querySelector('[data-nota]');
-    const lewo = document.querySelector('.kt-grid > div').getBoundingClientRect();
-    const form = document.querySelector('.kt-forma').getBoundingClientRect();
+    const lewo = document.querySelector('.kontakt-lewo').getBoundingClientRect();
+    const form = document.querySelector('.kontakt-form').getBoundingClientRect();
     const L = c => { const n = c.match(/[\d.]+/g).map(Number), a = n.length > 3 ? n[3] : 1;
       const [r, g, b] = n.slice(0, 3).map(v => { v = v * a / 255; return v <= .03928 ? v / 12.92 : ((v + .055) / 1.055) ** 2.4; });
       return .2126 * r + .7152 * g + .0722 * b; };
-    const i = document.querySelector('.kt-pole input'), cs = getComputedStyle(i);
+    const i = document.querySelector('.kontakt-form input'), cs = getComputedStyle(i);
+    const dt = document.querySelector('.kontakt-dane dt');
     return {
       // dane po lewej, formularz po prawej (na wąskim ekranie jeden pod drugim)
-      uklad: innerWidth < 961 || form.left > lewo.left,
-      // dane kontaktowe jako pigułki na zdjęciu
-      pigulki: document.querySelectorAll('.kt-pig').length === 4,
-      // zdjęcie tła musi się załadować, inaczej sekcja jest szarą płachtą
-      tlo: (() => { const t = document.querySelector('.kt-tlo');
+      uklad: innerWidth < 901 || form.left > lewo.left,
+      // siatka danych 2 × 2 z wersalikowymi etykietami — układ z 0b6c3d2
+      dane: document.querySelectorAll('.kontakt-dane dt').length === 4
+         && getComputedStyle(dt).textTransform === 'uppercase',
+      // zdjęcie w tle musi się wczytać, inaczej sekcja jest płaską czernią
+      tlo: (() => { const t = document.querySelector('.kontakt-tlo');
         return !!t && t.complete && t.naturalWidth > 0; })(),
+      // czarny pasek pod lewą kolumną ma NIE wrócić (decyzja klienta 2026-08-24)
+      bezPaska: getComputedStyle(document.querySelector('.kontakt-lewo'), '::before')
+        .backgroundImage === 'none',
       // obramowanie pola kontra jego tło min. 3:1 (WCAG dla elementów UI)
       poleWidoczne: (L(cs.borderColor) + .05) / (L(cs.backgroundColor) + .05) >= 3
                  || (L(cs.backgroundColor) + .05) / (L(cs.borderColor) + .05) >= 3,
       pustyBlokuje: /Uzupełnij|Zaznacz/.test(prz),
       wyslany: /demonstracyjny/.test(nota.textContent),
-      // każde pole ma etykietę powiązaną przez `for`
-      etykiety: [...document.querySelectorAll('.kt-forma input:not([type=checkbox]),.kt-forma textarea,.kt-forma select')]
+      etykiety: [...document.querySelectorAll('.kontakt-form input:not([type=checkbox]),.kontakt-form textarea,.kontakt-form select')]
         .every(e => e.id && document.querySelector(`label[for="${e.id}"]`)),
     };
   }, pusty);
   const bkOk = blog.ile === 3 && blog.miedzy && blog.komplet
-            && kontakt.uklad && kontakt.pigulki && kontakt.tlo && kontakt.poleWidoczne
-            && kontakt.pustyBlokuje && kontakt.wyslany && kontakt.etykiety;
+            && kontakt.uklad && kontakt.dane && kontakt.tlo && kontakt.bezPaska
+            && kontakt.poleWidoczne && kontakt.pustyBlokuje && kontakt.wyslany
+            && kontakt.etykiety;
   console.log(`${w}×${h} blog+kontakt`, bkOk ? 'ok' : 'BŁĄD ' + JSON.stringify({ blog, kontakt }));
   if (!bkOk) process.exitCode = 1;
 
