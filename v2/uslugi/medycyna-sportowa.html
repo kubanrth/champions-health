@@ -197,6 +197,7 @@ p{margin:0}
   padding:4px 0 10px;
   scrollbar-width:none}
 .inne::-webkit-scrollbar{display:none}
+.inne::-webkit-scrollbar{display:none}
 /* Stała szerokość 460 px sprawiała, że przy 2560 px pięć kart nie wypełniało
    ekranu i pas kończył się 196 px przed krawędzią — szerokość idzie za oknem. */
 .inna{position:relative;flex:none;width:clamp(280px,30vw,560px);aspect-ratio:16/10;
@@ -304,6 +305,65 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
   *,*::before,*::after{animation:none!important;transition:none!important}
   [data-rv]{opacity:1;transform:none}
 }
+
+
+/* --- strona kontaktu: formularz na tle meczowego zdjęcia (kontakt-tlo.jpg,
+   obrócone do poziomu, EXIF zdjęty). Identyfikacja jak reszta podstron:
+   Inter 500, pigułki home, radius 28/12, włosowe linie, krzywa Revoluta.
+   Lewa kolumna: nagłówek + dane w wierszach na scrimie; prawa: BIAŁA karta
+   formularza (Revolut: etykieta nad polem, pola h50 radius 12, pełna ciemna
+   pigułka na całą szerokość). ---------------------------------------------- */
+.kt-sek{position:relative;display:flex;align-items:center;
+  min-height:calc(100svh - 61px);padding:clamp(28px,4.6vw,64px) 0;overflow:hidden}
+.kt-tlo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 38%}
+.kt-sek::before{content:"";position:absolute;inset:0;background:
+  linear-gradient(to top,rgba(5,9,7,.5),transparent 55%),
+  linear-gradient(100deg,rgba(5,9,7,.88) 0%,rgba(5,9,7,.66) 46%,rgba(5,9,7,.38) 74%,rgba(5,9,7,.3) 100%)}
+.kt-grid{position:relative;z-index:2;width:100%;display:grid;
+  grid-template-columns:1fr minmax(440px,580px);gap:clamp(24px,3.6vw,64px);
+  align-items:center;color:#fff}
+.kt-grid h1{max-width:14ch;font-size:clamp(2.3rem,4.4vw,3.75rem);line-height:1.04}
+.kt-lead{margin:16px 0 0;max-width:42ch;font-size:18px;line-height:24px;color:rgba(255,255,255,.85)}
+/* dane jako szklane pigułki — ciemne szkło jak w pasie kontaktu na home,
+   więc kontrast nie zależy od tego, co świeci na zdjęciu pod spodem */
+.kt-pigulki{display:flex;flex-wrap:wrap;gap:12px;margin:clamp(24px,3vw,40px) 0 0;max-width:560px}
+.kt-pig{display:inline-flex;align-items:center;gap:10px;height:48px;padding:0 20px;
+  border-radius:999px;white-space:nowrap;color:var(--ink);background:#fff;
+  box-shadow:0 14px 30px -18px rgba(0,0,0,.55)}
+.kt-pig span{font-size:11px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;
+  color:var(--tekst2)}
+.kt-pig b{font-size:15px;font-weight:500}
+a.kt-pig{transition:background-color .3s var(--ease),transform .3s var(--ease)}
+a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
+/* karta formularza */
+.kt-forma{background:#fff;color:var(--ink);border-radius:28px;
+  padding:clamp(24px,2.6vw,36px);box-shadow:0 44px 90px -44px rgba(0,0,0,.65)}
+.kt-forma h2{font-size:22px;letter-spacing:-.02em}
+.kt-forma p.kt-pod{margin:6px 0 0;font-size:14px;color:var(--tekst2)}
+.kt-pole{margin-top:16px}
+.kt-pole label{display:block;margin-bottom:6px;font-size:13.5px;font-weight:500;color:var(--tekst)}
+.kt-pole input,.kt-pole textarea{width:100%;font:inherit;font-size:15px;color:var(--ink);
+  background:#fff;border:1px solid rgba(11,13,12,.16);border-radius:12px;
+  transition:border-color .25s var(--ease),box-shadow .25s var(--ease)}
+.kt-pole input{height:50px;padding:0 14px}
+.kt-pole textarea{min-height:96px;padding:12px 14px;resize:vertical}
+.kt-pole input:hover,.kt-pole textarea:hover{border-color:rgba(11,13,12,.3)}
+.kt-pole select{width:100%;height:50px;padding:0 40px 0 14px;font:inherit;font-size:15px;
+  color:var(--ink);background:#fff;border:1px solid rgba(11,13,12,.16);border-radius:12px;
+  appearance:none;-webkit-appearance:none;cursor:pointer;
+  background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 5.2 7 9l4-3.8" stroke="%230B0D0C" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>');
+  background-repeat:no-repeat;background-position:right 14px center;
+  transition:border-color .25s var(--ease),box-shadow .25s var(--ease)}
+.kt-pole select:hover{border-color:rgba(11,13,12,.3)}
+.kt-pole select:invalid{color:var(--tekst2)}   /* placeholder w kolorze podpowiedzi */
+.kt-pole input:focus,.kt-pole textarea:focus,.kt-pole select:focus{outline:none;
+  border-color:var(--ink);box-shadow:0 0 0 3px rgba(11,13,12,.08)}
+.kt-zgoda{display:flex;align-items:flex-start;gap:10px;margin-top:18px;
+  font-size:13px;line-height:1.55;color:var(--tekst)}
+.kt-zgoda input{flex:none;width:18px;height:18px;margin-top:2px;accent-color:#0B0D0C}
+.kt-forma .btn{width:100%;justify-content:center;margin-top:20px;height:50px}
+.kt-nota{margin:12px 0 0;font-size:13px;line-height:1.5;color:var(--tekst2)}
+.kt-nota:empty{display:none}
 </style>
 </head>
 <body id="gora">
@@ -314,10 +374,10 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
       <img src="../img/logo_LCH.svg" alt="Champions Health">
     </a>
     <div class="menu">
-      <a href="../index.html#opieka">Usługi</a>
+      <a href="../uslugi.html">Usługi</a>
       <a href="../zespol.html">Zespół</a>
       <a href="../blog.html">Blog</a>
-      <a href="#kontakt">Kontakt</a>
+      <a href="../kontakt.html">Kontakt</a>
     </div>
     <a class="cta" href="#kontakt">Umów wizytę</a>
   </div>
@@ -377,29 +437,88 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
   </div>
 </section>
 
-<section class="kont" id="kontakt">
-  <img src="../img/kontakt.png" alt="" aria-hidden="true">
-  <div class="kont-in">
-    <div class="kont-tekst" data-rv>
+<section class="kt-sek" id="kontakt">
+  <img class="kt-tlo" src="../img/kontakt-tlo.jpg" alt="" aria-hidden="true">
+  <div class="wrap kt-grid">
+    <div>
       <h2>Zacznij od rozmowy z koordynatorem</h2>
-      <p>Piętnaście minut wystarczy, żeby ustalić, czego potrzebujesz.
+      <p class="kt-lead">Piętnaście minut wystarczy, żeby ustalić, czego potrzebujesz.
         Bez skierowania i bez kolejki.</p>
-      <div class="kont-akcje">
-        <a class="btn btn-pelny" href="../index.html#kontakt">Wypełnij formularz
-          <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
-            <path d="M3 10 10 3M4.6 3H10v5.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg></a>
-        <a class="btn btn-ghost" href="tel:+48223182000">Zadzwoń: 22 318 20 00</a>
+      <div class="kt-pigulki">
+        <a class="kt-pig" href="tel:+48223182000"><span>Telefon</span><b>22 318 20 00</b></a>
+        <a class="kt-pig" href="mailto:info@championshealth.pl"><span>E-mail</span><b>info@championshealth.pl</b></a>
+        <span class="kt-pig"><span>Godziny</span><b>Pon.–pt. 8:00–20:00</b></span>
+        <span class="kt-pig"><span>Adres</span><b>Legionistów 3, Książenice</b></span>
       </div>
     </div>
-    <div class="kont-karta" data-rv>
-      <dl>
-        <div><dt>Telefon</dt><dd><a href="tel:+48223182000">22 318 20 00</a></dd></div>
-        <div><dt>E-mail</dt><dd><a href="mailto:info@legia.pl">info@legia.pl</a></dd></div>
-        <div><dt>Godziny</dt><dd>Pon.–pt. 8:00–20:00</dd></div>
-        <div><dt>Adres</dt><dd>ul. Łazienkowska 3, Warszawa</dd></div>
-      </dl>
-    </div>
+    <form class="kt-forma" id="formularz" data-forma novalidate>
+      <h3>Umów wizytę</h3>
+      <p class="kt-pod">Oddzwonimy tego samego dnia roboczego.</p>
+      <div class="kt-pole">
+        <label for="kt-imie">Imię i nazwisko</label>
+        <input id="kt-imie" name="imie" type="text" autocomplete="name" required>
+      </div>
+      <div class="kt-pole">
+        <label for="kt-tel">Telefon</label>
+        <input id="kt-tel" name="tel" type="tel" autocomplete="tel" required>
+      </div>
+      <div class="kt-pole">
+        <label for="kt-mail">E-mail</label>
+        <input id="kt-mail" name="email" type="email" autocomplete="email" required>
+      </div>
+      <div class="kt-pole">
+        <label for="kt-temat">Temat zgłoszenia</label>
+        <select id="kt-temat" name="temat" required>
+          <option value="" selected disabled hidden>Wybierz temat zgłoszenia</option>
+          <option>Medycyna sportowa</option>
+          <option>Ortopedia</option>
+          <option>Fizjoterapia i rehabilitacja</option>
+          <option>Dietetyka i suplementacja</option>
+          <option>Trening merytoryczny</option>
+          <option>Edukacja i szkolenie</option>
+          <option>Inny temat</option>
+        </select>
+      </div>
+      <div class="kt-pole">
+        <label for="kt-spec">Preferowany specjalista</label>
+        <select id="kt-spec" name="specjalista" required>
+          <option value="" selected disabled hidden>Preferowany specjalista</option>
+          <option>Bez preferencji</option>
+          <optgroup label="Lekarze">
+            <option>Filip Latawiec</option>
+            <option>Mateusz Dłutowski</option>
+            <option>Szymon Gałczyński</option>
+            <option>Piotr Modzelewski</option>
+            <option>Marcin Tusiński</option>
+          </optgroup>
+          <optgroup label="Fizjoterapeuci">
+            <option>Dominika Daros</option>
+            <option>Przemysław Domański</option>
+            <option>Łukasz Gembarzewski</option>
+            <option>Jakub Grodzki</option>
+            <option>Sandra Heronimek</option>
+            <option>Daniel Komar</option>
+            <option>Giovanni Mangano</option>
+            <option>Dominik Ofat</option>
+            <option>Kamil Pasoń</option>
+          </optgroup>
+        </select>
+      </div>
+      <div class="kt-pole">
+        <label for="kt-tresc">Wiadomość</label>
+        <textarea id="kt-tresc" name="tresc" rows="3"></textarea>
+      </div>
+      <label class="kt-zgoda">
+        <input id="kt-rodo" type="checkbox" required>
+        <span>Wysyłając formularz wyrażam zgodę na przetwarzanie moich danych osobowych
+          przez Champions Health zgodnie z Polityką Prywatności.</span>
+      </label>
+      <button class="btn btn-pelny" type="submit">Wyślij zgłoszenie
+        <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
+          <path d="M3 10 10 3M4.6 3H10v5.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg></button>
+      <p class="kt-nota" data-nota role="status" aria-live="polite"></p>
+    </form>
   </div>
 </section>
 
@@ -407,11 +526,11 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
   <div class="wrap">
     <div class="sek-head" data-rv><h2>Pozostałe zakresy opieki</h2></div>
     <div class="inne-pas" data-rv>
-      <div class="inne" data-pas><a class="inna" href="ortopedia.html"><img src="../img/c1-ortopedia.png" alt="" loading="lazy" style="object-position:50% 45%"><b>Ortopedia</b><span class="inna-pill">Otwórz<i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></i></span></a>
-      <a class="inna" href="fizjoterapia.html"><img src="../img/c3-fizjoterapia.png" alt="" loading="lazy" style="object-position:50% 40%"><b>Fizjoterapia i rehabilitacja</b><span class="inna-pill">Otwórz<i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></i></span></a>
-      <a class="inna" href="dietetyka.html"><img src="../img/c4-dietetyka.png" alt="" loading="lazy" style="object-position:50% 45%"><b>Dietetyka i suplementacja</b><span class="inna-pill">Otwórz<i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></i></span></a>
-      <a class="inna" href="trening.html"><img src="../img/c5-trening.png" alt="" loading="lazy" style="object-position:50% 45%"><b>Trening merytoryczny</b><span class="inna-pill">Otwórz<i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></i></span></a>
-      <a class="inna" href="edukacja.html"><img src="../img/c6-edukacja.png" alt="" loading="lazy" style="object-position:50% 45%"><b>Edukacja i szkolenie</b><span class="inna-pill">Otwórz<i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></i></span></a></div>
+      <div class="inne" data-pas><a class="inna" href="ortopedia.html"><img src="../img/c1-ortopedia.png" alt="" loading="lazy" style="object-position:50% 45%"><span>02 / Diagnostyka</span><b>Ortopedia</b></a>
+      <a class="inna" href="fizjoterapia.html"><img src="../img/c3-fizjoterapia.png" alt="" loading="lazy" style="object-position:50% 40%"><span>03 / Powrót do sprawności</span><b>Fizjoterapia i rehabilitacja</b></a>
+      <a class="inna" href="dietetyka.html"><img src="../img/c4-dietetyka.png" alt="" loading="lazy" style="object-position:50% 45%"><span>04 / Żywienie</span><b>Dietetyka i suplementacja</b></a>
+      <a class="inna" href="trening.html"><img src="../img/c5-trening.png" alt="" loading="lazy" style="object-position:50% 45%"><span>05 / Motoryka</span><b>Trening merytoryczny</b></a>
+      <a class="inna" href="edukacja.html"><img src="../img/c6-edukacja.png" alt="" loading="lazy" style="object-position:50% 45%"><span>06 / Wiedza</span><b>Edukacja i szkolenie</b></a></div>
       <button class="pas-strzalka w-lewo" data-pas-w aria-label="Poprzednie usługi">
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
           <path d="M10 3 5 8l5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
@@ -461,8 +580,8 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
         <h3 id="ft-kontakt">Kontakt</h3>
         <ul aria-labelledby="ft-kontakt">
           <li><a href="tel:+48223182000">22 318 20 00</a></li>
-          <li><a href="mailto:info@legia.pl">info@legia.pl</a></li>
-          <li class="ft-cicho">ul. Łazienkowska 3, 00-449 Warszawa</li>
+          <li><a href="mailto:info@championshealth.pl">info@championshealth.pl</a></li>
+          <li class="ft-cicho">Legionistów 3, 05-825 Książenice</li>
           <li class="ft-cicho">Pon.–pt. 8:00–20:00</li>
         </ul>
       </div>
@@ -504,6 +623,27 @@ if (matchMedia('(prefers-reduced-motion:reduce)').matches) {
   document.querySelector('[data-pas-d]').addEventListener('click',
     () => pas.scrollBy({ left: krok(), behavior: jak }));
 }
+
+// formularz kontaktowy — walidacja w przeglądarce, wysyłka do podpięcia (1:1 z home)
+(() => {
+  const forma = document.querySelector('[data-forma]');
+  if (!forma) return;
+  const nota = forma.querySelector('[data-nota]');
+  forma.addEventListener('submit', e => {
+    e.preventDefault();
+    if (!forma.checkValidity()) {
+      const zle = forma.querySelector(':invalid');
+      zle.focus();
+      const etykieta = forma.querySelector(`label[for="${zle.id}"]`);
+      nota.textContent = zle.id === 'kt-rodo'
+        ? 'Zaznacz zgodę na przetwarzanie danych.'
+        : 'Uzupełnij zaznaczone pole: ' + (etykieta ? etykieta.textContent.toLowerCase() : '') + '.';
+      return;
+    }
+    nota.textContent = 'Formularz demonstracyjny — wysyłka zostanie podpięta po stronie kliniki. '
+      + 'Na razie zadzwoń: 22 318 20 00.';
+  });
+})();
 </script>
 </body>
 </html>
