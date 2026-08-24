@@ -52,16 +52,20 @@ p{margin:0}
 .nav-in{display:flex;align-items:center;gap:26px;height:64px;
   max-width:var(--tresc);margin:0 auto;padding-inline:var(--bok)}
 .nav-in .brand img{height:26px}
-.wroc{display:inline-flex;align-items:center;gap:8px;margin-left:6px;white-space:nowrap;
-  font-size:14px;color:var(--tekst2);transition:color .25s var(--ease)}
-.wroc:hover{color:var(--ink)}
-.wroc svg{transition:transform .3s var(--ease)}
-.wroc:hover svg{transform:translateX(-3px)}
-.nav-menu{display:flex;gap:24px;margin-left:auto;font-size:15px;color:var(--tekst)}
-.nav-menu a{transition:color .25s var(--ease)}
-.nav-menu a:hover{color:var(--ink)}
-.nav .cta{display:inline-flex;align-items:center;height:37px;padding:0 16px;border-radius:999px;
-  background:#262626;color:#fff;font-size:15px;font-weight:500;
+/* menu 1:1 jak na stronie głównej (podkreślenie wjeżdżające od lewej) */
+.menu{display:flex;align-items:center;gap:30px;margin-left:auto;min-width:0;
+  overflow-x:auto;scrollbar-width:none}
+.menu::-webkit-scrollbar{display:none}
+.menu a{position:relative;font-size:16px;font-weight:500;letter-spacing:-.01em;
+  white-space:nowrap;color:#0A0A0A;padding:3px 0;transition:opacity .3s var(--ease)}
+.menu a::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1.5px;
+  background:#0A0A0A;transform:scaleX(0);transform-origin:left;
+  transition:transform .4s var(--ease)}
+.menu a:hover{opacity:.78}
+.menu a:hover::after{transform:scaleX(1)}
+.nav .cta{margin-left:26px;display:inline-flex;align-items:center;height:37px;padding:0 16px;
+  border-radius:999px;background:#262626;color:#fff;font-size:16px;font-weight:500;
+  letter-spacing:-.01em;
   transition:background-color .3s var(--ease),transform .3s var(--ease)}
 .nav .cta:hover{background:#333;transform:translateY(-1px)}
 :where(a,button):focus-visible{outline:2px solid var(--ink);outline-offset:3px;border-radius:6px}
@@ -187,13 +191,15 @@ p{margin:0}
    `scroll-padding`. Dlatego pas wychodzi poza kadr WYŁĄCZNIE w prawo: lewa
    krawędź zostaje na kontenerze, więc nie ma czego pomijać. */
 .inne{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x proximity;
-  margin-right:calc(50% - 50vw);
+  margin-inline:calc(50% - 50vw);
   /* Zapas z prawej trzymał ostatnią kartę daleko od krawędzi — przy 2560 px
      aż 818 px. Pas ma dochodzić do brzegu ekranu, więc zapasu nie ma. */
   padding:4px 0 10px;
   scrollbar-width:none}
 .inne::-webkit-scrollbar{display:none}
-.inna{position:relative;flex:none;width:min(72vw,460px);aspect-ratio:16/10;
+/* Stała szerokość 460 px sprawiała, że przy 2560 px pięć kart nie wypełniało
+   ekranu i pas kończył się 196 px przed krawędzią — szerokość idzie za oknem. */
+.inna{position:relative;flex:none;width:clamp(280px,30vw,560px);aspect-ratio:16/10;
   border-radius:28px;overflow:hidden;scroll-snap-align:start;background:#151515;
   display:flex;flex-direction:column;align-items:flex-start;padding:clamp(20px,2.4vw,28px);
   color:#fff;transition:transform .45s var(--ease),box-shadow .45s var(--ease)}
@@ -227,7 +233,7 @@ p{margin:0}
   box-shadow:inset 0 1px 0 rgba(255,255,255,.4),0 8px 24px rgba(0,0,0,.18);
   display:grid;place-items:center;transition:background-color .3s var(--ease)}
 .pas-strzalka:hover{background:rgba(255,255,255,.45)}
-.pas-strzalka.w-lewo{left:8px}
+.pas-strzalka.w-lewo{left:calc(50% - 50vw + 8px)}
 /* `.inne-pas` kończy się na kontenerze, więc `right:8px` stawiało strzałkę
    w środku ekranu (przy 2560 px aż 766 px od brzegu). Przesuwamy ją tam,
    gdzie realnie kończy się pas — na krawędź okna. */
@@ -236,11 +242,37 @@ p{margin:0}
 @media(max-width:760px){.pas-strzalka{display:none}}
 
 /* --- stopka --------------------------------------------------------------- */
-footer.site{border-top:1px solid var(--kres);padding:44px 0 28px;
-  font-size:13.5px;color:var(--tekst2)}
-footer.site .wrap{display:flex;flex-wrap:wrap;align-items:center;gap:18px}
-footer.site img{height:26px}
-footer.site span:last-child{margin-left:auto}
+/* --- stopka: ta sama co na stronie głównej ------------------------------- */
+footer.site{background:#070B09;color:#fff;border-top:0;padding:76px 0 26px}
+.ft-siatka{display:grid;gap:clamp(28px,4vw,64px);
+  grid-template-columns:minmax(230px,1.5fr) 1fr 1fr 1.15fr}
+.ft-marka img{height:30px}
+.ft-marka p{margin:20px 0 0;max-width:32ch;font-size:15px;line-height:1.55;color:rgba(255,255,255,.6)}
+.ft-kol h3{margin:0 0 18px;font-size:12.5px;font-weight:500;color:rgba(255,255,255,.5)}
+.ft-kol ul{margin:0;padding:0;list-style:none;display:grid;gap:11px}
+.ft-kol li{font-size:14.5px;font-weight:500;color:rgba(255,255,255,.86)}
+.ft-kol a{transition:color .3s var(--ease)}
+.ft-kol a:hover{color:#fff;text-decoration:underline;text-underline-offset:4px}
+.ft-kol .ft-cicho{color:rgba(255,255,255,.55)}
+.ft-dol{margin-top:clamp(48px,7vw,80px);padding-top:22px;
+  border-top:1px dashed rgba(255,255,255,.28);
+  display:flex;flex-wrap:wrap;gap:14px;justify-content:space-between;align-items:center;
+  font-size:13px;color:rgba(255,255,255,.5)}
+.ft-dol a{color:rgba(255,255,255,.72);transition:color .3s var(--ease)}
+.ft-dol a:hover{color:#fff;text-decoration:underline;text-underline-offset:4px}
+footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-radius:3px}
+@media(max-width:900px){
+  .ft-siatka{grid-template-columns:1fr 1fr;gap:34px 30px;align-items:start}
+  .ft-marka{grid-column:1/-1}
+  .ft-marka p{max-width:46ch}
+  .ft-uslugi{grid-row:span 2}
+}
+@media(max-width:560px){
+  footer.site{padding:56px 0 24px}
+  .ft-siatka{grid-template-columns:1fr;gap:30px}
+  .ft-uslugi{grid-row:auto}
+  .ft-kol ul{gap:10px}
+}
 
 /* --- wjazd ---------------------------------------------------------------- */
 [data-rv]{opacity:0;transform:translateY(22px);
@@ -274,18 +306,14 @@ footer.site span:last-child{margin-left:auto}
 }
 </style>
 </head>
-<body>
+<body id="gora">
 
 <nav class="nav">
   <div class="nav-in">
     <a class="brand" href="../index.html" aria-label="Champions Health — strona główna">
       <img src="../img/logo_LCH.svg" alt="Champions Health">
     </a>
-    <a class="wroc" href="../index.html#opieka">
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-        <path d="M8.5 2.5 4 7l4.5 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>Zakres opieki</a>
-    <div class="nav-menu">
+    <div class="menu">
       <a href="../index.html#opieka">Usługi</a>
       <a href="../zespol.html">Zespół</a>
       <a href="../blog.html">Blog</a>
@@ -400,9 +428,50 @@ footer.site span:last-child{margin-left:auto}
 
 <footer class="site">
   <div class="wrap">
-    <img src="../img/logo_LCH.svg" alt="Champions Health">
-    <span>ul. Łazienkowska 3, 00-449 Warszawa · 22 318 20 00</span>
-    <span>© 2026 Champions Health · Legia Warszawa S.A.</span>
+    <div class="ft-siatka">
+      <div class="ft-marka">
+        <img src="../img/logo_LCH_na-ciemnym.svg" alt="Champions Health">
+        <p>Klinika medycyny sportowej i rehabilitacji przy Legii Warszawa. Ten sam sztab,
+          który prowadzi pierwszą drużynę i Akademię.</p>
+      </div>
+
+      <nav class="ft-kol ft-uslugi" aria-labelledby="ft-opieka">
+        <h3 id="ft-opieka">Zakres opieki</h3>
+        <ul>
+          <li><a href="medycyna-sportowa.html">Medycyna sportowa</a></li>
+          <li><a href="ortopedia.html">Ortopedia</a></li>
+          <li><a href="fizjoterapia.html">Fizjoterapia i rehabilitacja</a></li>
+          <li><a href="dietetyka.html">Dietetyka i suplementacja</a></li>
+          <li><a href="trening.html">Trening merytoryczny</a></li>
+          <li><a href="edukacja.html">Edukacja i szkolenie</a></li>
+        </ul>
+      </nav>
+
+      <nav class="ft-kol" aria-labelledby="ft-klinika">
+        <h3 id="ft-klinika">Klinika</h3>
+        <ul>
+          <li><a href="../index.html#sciezka">Jak to działa</a></li>
+          <li><a href="../zespol.html">Zespół</a></li>
+          <li><a href="../blog.html">Wiedza</a></li>
+          <li><a href="../index.html#faq">Najczęstsze pytania</a></li>
+        </ul>
+      </nav>
+
+      <div class="ft-kol">
+        <h3 id="ft-kontakt">Kontakt</h3>
+        <ul aria-labelledby="ft-kontakt">
+          <li><a href="tel:+48223182000">22 318 20 00</a></li>
+          <li><a href="mailto:info@legia.pl">info@legia.pl</a></li>
+          <li class="ft-cicho">ul. Łazienkowska 3, 00-449 Warszawa</li>
+          <li class="ft-cicho">Pon.–pt. 8:00–20:00</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="ft-dol">
+      <span>© 2026 Champions Health · Legia Warszawa S.A.</span>
+      <a href="#gora">Wróć na górę</a>
+    </div>
   </div>
 </footer>
 
