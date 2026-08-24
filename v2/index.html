@@ -1014,14 +1014,22 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
   // obowiązkowe — strona ma `scroll-behavior:smooth`, więc zwykłe `scrollTo`
   // animowałoby korektę przez kilkanaście klatek i te klatki biłyby się
   // z rozpędem (to była przyczyna drgania kart).
-  let trzymaj = false, trzymajY = 0, morfDo = 0, ostatniRuch = 0, wlasny = false, pomijaj = 0;
+  let trzymaj = false, trzymajY = 0, morfDo = 0, koniecDo = 0,
+      ostatniRuch = 0, wlasny = false, pomijaj = 0;
   const przypnij = () => { wlasny = true;
     window.scrollTo({ top: trzymajY, behavior: 'instant' }); };
   sec.__pomijaj = ms => { pomijaj = performance.now() + ms; trzymaj = false; };
   // Blokujemy tylko ruch z palca. End/PageDown, linki kotwicowe i `scrollTo`
   // nie generują `wheel`/`touchmove`, więc idą bez przeszkód.
   let gestOd = 0;
-  const znacz = () => { gestOd = performance.now(); };
+  const znacz = () => {
+    const t = performance.now();
+    // Przerwa dłuższa niż 150 ms oznacza NOWY gest, a nie rozpęd poprzedniego —
+    // blokada ma go puścić od razu. Bez tego drugie podejście do scrolla było
+    // zjadane i wyglądało to jak zawieszenie na kafelku 01.
+    if (trzymaj && t - gestOd > 150) { trzymaj = false; kick(); }
+    gestOd = t;
+  };
   addEventListener('wheel', znacz, { passive: true });
   addEventListener('touchmove', znacz, { passive: true });
   sec.__trzymaj = () => {
@@ -1029,7 +1037,11 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
     if (t < pomijaj || t - gestOd > 250) return;  // skok celowy albo klawiatura
     trzymajY = Math.round(sec.offsetTop + window.innerHeight * WSTEP * 0.5);
     trzymaj = true;
-    morfDo = performance.now() + CZAS;
+    // Trzymamy tylko na czas LOTU banera, nie całej krzywej. Przy
+    // cubic-bezier(.35,0,0,1) po ~70% czasu karta jest praktycznie na miejscu,
+    // więc dalsze blokowanie tylko dłuży postój na kafelku 01.
+    morfDo = performance.now() + CZAS * 0.7;
+    koniecDo = performance.now() + 1400;          // twardy limit postoju
     ostatniRuch = performance.now();
     przypnij(); kick();
   };
@@ -1047,8 +1059,8 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
     if (!trzymaj) return;
     const t = performance.now();
     // puszczamy dopiero, gdy zwijanie się skończyło I ruch ustał
-    if (t > morfDo && t - ostatniRuch > 200) { trzymaj = false; kick(); }
-    else if (t > morfDo + 2500) { trzymaj = false; kick(); }   // bezpiecznik
+    if (t > morfDo && t - ostatniRuch > 120) { trzymaj = false; kick(); }
+    else if (t > koniecDo) { trzymaj = false; kick(); }        // bezpiecznik
   }, 60);
 
   const postep = () => {
@@ -1068,6 +1080,10 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
     const p = postep();
     const maxX = Math.max(0, track.scrollWidth - stage.clientWidth);
     track.style.transform = `translate3d(${(-p * maxX).toFixed(1)}px,0,0)`;
+    // Cel banera był liczony raz, w chwili zwinięcia. Gdy pasek ruszył
+    // w trakcie lotu (np. po wygaśnięciu blokady przy bardzo długim rozpędzie),
+    // baner lądował obok. Teraz cel podąża za kafelkiem 01.
+    if (sec.__odswiezCel) sec.__odswiezCel();
     const focus = p * (N - 1);
     const rozjazd = 1 - (N - 1) * KROK;
     cards.forEach((c, i) => {
@@ -1739,6 +1755,7 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
     // powrót na samą górę = wjazd gra od nowa (po tym, jak kadr wróci na miejsce)
     if (!teraz && hero.__odtworz) setTimeout(() => { if (scrollY <= PROG) hero.__odtworz(); }, 220);
   };
+  sec.__odswiezCel = () => { if (zwiniete) ustawCel(); };
   addEventListener('scroll', sprawdz, { passive: true });
   addEventListener('resize', () => { if (zwiniete) ustawCel(); });
   sprawdz();
