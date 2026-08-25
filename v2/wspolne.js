@@ -64,9 +64,14 @@
   text-transform:uppercase;color:rgba(11,13,12,.5);cursor:default}
 /* --- mobile: przycisk Menu w pasku, szuflada i plywajaca pastylka CTA ------
    UWAGA: w tym bloku nie ma odwrotnych apostrofow - to wnetrze szablonu JS. */
-.mnu-btn{display:none;align-items:center;gap:9px;height:40px;padding:0 4px 0 10px;border:0;
-  margin-left:auto;
-  background:none;color:inherit;font:inherit;font-size:16px;font-weight:500;cursor:pointer}
+/* Napis „Menu" ma byc czarny (zyczenie klienta). Nad ciemnym zdjeciem hero czarny
+   tekst bez podkladu ma ~1,5:1, wiec siedzi na jasnej pastylce - tej samej, co
+   reszta przyciskow na stronie. Na jasnych podstronach wyglada tak samo. */
+.mnu-btn{display:none;align-items:center;gap:10px;height:40px;padding:0 16px;border:0;
+  margin-left:auto;border-radius:999px;
+  background:#F1F1F1;color:#0B0D0C;font:inherit;font-size:16px;font-weight:500;cursor:pointer;
+  transition:background-color .3s cubic-bezier(.22,.8,.25,1)}
+.mnu-btn:hover{background:#fff}
 .mnu-btn i{width:9px;height:9px;border-radius:50%;background:currentColor;display:block}
 .mnu{position:fixed;inset:0;z-index:400;background:#0B0D0C;color:#fff;
   display:flex;flex-direction:column;padding:18px 24px calc(28px + env(safe-area-inset-bottom));
