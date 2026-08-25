@@ -91,13 +91,20 @@
 .mnu .btn-uw i{width:44px;height:44px;border-radius:50%;background:#0B0D0C;color:#fff;
   display:grid;place-items:center}
 .mnu .btn-uw svg{width:17px;height:17px}
+/* Pastylka startuje na calą szerokosc kadru, a po pierwszym scrollu zsuwa sie
+   symetrycznie do wlasnej szerokosci (--fab-waska liczy JS z zawartosci).
+   Zwezanie idzie na width, bo scaleX sciskaloby napis razem z tlem.
+   (Bez odwrotnych apostrofow - to wnetrze szablonu JS.) */
 .fab{position:fixed;z-index:250;left:50%;bottom:calc(14px + env(safe-area-inset-bottom));
-  transform:translateX(-50%);display:none;align-items:center;gap:14px;height:52px;
-  padding:0 6px 0 22px;border-radius:999px;background:#F1F1F1;color:#0B0D0C;
-  font-size:15.5px;font-weight:500;letter-spacing:-.01em;
+  transform:translateX(-50%);display:none;align-items:center;justify-content:space-between;
+  gap:14px;height:56px;width:calc(100vw - 40px);
+  padding:0 6px 0 24px;border-radius:999px;background:#F1F1F1;color:#0B0D0C;
+  font-size:16.5px;font-weight:500;letter-spacing:-.01em;white-space:nowrap;
   box-shadow:0 18px 40px -18px rgba(0,0,0,.55);
-  transition:transform .35s cubic-bezier(.22,.8,.25,1),opacity .3s cubic-bezier(.22,.8,.25,1)}
-.fab i{width:40px;height:40px;flex:none;border-radius:50%;background:#0B0D0C;color:#fff;
+  transition:width .55s cubic-bezier(.22,.8,.25,1),transform .35s cubic-bezier(.22,.8,.25,1),
+    opacity .3s cubic-bezier(.22,.8,.25,1)}
+.fab.zwezona{width:var(--fab-waska,auto)}
+.fab i{width:44px;height:44px;flex:none;border-radius:50%;background:#0B0D0C;color:#fff;
   display:grid;place-items:center}
 .fab svg{width:16px;height:16px}
 .fab:active{transform:translateX(-50%) scale(.97)}
@@ -108,7 +115,7 @@ body.mnu-otwarte .fab{opacity:0;pointer-events:none}
   .nav .menu,.nav .cta{display:none}
   .fab{display:inline-flex}
   /* miejsce pod plywajaca pastylke, zeby nie zaslaniala ostatniego wiersza */
-  footer.site{padding-bottom:calc(86px + env(safe-area-inset-bottom))}
+  footer.site{padding-bottom:calc(94px + env(safe-area-inset-bottom))}
 }
 
 /* --- odsłanianie tekstu znak po znaku (te same wartosci co na glownej) ---- */
@@ -205,6 +212,22 @@ body.mnu-otwarte .fab{opacity:0;pointer-events:none}
       document.body.appendChild(fab);
       podepnijUW(szuflada);                 // CTA w szufladzie
       fab.addEventListener('click', e => { e.preventDefault(); okno.showModal(); });
+
+      // szerokość docelowa mierzona z zawartości, bo w CSS-ie jej nie da się zapisać
+      const zmierzFab = () => {
+        fab.style.transition = 'none';
+        fab.style.width = 'auto';
+        const w = Math.ceil(fab.getBoundingClientRect().width);
+        fab.style.width = '';
+        fab.style.setProperty('--fab-waska', w + 'px');
+        void fab.offsetWidth;
+        fab.style.transition = '';
+      };
+      zmierzFab();
+      addEventListener('resize', zmierzFab);
+      const stanFab = () => fab.classList.toggle('zwezona', scrollY > 80);
+      addEventListener('scroll', stanFab, { passive: true });
+      stanFab();
 
       const przelacz = stan => {
         szuflada.classList.toggle('otwarte', stan);
