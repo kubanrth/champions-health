@@ -62,6 +62,50 @@
 .pw-lista li.wskazana:not([aria-selected="true"]){background:#EDEDEA}
 .pw-lista li[data-grupa]{padding:12px 14px 4px;font-size:11px;font-weight:500;letter-spacing:.07em;
   text-transform:uppercase;color:rgba(11,13,12,.5);cursor:default}
+/* --- mobile: przycisk Menu w pasku, szuflada i plywajaca pastylka CTA ------
+   UWAGA: w tym bloku nie ma odwrotnych apostrofow - to wnetrze szablonu JS. */
+.mnu-btn{display:none;align-items:center;gap:9px;height:40px;padding:0 4px 0 10px;border:0;
+  margin-left:auto;
+  background:none;color:inherit;font:inherit;font-size:16px;font-weight:500;cursor:pointer}
+.mnu-btn i{width:9px;height:9px;border-radius:50%;background:currentColor;display:block}
+.mnu{position:fixed;inset:0;z-index:400;background:#0B0D0C;color:#fff;
+  display:flex;flex-direction:column;padding:18px 24px calc(28px + env(safe-area-inset-bottom));
+  opacity:0;visibility:hidden;transform:translateY(-8px);
+  transition:opacity .3s cubic-bezier(.22,.8,.25,1),transform .35s cubic-bezier(.22,.8,.25,1),visibility .3s}
+.mnu.otwarte{opacity:1;visibility:visible;transform:none}
+.mnu-gora{display:flex;align-items:center;justify-content:space-between;height:44px}
+.mnu-gora img{height:24px;width:auto}
+.mnu-lista{margin:auto 0;display:grid;gap:6px}
+.mnu-lista a{font-size:clamp(2rem,10vw,2.9rem);line-height:1.1;letter-spacing:-.03em;font-weight:500;
+  color:#fff;padding:6px 0}
+.mnu-stopka{display:grid;gap:10px;font-size:15px;color:rgba(255,255,255,.66)}
+.mnu-stopka a{color:rgba(255,255,255,.86)}
+.mnu .btn-uw{display:inline-flex;align-items:center;justify-content:space-between;gap:16px;
+  height:56px;padding:0 6px 0 22px;border-radius:999px;background:#fff;color:#0B0D0C;
+  font-size:16px;font-weight:500;margin-bottom:20px}
+.mnu .btn-uw i{width:44px;height:44px;border-radius:50%;background:#0B0D0C;color:#fff;
+  display:grid;place-items:center}
+.mnu .btn-uw svg{width:17px;height:17px}
+.fab{position:fixed;z-index:250;left:50%;bottom:calc(14px + env(safe-area-inset-bottom));
+  transform:translateX(-50%);display:none;align-items:center;gap:14px;height:52px;
+  padding:0 6px 0 22px;border-radius:999px;background:#F1F1F1;color:#0B0D0C;
+  font-size:15.5px;font-weight:500;letter-spacing:-.01em;
+  box-shadow:0 18px 40px -18px rgba(0,0,0,.55);
+  transition:transform .35s cubic-bezier(.22,.8,.25,1),opacity .3s cubic-bezier(.22,.8,.25,1)}
+.fab i{width:40px;height:40px;flex:none;border-radius:50%;background:#0B0D0C;color:#fff;
+  display:grid;place-items:center}
+.fab svg{width:16px;height:16px}
+.fab:active{transform:translateX(-50%) scale(.97)}
+body.mnu-otwarte{overflow:hidden}
+body.mnu-otwarte .fab{opacity:0;pointer-events:none}
+@media(max-width:760px){
+  .mnu-btn{display:inline-flex}
+  .nav .menu,.nav .cta{display:none}
+  .fab{display:inline-flex}
+  /* miejsce pod plywajaca pastylke, zeby nie zaslaniala ostatniego wiersza */
+  footer.site{padding-bottom:calc(86px + env(safe-area-inset-bottom))}
+}
+
 /* --- odsłanianie tekstu znak po znaku (te same wartosci co na glownej) ---- */
 .reveal .word{display:inline-block;white-space:nowrap;overflow:hidden;vertical-align:bottom;
   padding-bottom:.16em;margin-bottom:-.16em}
@@ -79,6 +123,7 @@
     tel: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20.4 16.9v2.6a1.7 1.7 0 0 1-1.9 1.7 16.8 16.8 0 0 1-7.3-2.6 16.5 16.5 0 0 1-5.1-5.1A16.8 16.8 0 0 1 3.5 6.2 1.7 1.7 0 0 1 5.2 4.3h2.6a1.7 1.7 0 0 1 1.7 1.5c.1.8.3 1.6.6 2.4a1.7 1.7 0 0 1-.4 1.8l-1.1 1.1a13.6 13.6 0 0 0 5.1 5.1l1.1-1.1a1.7 1.7 0 0 1 1.8-.4c.8.3 1.6.5 2.4.6a1.7 1.7 0 0 1 1.4 1.6Z"/></svg>',
     mail: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5.4" width="18" height="13.2" rx="2.6"/><path d="m3.6 7 7.3 5.2a2 2 0 0 0 2.2 0L20.4 7"/></svg>',
     zamknij: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>',
+    strzalka: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg>',
   };
 
   // --- 1) pop-up ------------------------------------------------------------
@@ -107,12 +152,66 @@
   okno.addEventListener('click', e => { if (e.target === okno) okno.close(); });
   okno.querySelector('[data-uw-pisz]').addEventListener('click', () => okno.close());
 
-  for (const a of document.querySelectorAll('a'))
-    if (a.textContent.trim() === 'Umów wizytę')
-      a.addEventListener('click', e => {
-        e.preventDefault();
-        okno.showModal();
-      });
+  // podpinamy po treści, nie po klasie — „Umów wizytę" jest i w pasku, i na
+  // kartach, i w heroju. Funkcja, bo elementy mobilne powstają dopiero niżej.
+  const podepnijUW = zakres => {
+    for (const a of zakres.querySelectorAll('a'))
+      if (a.textContent.trim() === 'Umów wizytę')
+        a.addEventListener('click', e => { e.preventDefault(); okno.showModal(); });
+  };
+  podepnijUW(document);
+
+  // --- 1b) mobile: Menu w pasku + pływająca pastylka ------------------------
+  // Budowane z JS-u, bo ten sam pasek jest w siedmiu plikach. Linki bierzemy
+  // z istniejącego `.menu`, więc szuflada nie może się rozjechać z nawigacją.
+  {
+    const pasek = document.querySelector('.nav-in');
+    const menu = document.querySelector('.nav .menu');
+    if (pasek && menu) {
+      const przycisk = document.createElement('button');
+      przycisk.type = 'button';
+      przycisk.className = 'mnu-btn';
+      przycisk.setAttribute('aria-expanded', 'false');
+      przycisk.innerHTML = 'Menu<i aria-hidden="true"></i>';
+      pasek.appendChild(przycisk);
+
+      const logo = document.querySelector('.nav .brand img:not([aria-hidden])')
+        || document.querySelector('.nav .brand img');
+      const szuflada = document.createElement('div');
+      szuflada.className = 'mnu';
+      szuflada.hidden = false;
+      szuflada.innerHTML = '<div class="mnu-gora">'
+        + '<img src="' + (logo ? logo.getAttribute('src') : '') + '" alt="Champions Health">'
+        + '<button type="button" class="mnu-btn" data-mnu-x>Zamknij<i aria-hidden="true"></i></button>'
+        + '</div><nav class="mnu-lista"></nav>'
+        + '<a class="btn-uw" href="#">Umów wizytę<i>' + IKONA.strzalka + '</i></a>'
+        + '<div class="mnu-stopka">'
+        + '<a href="tel:' + TELEFON + '">' + TELEFON_ETYKIETA + '</a>'
+        + '<a href="mailto:info@championshealth.pl">info@championshealth.pl</a>'
+        + '<span>Legionistów 3, Książenice · pon.–pt. 8:00–20:00</span></div>';
+      for (const a of menu.querySelectorAll('a'))
+        szuflada.querySelector('.mnu-lista').appendChild(a.cloneNode(true));
+      document.body.appendChild(szuflada);
+
+      const fab = document.createElement('a');
+      fab.className = 'fab';
+      fab.href = '#';
+      fab.innerHTML = 'Umów wizytę<i>' + IKONA.strzalka + '</i>';
+      document.body.appendChild(fab);
+      podepnijUW(szuflada);                 // CTA w szufladzie
+      fab.addEventListener('click', e => { e.preventDefault(); okno.showModal(); });
+
+      const przelacz = stan => {
+        szuflada.classList.toggle('otwarte', stan);
+        document.body.classList.toggle('mnu-otwarte', stan);
+        przycisk.setAttribute('aria-expanded', String(stan));
+      };
+      przycisk.addEventListener('click', () => przelacz(!szuflada.classList.contains('otwarte')));
+      szuflada.querySelector('[data-mnu-x]').addEventListener('click', () => przelacz(false));
+      for (const a of szuflada.querySelectorAll('a')) a.addEventListener('click', () => przelacz(false));
+      addEventListener('keydown', e => e.key === 'Escape' && przelacz(false));
+    }
+  }
 
   // --- 2) odsłanianie tekstu znak po znaku ----------------------------------
   // Zmierzone na myhealthprac.com: znak jedzie translateY(100%) → 0, czas 0,33 s,

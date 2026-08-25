@@ -313,11 +313,19 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
   .inne{grid-template-columns:repeat(3,1fr)}
   .pg-kadr>img{aspect-ratio:16/9}
 }
+/* Pływająca pastylka „Umów wizytę" (wspolne.js) pokazuje się od 760 px w dół —
+   ta sama akcja w heroju byłaby drugim, identycznym przyciskiem na jednym
+   ekranie. Zostaje „Zadzwoń", bo to inna droga kontaktu. */
+@media(max-width:760px){
+  .pg-akcje .btn-pelny{display:none}
+  .pg-akcje .btn-ghost{width:100%;justify-content:center}
+}
 @media(max-width:720px){
   .nav-menu{display:none}
   /* na telefonie dwa narożniki nie mają sensu — jedna kolumna, wszystko do lewej */
   .pg-dol{align-self:stretch;max-width:none}
-  .pg-tresc{gap:clamp(28px,7vw,48px)}
+  /* zapas u dołu na pływającą pastylkę „Umów wizytę" (wspolne.js) */
+  .pg-tresc{gap:clamp(28px,7vw,48px);padding-bottom:calc(86px + env(safe-area-inset-bottom))}
   /* na wąskim ekranie tekst zajmuje całą szerokość, więc skośny scrim nic nie
      daje — wtedy równomierna kurtyna pionowa */
   .pg-hero::before{background:
