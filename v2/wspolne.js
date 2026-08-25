@@ -95,7 +95,8 @@
    symetrycznie do wlasnej szerokosci (--fab-waska liczy JS z zawartosci).
    Zwezanie idzie na width, bo scaleX sciskaloby napis razem z tlem.
    (Bez odwrotnych apostrofow - to wnetrze szablonu JS.) */
-.fab{position:fixed;z-index:250;left:50%;bottom:calc(14px + env(safe-area-inset-bottom));
+.fab{position:fixed;z-index:250;left:50%;
+  bottom:calc(14px + env(safe-area-inset-bottom) + var(--pasek-dolny,0px));
   transform:translateX(-50%);display:none;align-items:center;justify-content:space-between;
   gap:14px;height:56px;width:calc(100vw - 40px);
   padding:0 6px 0 24px;border-radius:999px;background:#F1F1F1;color:#0B0D0C;
@@ -249,6 +250,17 @@ body.mnu-otwarte .fab{opacity:0;pointer-events:none}
         const jasne = !rgb || (.2126 * rgb[0] + .7152 * rgb[1] + .0722 * rgb[2]) / 255 > .55;
         fab.classList.toggle('ciemna', jasne);
       };
+      // Pasek adresu przeglądarki na telefonie potrafi zasłonić dolną część
+      // okna układu — `position:fixed` tego nie widzi i pastylka chowa się pod
+      // nim. `visualViewport` mówi, ile realnie widać; różnicę oddajemy w CSS.
+      const vv = window.visualViewport;
+      if (vv) {
+        const zasloniete = () => fab.style.setProperty('--pasek-dolny',
+          Math.max(0, Math.round(innerHeight - vv.height - vv.offsetTop)) + 'px');
+        vv.addEventListener('resize', zasloniete);
+        vv.addEventListener('scroll', zasloniete);
+        zasloniete();
+      }
       let raf = null;
       const stanFab = () => {
         fab.classList.toggle('zwezona', scrollY > 80);
