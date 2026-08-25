@@ -187,7 +187,15 @@ a{color:inherit;text-decoration:none}
    przechodzi na dwa wiersze.                                             */
 .claim{background:#fff;color:#0A0A0A}
 .claim .claim-in{width:100%;max-width:none;display:flex;align-items:center;justify-content:flex-start;
-  gap:clamp(18px,2.4vw,40px);padding:clamp(4.5rem,9vw,8rem) clamp(24px,3.4vw,52px)}
+  gap:clamp(18px,2.4vw,40px);
+  /* pas jest jedną linijką — 4,5–8 rem góra/dół robiło z niego pustą stronę */
+  padding:clamp(2.2rem,4.4vw,3.9rem) clamp(24px,3.4vw,52px)}
+/* Odstęp wokół pasa to w większości padding SĄSIADÓW (2 × 144 px), nie samego
+   pasa — samo skrócenie `.claim-in` niewiele dawało. Przycinamy tylko te dwie
+   krawędzie, które go dotykają; reszta rytmu strony bez zmian. */
+/* `.sec` stoi niżej w arkuszu i przy równej wadze wygrywa — stąd `.sec.tm` */
+.sec.tm{padding-bottom:clamp(3rem,5.4vw,4.8rem)}
+.sec.blog{padding-top:clamp(3rem,5.4vw,4.8rem)}
 .claim-logo{flex:none;height:min(3.4vw,60px);width:auto}
 .claim-kreska{flex:none;width:1px;align-self:stretch;background:rgba(10,10,10,.18)}
 .claim-txt{margin:0;white-space:nowrap;font-size:min(3.78vw,4.8rem);
