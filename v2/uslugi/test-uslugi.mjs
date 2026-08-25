@@ -69,8 +69,13 @@ for (const u of uslugi) {
       // nie ładują zdjęć i test fałszywie krzyczy „obraz nie wczytany"
       const pas = document.querySelector('[data-pas]');
       if (pas) {
-        pas.scrollTo({ left: pas.scrollWidth, behavior: 'instant' });
-        await new Promise(r => setTimeout(r, 250));
+        // krokami, nie jednym skokiem: przy skoku na koniec karty pośrednie nigdy
+        // nie trafiają w kadr i ich `loading=lazy` się nie odpala
+        const krok = Math.max(200, Math.round(pas.clientWidth * .7));
+        for (let x = 0; x <= pas.scrollWidth; x += krok) {
+          pas.scrollTo({ left: x, behavior: 'instant' });
+          await new Promise(r => setTimeout(r, 120));
+        }
         pas.scrollTo({ left: 0, behavior: 'instant' });
       }
       scrollTo({ top: 0, behavior: 'instant' });

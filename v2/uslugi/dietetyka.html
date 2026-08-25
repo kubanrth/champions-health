@@ -208,9 +208,16 @@ p{margin:0}
    krawędź zostaje na kontenerze, więc nie ma czego pomijać. */
 .inne{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x proximity;
   margin-inline:calc(50% - 50vw);
-  /* Zapas z prawej trzymał ostatnią kartę daleko od krawędzi — przy 2560 px
-     aż 818 px. Pas ma dochodzić do brzegu ekranu, więc zapasu nie ma. */
-  padding:4px 0 10px;
+  /* Margines po obu stronach + wygaszenie krawędzi maską, żeby karty nie były
+     ucinane nożem. `scroll-padding-inline` jest konieczne: bez niego snap dosuwa
+     kartę do samego brzegu scrollportu i pomija ten padding. */
+  --zapas:clamp(20px,3.2vw,56px);
+  padding:4px var(--zapas) 10px;
+  scroll-padding-inline:var(--zapas);
+  -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 var(--zapas),
+    #000 calc(100% - var(--zapas)),transparent 100%);
+  mask-image:linear-gradient(90deg,transparent 0,#000 var(--zapas),
+    #000 calc(100% - var(--zapas)),transparent 100%);
   scrollbar-width:none}
 .inne::-webkit-scrollbar{display:none}
 .inne::-webkit-scrollbar{display:none}
@@ -219,8 +226,10 @@ p{margin:0}
 .inna{position:relative;flex:none;width:clamp(280px,30vw,560px);aspect-ratio:16/10;
   border-radius:28px;overflow:hidden;scroll-snap-align:start;background:#151515;
   display:flex;flex-direction:column;align-items:flex-start;padding:clamp(20px,2.4vw,28px);
-  color:#fff;transition:transform .45s var(--ease),box-shadow .45s var(--ease)}
-.inna:hover{transform:translateY(-4px);box-shadow:0 30px 56px -32px rgba(11,13,12,.55)}
+  color:#fff;transition:transform .45s var(--ease)}
+/* bez cienia pod kartą — ciemna plama odklejała kafel od pasa (uwaga klienta);
+   zostaje samo uniesienie */
+.inna:hover{transform:translateY(-4px)}
 .inna>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 /* Poprzednia wersja przyciemniała CAŁĄ kartę (.86 u góry, .96 u dołu) i to
    ona robiła z fotografii czarne plamy. Bez niczego tytuły miały jednak

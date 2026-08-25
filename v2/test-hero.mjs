@@ -243,26 +243,34 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
         if (!r.width || !r.height) return null;
         return [Math.round(r.x + r.width / 2), Math.round(r.y + r.height / 2)];
       });
-      const jasnosci = [];
-      if (srodek) for (let i = 0; i < 14; i++) {
+      // Mierzymy RUCH, nie jasność: ile pikseli w pierścieniu zmienia się między
+      // kolejnymi klatkami. Średnia rozmywa cienkie kółko (rozstęp 3,3), a
+      // maksimum jest wysycone stałą poświatą kropki (0,0) — dopiero różnica
+      // klatka-do-klatki jednoznacznie mówi „coś tu pulsuje".
+      // Pas 10–26 px omija samą kropkę (13 px) i łapie rozchodzące się kółko.
+      const zmiany = [];
+      let poprzednia = null;
+      if (srodek) for (let i = 0; i < 18; i++) {
         const png = PNG.sync.read(await p.screenshot());
-        let suma = 0, ile = 0;
-        for (let dy = -14; dy <= 14; dy++) for (let dx = -14; dx <= 14; dx++) {
+        const teraz = [];
+        for (let dy = -26; dy <= 26; dy++) for (let dx = -26; dx <= 26; dx++) {
           const d = Math.hypot(dx, dy);
-          if (d < 7 || d > 14) continue;
+          if (d < 10 || d > 26) continue;
           const x = srodek[0] + dx, y = srodek[1] + dy;
           if (x < 0 || y < 0 || x >= png.width || y >= png.height) continue;
           const j = (y * png.width + x) * 4;
-          suma += png.data[j] + png.data[j + 1] + png.data[j + 2]; ile++;
+          teraz.push(png.data[j] + png.data[j + 1] + png.data[j + 2]);
         }
-        if (ile) jasnosci.push(suma / ile);
-        await new Promise(r => setTimeout(r, 180));
+        if (poprzednia && poprzednia.length === teraz.length)
+          zmiany.push(teraz.filter((v, k) => Math.abs(v - poprzednia[k]) > 12).length);
+        poprzednia = teraz;
+        await new Promise(r => setTimeout(r, 130));
       }
-      const rozstep = jasnosci.length ? Math.max(...jasnosci) - Math.min(...jasnosci) : 0;
-      const pulsuje = !srodek || rozstep > 10;
+      const ruch = zmiany.length ? Math.max(...zmiany) : 0;
+      const pulsuje = !srodek || ruch >= 25;
       console.log(`${w}×${h} puls kropek`,
         !srodek ? 'ok (kropki schowane na tej szerokości)'
-        : pulsuje ? 'ok' : `BŁĄD rozstęp ${rozstep.toFixed(1)}`);
+        : pulsuje ? `ok (${ruch} zmienionych pikseli)` : `BŁĄD ruch ${ruch}`);
       if (!pulsuje) process.exitCode = 1;
     }
     console.log(`${w}×${h} powtórka wjazdu`, powtorka ? 'ok'
