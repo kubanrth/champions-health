@@ -105,12 +105,9 @@
   transition:width .55s cubic-bezier(.22,.8,.25,1),transform .35s cubic-bezier(.22,.8,.25,1),
     opacity .3s cubic-bezier(.22,.8,.25,1)}
 .fab.zwezona{width:var(--fab-waska,auto)}
-/* Po zwezeniu pastylka zostaje CZARNA na stale (zyczenie klienta) - wczesniej
-   przelaczala kolory zaleznie od sekcji pod spodem i migotala przy scrollu.
-   Wlosowa obwodka daje jej granice takze na ciemnych sekcjach. */
-.fab.zwezona{background:#0B0D0C;color:#fff;
-  box-shadow:0 18px 40px -18px rgba(0,0,0,.45),0 0 0 1px rgba(255,255,255,.3)}
-.fab.zwezona i{background:#fff;color:#0B0D0C}
+/* na jasnych sekcjach pastylka odwraca kolory, zeby nie zlewala sie z tlem */
+.fab.ciemna{background:#0B0D0C;color:#fff;box-shadow:0 18px 40px -18px rgba(0,0,0,.4)}
+.fab.ciemna i{background:#fff;color:#0B0D0C}
 .fab i{width:44px;height:44px;flex:none;border-radius:50%;background:#0B0D0C;color:#fff;
   display:grid;place-items:center}
 .fab svg{width:16px;height:16px}
@@ -232,6 +229,27 @@ body.mnu-otwarte .fab{opacity:0;pointer-events:none}
       };
       zmierzFab();
       addEventListener('resize', zmierzFab);
+      // Kolory pastylki zalezne od tego, co pod nia lezy. Sekcje ze zdjeciem nie
+      // maja wlasnego tla (jest w <img>), wiec ida z listy; reszte rozstrzyga
+      // pierwszy nieprzezroczysty `background-color` w gore drzewa.
+      const CIEMNE = '.hero,.pg-hero,.kt-sek,.etapy,.kontakt,.kont,footer.site';
+      const kolorFab = () => {
+        const r = fab.getBoundingClientRect();
+        fab.style.pointerEvents = 'none';
+        const el = document.elementFromPoint(Math.round(r.left + r.width / 2),
+                                             Math.round(r.top + r.height / 2));
+        fab.style.pointerEvents = '';
+        if (!el) return;
+        if (el.closest(CIEMNE)) { fab.classList.remove('ciemna'); return; }
+        let e = el, rgb = null;
+        while (e && e !== document.documentElement) {
+          const m = getComputedStyle(e).backgroundColor.match(/[\d.]+/g);
+          if (m && (m.length < 4 || Number(m[3]) > .5)) { rgb = m.map(Number); break; }
+          e = e.parentElement;
+        }
+        const jasne = !rgb || (.2126 * rgb[0] + .7152 * rgb[1] + .0722 * rgb[2]) / 255 > .55;
+        fab.classList.toggle('ciemna', jasne);
+      };
       // Pasek adresu przeglądarki na telefonie potrafi zasłonić dolną część
       // okna układu — `position:fixed` tego nie widzi i pastylka chowa się pod
       // nim. `visualViewport` mówi, ile realnie widać; różnicę oddajemy w CSS.
@@ -243,9 +261,14 @@ body.mnu-otwarte .fab{opacity:0;pointer-events:none}
         vv.addEventListener('scroll', zasloniete);
         zasloniete();
       }
-      const stanFab = () => fab.classList.toggle('zwezona', scrollY > 80);
+      let raf = null;
+      const stanFab = () => {
+        fab.classList.toggle('zwezona', scrollY > 80);
+        raf ||= requestAnimationFrame(() => { raf = null; kolorFab(); });
+      };
       addEventListener('scroll', stanFab, { passive: true });
       stanFab();
+      setTimeout(kolorFab, 400);            // po ułożeniu się strony
 
       const przelacz = stan => {
         szuflada.classList.toggle('otwarte', stan);
