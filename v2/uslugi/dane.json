@@ -1,236 +1,506 @@
 [
-{
-  "slug": "medycyna-sportowa",
-  "nr": "01",
-  "dzial": "Prowadzenie",
-  "tytul": "Medycyna sportowa",
-  "lead": "Badania kwalifikacyjne, prowadzenie przez cały sezon i decyzja o powrocie do gry — w tym samym standardzie, w którym prowadzimy pierwszą drużynę.",
-  "foto": "sprint-sharp.png",
-  "pozycja": "38% 40%",
-  "fakty": [
-    ["Skierowanie", "Niepotrzebne"],
-    ["Diagnostyka", "Na miejscu"],
-    ["Zespół", "Ten sam co w klubie"]
-  ],
-  "zakres": [
-    ["Badania kwalifikacyjne do sportu", "Komplet badań dopuszczających do treningu i zawodów, zamknięty w jednej wizycie."],
-    ["Prowadzenie przez sezon", "Kontrola obciążeń, urazów i regeneracji — od okresu przygotowawczego po ostatnią kolejkę."],
-    ["Decyzja o powrocie do gry", "Oparta na kryteriach i testach, nie na kalendarzu i nie na samopoczuciu."],
-    ["Konsultacja po urazie", "Ustalenie rozpoznania, ścieżki leczenia i tego, kto prowadzi Cię dalej."],
-    ["Orzeczenia i dokumentacja", "Zaświadczenia dla klubu, federacji i ubezpieczyciela — bez odsyłania po pieczątki."],
-    ["Koordynacja specjalistów", "Jedna osoba spina ortopedię, fizjoterapię, żywienie i trening w jeden plan."]
-  ],
-  "opis": [
-    "Medycyna sportowa to u nas nie pojedyncza konsultacja, tylko prowadzenie. Zaczyna się od zrozumienia, co robisz na treningu i w zawodach, a kończy na decyzji, czy możesz wejść w pełne obciążenia. Pomiędzy tymi punktami jest komplet badań, diagnostyka obrazowa i praca z fizjoterapeutą — ale prowadzi to jeden lekarz, który zna całą historię.",
-    "Ta sama ścieżka obsługuje zawodnika pierwszej drużyny i amatora, który biega dwa razy w tygodniu. Różnią się obciążenia i cele, nie standard opieki. W obu przypadkach obowiązuje ta sama zasada: żadna decyzja o powrocie nie zapada na podstawie tego, że „minęło już sporo czasu”.",
-    "Jeżeli nie wiesz, od czego zacząć, zacznij tutaj. Konsultacja w medycynie sportowej jest punktem, z którego rozchodzą się wszystkie pozostałe zakresy opieki — i z którego wychodzisz z konkretnym planem, a nie z listą kolejnych skierowań."
-  ],
-  "cytat": "Zawodnik nie wraca do gry dlatego, że minęło sześć tygodni. Wraca, bo spełnił kryteria.",
-  "dlaKogo": [
-    "Zawodnicy klubowi i akademii, którzy potrzebują badań i prowadzenia przez cały sezon",
-    "Amatorzy trenujący regularnie — bieganie, siłownia, sporty drużynowe",
-    "Osoby po urazie, które nie wiedzą, do którego specjalisty trafić najpierw"
-  ],
-  "przebieg": [
-    ["Rozmowa z koordynatorem", "Ustalamy, czego potrzebujesz i ile to zajmie. Piętnaście minut przez telefon."],
-    ["Wizyta i badanie", "Wywiad, badanie kliniczne i — jeśli trzeba — diagnostyka obrazowa tego samego dnia."],
-    ["Plan", "Dostajesz rozpisany zakres: co, kto i w jakiej kolejności prowadzi."],
-    ["Kontrola", "Wracasz na testy kontrolne w punktach, które ustaliliśmy z góry."]
-  ]
-},
-{
-  "slug": "ortopedia",
-  "nr": "02",
-  "dzial": "Diagnostyka",
-  "tytul": "Ortopedia",
-  "lead": "Konsultacje ortopedyczne z diagnostyką obrazową na miejscu. USG i RTG bez zewnętrznej rejestracji, decyzja o ścieżce leczenia od razu.",
-  "foto": "c1-ortopedia.png",
-  "pozycja": "50% 45%",
-  "fakty": [
-    ["Obrazowanie", "USG i RTG na miejscu"],
-    ["Rozpoznanie", "W trakcie wizyty"],
-    ["Ścieżka", "Ustalona od razu"]
-  ],
-  "zakres": [
-    ["Konsultacja ortopedyczna", "Badanie kliniczne stawu lub odcinka kręgosłupa i postawienie rozpoznania."],
-    ["USG narządu ruchu", "Badanie wykonywane przez lekarza w gabinecie, w trakcie tej samej wizyty."],
-    ["RTG", "Zdjęcia bez zewnętrznej rejestracji i bez drugiego terminu."],
-    ["Kwalifikacja do zabiegu", "Decyzja, czy operacja jest potrzebna — i co się stanie, jeśli jej nie będzie."],
-    ["Opieka pooperacyjna", "Kontrole gojenia i przekazanie do rehabilitacji bez przerwy w prowadzeniu."],
-    ["Druga opinia", "Ocena rozpoznania i planu leczenia postawionego gdzie indziej."]
-  ],
-  "opis": [
-    "Największą stratą czasu po urazie nie jest samo leczenie, tylko odstępy między jego etapami: tydzień do ortopedy, dwa tygodnie do obrazowania, kolejny tydzień na odczytanie wyniku. Diagnostyka stoi u nas w tym samym gabinecie, w którym odbywa się konsultacja — dlatego rozpoznanie i decyzja o dalszej drodze zapadają w trakcie jednej wizyty.",
-    "Ortopedia jest tu punktem rozstrzygającym, a nie końcowym. Po ustaleniu rozpoznania od razu wiadomo, czy prowadzi ono do zabiegu, do rehabilitacji, czy do zmiany sposobu trenowania — i kto z zespołu przejmuje Cię na następnym etapie.",
-    "Jeżeli masz już wynik badania z innego ośrodka, przynieś go. Druga opinia jest pełnoprawnym powodem wizyty i nie wymaga powtarzania całej diagnostyki od zera."
-  ],
-  "cytat": "Wynik badania to nie jest koniec wizyty. To jest moment, w którym zapada decyzja.",
-  "dlaKogo": [
-    "Świeży uraz — skręcenie, naderwanie, uraz kolana lub barku",
-    "Ból przeciążeniowy, który nie ustępuje mimo odpoczynku",
-    "Osoby przed decyzją o zabiegu i po zabiegu wykonanym gdzie indziej"
-  ],
-  "przebieg": [
-    ["Zgłoszenie", "Opisujesz koordynatorowi, co się stało i od kiedy boli."],
-    ["Badanie kliniczne", "Ortopeda ocenia staw, zakres ruchu i stabilność."],
-    ["Obrazowanie", "USG lub RTG w tym samym gabinecie, jeśli badanie tego wymaga."],
-    ["Decyzja i przekazanie", "Wychodzisz z rozpoznaniem i z ustalonym następnym krokiem."]
-  ]
-},
-{
-  "slug": "fizjoterapia",
-  "nr": "03",
-  "dzial": "Powrót do sprawności",
-  "tytul": "Fizjoterapia i rehabilitacja",
-  "lead": "Protokoły powrotu po urazie, którymi na co dzień prowadzimy zawodników. Praca 1:1 i kryteria progresu zamiast kalendarza.",
-  "foto": "c3-fizjoterapia.png",
-  "pozycja": "50% 40%",
-  "fakty": [
-    ["Praca", "1:1 z fizjoterapeutą"],
-    ["Progres", "Wg kryteriów, nie dat"],
-    ["Zakończenie", "Testy przed powrotem"]
-  ],
-  "zakres": [
-    ["Rehabilitacja pooperacyjna", "Prowadzenie od pierwszych dni po zabiegu do pełnych obciążeń treningowych."],
-    ["Terapia po urazie", "Skręcenia, naderwania, uszkodzenia więzadeł i mięśni — bez skracania etapów."],
-    ["Ból przeciążeniowy", "Praca nad przyczyną przeciążenia, nie tylko nad miejscem, które boli."],
-    ["Terapia manualna", "Praca na tkankach i stawach jako element planu, nie jako cała terapia."],
-    ["Trening medyczny", "Kontrolowane budowanie siły i zakresu ruchu na sali, nie na leżance."],
-    ["Testy kontrolne", "Pomiar symetrii siły i kontroli motorycznej przed dopuszczeniem do gry."]
-  ],
-  "opis": [
-    "Rehabilitacja ma tu jedną twardą zasadę: przejście do kolejnego etapu jest decyzją opartą na wyniku testu, a nie na tym, ile tygodni minęło od urazu. Dlatego plan zaczyna się od ustalenia kryteriów wyjścia — wiadomo z góry, co trzeba osiągnąć, żeby wrócić do biegania, do treningu z zespołem i do gry.",
-    "Pracujemy jeden na jeden. Fizjoterapeuta prowadzi całą sesję, a nie ustawia Cię przy sprzęcie i odchodzi do kolejnej osoby. To ta sama forma pracy, w której prowadzimy zawodników — różnią się obciążenia, nie sposób prowadzenia.",
-    "Ostatni etap zawsze wygląda tak samo: testy kontrolne i porównanie strony operowanej ze zdrową. Jeżeli różnica jest zbyt duża, nie wracasz do pełnych obciążeń — nawet jeśli nic nie boli. To najczęstszy moment, w którym rehabilitacja kończy się o kilka tygodni za wcześnie i dochodzi do nawrotu."
-  ],
-  "cytat": "Brak bólu to nie to samo co gotowość. Gotowość da się zmierzyć.",
-  "dlaKogo": [
-    "Osoby po zabiegu ortopedycznym — rekonstrukcja więzadła, łąkotka, bark",
-    "Zawodnicy po urazie mięśniowym, u których zdarzały się nawroty",
-    "Trenujący z bólem przeciążeniowym, który wraca po każdej przerwie"
-  ],
-  "przebieg": [
-    ["Ocena wyjściowa", "Badanie, pomiar zakresu ruchu i siły, ustalenie kryteriów wyjścia."],
-    ["Etap odciążenia", "Praca nad bólem, obrzękiem i zakresem ruchu — bez wchodzenia w obciążenia."],
-    ["Trening medyczny", "Budowanie siły i kontroli, stopniowo, po zaliczeniu kolejnych progów."],
-    ["Testy i powrót", "Porównanie stron, testy funkcjonalne i zgoda na pełne obciążenia."]
-  ]
-},
-{
-  "slug": "dietetyka",
-  "nr": "04",
-  "dzial": "Żywienie",
-  "tytul": "Dietetyka i suplementacja",
-  "lead": "Analiza składu ciała i plan żywienia pod cel — masa, redukcja, wydolność. Suplementacja tylko tam, gdzie ma sens.",
-  "foto": "c4-dietetyka.png",
-  "pozycja": "50% 45%",
-  "fakty": [
-    ["Punkt wyjścia", "Pomiar, nie ankieta"],
-    ["Plan", "Pod obciążenia treningowe"],
-    ["Suplementy", "Tylko uzasadnione"]
-  ],
-  "zakres": [
-    ["Analiza składu ciała", "Pomiar jako punkt odniesienia do wszystkich późniejszych decyzji."],
-    ["Plan żywieniowy pod cel", "Masa, redukcja albo wydolność — jeden cel naraz, rozpisany na tydzień treningowy."],
-    ["Żywienie okołotreningowe", "Co jeść przed jednostką, w jej trakcie i po niej, żeby zdążyć się zregenerować."],
-    ["Żywienie w czasie kontuzji", "Utrzymanie masy mięśniowej i wsparcie gojenia przy ograniczonym ruchu."],
-    ["Ocena suplementacji", "Przegląd tego, co bierzesz — z rekomendacją odstawienia tam, gdzie nic nie wnosi."],
-    ["Kontrole", "Powtórny pomiar i korekta planu zamiast jednorazowej diety w PDF-ie."]
-  ],
-  "opis": [
-    "Plan żywienia zaczyna się od pomiaru, nie od ankiety. Bez punktu odniesienia nie da się stwierdzić, czy zmiana faktycznie działa — a dieta, której skuteczności nie sposób sprawdzić, jest tylko listą zakupów.",
-    "Drugim warunkiem jest zgranie planu z tym, co robisz na treningu. Zapotrzebowanie w tygodniu z dwiema jednostkami wygląda inaczej niż w tygodniu z sześcioma, a przy kontuzji zmienia się jeszcze raz. Dlatego dietetyk pracuje tu w tym samym zespole co fizjoterapeuci i trenerzy przygotowania, a nie obok niego.",
-    "Suplementacja jest ostatnim elementem, nie pierwszym. Najczęstszym efektem konsultacji jest skrócenie listy preparatów, a nie jej wydłużenie — i przesunięcie uwagi na te dwa czy trzy, które w Twoim przypadku rzeczywiście mają uzasadnienie."
-  ],
-  "cytat": "Dieta, której skuteczności nie da się sprawdzić, jest tylko listą zakupów.",
-  "dlaKogo": [
-    "Zawodnicy, którzy nie regenerują się między jednostkami treningowymi",
-    "Osoby z celem zmiany masy ciała — w górę albo w dół — przy zachowaniu formy",
-    "Trenujący z długą listą suplementów i bez pewności, co z niej działa"
-  ],
-  "przebieg": [
-    ["Pomiar", "Analiza składu ciała i przegląd dotychczasowego sposobu żywienia."],
-    ["Ustalenie celu", "Jeden cel na dany okres, dopasowany do kalendarza startów lub sezonu."],
-    ["Plan", "Rozpisane żywienie na tydzień treningowy wraz z okołotreningowym."],
-    ["Kontrola", "Powtórny pomiar i korekta — plan zmienia się razem z obciążeniami."]
-  ]
-},
-{
-  "slug": "trening",
-  "nr": "05",
-  "dzial": "Motoryka",
-  "tytul": "Trening merytoryczny",
-  "lead": "Motoryka, siła i profilaktyka urazów pod okiem trenerów przygotowania. Testy wydolnościowe i plan na cały sezon.",
-  "foto": "c5-trening.png",
-  "pozycja": "50% 45%",
-  "fakty": [
-    ["Start", "Od testów"],
-    ["Plan", "Na cały sezon"],
-    ["Cel", "Forma i mniej urazów"]
-  ],
-  "zakres": [
-    ["Testy motoryczne i wydolnościowe", "Punkt wyjścia do planu — i miara, czy plan działa."],
-    ["Plan przygotowania", "Rozpisany na okres przygotowawczy, startowy i przejściowy."],
-    ["Trening siły", "Budowanie siły w formie, która przekłada się na Twoją dyscyplinę."],
-    ["Profilaktyka urazów", "Praca nad tym, co u Ciebie realnie zawodzi — nie uniwersalny zestaw ćwiczeń."],
-    ["Powrót do obciążeń", "Domknięcie rehabilitacji: od zgody fizjoterapeuty do pełnego treningu."],
-    ["Współpraca z klubem", "Uzgodnienie planu z trenerem prowadzącym, żeby obciążenia się nie dublowały."]
-  ],
-  "opis": [
-    "Trening zaczyna się od testów, bo bez nich plan jest zgadywaniem. Pomiar pokazuje, gdzie naprawdę jest luka — w sile, w wytrzymałości, w symetrii albo w kontroli ruchu — i pozwala później sprawdzić, czy przez sezon coś się zmieniło.",
-    "Profilaktyka urazów jest tu osobnym elementem planu, nie dodatkiem do rozgrzewki. Buduje się ją na tym, co u Ciebie zawodzi, i na historii Twoich kontuzji — dlatego trenerzy przygotowania pracują na tych samych danych, co fizjoterapeuci prowadzący Twój powrót po urazie.",
-    "Ostatni etap rehabilitacji i pierwszy etap treningu to w praktyce ten sam moment. Prowadzimy oba w jednym miejscu, żeby nie powstała luka, w której zawodnik ma już zgodę na trening, ale nikt nie kontroluje, jak szybko rosną obciążenia."
-  ],
-  "cytat": "Plan bez testu na wejściu i na wyjściu jest tylko zestawem ćwiczeń.",
-  "dlaKogo": [
-    "Zawodnicy przygotowujący się do sezonu lub do konkretnego startu",
-    "Osoby po zakończonej rehabilitacji, wracające do pełnych obciążeń",
-    "Trenujący, u których kontuzje wracają w tym samym miejscu"
-  ],
-  "przebieg": [
-    ["Testy", "Ocena motoryki, wydolności i symetrii — komplet pomiarów wyjściowych."],
-    ["Plan sezonu", "Rozpisanie okresów i celów, uzgodnione z Twoim trenerem prowadzącym."],
-    ["Praca", "Sesje na sali z kontrolą techniki i obciążeń."],
-    ["Retest", "Powtórzenie pomiarów i korekta planu na kolejny okres."]
-  ]
-},
-{
-  "slug": "edukacja",
-  "nr": "06",
-  "dzial": "Wiedza",
-  "tytul": "Edukacja i szkolenie",
-  "lead": "Warsztaty i szkolenia dla klubów oraz trenerów. Wiedza sztabu pierwszej drużyny dostępna dla akademii i amatorów.",
-  "foto": "c6-edukacja.png",
-  "pozycja": "50% 45%",
-  "fakty": [
-    ["Forma", "Warsztat, nie wykład"],
-    ["Odbiorca", "Kluby i akademie"],
-    ["Miejsce", "U nas lub u Was"]
-  ],
-  "zakres": [
-    ["Szkolenia dla trenerów", "Rozpoznawanie urazów, zarządzanie obciążeniami i praca z zawodnikiem po kontuzji."],
-    ["Warsztaty dla klubów i akademii", "Profilaktyka urazów wpleciona w codzienny plan treningowy zespołu."],
-    ["Pierwsza pomoc przy urazie", "Postępowanie na boisku w pierwszych minutach po zdarzeniu."],
-    ["Szkolenia dla rodziców", "Obciążenia treningowe i regeneracja u zawodników w wieku rozwojowym."],
-    ["Konsultacje dla sztabów", "Przegląd procedur medycznych klubu i ścieżki postępowania po urazie."],
-    ["Wykłady otwarte", "Spotkania dla amatorów — trening, regeneracja i najczęstsze błędy."]
-  ],
-  "opis": [
-    "Największy wpływ na liczbę urazów w klubie ma to, co dzieje się codziennie na treningu, a nie to, co dzieje się w gabinecie po urazie. Dlatego wiedzę, którą sztab wykorzystuje przy pierwszej drużynie, udostępniamy w formie szkoleń dla trenerów, akademii i całych sztabów.",
-    "Zajęcia mają formę warsztatu. Pracujemy na konkretnych sytuacjach z Waszego zespołu — kalendarzu obciążeń, historii kontuzji, procedurach po urazie — i wychodzimy z ustaleniami, które da się wdrożyć w najbliższym mikrocyklu.",
-    "Program układamy pod odbiorcę. Inaczej wygląda spotkanie dla trenerów akademii, inaczej dla rodziców zawodników w wieku rozwojowym, a jeszcze inaczej dla sztabu medycznego klubu. Zakres i długość ustalamy przed szkoleniem."
-  ],
-  "cytat": "O liczbie urazów decyduje codzienny trening, nie gabinet po urazie.",
-  "dlaKogo": [
-    "Kluby i akademie piłkarskie oraz inne sporty zespołowe",
-    "Trenerzy i sztaby medyczne szukające spójnych procedur po urazie",
-    "Organizatorzy zajęć dla amatorów i rodzice młodych zawodników"
-  ],
-  "przebieg": [
-    ["Rozmowa wstępna", "Ustalamy, kto jest odbiorcą i jaki problem ma rozwiązać szkolenie."],
-    ["Program", "Dostajesz zakres, długość i formę zajęć do akceptacji."],
-    ["Warsztat", "Spotkanie u nas albo u Was, na Waszych realnych przypadkach."],
-    ["Wdrożenie", "Ustalenia na piśmie i możliwość konsultacji po szkoleniu."]
-  ]
-}
+  {
+    "slug": "medycyna-sportowa",
+    "nr": "01",
+    "dzial": "Prowadzenie",
+    "tytul": "Medycyna sportowa",
+    "lead": "Badania kwalifikacyjne, prowadzenie przez cały sezon i decyzja o powrocie do gry — w tym samym standardzie, w którym prowadzimy pierwszą drużynę.",
+    "foto": "sprint-sharp.png",
+    "pozycja": "38% 40%",
+    "fakty": [
+      [
+        "Skierowanie",
+        "Niepotrzebne"
+      ],
+      [
+        "Diagnostyka",
+        "Na miejscu"
+      ],
+      [
+        "Zespół",
+        "Ten sam co w klubie"
+      ]
+    ],
+    "zakres": [
+      [
+        "Badania kwalifikacyjne do sportu",
+        "Komplet badań dopuszczających do treningu i zawodów, zamknięty w jednej wizycie.",
+        "osoba"
+      ],
+      [
+        "Prowadzenie przez sezon",
+        "Kontrola obciążeń, urazów i regeneracji — od okresu przygotowawczego po ostatnią kolejkę.",
+        "kalendarz"
+      ],
+      [
+        "Decyzja o powrocie do gry",
+        "Oparta na kryteriach i testach, nie na kalendarzu i nie na samopoczuciu.",
+        "powrot"
+      ],
+      [
+        "Konsultacja po urazie",
+        "Ustalenie rozpoznania, ścieżki leczenia i tego, kto prowadzi Cię dalej.",
+        "stetoskop"
+      ],
+      [
+        "Orzeczenia i dokumentacja",
+        "Zaświadczenia dla klubu, federacji i ubezpieczyciela — bez odsyłania po pieczątki.",
+        "dokument"
+      ],
+      [
+        "Koordynacja specjalistów",
+        "Jedna osoba spina ortopedię, fizjoterapię, żywienie i trening w jeden plan.",
+        "siec"
+      ]
+    ],
+    "opis": [
+      "Medycyna sportowa to u nas nie pojedyncza konsultacja, tylko prowadzenie. Zaczyna się od zrozumienia, co robisz na treningu i w zawodach, a kończy na decyzji, czy możesz wejść w pełne obciążenia. Pomiędzy tymi punktami jest komplet badań, diagnostyka obrazowa i praca z fizjoterapeutą — ale prowadzi to jeden lekarz, który zna całą historię.",
+      "Ta sama ścieżka obsługuje zawodnika pierwszej drużyny i amatora, który biega dwa razy w tygodniu. Różnią się obciążenia i cele, nie standard opieki. W obu przypadkach obowiązuje ta sama zasada: żadna decyzja o powrocie nie zapada na podstawie tego, że „minęło już sporo czasu”.",
+      "Jeżeli nie wiesz, od czego zacząć, zacznij tutaj. Konsultacja w medycynie sportowej jest punktem, z którego rozchodzą się wszystkie pozostałe zakresy opieki — i z którego wychodzisz z konkretnym planem, a nie z listą kolejnych skierowań."
+    ],
+    "cytat": "Zawodnik nie wraca do gry dlatego, że minęło sześć tygodni. Wraca, bo spełnił kryteria.",
+    "dlaKogo": [
+      "Zawodnicy klubowi i akademii, którzy potrzebują badań i prowadzenia przez cały sezon",
+      "Amatorzy trenujący regularnie — bieganie, siłownia, sporty drużynowe",
+      "Osoby po urazie, które nie wiedzą, do którego specjalisty trafić najpierw"
+    ],
+    "przebieg": [
+      [
+        "Rozmowa z koordynatorem",
+        "Ustalamy, czego potrzebujesz i ile to zajmie. Piętnaście minut przez telefon."
+      ],
+      [
+        "Wizyta i badanie",
+        "Wywiad, badanie kliniczne i — jeśli trzeba — diagnostyka obrazowa tego samego dnia."
+      ],
+      [
+        "Plan",
+        "Dostajesz rozpisany zakres: co, kto i w jakiej kolejności prowadzi."
+      ],
+      [
+        "Kontrola",
+        "Wracasz na testy kontrolne w punktach, które ustaliliśmy z góry."
+      ]
+    ]
+  },
+  {
+    "slug": "ortopedia",
+    "nr": "02",
+    "dzial": "Diagnostyka",
+    "tytul": "Ortopedia",
+    "lead": "Konsultacje ortopedyczne z diagnostyką obrazową na miejscu. USG i RTG bez zewnętrznej rejestracji, decyzja o ścieżce leczenia od razu.",
+    "foto": "c1-ortopedia.png",
+    "pozycja": "50% 45%",
+    "fakty": [
+      [
+        "Obrazowanie",
+        "USG i RTG na miejscu"
+      ],
+      [
+        "Rozpoznanie",
+        "W trakcie wizyty"
+      ],
+      [
+        "Ścieżka",
+        "Ustalona od razu"
+      ]
+    ],
+    "zakres": [
+      [
+        "Konsultacja ortopedyczna",
+        "Badanie kliniczne stawu lub odcinka kręgosłupa i postawienie rozpoznania.",
+        "stetoskop"
+      ],
+      [
+        "USG narządu ruchu",
+        "Badanie wykonywane przez lekarza w gabinecie, w trakcie tej samej wizyty.",
+        "fale"
+      ],
+      [
+        "RTG",
+        "Zdjęcia bez zewnętrznej rejestracji i bez drugiego terminu.",
+        "kosc"
+      ],
+      [
+        "Kwalifikacja do zabiegu",
+        "Decyzja, czy operacja jest potrzebna — i co się stanie, jeśli jej nie będzie.",
+        "zabieg"
+      ],
+      [
+        "Opieka pooperacyjna",
+        "Kontrole gojenia i przekazanie do rehabilitacji bez przerwy w prowadzeniu.",
+        "serce"
+      ],
+      [
+        "Druga opinia",
+        "Ocena rozpoznania i planu leczenia postawionego gdzie indziej.",
+        "rozmowa"
+      ]
+    ],
+    "opis": [
+      "Największą stratą czasu po urazie nie jest samo leczenie, tylko odstępy między jego etapami: tydzień do ortopedy, dwa tygodnie do obrazowania, kolejny tydzień na odczytanie wyniku. Diagnostyka stoi u nas w tym samym gabinecie, w którym odbywa się konsultacja — dlatego rozpoznanie i decyzja o dalszej drodze zapadają w trakcie jednej wizyty.",
+      "Ortopedia jest tu punktem rozstrzygającym, a nie końcowym. Po ustaleniu rozpoznania od razu wiadomo, czy prowadzi ono do zabiegu, do rehabilitacji, czy do zmiany sposobu trenowania — i kto z zespołu przejmuje Cię na następnym etapie.",
+      "Jeżeli masz już wynik badania z innego ośrodka, przynieś go. Druga opinia jest pełnoprawnym powodem wizyty i nie wymaga powtarzania całej diagnostyki od zera."
+    ],
+    "cytat": "Wynik badania to nie jest koniec wizyty. To jest moment, w którym zapada decyzja.",
+    "dlaKogo": [
+      "Świeży uraz — skręcenie, naderwanie, uraz kolana lub barku",
+      "Ból przeciążeniowy, który nie ustępuje mimo odpoczynku",
+      "Osoby przed decyzją o zabiegu i po zabiegu wykonanym gdzie indziej"
+    ],
+    "przebieg": [
+      [
+        "Zgłoszenie",
+        "Opisujesz koordynatorowi, co się stało i od kiedy boli."
+      ],
+      [
+        "Badanie kliniczne",
+        "Ortopeda ocenia staw, zakres ruchu i stabilność."
+      ],
+      [
+        "Obrazowanie",
+        "USG lub RTG w tym samym gabinecie, jeśli badanie tego wymaga."
+      ],
+      [
+        "Decyzja i przekazanie",
+        "Wychodzisz z rozpoznaniem i z ustalonym następnym krokiem."
+      ]
+    ]
+  },
+  {
+    "slug": "fizjoterapia",
+    "nr": "03",
+    "dzial": "Powrót do sprawności",
+    "tytul": "Fizjoterapia i rehabilitacja",
+    "lead": "Protokoły powrotu po urazie, którymi na co dzień prowadzimy zawodników. Praca 1:1 i kryteria progresu zamiast kalendarza.",
+    "foto": "c3-fizjoterapia.png",
+    "pozycja": "50% 40%",
+    "fakty": [
+      [
+        "Praca",
+        "1:1 z fizjoterapeutą"
+      ],
+      [
+        "Progres",
+        "Wg kryteriów, nie dat"
+      ],
+      [
+        "Zakończenie",
+        "Testy przed powrotem"
+      ]
+    ],
+    "zakres": [
+      [
+        "Rehabilitacja pooperacyjna",
+        "Prowadzenie od pierwszych dni po zabiegu do pełnych obciążeń treningowych.",
+        "serce"
+      ],
+      [
+        "Terapia po urazie",
+        "Skręcenia, naderwania, uszkodzenia więzadeł i mięśni — bez skracania etapów.",
+        "powrot"
+      ],
+      [
+        "Ból przeciążeniowy",
+        "Praca nad przyczyną przeciążenia, nie tylko nad miejscem, które boli.",
+        "iskra"
+      ],
+      [
+        "Terapia manualna",
+        "Praca na tkankach i stawach jako element planu, nie jako cała terapia.",
+        "rece"
+      ],
+      [
+        "Trening medyczny",
+        "Kontrolowane budowanie siły i zakresu ruchu na sali, nie na leżance.",
+        "hantla"
+      ],
+      [
+        "Testy kontrolne",
+        "Pomiar symetrii siły i kontroli motorycznej przed dopuszczeniem do gry.",
+        "wykres"
+      ]
+    ],
+    "opis": [
+      "Rehabilitacja ma tu jedną twardą zasadę: przejście do kolejnego etapu jest decyzją opartą na wyniku testu, a nie na tym, ile tygodni minęło od urazu. Dlatego plan zaczyna się od ustalenia kryteriów wyjścia — wiadomo z góry, co trzeba osiągnąć, żeby wrócić do biegania, do treningu z zespołem i do gry.",
+      "Pracujemy jeden na jeden. Fizjoterapeuta prowadzi całą sesję, a nie ustawia Cię przy sprzęcie i odchodzi do kolejnej osoby. To ta sama forma pracy, w której prowadzimy zawodników — różnią się obciążenia, nie sposób prowadzenia.",
+      "Ostatni etap zawsze wygląda tak samo: testy kontrolne i porównanie strony operowanej ze zdrową. Jeżeli różnica jest zbyt duża, nie wracasz do pełnych obciążeń — nawet jeśli nic nie boli. To najczęstszy moment, w którym rehabilitacja kończy się o kilka tygodni za wcześnie i dochodzi do nawrotu."
+    ],
+    "cytat": "Brak bólu to nie to samo co gotowość. Gotowość da się zmierzyć.",
+    "dlaKogo": [
+      "Osoby po zabiegu ortopedycznym — rekonstrukcja więzadła, łąkotka, bark",
+      "Zawodnicy po urazie mięśniowym, u których zdarzały się nawroty",
+      "Trenujący z bólem przeciążeniowym, który wraca po każdej przerwie"
+    ],
+    "przebieg": [
+      [
+        "Ocena wyjściowa",
+        "Badanie, pomiar zakresu ruchu i siły, ustalenie kryteriów wyjścia."
+      ],
+      [
+        "Etap odciążenia",
+        "Praca nad bólem, obrzękiem i zakresem ruchu — bez wchodzenia w obciążenia."
+      ],
+      [
+        "Trening medyczny",
+        "Budowanie siły i kontroli, stopniowo, po zaliczeniu kolejnych progów."
+      ],
+      [
+        "Testy i powrót",
+        "Porównanie stron, testy funkcjonalne i zgoda na pełne obciążenia."
+      ]
+    ]
+  },
+  {
+    "slug": "dietetyka",
+    "nr": "04",
+    "dzial": "Żywienie",
+    "tytul": "Dietetyka i suplementacja",
+    "lead": "Analiza składu ciała i plan żywienia pod cel — masa, redukcja, wydolność. Suplementacja tylko tam, gdzie ma sens.",
+    "foto": "c4-dietetyka.png",
+    "pozycja": "50% 45%",
+    "fakty": [
+      [
+        "Punkt wyjścia",
+        "Pomiar, nie ankieta"
+      ],
+      [
+        "Plan",
+        "Pod obciążenia treningowe"
+      ],
+      [
+        "Suplementy",
+        "Tylko uzasadnione"
+      ]
+    ],
+    "zakres": [
+      [
+        "Analiza składu ciała",
+        "Pomiar jako punkt odniesienia do wszystkich późniejszych decyzji.",
+        "waga"
+      ],
+      [
+        "Plan żywieniowy pod cel",
+        "Masa, redukcja albo wydolność — jeden cel naraz, rozpisany na tydzień treningowy.",
+        "talerz"
+      ],
+      [
+        "Żywienie okołotreningowe",
+        "Co jeść przed jednostką, w jej trakcie i po niej, żeby zdążyć się zregenerować.",
+        "kalendarz"
+      ],
+      [
+        "Żywienie w czasie kontuzji",
+        "Utrzymanie masy mięśniowej i wsparcie gojenia przy ograniczonym ruchu.",
+        "serce"
+      ],
+      [
+        "Ocena suplementacji",
+        "Przegląd tego, co bierzesz — z rekomendacją odstawienia tam, gdzie nic nie wnosi.",
+        "pigulka"
+      ],
+      [
+        "Kontrole",
+        "Powtórny pomiar i korekta planu zamiast jednorazowej diety w PDF-ie.",
+        "wykres"
+      ]
+    ],
+    "opis": [
+      "Plan żywienia zaczyna się od pomiaru, nie od ankiety. Bez punktu odniesienia nie da się stwierdzić, czy zmiana faktycznie działa — a dieta, której skuteczności nie sposób sprawdzić, jest tylko listą zakupów.",
+      "Drugim warunkiem jest zgranie planu z tym, co robisz na treningu. Zapotrzebowanie w tygodniu z dwiema jednostkami wygląda inaczej niż w tygodniu z sześcioma, a przy kontuzji zmienia się jeszcze raz. Dlatego dietetyk pracuje tu w tym samym zespole co fizjoterapeuci i trenerzy przygotowania, a nie obok niego.",
+      "Suplementacja jest ostatnim elementem, nie pierwszym. Najczęstszym efektem konsultacji jest skrócenie listy preparatów, a nie jej wydłużenie — i przesunięcie uwagi na te dwa czy trzy, które w Twoim przypadku rzeczywiście mają uzasadnienie."
+    ],
+    "cytat": "Dieta, której skuteczności nie da się sprawdzić, jest tylko listą zakupów.",
+    "dlaKogo": [
+      "Zawodnicy, którzy nie regenerują się między jednostkami treningowymi",
+      "Osoby z celem zmiany masy ciała — w górę albo w dół — przy zachowaniu formy",
+      "Trenujący z długą listą suplementów i bez pewności, co z niej działa"
+    ],
+    "przebieg": [
+      [
+        "Pomiar",
+        "Analiza składu ciała i przegląd dotychczasowego sposobu żywienia."
+      ],
+      [
+        "Ustalenie celu",
+        "Jeden cel na dany okres, dopasowany do kalendarza startów lub sezonu."
+      ],
+      [
+        "Plan",
+        "Rozpisane żywienie na tydzień treningowy wraz z okołotreningowym."
+      ],
+      [
+        "Kontrola",
+        "Powtórny pomiar i korekta — plan zmienia się razem z obciążeniami."
+      ]
+    ]
+  },
+  {
+    "slug": "trening",
+    "nr": "05",
+    "dzial": "Motoryka",
+    "tytul": "Trening merytoryczny",
+    "lead": "Motoryka, siła i profilaktyka urazów pod okiem trenerów przygotowania. Testy wydolnościowe i plan na cały sezon.",
+    "foto": "c5-trening.png",
+    "pozycja": "50% 45%",
+    "fakty": [
+      [
+        "Start",
+        "Od testów"
+      ],
+      [
+        "Plan",
+        "Na cały sezon"
+      ],
+      [
+        "Cel",
+        "Forma i mniej urazów"
+      ]
+    ],
+    "zakres": [
+      [
+        "Testy motoryczne i wydolnościowe",
+        "Punkt wyjścia do planu — i miara, czy plan działa.",
+        "wykres"
+      ],
+      [
+        "Plan przygotowania",
+        "Rozpisany na okres przygotowawczy, startowy i przejściowy.",
+        "kalendarz"
+      ],
+      [
+        "Trening siły",
+        "Budowanie siły w formie, która przekłada się na Twoją dyscyplinę.",
+        "hantla"
+      ],
+      [
+        "Profilaktyka urazów",
+        "Praca nad tym, co u Ciebie realnie zawodzi — nie uniwersalny zestaw ćwiczeń.",
+        "tarcza"
+      ],
+      [
+        "Powrót do obciążeń",
+        "Domknięcie rehabilitacji: od zgody fizjoterapeuty do pełnego treningu.",
+        "powrot"
+      ],
+      [
+        "Współpraca z klubem",
+        "Uzgodnienie planu z trenerem prowadzącym, żeby obciążenia się nie dublowały.",
+        "siec"
+      ]
+    ],
+    "opis": [
+      "Trening zaczyna się od testów, bo bez nich plan jest zgadywaniem. Pomiar pokazuje, gdzie naprawdę jest luka — w sile, w wytrzymałości, w symetrii albo w kontroli ruchu — i pozwala później sprawdzić, czy przez sezon coś się zmieniło.",
+      "Profilaktyka urazów jest tu osobnym elementem planu, nie dodatkiem do rozgrzewki. Buduje się ją na tym, co u Ciebie zawodzi, i na historii Twoich kontuzji — dlatego trenerzy przygotowania pracują na tych samych danych, co fizjoterapeuci prowadzący Twój powrót po urazie.",
+      "Ostatni etap rehabilitacji i pierwszy etap treningu to w praktyce ten sam moment. Prowadzimy oba w jednym miejscu, żeby nie powstała luka, w której zawodnik ma już zgodę na trening, ale nikt nie kontroluje, jak szybko rosną obciążenia."
+    ],
+    "cytat": "Plan bez testu na wejściu i na wyjściu jest tylko zestawem ćwiczeń.",
+    "dlaKogo": [
+      "Zawodnicy przygotowujący się do sezonu lub do konkretnego startu",
+      "Osoby po zakończonej rehabilitacji, wracające do pełnych obciążeń",
+      "Trenujący, u których kontuzje wracają w tym samym miejscu"
+    ],
+    "przebieg": [
+      [
+        "Testy",
+        "Ocena motoryki, wydolności i symetrii — komplet pomiarów wyjściowych."
+      ],
+      [
+        "Plan sezonu",
+        "Rozpisanie okresów i celów, uzgodnione z Twoim trenerem prowadzącym."
+      ],
+      [
+        "Praca",
+        "Sesje na sali z kontrolą techniki i obciążeń."
+      ],
+      [
+        "Retest",
+        "Powtórzenie pomiarów i korekta planu na kolejny okres."
+      ]
+    ]
+  },
+  {
+    "slug": "edukacja",
+    "nr": "06",
+    "dzial": "Wiedza",
+    "tytul": "Edukacja i szkolenie",
+    "lead": "Warsztaty i szkolenia dla klubów oraz trenerów. Wiedza sztabu pierwszej drużyny dostępna dla akademii i amatorów.",
+    "foto": "c6-edukacja.png",
+    "pozycja": "50% 45%",
+    "fakty": [
+      [
+        "Forma",
+        "Warsztat, nie wykład"
+      ],
+      [
+        "Odbiorca",
+        "Kluby i akademie"
+      ],
+      [
+        "Miejsce",
+        "U nas lub u Was"
+      ]
+    ],
+    "zakres": [
+      [
+        "Szkolenia dla trenerów",
+        "Rozpoznawanie urazów, zarządzanie obciążeniami i praca z zawodnikiem po kontuzji.",
+        "tablica"
+      ],
+      [
+        "Warsztaty dla klubów i akademii",
+        "Profilaktyka urazów wpleciona w codzienny plan treningowy zespołu.",
+        "grupa"
+      ],
+      [
+        "Pierwsza pomoc przy urazie",
+        "Postępowanie na boisku w pierwszych minutach po zdarzeniu.",
+        "apteczka"
+      ],
+      [
+        "Szkolenia dla rodziców",
+        "Obciążenia treningowe i regeneracja u zawodników w wieku rozwojowym.",
+        "osoba"
+      ],
+      [
+        "Konsultacje dla sztabów",
+        "Przegląd procedur medycznych klubu i ścieżki postępowania po urazie.",
+        "siec"
+      ],
+      [
+        "Wykłady otwarte",
+        "Spotkania dla amatorów — trening, regeneracja i najczęstsze błędy.",
+        "rozmowa"
+      ]
+    ],
+    "opis": [
+      "Największy wpływ na liczbę urazów w klubie ma to, co dzieje się codziennie na treningu, a nie to, co dzieje się w gabinecie po urazie. Dlatego wiedzę, którą sztab wykorzystuje przy pierwszej drużynie, udostępniamy w formie szkoleń dla trenerów, akademii i całych sztabów.",
+      "Zajęcia mają formę warsztatu. Pracujemy na konkretnych sytuacjach z Waszego zespołu — kalendarzu obciążeń, historii kontuzji, procedurach po urazie — i wychodzimy z ustaleniami, które da się wdrożyć w najbliższym mikrocyklu.",
+      "Program układamy pod odbiorcę. Inaczej wygląda spotkanie dla trenerów akademii, inaczej dla rodziców zawodników w wieku rozwojowym, a jeszcze inaczej dla sztabu medycznego klubu. Zakres i długość ustalamy przed szkoleniem."
+    ],
+    "cytat": "O liczbie urazów decyduje codzienny trening, nie gabinet po urazie.",
+    "dlaKogo": [
+      "Kluby i akademie piłkarskie oraz inne sporty zespołowe",
+      "Trenerzy i sztaby medyczne szukające spójnych procedur po urazie",
+      "Organizatorzy zajęć dla amatorów i rodzice młodych zawodników"
+    ],
+    "przebieg": [
+      [
+        "Rozmowa wstępna",
+        "Ustalamy, kto jest odbiorcą i jaki problem ma rozwiązać szkolenie."
+      ],
+      [
+        "Program",
+        "Dostajesz zakres, długość i formę zajęć do akceptacji."
+      ],
+      [
+        "Warsztat",
+        "Spotkanie u nas albo u Was, na Waszych realnych przypadkach."
+      ],
+      [
+        "Wdrożenie",
+        "Ustalenia na piśmie i możliwość konsultacji po szkoleniu."
+      ]
+    ]
+  }
 ]

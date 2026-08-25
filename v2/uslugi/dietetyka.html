@@ -96,11 +96,14 @@ p{margin:0}
 .pg-hero{position:relative;display:flex;flex-direction:column;
   min-height:calc(100svh - 64px);color:#fff;overflow:hidden}
 .pg-tlo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-/* scrim: cięższy po lewej pod tekstem + dolny pod listwę faktów */
-.pg-hero::before{content:"";position:absolute;inset:0;background:
-  linear-gradient(100deg,rgba(5,9,7,.86) 0%,rgba(5,9,7,.62) 44%,
-                  rgba(5,9,7,.26) 72%,rgba(5,9,7,.1) 100%),
-  linear-gradient(to top,rgba(5,9,7,.72),transparent 32%)}
+/* Scrim: cięższy po lewej pod tekstem, dolny osadza zdjęcie na sekcji niżej.
+   `z-index:1` jest OBOWIĄZKOWE: `::before` jest generowane jako pierwsze dziecko,
+   więc bez niego zdjęcie (późniejsze w kolejności) maluje się NA przyciemnieniu
+   i cały scrim nic nie robi. */
+.pg-hero::before{content:"";position:absolute;inset:0;z-index:1;background:
+  linear-gradient(100deg,rgba(5,9,7,.88) 0%,rgba(5,9,7,.76) 40%,
+                  rgba(5,9,7,.42) 70%,rgba(5,9,7,.16) 100%),
+  linear-gradient(to top,rgba(5,9,7,.6),transparent 30%)}
 /* .wrap ma margin:0 auto — w kolumnowym flexie poziome auto-marginesy
    WYŁĄCZAJĄ stretch i pudełko kurczy się do treści. Stąd jawne width:100%. */
 .pg-tresc{position:relative;z-index:2;width:100%;margin-block:auto;
@@ -117,14 +120,6 @@ p{margin:0}
   -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
 .pg-hero .btn-ghost:hover{background:rgba(255,255,255,.2);border-color:rgba(255,255,255,.5)}
 .pg-hero :where(a,button):focus-visible{outline-color:#fff}
-.pg-dol{position:relative;z-index:2;width:100%;padding-bottom:clamp(20px,3vw,36px)}
-.fakty{margin:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));max-width:760px}
-.fakty div{padding:2px 18px}
-.fakty div:first-child{padding-left:0}
-.fakty div+div{border-left:1px solid rgba(255,255,255,.26)}
-.fakty dt{font-size:11.5px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;
-  color:rgba(255,255,255,.78)}
-.fakty dd{margin:5px 0 0;font-size:15px;line-height:1.35;color:#fff}
 
 /* --- wspólna szpica sekcji ------------------------------------------------ */
 .sek{padding:clamp(48px,6.5vw,88px) 0;border-top:1px solid var(--kres)}
@@ -137,16 +132,18 @@ p{margin:0}
    rytm ~124px, BEZ pudełek i BEZ linii — kontrast niesie samo powietrze).
    W roli ikon numery krojem Legii, jak na home. --------------------------- */
 .zakres{background:var(--plyta)}
-.zakres-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(32px,5vw,88px);
+.zakres-grid{display:grid;grid-template-columns:1fr 1.05fr;gap:clamp(32px,5vw,88px);
   align-items:start}
+/* Lewa kolumna stoi, prawa przewija się obok (wzór: myhealthprac.com).
+   `top` musi minąć przyklejony pasek nawigacji, inaczej nagłówek pod nim ginie. */
+.zakres-head{position:sticky;top:clamp(84px,11vh,104px)}
 .zakres-head h2{max-width:12ch;font-size:clamp(2.2rem,4.2vw,3.6rem);text-wrap:balance}
 .zakres-head p{margin-top:18px;max-width:40ch;font-size:15px;line-height:1.6;color:var(--tekst)}
-.kafle{display:grid;gap:clamp(28px,3.2vw,44px)}
-.kafel{display:grid;grid-template-columns:44px 1fr;gap:20px;align-items:start;max-width:480px}
-.kafel i{font-family:var(--legia);font-style:normal;font-weight:700;font-size:15px;
-  line-height:1.55;color:var(--ink)}
-.kafel h3{font-size:18.5px;letter-spacing:-.018em;line-height:1.3}
-.kafel p{margin-top:8px;font-size:14.5px;line-height:1.6;color:var(--tekst)}
+.kafle{display:grid;gap:clamp(34px,3.8vw,52px)}
+.kafel{display:grid;grid-template-columns:52px 1fr;gap:22px;align-items:start;max-width:560px}
+.kafel-ikona{width:34px;height:34px;margin-top:2px;color:var(--ink)}
+.kafel h3{font-size:clamp(20px,1.5vw,23px);letter-spacing:-.018em;line-height:1.28}
+.kafel p{margin-top:9px;font-size:clamp(15px,1.05vw,16.5px);line-height:1.6;color:var(--tekst)}
 
 /* --- wielka linia + proza + „dla kogo" ------------------------------------ */
 .claim-line{max-width:22ch;font-size:clamp(1.9rem,3.8vw,3.2rem);line-height:1.15;
@@ -293,18 +290,18 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
 @media(max-width:1080px){
   .opis-grid,.kont-in{grid-template-columns:1fr}
   .zakres-grid{grid-template-columns:1fr;gap:36px}
+  .zakres-head{position:static}   /* przypięcie ma sens tylko przy dwóch kolumnach */
   .inne{grid-template-columns:repeat(3,1fr)}
   .pg-kadr>img{aspect-ratio:16/9}
 }
 @media(max-width:720px){
   .nav-menu{display:none}
-  .kafel{grid-template-columns:36px 1fr;gap:14px}
-  /* fakty w jednej kolumnie, dalej na zdjęciu — dolny scrim je trzyma */
-  .fakty{grid-template-columns:1fr}
-  .fakty div{padding:9px 2px;border-left:0;border-top:1px solid rgba(255,255,255,.24);
-    display:flex;align-items:baseline;gap:10px}
-  .fakty div:first-child{border-top:0;padding-left:2px}
-  .fakty dd{margin:0}
+  /* na wąskim ekranie tekst zajmuje całą szerokość, więc skośny scrim nic nie
+     daje — wtedy równomierna kurtyna pionowa */
+  .pg-hero::before{background:
+    linear-gradient(180deg,rgba(5,9,7,.62) 0%,rgba(5,9,7,.74) 42%,rgba(5,9,7,.84) 100%)}
+  .kafel{grid-template-columns:40px 1fr;gap:16px}
+  .kafel-ikona{width:28px;height:28px}
   .btn{width:100%;justify-content:center}
   .inna{width:min(84vw,460px)}
   footer.site span:last-child{margin-left:0}
@@ -407,11 +404,6 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
       <a class="btn btn-ghost btn-szeroki" href="tel:+48223182000">Zadzwoń: 22 318 20 00</a>
     </div>
   </div>
-  <div class="wrap pg-dol">
-    <dl class="fakty"><div><dt>Punkt wyjścia</dt><dd>Pomiar, nie ankieta</dd></div>
-      <div><dt>Plan</dt><dd>Pod obciążenia treningowe</dd></div>
-      <div><dt>Suplementy</dt><dd>Tylko uzasadnione</dd></div></dl>
-  </div>
 </header>
 
 <section class="sek zakres">
@@ -420,12 +412,12 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
       <h2>Co obejmuje ten zakres</h2>
       <p>Plan układamy pod to, z czym przychodzisz. Nie musisz korzystać ze wszystkiego.</p>
     </div>
-    <div class="kafle"><article class="kafel" data-rv><i>01</i><div><h3>Analiza składu ciała</h3><p>Pomiar jako punkt odniesienia do wszystkich późniejszych decyzji.</p></div></article>
-      <article class="kafel" data-rv><i>02</i><div><h3>Plan żywieniowy pod cel</h3><p>Masa, redukcja albo wydolność — jeden cel naraz, rozpisany na tydzień treningowy.</p></div></article>
-      <article class="kafel" data-rv><i>03</i><div><h3>Żywienie okołotreningowe</h3><p>Co jeść przed jednostką, w jej trakcie i po niej, żeby zdążyć się zregenerować.</p></div></article>
-      <article class="kafel" data-rv><i>04</i><div><h3>Żywienie w czasie kontuzji</h3><p>Utrzymanie masy mięśniowej i wsparcie gojenia przy ograniczonym ruchu.</p></div></article>
-      <article class="kafel" data-rv><i>05</i><div><h3>Ocena suplementacji</h3><p>Przegląd tego, co bierzesz — z rekomendacją odstawienia tam, gdzie nic nie wnosi.</p></div></article>
-      <article class="kafel" data-rv><i>06</i><div><h3>Kontrole</h3><p>Powtórny pomiar i korekta planu zamiast jednorazowej diety w PDF-ie.</p></div></article></div>
+    <div class="kafle"><article class="kafel" data-rv><svg class="kafel-ikona" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="3"/><path d="M8.4 8.6h7.2"/><path d="M12 16.6v-4.4l2.6-1.6"/></svg><div><h3>Analiza składu ciała</h3><p>Pomiar jako punkt odniesienia do wszystkich późniejszych decyzji.</p></div></article>
+      <article class="kafel" data-rv><svg class="kafel-ikona" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10.6" cy="12" r="7"/><circle cx="10.6" cy="12" r="3.4"/><path d="M19.4 4.6v14.8M17.4 4.6v4.2a2 2 0 0 0 4 0V4.6"/></svg><div><h3>Plan żywieniowy pod cel</h3><p>Masa, redukcja albo wydolność — jeden cel naraz, rozpisany na tydzień treningowy.</p></div></article>
+      <article class="kafel" data-rv><svg class="kafel-ikona" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.4" y="5.2" width="17.2" height="15.4" rx="2.4"/><path d="M3.4 10h17.2M8.2 3.4v3.4M15.8 3.4v3.4"/><path d="M7.6 13.6h2.2M11 13.6h2.2M14.4 13.6h2.2M7.6 17h2.2M11 17h2.2"/></svg><div><h3>Żywienie okołotreningowe</h3><p>Co jeść przed jednostką, w jej trakcie i po niej, żeby zdążyć się zregenerować.</p></div></article>
+      <article class="kafel" data-rv><svg class="kafel-ikona" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20.4s-6.6-3.8-6.6-8.4a3.7 3.7 0 0 1 6.6-2.3 3.7 3.7 0 0 1 6.6 2.3c0 4.6-6.6 8.4-6.6 8.4Z"/><path d="M6.8 4.4h10.4"/></svg><div><h3>Żywienie w czasie kontuzji</h3><p>Utrzymanie masy mięśniowej i wsparcie gojenia przy ograniczonym ruchu.</p></div></article>
+      <article class="kafel" data-rv><svg class="kafel-ikona" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.8" y="9" width="18.4" height="6" rx="3" transform="rotate(-40 12 12)"/><path d="M9.4 8.2 15.8 14.6"/></svg><div><h3>Ocena suplementacji</h3><p>Przegląd tego, co bierzesz — z rekomendacją odstawienia tam, gdzie nic nie wnosi.</p></div></article>
+      <article class="kafel" data-rv><svg class="kafel-ikona" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.4 20.4h17.2"/><path d="M7 20.4v-4.6M11.6 20.4v-8M16.2 20.4v-5.4M20.8 20.4v-11"/></svg><div><h3>Kontrole</h3><p>Powtórny pomiar i korekta planu zamiast jednorazowej diety w PDF-ie.</p></div></article></div>
   </div>
 </section>
 
@@ -535,11 +527,11 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
   <div class="wrap">
     <div class="sek-head" data-rv><h2>Pozostałe zakresy opieki</h2></div>
     <div class="inne-pas" data-rv>
-      <div class="inne" data-pas><a class="inna" href="medycyna-sportowa.html"><img src="../img/sprint-sharp.png" alt="" loading="lazy" style="object-position:38% 40%"><span>01 / Prowadzenie</span><b>Medycyna sportowa</b></a>
-      <a class="inna" href="ortopedia.html"><img src="../img/c1-ortopedia.png" alt="" loading="lazy" style="object-position:50% 45%"><span>02 / Diagnostyka</span><b>Ortopedia</b></a>
-      <a class="inna" href="fizjoterapia.html"><img src="../img/c3-fizjoterapia.png" alt="" loading="lazy" style="object-position:50% 40%"><span>03 / Powrót do sprawności</span><b>Fizjoterapia i rehabilitacja</b></a>
-      <a class="inna" href="trening.html"><img src="../img/c5-trening.png" alt="" loading="lazy" style="object-position:50% 45%"><span>05 / Motoryka</span><b>Trening merytoryczny</b></a>
-      <a class="inna" href="edukacja.html"><img src="../img/c6-edukacja.png" alt="" loading="lazy" style="object-position:50% 45%"><span>06 / Wiedza</span><b>Edukacja i szkolenie</b></a></div>
+      <div class="inne" data-pas><a class="inna" href="medycyna-sportowa.html"><img src="../img/sprint-sharp.png" alt="" loading="lazy" style="object-position:38% 40%"><b>Medycyna sportowa</b><span class="inna-pill">Otwórz<i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></i></span></a>
+      <a class="inna" href="ortopedia.html"><img src="../img/c1-ortopedia.png" alt="" loading="lazy" style="object-position:50% 45%"><b>Ortopedia</b><span class="inna-pill">Otwórz<i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></i></span></a>
+      <a class="inna" href="fizjoterapia.html"><img src="../img/c3-fizjoterapia.png" alt="" loading="lazy" style="object-position:50% 40%"><b>Fizjoterapia i rehabilitacja</b><span class="inna-pill">Otwórz<i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></i></span></a>
+      <a class="inna" href="trening.html"><img src="../img/c5-trening.png" alt="" loading="lazy" style="object-position:50% 45%"><b>Trening merytoryczny</b><span class="inna-pill">Otwórz<i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></i></span></a>
+      <a class="inna" href="edukacja.html"><img src="../img/c6-edukacja.png" alt="" loading="lazy" style="object-position:50% 45%"><b>Edukacja i szkolenie</b><span class="inna-pill">Otwórz<i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></i></span></a></div>
       <button class="pas-strzalka w-lewo" data-pas-w aria-label="Poprzednie usługi">
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
           <path d="M10 3 5 8l5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
