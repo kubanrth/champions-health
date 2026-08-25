@@ -14,11 +14,11 @@ const PROG = { tytul: 3, etykieta: 4.5, wpis: 4.5, wybor: 4.5, zgoda: 4.5, pigDt
 // ta sama sekcja żyje w dwóch miejscach pod innymi klasami — obie mierzymy tak samo
 const STRONY = [
   { url: '', sek: '#kontakt', pola: { tytul: '.form-tytul', etykieta: 'label[for="kt-imie"]',
-      wpis: '#kt-imie', wybor: '#kt-temat', zgoda: '.kontakt-zgoda span',
+      wpis: '#kt-imie', wybor: '.kontakt-form .pw-btn', zgoda: '.kontakt-zgoda span',
       pigDt: '.kontakt-dane div dt', pigDd: '.kontakt-dane div dd' },
     imie: '#kt-imie', tel: '#kt-tel', select: '.kontakt-form select' },
   { url: 'kontakt.html', sek: '.kt-sek', pola: { tytul: '.kt-forma h2', etykieta: 'label[for="kt-imie"]',
-      wpis: '#kt-imie', wybor: '#kt-temat', zgoda: '.kt-zgoda span',
+      wpis: '#kt-imie', wybor: '.kt-pole .pw-btn', zgoda: '.kt-zgoda span',
       pigDt: '.kt-pig span', pigDd: '.kt-pig b' },
     imie: '#kt-imie', tel: '#kt-tel', select: '.kt-pole select' },
 ];
@@ -26,9 +26,9 @@ const STRONY = [
 // narożnika wchodzi jeszcze w wcięcie 8 px — wtedy to krawędź, a nie tło pod
 // literami, wychodzi jako najjaśniejszy piksel i pomiar stoi w miejscu.
 const WCIECIE = { wpis: 15, wybor: 15 };
-// Strzałka listy wyboru jest niemal czarna i leży w pudełku pola — bez większego
-// wcięcia z prawej to ona wychodzi jako „najciemniejsze tło pod tekstem".
-const PRAWO = { wybor: 40 };
+// Strzałka listy wyboru leży w pudełku przycisku — bez większego wcięcia z prawej
+// to ona wychodzi jako „najciemniejsze tło pod tekstem".
+const PRAWO = { wybor: 44 };
 
 const lum = (r, g, b) => { const f = v => (v /= 255) <= .03928 ? v / 12.92 : ((v + .055) / 1.055) ** 2.4;
   return .2126 * f(r) + .7152 * f(g) + .0722 * f(b); };

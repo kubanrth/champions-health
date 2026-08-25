@@ -1,6 +1,6 @@
 # ANSWER KEY — powrót do starego designu formularza
 
-**Stan: 31/31 zaliczone** (przegląd 2026-08-24, weryfikacja wykonana, nie deklarowana).
+**Stan: 36/36 zaliczone** (przegląd 2026-08-24, weryfikacja wykonana, nie deklarowana).
 
 - [x] AK1: sekcja `#kontakt` na stronie głównej ma zdjęcie w tle `.kontakt-tlo` — VERIFY: `document.querySelector('#kontakt .kontakt-tlo')` niepuste i `complete && naturalWidth>0`
 - [x] AK2: zdjęcie w tle to `kontakt-tlo.jpg` — VERIFY: `.kontakt-tlo` ma `src` kończący się `kontakt-tlo.jpg`
@@ -32,4 +32,9 @@
 - [x] AK29: kwadracik zgody jest własny, nie systemowy — VERIFY: `getComputedStyle('.kontakt-zgoda input').appearance === 'none'`, promień 7 px, po zaznaczeniu tło `rgb(255, 255, 255)` z fajką w `background-image`; to samo dla `.kt-zgoda input`
 - [x] AK30 (zmieniony, D15): herb leci z prawego górnego rogu do lewego dolnego — VERIFY: `.etapy-herb` ma `background-image` z `herb-glass.png` i szerokość ≥ 200vh; przejazd (`24–26vw` w bok, `-28vh` w pionie) stoi PRZED `rotate` w `transform`, więc kierunek jest w układzie ekranu; sprawdzenie `herb płynie` w `test-kontrast.mjs`: `--h` zmienia się o > 0,15 między górą a dołem przejazdu
 - [x] AK31: herb nie psuje czytelności sekcji — VERIFY: blok `etapy` w `test-kontrast.mjs`: nagłówek, tytuł wiersza i etykieta ≥ 4,5:1 na 1440 i 390, mierzone w czterech miejscach przejazdu (bez herbu 10:1, z herbem przy `opacity:.5` spadało do 3,9:1 — stąd .34)
+- [x] AK32: „Umów wizytę" otwiera pop-up z wyborem telefon/formularz, nie skacze do formularza — VERIFY: na każdej podstronie klik w `.nav .cta` otwiera `dialog.uw` (`open === true`); w środku `a[href^="tel:"]` i link do formularza
+- [x] AK33: listy wyboru mają styl strony, a natywny `select` zostaje pod spodem — VERIFY: `.pw-btn` istnieje dla każdego `select`; klik w pozycję listy ustawia `select.value` i podmienia etykietę przycisku; bez JS-u `select` jest widoczny i działa
+- [x] AK34: pole formularza jest białe TYLKO w trakcie wypełniania — VERIFY: `getComputedStyle` pola w spoczynku ma tło szkła, a przy `:focus` `rgb(255, 255, 255)`; po utracie ogniska wraca
+- [x] AK35: „Usługi" w nawigacji prowadzi na `uslugi.html` na każdej podstronie — VERIFY: `[...document.querySelectorAll('.nav a')].find(a => a.textContent.trim() === 'Usługi').getAttribute('href')` kończy się `uslugi.html`
+- [x] AK36: kropki na banerze pulsują — VERIFY: sprawdzenie `puls kropek` w `test-hero.mjs`: jasność pierścienia 7–14 px wokół kropki zmienia się o > 10 w 14 klatkach (na wąskich ekranach kropki są schowane — pomijane)
 - [x] AK25: pomiar kontrastu jest odporny na animacje i na krawędź szkła — VERIFY: `test-kontrast.mjs` zamraża animacje przed zrzutami i wcina pudełko pola o 15 px; trzy kolejne uruchomienia dają ten sam wynik

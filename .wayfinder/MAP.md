@@ -130,6 +130,31 @@ z tym commitem 1:1 — zweryfikowane renderem, nie z pamięci.
 - Done looks like: przy wjeździe sekcji herb jest w prawej górnej części kadru,
   przy wyjeździe w lewej dolnej; kontrast tekstu dalej ≥ 4,5:1.
 
+## D16: Pop-up „Umów wizytę" zamiast skoku do formularza
+- Decyzja: każdy link „Umów wizytę" otwiera okno z dwiema drogami — telefon albo
+  formularz. Jeden plik `v2/wspolne.js` obsługuje to na wszystkich podstronach.
+- Why: prośba klienta. Wspólny plik zamiast kopii w siedmiu stronach, bo inaczej
+  następna zmiana treści okna wymagałaby siedmiu edycji.
+- Done looks like: AK32.
+- Uwaga: klasa `.wiz` była już zajęta przez wizytówkę zespołu na stronie głównej —
+  okno używa `.uw`. Kolizja klas kosztowała pół godziny debugowania.
+
+## D17: Własne listy wyboru, natywny `select` zostaje pod spodem
+- Decyzja: `select` chowamy wizualnie i budujemy nad nim przycisk + listę w stylu
+  strony; wartość ustawiamy na natywnym elemencie i wysyłamy `change`.
+- Why: natywna lista rozwijana wygląda systemowo („średnio dopasowane"), a nie da
+  się jej ostylować. Zostawienie `select` pod spodem znaczy, że walidacja, wysyłka
+  i brak JS-u działają bez zmian.
+- Done looks like: AK33.
+- Uwaga techniczna: lista jedzie do `body` jako `position:fixed`. Pola formularza
+  mają `backdrop-filter`, który wypycha je na własną warstwę kompozytową i wtedy
+  malują się NAD listą mimo wyższego `z-index`.
+
+## D18: Pole białe tylko w trakcie wypełniania
+- Decyzja: spoczynkowe pole jest szare (szkło), a bieleje na `:focus`.
+- Why: prośba klienta.
+- Done looks like: AK34.
+
 ## Out of bounds
 - `blog.html`, `zespol.html`, `uslugi*`, stopka — nie ruszamy.
 - `kontakt.html` — tylko materiał sekcji formularza (D10); układ, treść i pola bez zmian.

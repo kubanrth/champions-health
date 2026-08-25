@@ -221,11 +221,36 @@ section[id]{scroll-margin-top:90px}
 .pas-strzalka.w-prawo{right:calc(-1 * clamp(8px,1vw,14px))}
 
 /* --- stopka --------------------------------------------------------------- */
-footer.site{border-top:1px solid var(--kres);padding:44px 0 28px;
-  font-size:13.5px;color:var(--tekst2)}
-footer.site .wrap{display:flex;flex-wrap:wrap;align-items:center;gap:18px}
-footer.site img{height:26px}
-footer.site span:last-child{margin-left:auto}
+/* pełna stopka — ta sama co na pozostałych podstronach */
+footer.site{background:#070B09;color:#fff;border-top:0;padding:76px 0 26px}
+.ft-siatka{display:grid;gap:clamp(28px,4vw,64px);
+  grid-template-columns:minmax(230px,1.5fr) 1fr 1fr 1.15fr}
+.ft-marka img{height:30px}
+.ft-marka p{margin:20px 0 0;max-width:32ch;font-size:15px;line-height:1.55;color:rgba(255,255,255,.6)}
+.ft-kol h3{margin:0 0 18px;font-size:12.5px;font-weight:500;color:rgba(255,255,255,.5)}
+.ft-kol ul{margin:0;padding:0;list-style:none;display:grid;gap:11px}
+.ft-kol li{font-size:14.5px;font-weight:500;color:rgba(255,255,255,.86)}
+.ft-kol a{transition:color .3s var(--ease)}
+.ft-kol a:hover{color:#fff;text-decoration:underline;text-underline-offset:4px}
+.ft-kol .ft-cicho{color:rgba(255,255,255,.55)}
+.ft-dol{margin-top:clamp(48px,7vw,80px);padding-top:22px;
+  border-top:1px dashed rgba(255,255,255,.28);
+  display:flex;flex-wrap:wrap;gap:14px;justify-content:space-between;align-items:center;
+  font-size:13px;color:rgba(255,255,255,.5)}
+.ft-dol a{color:rgba(255,255,255,.72);transition:color .3s var(--ease)}
+.ft-dol a:hover{color:#fff;text-decoration:underline;text-underline-offset:4px}
+footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-radius:3px}
+@media(max-width:900px){
+  .ft-siatka{grid-template-columns:1fr 1fr;gap:34px 30px;align-items:start}
+  .ft-marka{grid-column:1/-1}
+  .ft-marka p{max-width:46ch}
+  .ft-uslugi{grid-row:span 2}
+}
+@media(max-width:560px){
+  .ft-siatka{grid-template-columns:1fr;gap:30px}
+  .ft-uslugi{grid-row:auto}
+  .ft-kol ul{gap:10px}
+}
 
 /* --- wjazd ---------------------------------------------------------------- */
 [data-rv]{opacity:0;transform:translateY(22px);
@@ -250,7 +275,7 @@ footer.site span:last-child{margin-left:auto}
   .fakty dd{margin:0}
   .btn{width:100%;justify-content:center}
   .inna{width:min(84vw,460px)}
-  footer.site span:last-child{margin-left:0}
+  footer.site{padding:56px 0 24px}
 }
 @media(prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
@@ -462,7 +487,7 @@ footer.site span:last-child{margin-left:auto}
       <img src="img/logo_LCH.svg" alt="Champions Health">
     </a>
     <div class="menu">
-      <a href="index.html#opieka">Usługi</a>
+      <a href="uslugi.html">Usługi</a>
       <a href="zespol.html">Zespół</a>
       <a href="blog.html" aria-current="page">Blog</a>
       <a href="kontakt.html">Kontakt</a>
@@ -626,9 +651,50 @@ footer.site span:last-child{margin-left:auto}
 
 <footer class="site">
   <div class="wrap">
-    <img src="img/logo_LCH.svg" alt="Champions Health">
-    <span>Legionistów 3, 05-825 Książenice · 22 318 20 00</span>
-    <span>© 2026 Champions Health · Legia Warszawa S.A.</span>
+    <div class="ft-siatka">
+      <div class="ft-marka">
+        <img src="img/logo_LCH_na-ciemnym.svg" alt="Champions Health">
+        <p>Klinika medycyny sportowej i rehabilitacji przy Legii Warszawa. Ten sam sztab,
+          który prowadzi pierwszą drużynę i Akademię.</p>
+      </div>
+
+      <nav class="ft-kol ft-uslugi" aria-labelledby="ft-opieka">
+        <h3 id="ft-opieka">Zakres opieki</h3>
+        <ul>
+          <li><a href="uslugi/medycyna-sportowa.html">Medycyna sportowa</a></li>
+          <li><a href="uslugi/ortopedia.html">Ortopedia</a></li>
+          <li><a href="uslugi/fizjoterapia.html">Fizjoterapia i rehabilitacja</a></li>
+          <li><a href="uslugi/dietetyka.html">Dietetyka i suplementacja</a></li>
+          <li><a href="uslugi/trening.html">Trening merytoryczny</a></li>
+          <li><a href="uslugi/edukacja.html">Edukacja i szkolenie</a></li>
+        </ul>
+      </nav>
+
+      <nav class="ft-kol" aria-labelledby="ft-klinika">
+        <h3 id="ft-klinika">Klinika</h3>
+        <ul>
+          <li><a href="index.html#sciezka">Jak to działa</a></li>
+          <li><a href="zespol.html">Zespół</a></li>
+          <li><a href="blog.html">Wiedza</a></li>
+          <li><a href="index.html#faq">Najczęstsze pytania</a></li>
+        </ul>
+      </nav>
+
+      <div class="ft-kol">
+        <h3 id="ft-kontakt">Kontakt</h3>
+        <ul aria-labelledby="ft-kontakt">
+          <li><a href="tel:+48223182000">22 318 20 00</a></li>
+          <li><a href="mailto:info@championshealth.pl">info@championshealth.pl</a></li>
+          <li class="ft-cicho">Legia Training Center · ul. Legionistów 3, 05-825 Książenice</li>
+          <li class="ft-cicho">Pon.–pt. 8:00–20:00</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="ft-dol">
+      <span>© 2026 Champions Health · Legia Warszawa S.A.</span>
+      <a href="#">Wróć na górę</a>
+    </div>
   </div>
 </footer>
 
@@ -649,5 +715,6 @@ if (matchMedia('(prefers-reduced-motion:reduce)').matches) {
   rv.forEach(e => io.observe(e));
 }
 </script>
+<script src="wspolne.js" defer></script>
 </body>
 </html>

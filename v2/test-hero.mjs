@@ -3,6 +3,7 @@
 // Uruchom przy działającym serve.mjs:
 //   node sites/champions-health/v2/test-hero.mjs
 import puppeteer from 'puppeteer';
+import { PNG } from 'pngjs';          // puls kropek mierzymy na pikselach zrzutu
 const STAWY = ['j-bark', 'j-lokiec', 'j-biodro', 'j-kolano', 'j-skok'];
 const b = await puppeteer.launch({ headless: 'new', args: ['--no-sandbox'] });
 for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
@@ -229,6 +230,41 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
                      && poPowtorce.zapalonych === 5 && poPowtorce.tekst
                      && gasniecie < 300 && migniecie <= 1;
     console.log(`${w}×${h} wjazd hero`, wOk ? 'ok' : 'BŁĄD ' + JSON.stringify({ kolej, czasy, kopia }));
+
+    // Kropki mają pulsować (życzenie klienta). Mierzymy jasność PIERŚCIENIA wokół
+    // kropki w kilkunastu klatkach — sama kropka jest statyczna, pulsuje dopiero
+    // rozchodzące się kółko, więc próbkujemy promień 7–14 px, nie środek.
+    {
+      // na wąskich ekranach kropki są schowane — wtedy nie ma czego mierzyć
+      const srodek = await p.evaluate(() => {
+        const d = document.querySelector('.j-kolano');
+        if (!d) return null;
+        const r = d.getBoundingClientRect();
+        if (!r.width || !r.height) return null;
+        return [Math.round(r.x + r.width / 2), Math.round(r.y + r.height / 2)];
+      });
+      const jasnosci = [];
+      if (srodek) for (let i = 0; i < 14; i++) {
+        const png = PNG.sync.read(await p.screenshot());
+        let suma = 0, ile = 0;
+        for (let dy = -14; dy <= 14; dy++) for (let dx = -14; dx <= 14; dx++) {
+          const d = Math.hypot(dx, dy);
+          if (d < 7 || d > 14) continue;
+          const x = srodek[0] + dx, y = srodek[1] + dy;
+          if (x < 0 || y < 0 || x >= png.width || y >= png.height) continue;
+          const j = (y * png.width + x) * 4;
+          suma += png.data[j] + png.data[j + 1] + png.data[j + 2]; ile++;
+        }
+        if (ile) jasnosci.push(suma / ile);
+        await new Promise(r => setTimeout(r, 180));
+      }
+      const rozstep = jasnosci.length ? Math.max(...jasnosci) - Math.min(...jasnosci) : 0;
+      const pulsuje = !srodek || rozstep > 10;
+      console.log(`${w}×${h} puls kropek`,
+        !srodek ? 'ok (kropki schowane na tej szerokości)'
+        : pulsuje ? 'ok' : `BŁĄD rozstęp ${rozstep.toFixed(1)}`);
+      if (!pulsuje) process.exitCode = 1;
+    }
     console.log(`${w}×${h} powtórka wjazdu`, powtorka ? 'ok'
       : 'BŁĄD ' + JSON.stringify({ zwinal, krokiZwijania, gasniecie, migniecie, powrot, odNowa, poPowtorce }));
     if (!powtorka) process.exitCode = 1;

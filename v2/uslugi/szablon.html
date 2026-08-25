@@ -337,7 +337,7 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
   border-radius:999px;white-space:nowrap;color:var(--ink);background:#fff;
   box-shadow:0 14px 30px -18px rgba(0,0,0,.55)}
 .kt-pig span{font-size:11px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;
-  color:var(--tekst2)}
+  color:rgba(11,13,12,.72)}   /* 11 px wersalikami — var(--tekst2) dawało 4,37:1 */
 .kt-pig b{font-size:15px;font-weight:500}
 a.kt-pig{transition:background-color .3s var(--ease),transform .3s var(--ease)}
 a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
@@ -361,6 +361,14 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
   background-repeat:no-repeat;background-position:right 14px center;
   transition:border-color .25s var(--ease),box-shadow .25s var(--ease)}
 .kt-pole select:hover{border-color:rgba(11,13,12,.3)}
+/* przycisk listy wyboru (skrypt wspolne.js) wygląda jak pole */
+.kt-pole .pw-btn{width:100%;height:50px;padding:0 40px 0 14px;font:inherit;font-size:15px;
+  color:var(--ink);background:#fff;border:1px solid rgba(11,13,12,.16);border-radius:12px;
+  text-align:left;cursor:pointer;
+  transition:border-color .25s var(--ease),box-shadow .25s var(--ease)}
+.kt-pole .pw-btn:hover{border-color:rgba(11,13,12,.3)}
+.kt-pole .pw-btn:focus,.kt-pole .pw.otwarta .pw-btn{outline:none;border-color:var(--ink);
+  box-shadow:0 0 0 3px rgba(11,13,12,.08)}
 .kt-pole select:invalid{color:var(--tekst2)}   /* placeholder w kolorze podpowiedzi */
 .kt-pole input:focus,.kt-pole textarea:focus,.kt-pole select:focus{outline:none;
   border-color:var(--ink);box-shadow:0 0 0 3px rgba(11,13,12,.08)}
@@ -635,5 +643,6 @@ if (matchMedia('(prefers-reduced-motion:reduce)').matches) {
   });
 })();
 </script>
+<script src="../wspolne.js" defer></script>
 </body>
 </html>

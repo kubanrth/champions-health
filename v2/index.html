@@ -364,6 +364,21 @@ a{color:inherit;text-decoration:none}
   box-shadow:0 0 0 1px rgba(6,14,10,.35),0 0 18px rgba(255,255,255,.5);
   transform:scale(.2);transition:transform .5s cubic-bezier(.2,1.4,.4,1)}
 .hero.wjazd .jt.zapalony .jt-dot{transform:none}
+/* Puls: osobny pierścień w ::after, żeby nie ruszać `transform` samej kropki —
+   on jest zajęty przez zapalanie i powiększenie po najechaniu. */
+.jt-dot::after{content:"";position:absolute;inset:0;border-radius:50%;
+  border:1px solid rgba(255,255,255,.9);opacity:0}
+.hero.wjazd .jt.zapalony .jt-dot::after{animation:jt-puls 2.8s var(--ease) infinite}
+.hero.morphed .jt .jt-dot::after{animation:none}
+.jt:nth-of-type(2) .jt-dot::after{animation-delay:.35s}
+.jt:nth-of-type(3) .jt-dot::after{animation-delay:.7s}
+.jt:nth-of-type(4) .jt-dot::after{animation-delay:1.05s}
+.jt:nth-of-type(5) .jt-dot::after{animation-delay:1.4s}
+@keyframes jt-puls{
+  0%{transform:scale(1);opacity:.6}
+  70%{transform:scale(3.4);opacity:0}
+  100%{transform:scale(3.4);opacity:0}}
+@media(prefers-reduced-motion:reduce){.jt-dot::after{animation:none!important}}
 .jt:hover .jt-dot,.jt:focus-visible .jt-dot,.jt.on .jt-dot{transform:scale(1.35)}
 .jt:focus-visible{outline:2px solid #fff;outline-offset:7px;border-radius:50%}
 
@@ -818,15 +833,16 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
 .form-tytul{margin:0 0 4px;font-size:20px;font-weight:500;letter-spacing:-.02em}
 .kontakt-pole{display:grid;gap:7px}
 .kontakt-pole label{font-size:13px;letter-spacing:.01em;color:rgba(255,255,255,.9)}
-.kontakt-form input,.kontakt-form textarea,.kontakt-form select{width:100%;padding:13px 15px;
+.kontakt-form input,.kontakt-form textarea,.kontakt-form select,.kontakt-form .pw-btn{
+  width:100%;padding:13px 15px;
   border-radius:14px;color:#0B0D0C;font:inherit;font-size:15px;resize:vertical;
-  background:linear-gradient(180deg,rgba(255,255,255,.66),rgba(255,255,255,.52));
+  background:linear-gradient(180deg,rgba(255,255,255,.58),rgba(255,255,255,.44));
   border:0;
   -webkit-backdrop-filter:blur(8px) saturate(1.6);
   backdrop-filter:blur(8px) saturate(1.6);
   box-shadow:inset 0 2px 5px -2px rgba(0,0,0,.35);
   transition:border-color .3s var(--ease),box-shadow .3s var(--ease)}
-.kontakt-form input::placeholder,.kontakt-form textarea::placeholder{color:#2F3230}
+.kontakt-form input::placeholder,.kontakt-form textarea::placeholder{color:#232624}
 /* Chrome wstawia przy autouzupełnianiu własne, lawendowe tło i samego
    `background` nie respektuje — nadpisujemy je cieniem wewnętrznym w kolorze
    zmierzonym z wyrenderowanego pola, żeby autouzupełnione pole wyglądało jak szkło */
@@ -837,15 +853,22 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
   -webkit-text-fill-color:#0B0D0C;caret-color:#0B0D0C}
 .kontakt-form select{appearance:none;-webkit-appearance:none;cursor:pointer;padding-right:40px;
   background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 5.2 7 9l4-3.8" stroke="%230B0D0C" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>'),
-    linear-gradient(180deg,rgba(255,255,255,.66),rgba(255,255,255,.52));
+    linear-gradient(180deg,rgba(255,255,255,.58),rgba(255,255,255,.44));
   background-repeat:no-repeat,no-repeat;background-position:right 14px center,0 0}
-.kontakt-form select:invalid{color:#2F3230}
+.kontakt-form select:invalid{color:#232624}
 /* natywna lista rozwijana rysuje się poza szkłem — tam wracamy do jasnego tła */
 .kontakt-form option{color:#0B0D0C;background:#fff}
-.kontakt-form input:hover,.kontakt-form textarea:hover{
+.kontakt-form .pw-btn{padding-right:40px}
+.kontakt-form input:hover,.kontakt-form textarea:hover,.kontakt-form .pw-btn:hover{
   background:linear-gradient(180deg,rgba(255,255,255,.78),rgba(255,255,255,.64))}
 .kontakt-form select:hover{background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 5.2 7 9l4-3.8" stroke="%230B0D0C" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>'),
     linear-gradient(180deg,rgba(255,255,255,.78),rgba(255,255,255,.64))}
+/* pole robi się BIAŁE tylko na czas wypełniania — po wyjściu wraca do szkła */
+.kontakt-form input:focus,.kontakt-form textarea:focus,.kontakt-form select:focus,
+.kontakt-form .pw-btn:focus,.kontakt-form .pw.otwarta .pw-btn{
+  background:#fff;box-shadow:inset 0 2px 5px -2px rgba(0,0,0,.22)}
+.kontakt-form select:focus{background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 5.2 7 9l4-3.8" stroke="%230B0D0C" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>'),
+    linear-gradient(180deg,#fff,#fff)}
 .kontakt-form input:focus-visible,.kontakt-form textarea:focus-visible,
 .kontakt-form select:focus-visible{outline:2px solid rgba(255,255,255,.85);outline-offset:2px}
 .kontakt-form input:user-invalid,.kontakt-form textarea:user-invalid{
@@ -922,7 +945,7 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
       <img class="na-jasnym" src="img/logo_LCH.svg" alt="" aria-hidden="true">
     </a>
     <div class="menu">
-      <a href="#opieka">Usługi</a>
+      <a href="uslugi.html">Usługi</a>
       <a href="zespol.html">Zespół</a>
       <a href="blog.html">Blog</a>
       <a href="kontakt.html">Kontakt</a>
@@ -2320,5 +2343,6 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
   });
 })();
 </script>
+<script src="wspolne.js" defer></script>
 </body>
 </html>
