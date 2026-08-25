@@ -162,10 +162,11 @@ p{margin:0}
 .proza p{max-width:600px;font-size:18px;line-height:1.65;color:var(--tekst)}
 .proza p+p{margin-top:1.15em}
 .dla-kogo h3{font-size:17px;letter-spacing:-.012em}
-.dla-kogo ul{margin:10px 0 0;padding:0;list-style:none}
-.dla-kogo li{padding:14px 0;font-size:14.5px;line-height:1.55;
-  color:var(--tekst);border-top:1px solid var(--kres)}
-.dla-kogo li:first-child{border-top:0}
+.dla-kogo ul{margin:18px 0 0;padding:0;list-style:none;display:grid;gap:clamp(20px,2.4vw,30px)}
+/* wiersz z ikoną zamiast kreskowanych podziałów (wzór: myhealthprac.com) */
+.dla-kogo li{display:grid;grid-template-columns:34px 1fr;gap:16px;align-items:start;
+  font-size:15.5px;line-height:1.5;color:var(--ink);letter-spacing:-.005em}
+.dla-kogo li .kafel-ikona{width:30px;height:30px;margin-top:-2px;color:var(--ink)}
 
 /* --- pas kontaktu: ciemne zdjęcie + szkło (jak kontakt na home) ----------- */
 .kont{position:relative;margin:clamp(48px,6.5vw,88px) auto 0;max-width:calc(var(--tresc) - 2px);
@@ -509,9 +510,9 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
       </div>
       <aside class="dla-kogo" data-rv>
         <h3>Dla kogo</h3>
-        <ul><li>Zawodnicy klubowi i akademii, którzy potrzebują badań i prowadzenia przez cały sezon</li>
-        <li>Amatorzy trenujący regularnie — bieganie, siłownia, sporty drużynowe</li>
-        <li>Osoby po urazie, które nie wiedzą, do którego specjalisty trafić najpierw</li></ul>
+        <ul><li><svg class="kafel-ikona" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8.4" r="2.8"/><path d="M3.6 18.4a5.4 5.4 0 0 1 10.8 0"/><path d="M15.6 6.2a2.8 2.8 0 0 1 0 5.4"/><path d="M16.8 13.8a5.4 5.4 0 0 1 3.6 4.6"/></svg><span>Zawodnicy klubowi i akademii, którzy potrzebują badań i prowadzenia przez cały sezon</span></li>
+        <li><svg class="kafel-ikona" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.6 9.4v5.2M6.8 7.4v9.2M17.2 7.4v9.2M20.4 9.4v5.2"/><path d="M6.8 12h10.4"/></svg><span>Amatorzy trenujący regularnie — bieganie, siłownia, sporty drużynowe</span></li>
+        <li><svg class="kafel-ikona" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7.4-3.7 7.4-9.1V5.7L12 3 4.6 5.7v6.2C4.6 17.3 12 21 12 21Z"/><path d="M7.6 12.1h2.2l1.4-2.5 1.9 4.3 1.2-1.8h1.9"/></svg><span>Osoby po urazie, które nie wiedzą, do którego specjalisty trafić najpierw</span></li></ul>
       </aside>
     </div>
   </div>

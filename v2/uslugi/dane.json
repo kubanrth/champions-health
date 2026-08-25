@@ -60,9 +60,18 @@
     ],
     "cytat": "Zawodnik nie wraca do gry dlatego, że minęło sześć tygodni. Wraca, bo spełnił kryteria.",
     "dlaKogo": [
-      "Zawodnicy klubowi i akademii, którzy potrzebują badań i prowadzenia przez cały sezon",
-      "Amatorzy trenujący regularnie — bieganie, siłownia, sporty drużynowe",
-      "Osoby po urazie, które nie wiedzą, do którego specjalisty trafić najpierw"
+      [
+        "Zawodnicy klubowi i akademii, którzy potrzebują badań i prowadzenia przez cały sezon",
+        "grupa"
+      ],
+      [
+        "Amatorzy trenujący regularnie — bieganie, siłownia, sporty drużynowe",
+        "hantla"
+      ],
+      [
+        "Osoby po urazie, które nie wiedzą, do którego specjalisty trafić najpierw",
+        "tarcza"
+      ]
     ],
     "przebieg": [
       [
@@ -144,9 +153,18 @@
     ],
     "cytat": "Wynik badania to nie jest koniec wizyty. To jest moment, w którym zapada decyzja.",
     "dlaKogo": [
-      "Świeży uraz — skręcenie, naderwanie, uraz kolana lub barku",
-      "Ból przeciążeniowy, który nie ustępuje mimo odpoczynku",
-      "Osoby przed decyzją o zabiegu i po zabiegu wykonanym gdzie indziej"
+      [
+        "Świeży uraz — skręcenie, naderwanie, uraz kolana lub barku",
+        "iskra"
+      ],
+      [
+        "Ból przeciążeniowy, który nie ustępuje mimo odpoczynku",
+        "powrot"
+      ],
+      [
+        "Osoby przed decyzją o zabiegu i po zabiegu wykonanym gdzie indziej",
+        "dokument"
+      ]
     ],
     "przebieg": [
       [
@@ -228,9 +246,18 @@
     ],
     "cytat": "Brak bólu to nie to samo co gotowość. Gotowość da się zmierzyć.",
     "dlaKogo": [
-      "Osoby po zabiegu ortopedycznym — rekonstrukcja więzadła, łąkotka, bark",
-      "Zawodnicy po urazie mięśniowym, u których zdarzały się nawroty",
-      "Trenujący z bólem przeciążeniowym, który wraca po każdej przerwie"
+      [
+        "Osoby po zabiegu ortopedycznym — rekonstrukcja więzadła, łąkotka, bark",
+        "kosc"
+      ],
+      [
+        "Zawodnicy po urazie mięśniowym, u których zdarzały się nawroty",
+        "tarcza"
+      ],
+      [
+        "Trenujący z bólem przeciążeniowym, który wraca po każdej przerwie",
+        "kalendarz"
+      ]
     ],
     "przebieg": [
       [
@@ -312,9 +339,18 @@
     ],
     "cytat": "Dieta, której skuteczności nie da się sprawdzić, jest tylko listą zakupów.",
     "dlaKogo": [
-      "Zawodnicy, którzy nie regenerują się między jednostkami treningowymi",
-      "Osoby z celem zmiany masy ciała — w górę albo w dół — przy zachowaniu formy",
-      "Trenujący z długą listą suplementów i bez pewności, co z niej działa"
+      [
+        "Zawodnicy, którzy nie regenerują się między jednostkami treningowymi",
+        "hantla"
+      ],
+      [
+        "Osoby z celem zmiany masy ciała — w górę albo w dół — przy zachowaniu formy",
+        "osoba"
+      ],
+      [
+        "Trenujący z długą listą suplementów i bez pewności, co z niej działa",
+        "tarcza"
+      ]
     ],
     "przebieg": [
       [
@@ -396,9 +432,18 @@
     ],
     "cytat": "Plan bez testu na wejściu i na wyjściu jest tylko zestawem ćwiczeń.",
     "dlaKogo": [
-      "Zawodnicy przygotowujący się do sezonu lub do konkretnego startu",
-      "Osoby po zakończonej rehabilitacji, wracające do pełnych obciążeń",
-      "Trenujący, u których kontuzje wracają w tym samym miejscu"
+      [
+        "Zawodnicy przygotowujący się do sezonu lub do konkretnego startu",
+        "osoba"
+      ],
+      [
+        "Osoby po zakończonej rehabilitacji, wracające do pełnych obciążeń",
+        "serce"
+      ],
+      [
+        "Trenujący, u których kontuzje wracają w tym samym miejscu",
+        "iskra"
+      ]
     ],
     "przebieg": [
       [
@@ -480,9 +525,18 @@
     ],
     "cytat": "O liczbie urazów decyduje codzienny trening, nie gabinet po urazie.",
     "dlaKogo": [
-      "Kluby i akademie piłkarskie oraz inne sporty zespołowe",
-      "Trenerzy i sztaby medyczne szukające spójnych procedur po urazie",
-      "Organizatorzy zajęć dla amatorów i rodzice młodych zawodników"
+      [
+        "Kluby i akademie piłkarskie oraz inne sporty zespołowe",
+        "stetoskop"
+      ],
+      [
+        "Trenerzy i sztaby medyczne szukające spójnych procedur po urazie",
+        "tarcza"
+      ],
+      [
+        "Organizatorzy zajęć dla amatorów i rodzice młodych zawodników",
+        "dokument"
+      ]
     ],
     "przebieg": [
       [

@@ -55,7 +55,8 @@ for (const u of uslugi) {
       `<article class="kafel" data-rv>${ikona(ik)}` +
       `<div><h3>${t}</h3><p>${o}</p></div></article>`).join('\n      '),
     opisHtml: `<p>${u.opis[0]}</p>`,   // reszta akapitów czeka w dane.json, strona bierze jeden
-    dlaKogoHtml: u.dlaKogo.map(l => `<li>${l}</li>`).join('\n        '),
+    dlaKogoHtml: u.dlaKogo.map(([t, ik]) =>
+      `<li>${ikona(ik)}<span>${t}</span></li>`).join('\n        '),
     // Pozostałe pięć usług jako karty w anatomii slidera z home.
     // BEZ podpisu „01 / Dział" i Z pastylką „Otwórz" (decyzja klienta, 35b009a).
     // Uwaga historyczna: ta zmiana żyła najpierw tylko w wygenerowanych plikach,

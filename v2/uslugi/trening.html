@@ -162,10 +162,11 @@ p{margin:0}
 .proza p{max-width:600px;font-size:18px;line-height:1.65;color:var(--tekst)}
 .proza p+p{margin-top:1.15em}
 .dla-kogo h3{font-size:17px;letter-spacing:-.012em}
-.dla-kogo ul{margin:10px 0 0;padding:0;list-style:none}
-.dla-kogo li{padding:14px 0;font-size:14.5px;line-height:1.55;
-  color:var(--tekst);border-top:1px solid var(--kres)}
-.dla-kogo li:first-child{border-top:0}
+.dla-kogo ul{margin:18px 0 0;padding:0;list-style:none;display:grid;gap:clamp(20px,2.4vw,30px)}
+/* wiersz z ikoną zamiast kreskowanych podziałów (wzór: myhealthprac.com) */
+.dla-kogo li{display:grid;grid-template-columns:34px 1fr;gap:16px;align-items:start;
+  font-size:15.5px;line-height:1.5;color:var(--ink);letter-spacing:-.005em}
+.dla-kogo li .kafel-ikona{width:30px;height:30px;margin-top:-2px;color:var(--ink)}
 
 /* --- pas kontaktu: ciemne zdjęcie + szkło (jak kontakt na home) ----------- */
 .kont{position:relative;margin:clamp(48px,6.5vw,88px) auto 0;max-width:calc(var(--tresc) - 2px);
@@ -509,9 +510,9 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
       </div>
       <aside class="dla-kogo" data-rv>
         <h3>Dla kogo</h3>
-        <ul><li>Zawodnicy przygotowujący się do sezonu lub do konkretnego startu</li>
-        <li>Osoby po zakończonej rehabilitacji, wracające do pełnych obciążeń</li>
-        <li>Trenujący, u których kontuzje wracają w tym samym miejscu</li></ul>
+        <ul><li><svg class="kafel-ikona" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="7.6" r="3.3"/><path d="M3.4 19.6a5.6 5.6 0 0 1 11.2 0"/><path d="M15.8 9.2l1.9 1.9 3.4-3.9"/></svg><span>Zawodnicy przygotowujący się do sezonu lub do konkretnego startu</span></li>
+        <li><svg class="kafel-ikona" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20.4s-6.6-3.8-6.6-8.4a3.7 3.7 0 0 1 6.6-2.3 3.7 3.7 0 0 1 6.6 2.3c0 4.6-6.6 8.4-6.6 8.4Z"/><path d="M6.8 4.4h10.4"/></svg><span>Osoby po zakończonej rehabilitacji, wracające do pełnych obciążeń</span></li>
+        <li><svg class="kafel-ikona" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13.4 2.6 5.6 13.4h5.2l-.8 8 8-11h-5.2Z"/></svg><span>Trenujący, u których kontuzje wracają w tym samym miejscu</span></li></ul>
       </aside>
     </div>
   </div>
