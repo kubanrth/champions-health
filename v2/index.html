@@ -249,7 +249,7 @@ a{color:inherit;text-decoration:none}
    (sekcja jeszcze pod ekranem) do -1 (już nad nim). */
 .etapy-herb{position:absolute;z-index:1;left:50%;top:50%;pointer-events:none;
   width:min(230vh,2300px);aspect-ratio:1;opacity:.34;
-  background:url(img/herb-glass.png) center/contain no-repeat;
+  background:url(img/herb-glass.webp) center/contain no-repeat;
   /* przejazd LICZY SIĘ PRZED obrotem — inaczej skos herbu przekręcałby też
      kierunek lotu. `--h` = +1 nad sekcją (herb w prawym górnym rogu),
      −1 pod nią (lewy dolny) */
@@ -686,7 +686,12 @@ a{color:inherit;text-decoration:none}
 }
 @media(max-width:760px){
   .deal{--dcw:88vw;--dch:min(58svh,420px)}
-  .card-in{padding:18px 15px}
+  /* Pływająca pastylka zajmuje dolne ~70 px, więc bez tego zapasu talia stała
+     optycznie za nisko: nad nagłówkiem była pusta biel, a pod kartą przycisk. */
+  .deal-stage{padding-bottom:calc(86px + env(safe-area-inset-bottom))}
+  /* morf MUSI mieć ten sam padding co karta — inaczej przy przekazaniu kadru
+     tytuł przeskakiwał o 9 px w bok, a opis o 80 px w pionie */
+  .card-in,.morph-in{padding:18px 15px}
   .card-in h3,.morph-in h3{font-size:21px}
   .card-txt{font-size:12.5px}
 }
@@ -994,7 +999,7 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
 <header class="hero" id="top">
     <svg class="jt-tor" data-tor aria-hidden="true"><path/></svg>
   <div class="morph" data-morph>
-      <img src="img/sprint-sharp.png" alt="Zawodnik Legii Warszawa w pełnym sprincie">
+      <img src="img/sprint-sharp.webp" alt="Zawodnik Legii Warszawa w pełnym sprincie">
       <div class="morph-in">
       <h3>Medycyna sportowa</h3>
       <span class="card-txt">Badania kwalifikacyjne, prowadzenie przez cały sezon i decyzje o powrocie do gry — te same standardy, którymi prowadzimy pierwszą drużynę.</span>
@@ -1074,7 +1079,7 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
     </div>
     <div class="deal-track" data-track>
       <article class="card" data-card>
-        <img src="img/sprint-sharp.png" alt="Medycyna sportowa" style="object-position:38% 40%">
+        <img src="img/sprint-sharp.webp" alt="Medycyna sportowa" style="object-position:38% 40%">
         <div class="card-in">
           <h3>Medycyna sportowa</h3>
           <span class="card-txt">Badania kwalifikacyjne, prowadzenie przez cały sezon i decyzje o powrocie do gry — te same standardy, którymi prowadzimy pierwszą drużynę.</span>
@@ -1082,7 +1087,7 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
         </div>
       </article>
       <article class="card" data-card>
-        <img src="img/c1-ortopedia.png" alt="Ortopedia" loading="lazy">
+        <img src="img/c1-ortopedia.webp" alt="Ortopedia" loading="lazy">
         <div class="card-in">
           <h3>Ortopedia</h3>
           <span class="card-txt">Konsultacje ortopedyczne z diagnostyką obrazową na miejscu. USG i RTG bez zewnętrznej rejestracji, decyzja o ścieżce leczenia od razu.</span>
@@ -1090,7 +1095,7 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
         </div>
       </article>
       <article class="card" data-card>
-        <img src="img/c3-fizjoterapia.png" alt="Fizjoterapia i rehabilitacja" loading="lazy">
+        <img src="img/c3-fizjoterapia.webp" alt="Fizjoterapia i rehabilitacja" loading="lazy">
         <div class="card-in">
           <h3>Fizjoterapia i rehabilitacja</h3>
           <span class="card-txt">Protokoły powrotu po urazie, którymi na co dzień prowadzimy zawodników. Praca 1:1 i kryteria progresu zamiast kalendarza.</span>
@@ -1098,7 +1103,7 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
         </div>
       </article>
             <article class="card" data-card>
-        <img src="img/c4-dietetyka.png" alt="Dietetyka i suplementacja" loading="lazy">
+        <img src="img/c4-dietetyka.webp" alt="Dietetyka i suplementacja" loading="lazy">
         <div class="card-in">
           <h3>Dietetyka i suplementacja</h3>
           <span class="card-txt">Analiza składu ciała i plan żywienia pod cel — masa, redukcja, wydolność. Suplementacja tylko tam, gdzie ma sens.</span>
@@ -1106,7 +1111,7 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
         </div>
       </article>
       <article class="card" data-card>
-        <img src="img/c5-trening.png" alt="Trening merytoryczny" loading="lazy">
+        <img src="img/c5-trening.webp" alt="Trening merytoryczny" loading="lazy">
         <div class="card-in">
           <h3>Trening merytoryczny</h3>
           <span class="card-txt">Motoryka, siła i profilaktyka urazów pod okiem trenerów przygotowania. Testy wydolnościowe i plan na cały sezon.</span>
@@ -1114,7 +1119,7 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
         </div>
       </article>
       <article class="card" data-card>
-        <img src="img/c6-edukacja.png" alt="Edukacja i szkolenie" loading="lazy">
+        <img src="img/c6-edukacja.webp" alt="Edukacja i szkolenie" loading="lazy">
         <div class="card-in">
           <h3>Edukacja i szkolenie</h3>
           <span class="card-txt">Warsztaty i szkolenia dla klubów oraz trenerów. Wiedza sztabu pierwszej drużyny dostępna dla akademii i amatorów.</span>
@@ -1329,7 +1334,7 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
 
 <div class="etapy-ramka">
 <section class="etapy" id="sciezka">
-  <img class="etapy-tlo" src="img/etapy.png" alt="" aria-hidden="true">
+  <img class="etapy-tlo" src="img/etapy.webp" alt="" aria-hidden="true">
   <div class="etapy-herb" aria-hidden="true"></div>
   <div class="etapy-in">
     <h2 class="etapy-naglowek reveal" data-reveal>Opieka, która prowadzi Cię od pierwszej wizyty do pełnej formy</h2>
@@ -1616,7 +1621,7 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
   <div class="blog-siatka">
       <article class="post">
         <a class="post-foto" href="wpis.html" aria-label="Powrót po rekonstrukcji ACL">
-          <img src="img/c1-ortopedia.png" alt="" loading="lazy">
+          <img src="img/c1-ortopedia.webp" alt="" loading="lazy">
         </a>
         <span class="post-meta">Rehabilitacja · 8 min czytania</span>
         <h3><a href="wpis.html">Powrót po rekonstrukcji ACL</a></h3>
@@ -1624,7 +1629,7 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
       </article>
       <article class="post">
         <a class="post-foto" href="wpis.html" aria-label="Ile naprawdę znaczy sen w profilaktyce urazów">
-          <img src="img/c2-medycyna.png" alt="" loading="lazy">
+          <img src="img/c2-medycyna.webp" alt="" loading="lazy">
         </a>
         <span class="post-meta">Profilaktyka · 6 min czytania</span>
         <h3><a href="wpis.html">Ile naprawdę znaczy sen w profilaktyce urazów</a></h3>
@@ -1632,7 +1637,7 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
       </article>
       <article class="post">
         <a class="post-foto" href="wpis.html" aria-label="Testy przed powrotem do gry">
-          <img src="img/c3-fizjoterapia.png" alt="" loading="lazy">
+          <img src="img/c3-fizjoterapia.webp" alt="" loading="lazy">
         </a>
         <span class="post-meta">Diagnostyka · 5 min czytania</span>
         <h3><a href="wpis.html">Testy przed powrotem do gry</a></h3>
@@ -1672,7 +1677,7 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
 </section>
 
 <section class="kontakt" id="kontakt">
-  <img class="kontakt-tlo" src="img/kontakt-tlo.jpg" alt="" aria-hidden="true">
+  <img class="kontakt-tlo" src="img/kontakt-tlo.webp" alt="" aria-hidden="true">
   <div class="kontakt-in">
     <div class="kontakt-lewo">
       <h2 class="reveal" data-reveal>Zacznij od rozmowy z koordynatorem</h2>
@@ -2132,7 +2137,7 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
   const hero = document.querySelector('.hero');
   if (!hero) return;
   const joints = [...hero.querySelectorAll('[data-jt]')];
-  const IW = 1820, IH = 1024;                 // wymiary sprint-sharp.png
+  const IW = 1820, IH = 1024;                 // wymiary sprint-sharp.webp
 
   const place = () => {
     const H = hero.getBoundingClientRect();
