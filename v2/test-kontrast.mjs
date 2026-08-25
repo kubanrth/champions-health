@@ -21,6 +21,11 @@ const STRONY = [
       wpis: '#kt-imie', wybor: '.kt-pole .pw-btn', zgoda: '.kt-zgoda span',
       pigDt: '.kt-pig span', pigDd: '.kt-pig b' },
     imie: '#kt-imie', tel: '#kt-tel', select: '.kt-pole select' },
+  // ta sama sekcja trafiła też na podstrony usług (te same klasy `kt-*`)
+  { url: 'uslugi/ortopedia.html', sek: '#kontakt', pola: { tytul: '.kt-forma h3', etykieta: 'label[for="kt-imie"]',
+      wpis: '#kt-imie', wybor: '.kt-pole .pw-btn', zgoda: '.kt-zgoda span',
+      pigDt: '.kt-pig span', pigDd: '.kt-pig b' },
+    imie: '#kt-imie', tel: '#kt-tel', select: '.kt-pole select' },
 ];
 // Pudełko pola zawiera własną, jasną krawędź szkła, a przy promieniu 14 px łuk
 // narożnika wchodzi jeszcze w wcięcie 8 px — wtedy to krawędź, a nie tło pod
