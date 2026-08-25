@@ -200,7 +200,7 @@ body.mnu-otwarte .fab{opacity:0;pointer-events:none}
       szuflada.className = 'mnu';
       szuflada.hidden = false;
       szuflada.innerHTML = '<div class="mnu-gora">'
-        + '<img src="' + (logo ? logo.getAttribute('src') : '') + '" alt="Champions Health">'
+        + '<img src="' + (logo ? logo.getAttribute('src') : '') + '" alt="Legia Medical">'
         + '<button type="button" class="mnu-btn" data-mnu-x>Zamknij<i aria-hidden="true"></i></button>'
         + '</div><nav class="mnu-lista"></nav>'
         + '<a class="btn-uw" href="#">Umów wizytę<i>' + IKONA.strzalka + '</i></a>'
