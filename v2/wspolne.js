@@ -62,7 +62,14 @@
 .pw-lista li.wskazana:not([aria-selected="true"]){background:#EDEDEA}
 .pw-lista li[data-grupa]{padding:12px 14px 4px;font-size:11px;font-weight:500;letter-spacing:.07em;
   text-transform:uppercase;color:rgba(11,13,12,.5);cursor:default}
+/* --- odsłanianie tekstu znak po znaku (te same wartosci co na glownej) ---- */
+.reveal .word{display:inline-block;white-space:nowrap;overflow:hidden;vertical-align:bottom;
+  padding-bottom:.16em;margin-bottom:-.16em}
+.reveal .char{display:inline-block;transform:translateY(115%);
+  transition:transform .33s cubic-bezier(.25,.46,.45,.94) calc(var(--i) * 16ms)}
+.reveal.pokaz .char{transform:none}
 @media(prefers-reduced-motion:reduce){
+  .reveal .char{transform:none;transition:none}
   .uw[open]{animation:none}
   .pw-lista,.pw-btn::after{transition:none}
 }`;
@@ -109,7 +116,46 @@
         okno.showModal();
       });
 
-  // --- 2) listy wyboru ------------------------------------------------------
+  // --- 2) odsłanianie tekstu znak po znaku ----------------------------------
+  // Zmierzone na myhealthprac.com: znak jedzie translateY(100%) → 0, czas 0,33 s,
+  // rozjazd 16 ms. Strona główna ma własną, starszą kopię tego kodu w <script>,
+  // dlatego pomijamy elementy już podzielone — inaczej podzieliłoby je dwa razy.
+  {
+    const bezRuchu = matchMedia('(prefers-reduced-motion:reduce)').matches;
+    for (const el of document.querySelectorAll('[data-reveal]')) {
+      if (el.querySelector('.word')) continue;
+      const tekst = el.textContent.trim();
+      el.setAttribute('aria-label', tekst);       // czytnik czyta zdanie, nie litery
+      if (bezRuchu) continue;
+      const frag = document.createDocumentFragment();
+      let i = 0;
+      for (const kawalek of tekst.split(/(\s+)/)) {
+        if (!kawalek) continue;
+        if (/^\s+$/.test(kawalek)) { frag.appendChild(document.createTextNode(' ')); continue; }
+        const slowo = document.createElement('span');
+        slowo.className = 'word';
+        for (const znak of [...kawalek]) {
+          const c = document.createElement('span');
+          c.className = 'char';
+          c.style.setProperty('--i', i++);
+          c.textContent = znak;
+          slowo.appendChild(c);
+        }
+        frag.appendChild(slowo);
+      }
+      el.textContent = '';
+      el.appendChild(frag);
+      new IntersectionObserver((e, o) => {
+        if (!e[0].isIntersecting) return;
+        el.classList.add('pokaz');
+        o.disconnect();
+      }, { threshold: .4 }).observe(el);
+      console.assert(el.getAttribute('aria-label').replace(/\s+/g, '')
+                  === el.textContent.replace(/\s+/g, ''), 'odsłanianie zmieniło treść');
+    }
+  }
+
+  // --- 3) listy wyboru ------------------------------------------------------
   for (const [nr, sel] of [...document.querySelectorAll('select')].entries()) {
     const opcje = [...sel.querySelectorAll('option')];
     const box = document.createElement('div');

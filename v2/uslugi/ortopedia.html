@@ -103,19 +103,21 @@ p{margin:0}
    więc bez niego zdjęcie (późniejsze w kolejności) maluje się NA przyciemnieniu
    i cały scrim nic nie robi. */
 .pg-hero::before{content:"";position:absolute;inset:0;z-index:1;background:
-  linear-gradient(100deg,rgba(5,9,7,.9) 0%,rgba(5,9,7,.8) 46%,
-                  rgba(5,9,7,.5) 74%,rgba(5,9,7,.18) 100%),
-  linear-gradient(to top,rgba(5,9,7,.6),transparent 30%)}
+  radial-gradient(125% 95% at 0% 0%,rgba(5,9,7,.95) 0%,rgba(5,9,7,.78) 40%,rgba(5,9,7,0) 76%),
+  radial-gradient(115% 90% at 100% 100%,rgba(5,9,7,.95) 0%,rgba(5,9,7,.8) 38%,rgba(5,9,7,0) 78%),
+  linear-gradient(to top,rgba(5,9,7,.6),rgba(5,9,7,.24) 45%,rgba(5,9,7,.42) 100%)}
 /* .wrap ma margin:0 auto — w kolumnowym flexie poziome auto-marginesy
    WYŁĄCZAJĄ stretch i pudełko kurczy się do treści. Stąd jawne width:100%. */
-/* Blok tekstu siedzi przy DOLE kadru, nie na środku: zdjęcie dostaje górę,
-   tekst dolne dwie piąte i przez to nie pływa w pustce. */
-.pg-tresc{position:relative;z-index:2;width:100%;margin-block:auto 0;
-  padding-block:clamp(56px,8vw,112px)}
+/* Dwa narożniki (wzór: myhealthprac.com): tytuł w górnym lewym, opis z pigułkami
+   w dolnym prawym. Kadr zostaje pusty po przekątnej, więc zdjęcie ma czym oddychać. */
+.pg-tresc{position:relative;z-index:2;width:100%;flex:1;display:flex;
+  flex-direction:column;justify-content:space-between;gap:clamp(40px,7vw,90px);
+  padding-block:clamp(48px,7vw,96px)}
+.pg-dol{align-self:flex-end;max-width:min(46ch,100%);text-align:left}
 .pg-hero h1{margin:0;max-width:15ch;font-size:clamp(3rem,6.6vw,6rem);
   line-height:1;letter-spacing:-.03em}
 /* lead tym samym krojem i wagą co tytuł, tylko mniejszy — nie „drobny druk" */
-.pg-lead{margin:clamp(18px,2.2vw,30px) 0 0;max-width:34ch;
+.pg-lead{margin:0;max-width:34ch;
   font-size:clamp(20px,2vw,31px);line-height:1.28;letter-spacing:-.018em;font-weight:500;
   color:rgba(255,255,255,.92);text-wrap:pretty}
 .pg-akcje{display:flex;flex-wrap:wrap;gap:12px;margin-top:clamp(28px,3.4vw,44px)}
@@ -303,6 +305,9 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
 }
 @media(max-width:720px){
   .nav-menu{display:none}
+  /* na telefonie dwa narożniki nie mają sensu — jedna kolumna, wszystko do lewej */
+  .pg-dol{align-self:stretch;max-width:none}
+  .pg-tresc{gap:clamp(28px,7vw,48px)}
   /* na wąskim ekranie tekst zajmuje całą szerokość, więc skośny scrim nic nie
      daje — wtedy równomierna kurtyna pionowa */
   .pg-hero::before{background:
@@ -466,7 +471,8 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
 <header class="pg-hero">
   <img class="pg-tlo" src="../img/c1-ortopedia.png" alt="" style="object-position:50% 45%">
   <div class="wrap pg-tresc">
-    <h1 data-rv>Ortopedia</h1>
+    <h1 class="reveal" data-reveal>Ortopedia</h1>
+    <div class="pg-dol">
     <p class="pg-lead" data-rv>Konsultacje ortopedyczne z diagnostyką obrazową na miejscu. USG i RTG bez zewnętrznej rejestracji, decyzja o ścieżce leczenia od razu.</p>
     <div class="pg-akcje" data-rv>
       <a class="btn btn-pelny" href="#kontakt">Umów wizytę
@@ -474,6 +480,7 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
           <path d="M3 10 10 3M4.6 3H10v5.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
         </svg></a>
       <a class="btn btn-ghost btn-szeroki" href="tel:+48223182000">Zadzwoń: 22 318 20 00</a>
+    </div>
     </div>
   </div>
 </header>
