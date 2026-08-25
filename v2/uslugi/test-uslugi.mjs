@@ -493,6 +493,28 @@ console.log('\n— uslugi.html');
   await p.close();
 }
 
+// „Umów wizytę" otwiera pop-up, a „Napisz do nas" PRZENOSI na podstronę kontaktu —
+// nie przewija do formularza na bieżącej stronie (decyzja klienta).
+console.log('\n— pop-up „Umów wizytę"');
+for (const strona of ['../index.html', 'ortopedia.html', '../blog.html']) {
+  const p = await przegladarka.newPage();
+  await p.setViewport({ width: 1440, height: 900, deviceScaleFactor: 1 });
+  await p.goto(BAZA + strona, { waitUntil: 'networkidle2' });
+  await new Promise(r => setTimeout(r, 700));
+  const otwarty = await p.evaluate(() => {
+    const cta = [...document.querySelectorAll('a')].find(a => a.textContent.trim() === 'Umów wizytę');
+    if (!cta) return null;
+    cta.click();
+    return document.querySelector('dialog.uw')?.open === true;
+  });
+  if (!otwarty) zle(`pop-up nie otworzył się (${strona})`);
+  const cel = await p.evaluate(() => document.querySelector('[data-uw-pisz]')?.getAttribute('href'));
+  if (cel !== 'kontakt.html#formularz' && cel !== '../kontakt.html#formularz')
+    zle(`„Napisz do nas" prowadzi gdzie indziej (${strona})`, cel);
+  else console.log(`  ${strona.padEnd(18)} pop-up ok, „Napisz" → ${cel}`);
+  await p.close();
+}
+
 // --- tekst NA ZDJĘCIU: kontrast liczony z najgorszego piksela pod literą ----
 // Średnia tła (metoda wyżej) kłamie na fotografii: pokazywała 6,46:1 dla leadu
 // heroju, podczas gdy pod pojedynczą literą tło miało jasność 0,63 i realny

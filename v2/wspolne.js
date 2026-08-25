@@ -82,11 +82,9 @@
   };
 
   // --- 1) pop-up ------------------------------------------------------------
-  // cel formularza: na stronie z sekcją kontaktu zostajemy na miejscu,
-  // na pozostałych idziemy na podstronę kontaktu
-  const doFormularza = document.querySelector('#kontakt, #formularz')
-    ? (document.querySelector('#formularz') ? '#formularz' : '#kontakt')
-    : (location.pathname.includes('/uslugi/') ? '../kontakt.html#formularz' : 'kontakt.html#formularz');
+  // „Napisz do nas" ZAWSZE prowadzi na podstronę kontaktu, nawet jeśli bieżąca
+  // strona ma własny formularz niżej (decyzja klienta: przenieść, nie przewijać).
+  const doFormularza = (location.pathname.includes('/uslugi/') ? '../' : '') + 'kontakt.html#formularz';
 
   const okno = document.createElement('dialog');
   okno.className = 'uw';
