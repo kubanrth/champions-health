@@ -2291,19 +2291,27 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
     place();
     tor.style.strokeDasharray = '0 9999';
   };
+  // Na telefonie kropki i kreska są schowane (`.jt,.jt-tor{display:none}`), więc
+  // czekanie na ich animację tylko opóźniało tekst — a to on jest największym
+  // elementem pierwszego kadru: LCP siedziało na 2,7–3,2 s. Bez kropek tekst
+  // wchodzi od razu (własną animacją maski), a nie po przejeździe kreski.
+  const bezKropek = () => matchMedia('(max-width:760px)').matches;
+  const odRazu = () => {
+    hero.classList.add('wjazd', 'tekst', 'bezkreski');
+    joints.forEach(j => j.classList.add('zapalony'));
+    hero.querySelector('.j-lokiec').classList.add('wedruje');
+    hero.querySelector('.j-bark').classList.add('zapalony');
+    place();
+  };
   hero.__odtworz = () => {
     if (matchMedia('(prefers-reduced-motion:reduce)').matches) return;
+    if (bezKropek()) { hero.__zeruj(); requestAnimationFrame(odRazu); return; }
     hero.__zeruj();
     requestAnimationFrame(() => requestAnimationFrame(wjazd));
   };
 
-  if (matchMedia('(prefers-reduced-motion:reduce)').matches) {
-    hero.classList.add('wjazd', 'tekst', 'bezkreski');
-    joints.forEach(j => j.classList.add('zapalony'));
-    const bk = hero.querySelector('.j-lokiec');
-    bk.classList.add('wedruje');   // bez animacji kropka od razu stoi na łokciu
-    hero.querySelector('.j-bark').classList.add('zapalony');
-    place();   // ustawia i kropki, i ciemne pole pod nagłówkiem
+  if (matchMedia('(prefers-reduced-motion:reduce)').matches || bezKropek()) {
+    odRazu();   // ustawia i kropki, i ciemne pole pod nagłówkiem
   } else {
     // czekamy na krój i obraz — inaczej pozycje stawów jeszcze się przesuną
     Promise.all([document.fonts?.ready,
