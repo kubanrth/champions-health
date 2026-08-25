@@ -93,25 +93,32 @@ p{margin:0}
 
 /* --- hero: zdjęcie na pełny ekran, tekst do lewej na scrimie (układ
    podstron produktowych Revoluta, materiał jak hero na home) -------------- */
+/* Kadr przycięty od góry: przy 100svh na wysokim ekranie zostawał pas pustego
+   zdjęcia nad tekstem. Teraz blok tekstu zajmuje ~3/4 wysokości. */
 .pg-hero{position:relative;display:flex;flex-direction:column;
-  min-height:calc(100svh - 64px);color:#fff;overflow:hidden}
+  min-height:min(calc(100svh - 64px),820px);color:#fff;overflow:hidden}
 .pg-tlo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 /* Scrim: cięższy po lewej pod tekstem, dolny osadza zdjęcie na sekcji niżej.
    `z-index:1` jest OBOWIĄZKOWE: `::before` jest generowane jako pierwsze dziecko,
    więc bez niego zdjęcie (późniejsze w kolejności) maluje się NA przyciemnieniu
    i cały scrim nic nie robi. */
 .pg-hero::before{content:"";position:absolute;inset:0;z-index:1;background:
-  linear-gradient(100deg,rgba(5,9,7,.88) 0%,rgba(5,9,7,.76) 40%,
-                  rgba(5,9,7,.42) 70%,rgba(5,9,7,.16) 100%),
+  linear-gradient(100deg,rgba(5,9,7,.9) 0%,rgba(5,9,7,.8) 46%,
+                  rgba(5,9,7,.5) 74%,rgba(5,9,7,.18) 100%),
   linear-gradient(to top,rgba(5,9,7,.6),transparent 30%)}
 /* .wrap ma margin:0 auto — w kolumnowym flexie poziome auto-marginesy
    WYŁĄCZAJĄ stretch i pudełko kurczy się do treści. Stąd jawne width:100%. */
-.pg-tresc{position:relative;z-index:2;width:100%;margin-block:auto;
-  padding-block:clamp(40px,6vw,72px)}
-.pg-hero h1{margin:0;max-width:14ch;font-size:clamp(2.6rem,5.4vw,4.6rem);line-height:1.02}
-.pg-lead{margin:18px 0 0;max-width:46ch;font-size:18px;line-height:24px;
-  color:rgba(255,255,255,.86)}
-.pg-akcje{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
+/* Blok tekstu siedzi przy DOLE kadru, nie na środku: zdjęcie dostaje górę,
+   tekst dolne dwie piąte i przez to nie pływa w pustce. */
+.pg-tresc{position:relative;z-index:2;width:100%;margin-block:auto 0;
+  padding-block:clamp(56px,8vw,112px)}
+.pg-hero h1{margin:0;max-width:15ch;font-size:clamp(3rem,6.6vw,6rem);
+  line-height:1;letter-spacing:-.03em}
+/* lead tym samym krojem i wagą co tytuł, tylko mniejszy — nie „drobny druk" */
+.pg-lead{margin:clamp(18px,2.2vw,30px) 0 0;max-width:34ch;
+  font-size:clamp(20px,2vw,31px);line-height:1.28;letter-spacing:-.018em;font-weight:500;
+  color:rgba(255,255,255,.92);text-wrap:pretty}
+.pg-akcje{display:flex;flex-wrap:wrap;gap:12px;margin-top:clamp(28px,3.4vw,44px)}
 /* pigułki na zdjęciu: biała pełna + szklany ghost — jak w pasie kontaktu */
 .pg-hero .btn-pelny{background:#fff;color:#000}
 .pg-hero .btn-pelny:hover{background:#E9E9E6}
