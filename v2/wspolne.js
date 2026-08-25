@@ -114,6 +114,9 @@
 .fab:active{transform:translateX(-50%) scale(.97)}
 body.mnu-otwarte{overflow:hidden}
 body.mnu-otwarte .fab{opacity:0;pointer-events:none}
+/* pasek chowa sie przy scrollu w dol, wraca przy scrollu w gore - inaczej
+   przy stalym pasku naglowki sekcji zostaja przyciete tuz pod nim */
+.nav.schowana{transform:translateY(-100%)}
 @media(max-width:760px){
   .mnu-btn{display:inline-flex}
   .nav .menu,.nav .cta{display:none}
@@ -262,6 +265,28 @@ body.mnu-otwarte .fab{opacity:0;pointer-events:none}
         zasloniete();
       }
       let raf = null;
+      // Pasek na podstronach stoi na stale i przycinal naglowki sekcji tuz pod
+      // soba. Strona glowna ma wlasna logike (data-nav-auto) - tam nie ruszamy.
+      // UWAGA: `pasek` jest już zajęte wyżej (`.nav-in`) — ta sama nazwa w tym
+      // bloku wywalała cały skrypt („Cannot access 'pasek' before initialization"),
+      // razem z szufladą i pastylką.
+      const pasekNav = document.querySelector('.nav');
+      if (pasekNav && !pasekNav.hasAttribute('data-nav-auto')) {
+        pasekNav.style.transition = 'transform .35s cubic-bezier(.22,.8,.25,1)';
+        let ostatni = scrollY;
+        addEventListener('scroll', () => {
+          if (!matchMedia('(max-width:760px)').matches) { pasekNav.classList.remove('schowana'); return; }
+          if (document.body.classList.contains('mnu-otwarte')) return;
+          const y = scrollY;
+          // `ostatni` przesuwamy TYLKO przy ruchu ponad próg — inaczej drobne
+          // drgnięcie w górę po serii małych kroków w dół odwracało kierunek
+          if (Math.abs(y - ostatni) > 6) {
+            pasekNav.classList.toggle('schowana', y > ostatni && y > 140);
+            ostatni = y;
+          }
+        }, { passive: true });
+      }
+
       const stanFab = () => {
         fab.classList.toggle('zwezona', scrollY > 80);
         raf ||= requestAnimationFrame(() => { raf = null; kolorFab(); });

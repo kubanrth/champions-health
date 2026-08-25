@@ -487,7 +487,11 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
    w odcieniach szarości, kolor wraca na hover — neutralna, nie „googlowa".
    Wskazówki dojazdu bez zmyślonych linii i minut: konkrety, które są pewne,
    plus akcje prowadzące do nawigacji. ------------------------------------- */
-.dojazd{padding:clamp(48px,6.5vw,88px) 0}
+.dojazd{padding:clamp(48px,6.5vw,88px) 0;
+  /* Po zmianie kolejności (mapa przed formularzem) to jest PIERWSZA sekcja
+     strony, a pasek nawigacji jest `fixed` — bez zapasu nagłówek chował się
+     pod nim (na 390 px o 13 px). */
+  padding-top:calc(clamp(48px,6.5vw,88px) + 64px)}
 .dojazd h2{max-width:14ch;font-size:clamp(1.9rem,3.4vw,2.9rem);text-wrap:balance}
 .dojazd .lead2{margin:14px 0 0;max-width:52ch;font-size:17px;line-height:1.6;color:var(--tekst)}
 .dojazd-grid{display:grid;grid-template-columns:1.25fr .75fr;gap:clamp(20px,3vw,44px);
