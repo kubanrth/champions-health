@@ -122,10 +122,16 @@ body.mnu-otwarte .fab{opacity:0;pointer-events:none}
    (W tym bloku nie ma odwrotnych apostrofow - to wnetrze szablonu JS.) */
 .nav-in{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:20px;
   width:100%;max-width:none}
-.nav .menu{grid-column:2;justify-self:center;margin:0}
-.nav-prawo{grid-column:3;justify-self:end;display:flex;align-items:center;gap:16px}
-.nav .cta{margin-left:0}
-.nav .brand{margin-right:0}
+/* wszystkie trzy w PIERWSZYM wierszu: bez grid-row logo trafialo pod menu,
+   bo w kolejnosci DOM idzie po elemencie z kolumny 2 (algorytm rzadki) */
+.nav .menu{grid-column:2;grid-row:1;justify-self:center;margin:0}
+/* display:contents rozpuszcza opakowanie, wiec przycisk i logo staja sie
+   bezposrednimi polami siatki i moga usiasc po przeciwnych stronach paska
+   bez ruszania markupu na siedmiu stronach.
+   (Zadnych odwrotnych apostrofow w tym bloku - to wnetrze szablonu JS.) */
+.nav-prawo{display:contents}
+.nav .brand{grid-column:1;grid-row:1;justify-self:start;margin-right:0}
+.nav .cta{grid-column:3;grid-row:1;justify-self:end;margin-left:0}
 .nav .brand img{height:44px}
 /* Miedzy 760 a 1080 px menu i prawa grupa nie miesza sie w rownych polowkach
    (siatka 1fr auto 1fr wymusza symetrie) - logo wystawalo o 7-17 px poza kadr.
@@ -135,13 +141,12 @@ body.mnu-otwarte .fab{opacity:0;pointer-events:none}
   .nav-in{gap:14px}
   .nav .menu{gap:18px}
   .nav .cta{padding:0 14px}
-  .nav-prawo{gap:12px}
   .nav .brand img{height:32px}
 }
 @media(max-width:760px){
-  /* na telefonie wracamy do: logo z lewej, „Menu" z prawej */
+  /* na telefonie: logo z lewej, „Menu" z prawej */
   .nav-in{display:flex}
-  .nav-prawo{margin-right:auto}
+  .nav .brand{margin-right:auto}
 }
 
 /* pasek chowa sie przy scrollu w dol, wraca przy scrollu w gore - inaczej

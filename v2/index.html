@@ -789,6 +789,9 @@ h2{margin:0;font-size:clamp(2.1rem,4.6vw,3.6rem);line-height:1.05;letter-spacing
    prawny. Układ i przerywana kreska zdjęte z myhealthprac.com; ich skala (label
    12,24 px, link 11,52 px przy body 14) przeliczona na naszą (body 16). */
 footer.site{border-top:1px solid rgba(255,255,255,.10);padding:76px 0 26px}
+/* kontener stopki taki sam jak na podstronach (1180 px) — na głównej `.wrap`
+   ma 1100 px i stopka wychodziła węższa niż w reszcie serwisu */
+footer.site .wrap{width:1180px;max-width:100%;padding-inline:clamp(24px,4vw,58px)}
 .ft-siatka{display:grid;gap:clamp(28px,4vw,64px);
   grid-template-columns:minmax(230px,1.5fr) 1fr 1fr 1.15fr}
 .ft-marka img{height:30px}
@@ -1779,7 +1782,7 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
         <ul aria-labelledby="ft-kontakt">
           <li><a href="tel:+48223182000">22 318 20 00</a></li>
           <li><a href="mailto:info@championshealth.pl">info@championshealth.pl</a></li>
-          <li class="ft-cicho">Legionistów 3, 05-825 Książenice</li>
+          <li class="ft-cicho">Legia Training Center · ul. Legionistów 3, 05-825 Książenice</li>
           <li class="ft-cicho">Pon.–pt. 8:00–20:00</li>
         </ul>
       </div>
