@@ -16,7 +16,7 @@ są w `wspolne.js`.
 - `kontakt.html` - mapa, dojazd, formularz
 - `img/` - zdjęcia (webp) i logo (svg)
 
-Fonty ciągną się z Google Fonts i Fontshare, nie ma ich w repo.
+Fonty (Inter, Archivo) ciągną się z Google Fonts, nie ma ich w repo.
 
 ## Uruchomienie
 
