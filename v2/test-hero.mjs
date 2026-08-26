@@ -641,30 +641,12 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
       komplet: posty.every(a => a.querySelector('img') && a.querySelector('h3 a')
                              && a.querySelector('p').textContent.trim().length > 30) };
   });
-  // Wjazd modułu: bez `.pokaz` moduł jest schowany, po odsłonięciu — pełny.
-  // Stan „przed" sprawdzamy zdejmując klasę, a nie pozycją scrolla: wcześniejsze
-  // bloki testu przewijają całą stronę, więc sekcja bywa już odsłonięta.
-  const przedWjazdem = await p.evaluate(() => {
-    // przejścia muszą być na chwilę wyłączone: po zdjęciu klasy element zaczyna
-    // WRACAĆ do zera i przez pierwsze klatki dalej raportuje ~1
-    document.head.insertAdjacentHTML('beforeend',
-      '<style id="bezTr">.kontakt,.kontakt *{transition:none!important}</style>');
-    const sek = document.querySelector('.kontakt'), bylo = sek.classList.contains('pokaz');
-    sek.classList.remove('pokaz');
-    const o = getComputedStyle(document.querySelector('.kontakt-form')).opacity;
-    if (bylo) sek.classList.add('pokaz');
-    document.getElementById('bezTr').remove();
-    return o;
-  });
+  // Sekcja kontaktu = kanon z kontakt.html (2026-08-26): bez wjazdu modułu,
+  // wąska lewa kolumna z pigułkami w słupku, szkło 580 px po prawej.
   await p.evaluate(() => document.querySelector('#kontakt').scrollIntoView({ block: 'start' }));
-  await new Promise(r => setTimeout(r, 1600));
-  const poWjezdzie = await p.evaluate(() => {
-    const o = s => getComputedStyle(document.querySelector(s)).opacity;
-    return { karta: o('.kontakt-form'), pole: o('.kontakt-pole'),
-             pastylka: o('.kontakt-dane div'), lead: o('.kontakt-lead') };
-  });
+  await new Promise(r => setTimeout(r, 800));
   // pusty formularz nie może przejść — jest też wymagana zgoda RODO
-  await p.click('.kontakt-form button[type=submit]');
+  await p.click('.kt-forma button[type=submit]');
   await new Promise(r => setTimeout(r, 400));
   const pusty = await p.evaluate(() => document.querySelector('[data-nota]').textContent);
   await p.type('#kt-imie', 'Jan Kowalski');
@@ -674,43 +656,42 @@ for (const [w, h] of [[1440, 900], [1280, 720], [820, 1180]]) {
     await p.select(id, await p.evaluate(sel =>
       [...document.querySelectorAll(sel + ' option')].filter(o => o.value)[0].value, id));
   await p.click('#kt-rodo');
-  await p.click('.kontakt-form button[type=submit]');
+  await p.click('.kt-forma button[type=submit]');
   await new Promise(r => setTimeout(r, 400));
-  const kontakt = await p.evaluate(({ prz, przed, po }) => {
+  const kontakt = await p.evaluate(({ prz }) => {
     const nota = document.querySelector('[data-nota]');
-    const lewo = document.querySelector('.kontakt-lewo').getBoundingClientRect();
-    const form = document.querySelector('.kontakt-form').getBoundingClientRect();
-    const i = document.querySelector('.kontakt-form input'), cs = getComputedStyle(i);
-    const dt = document.querySelector('.kontakt-dane dt');
+    const lewo = document.querySelector('.kt-grid > div:first-child').getBoundingClientRect();
+    const form = document.querySelector('.kt-forma').getBoundingClientRect();
+    const i = document.querySelector('.kt-forma input'), cs = getComputedStyle(i);
+    const pig = document.querySelectorAll('.kt-pigulki .kt-pig');
+    const h = document.querySelector('.kt-grid .kt-h'), hcs = getComputedStyle(h);
     return {
       // dane po lewej, formularz po prawej (na wąskim ekranie jeden pod drugim)
-      uklad: innerWidth < 901 || form.left > lewo.left,
-      // siatka danych 2 × 2 z wersalikowymi etykietami — układ z 0b6c3d2
-      dane: document.querySelectorAll('.kontakt-dane dt').length === 4
-         && getComputedStyle(dt).textTransform === 'uppercase',
+      uklad: innerWidth < 961 || form.left > lewo.left,
+      // szkło formularza ma 580 px na szerokim ekranie — ten sam wymiar co kontakt.html
+      szklo: innerWidth < 961 || Math.abs(form.width - 580) < 1,
+      // 4 pigułki z wersalikową etykietą, na szerokim ekranie w słupku (każda w nowym wierszu)
+      dane: pig.length === 4 && getComputedStyle(pig[0].querySelector('span')).textTransform === 'uppercase'
+         && (innerWidth < 961 || new Set([...pig].map(x => Math.round(x.getBoundingClientRect().top))).size === 4),
+      // nagłówek łamie się na trzy wiersze („Zacznij od / rozmowy z / koordynatorem")
+      trzyLinie: innerWidth < 961 || Math.round(h.getBoundingClientRect().height / parseFloat(hcs.lineHeight)) === 3,
       // zdjęcie w tle musi się wczytać, inaczej sekcja jest płaską czernią
-      tlo: (() => { const t = document.querySelector('.kontakt-tlo');
+      tlo: (() => { const t = document.querySelector('.kt-tlo');
         return !!t && t.complete && t.naturalWidth > 0; })(),
-      // czarny pasek pod lewą kolumną ma NIE wrócić (decyzja klienta 2026-08-24)
-      bezPaska: getComputedStyle(document.querySelector('.kontakt-lewo'), '::before')
-        .backgroundImage === 'none',
-      // pole ze szkła bez ramki: granicę robi własne wypełnienie i zagłębienie,
-      // więc sprawdzamy, że oba są na miejscu i że nie wróciła obwódka.
-      // Sam kontrast granicy mierzy w pikselach test-kontakt.mjs
+      // ciemny gradient z głównej (nie jaśniejszy z dawnego kontakt.html)
+      gradient: /0\.94\)/.test(getComputedStyle(document.querySelector('.kt-sek'), '::before').backgroundImage),
+      // pole ze szkła bez ramki: granicę robi własne wypełnienie i zagłębienie
       poleWidoczne: /gradient/.test(cs.backgroundImage) && /blur/.test(cs.backdropFilter)
                  && /inset/.test(cs.boxShadow) && cs.borderTopWidth === '0px',
       pustyBlokuje: /Uzupełnij|Zaznacz/.test(prz),
-      // progi, nie równości: w trakcie przejścia przeglądarka zwraca wartość
-      // interpolowaną („0.000138"), więc porównanie do '0'/'1' zawsze fałszuje
-      wjazd: Number(przed) < .05 && Object.values(po).every(v => Number(v) > .9),
       wyslany: /demonstracyjny/.test(nota.textContent),
-      etykiety: [...document.querySelectorAll('.kontakt-form input:not([type=checkbox]),.kontakt-form textarea,.kontakt-form select')]
+      etykiety: [...document.querySelectorAll('.kt-forma input:not([type=checkbox]),.kt-forma textarea,.kt-forma select')]
         .every(e => e.id && document.querySelector(`label[for="${e.id}"]`)),
     };
-  }, { prz: pusty, przed: przedWjazdem, po: poWjezdzie });
+  }, { prz: pusty });
   const bkOk = blog.ile === 3 && blog.miedzy && blog.komplet
-            && kontakt.uklad && kontakt.dane && kontakt.tlo && kontakt.bezPaska
-            && kontakt.poleWidoczne && kontakt.pustyBlokuje && kontakt.wyslany && kontakt.wjazd
+            && kontakt.uklad && kontakt.szklo && kontakt.dane && kontakt.trzyLinie && kontakt.tlo
+            && kontakt.gradient && kontakt.poleWidoczne && kontakt.pustyBlokuje && kontakt.wyslany
             && kontakt.etykiety;
   console.log(`${w}×${h} blog+kontakt`, bkOk ? 'ok' : 'BŁĄD ' + JSON.stringify({ blog, kontakt }));
   if (!bkOk) process.exitCode = 1;

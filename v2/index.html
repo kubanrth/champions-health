@@ -831,147 +831,119 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
 
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 
-/* === sekcja kontaktu — powrót do układu z 0b6c3d2 ======================== */
-/* Zdjęcie na całą sekcję, lewa kolumna z nagłówkiem i siatką danych, prawa —
-   karta formularza ze szkła. Względem oryginału: BEZ prostokątnego
-   przyciemnienia pod lewą kolumną (`.kontakt-lewo::before`) — zostaje sama
-   miękka gradacja sekcji, wzmocniona tak, żeby tekst dalej się czytał. */
-.kontakt{position:relative;overflow:hidden;background:#07100C;color:#fff;isolation:isolate}
-.kontakt-tlo{position:absolute;inset:0;z-index:0;width:100%;height:100%;
-  object-fit:cover;object-position:50% 42%}
-.kontakt::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+/* --- kontakt: JEDNA sekcja na wszystkich stronach (2026-08-26) ------------
+   Układ z kontakt.html (wąska lewa kolumna, pigułki w słupku, szkło 580 px),
+   tło i gradient z index.html (ciemniejszy, 100deg .94→.32). Zmiana tutaj =
+   zmiana we wszystkich plikach: skrypt /tmp/ujednolic.mjs, źródło kontakt.html. */
+.kt-sek{position:relative;display:flex;align-items:center;
+  min-height:calc(100svh - 76px);padding:clamp(28px,4.6vw,64px) 0;overflow:hidden}
+.kt-tlo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 42%}
+.kt-sek::before{content:"";position:absolute;inset:0;pointer-events:none;
   background:linear-gradient(100deg,rgba(5,12,9,.94) 0%,rgba(5,12,9,.88) 34%,
              rgba(5,12,9,.6) 62%,rgba(5,12,9,.32) 100%)}
-.kontakt-in{position:relative;z-index:2;display:grid;gap:clamp(2.4rem,4vw,5rem);
-  grid-template-columns:minmax(0,1.05fr) minmax(320px,.95fr);align-items:start;
-  padding:clamp(4.5rem,9vw,8rem) clamp(24px,3.4vw,52px)}
-.kontakt-lewo{position:relative}
-.kontakt-lewo h2{margin:0;max-width:16ch;font-size:clamp(2.4rem,5.4vw,4.6rem);line-height:1.0;
-  letter-spacing:-.028em;font-weight:500}
-.kontakt-lead{margin:1.4rem 0 0;max-width:46ch;font-size:18px;line-height:26px;
-  color:rgba(255,255,255,.86)}
-/* Liquid glass — jeden materiał na całą sekcję: przepuszcza i rozmywa zdjęcie,
-   ma świetlną krawędź u góry i miękki cień pod spodem. Hierarchię robi GRUBOŚĆ
-   szkła, nie kolor: tafla formularza jest najgęstsza, pola najcieńsze, więc pola
-   świecą jaśniej niż karta, na której leżą — i nie wyglądają jak dziury. */
-.kontakt-dane{margin:clamp(2rem,3.4vw,3rem) 0 0;display:flex;flex-wrap:wrap;gap:12px;
-  max-width:34rem}
+/* ten sam kontener na każdej stronie — index ma inny .wrap */
+.kt-sek .wrap{width:auto;max-width:1180px;margin:0 auto;padding-inline:clamp(20px,4vw,64px)}
+.kt-grid{position:relative;z-index:2;width:100%;display:grid;
+  grid-template-columns:1fr minmax(440px,580px);gap:clamp(24px,3.6vw,64px);
+  align-items:center;color:#fff}
+.kt-grid h1,.kt-grid .kt-h{margin:0;max-width:12.5ch;letter-spacing:-.028em;font-size:clamp(2.3rem,4.4vw,3.75rem);line-height:1.04}
+.kt-lead{margin:16px 0 0;max-width:42ch;font-size:18px;line-height:24px;color:rgba(255,255,255,.85)}
+/* Liquid glass — ten sam materiał co w sekcji kontaktu na stronie głównej:
+   przepuszcza i rozmywa zdjęcie, świetlna krawędź u góry, miękki cień.
+   Hierarchię robi GRUBOŚĆ szkła, nie kolor: tafla formularza przyciemnia tło
+   filtrem (zdjęcie prześwituje kolorem), pola je rozjaśniają, więc świecą
+   jaśniej niż tafla i nie wyglądają jak dziury. */
+.kt-pigulki{display:flex;flex-wrap:wrap;gap:12px;margin:clamp(24px,3vw,40px) 0 0;max-width:560px}
 /* pastylki zostają białe — pełna biel trzyma kontrast niezależnie od tego, co
    akurat świeci na zdjęciu, i odcina blok danych od szkła formularza */
-.kontakt-dane div{display:inline-flex;align-items:center;gap:10px;height:48px;padding:0 20px;
-  border-radius:999px;white-space:nowrap;background:#fff;color:#0B0D0C;
-  box-shadow:0 14px 30px -18px rgba(0,0,0,.55);
-  transition:background-color .3s var(--ease),transform .3s var(--ease)}
-.kontakt-dane div:has(a):hover{background:#E9E9E6;transform:translateY(-1px)}
-.kontakt-dane dt{font-size:11px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;
-  color:rgba(11,13,12,.6)}
-.kontakt-dane dd{margin:0;font-size:15px;font-weight:500;letter-spacing:-.01em}
-
-.kontakt-form{padding:clamp(22px,2.4vw,32px);border-radius:26px;
+.kt-pig{display:inline-flex;align-items:center;gap:10px;height:48px;padding:0 20px;
+  border-radius:999px;white-space:nowrap;color:var(--ink);background:#fff;
+  box-shadow:0 14px 30px -18px rgba(0,0,0,.55)}
+.kt-pig span{font-size:11px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;
+  color:rgba(11,13,12,.72)}   /* 11 px wersalikami — var(--tekst2) dawało 4,37:1 */
+.kt-pig b{font-size:15px;font-weight:500}
+a.kt-pig{transition:background-color .3s var(--ease),transform .3s var(--ease)}
+a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
+/* karta formularza */
+.kt-forma{color:#fff;border-radius:28px;padding:clamp(24px,2.6vw,36px);
   background:linear-gradient(155deg,rgba(255,255,255,.1),rgba(255,255,255,.03));
-  -webkit-backdrop-filter:blur(30px) saturate(1.9) brightness(.45);
-  backdrop-filter:blur(30px) saturate(1.9) brightness(.45);
-  box-shadow:0 46px 90px -46px rgba(0,0,0,.75);
-  display:grid;gap:14px}
-.form-tytul{margin:0 0 4px;font-size:20px;font-weight:500;letter-spacing:-.02em}
-.kontakt-pole{display:grid;gap:7px}
-.kontakt-pole label{font-size:13px;letter-spacing:.01em;color:rgba(255,255,255,.9)}
-.kontakt-form input,.kontakt-form textarea,.kontakt-form select,.kontakt-form .pw-btn{
-  width:100%;padding:13px 15px;
-  border-radius:14px;color:#0B0D0C;font:inherit;font-size:15px;resize:vertical;
+  -webkit-backdrop-filter:blur(30px) saturate(1.9) brightness(.33);
+  backdrop-filter:blur(30px) saturate(1.9) brightness(.33);
+  box-shadow:0 46px 90px -46px rgba(0,0,0,.75)}
+.kt-forma h2,.kt-forma h3{margin:0;font-size:22px;letter-spacing:-.02em}
+.kt-forma p.kt-pod{margin:6px 0 0;font-size:14px;color:rgba(255,255,255,.78)}
+.kt-pole{margin-top:16px}
+.kt-pole label{display:block;margin-bottom:6px;font-size:13.5px;font-weight:500;
+  color:rgba(255,255,255,.9)}
+/* Pola: jasne szklane studzienki z ciemnym tekstem, bez ramki. Białe litery
+   wymagają ciemnego pola, a widoczna granica bez obwódki — jasnego; przy jednym
+   kadrze obie rzeczy naraz się nie mieszczą, więc wnętrze ma odwrotną polaryzację
+   niż tafla. Granicę robi kontrast wypełnienia (7,2:1), nie kreska. */
+.kt-pole input,.kt-pole textarea,.kt-pole select,.kt-pole .pw-btn{width:100%;font:inherit;font-size:15px;
+  color:#0B0D0C;border:0;border-radius:14px;
   background:linear-gradient(180deg,rgba(255,255,255,.58),rgba(255,255,255,.44));
-  border:0;
-  -webkit-backdrop-filter:blur(8px) saturate(1.6);
-  backdrop-filter:blur(8px) saturate(1.6);
+  -webkit-backdrop-filter:blur(8px) saturate(1.6);backdrop-filter:blur(8px) saturate(1.6);
   box-shadow:inset 0 2px 5px -2px rgba(0,0,0,.35);
-  transition:border-color .3s var(--ease),box-shadow .3s var(--ease)}
-.kontakt-form input::placeholder,.kontakt-form textarea::placeholder{color:#232624}
+  transition:background-color .25s var(--ease),box-shadow .25s var(--ease)}
+.kt-pole input{height:50px;padding:0 14px}
+.kt-pole textarea{min-height:96px;padding:12px 14px;resize:vertical}
+.kt-pole input::placeholder,.kt-pole textarea::placeholder{color:#232624}
 /* Chrome wstawia przy autouzupełnianiu własne, lawendowe tło i samego
    `background` nie respektuje — nadpisujemy je cieniem wewnętrznym w kolorze
-   zmierzonym z wyrenderowanego pola, żeby autouzupełnione pole wyglądało jak szkło */
-.kontakt-form input:-webkit-autofill,
-.kontakt-form input:-webkit-autofill:hover,
-.kontakt-form input:-webkit-autofill:focus{
+   zmierzonym z wyrenderowanego pola */
+.kt-pole input:-webkit-autofill,
+.kt-pole input:-webkit-autofill:hover,
+.kt-pole input:-webkit-autofill:focus{
   -webkit-box-shadow:0 0 0 1000px rgb(168,166,166) inset,inset 0 2px 5px -2px rgba(0,0,0,.35);
   -webkit-text-fill-color:#0B0D0C;caret-color:#0B0D0C}
-.kontakt-form select{appearance:none;-webkit-appearance:none;cursor:pointer;padding-right:40px;
+.kt-pole .pw-btn{height:50px;padding:0 40px 0 14px;text-align:left;cursor:pointer}
+.kt-pole select{height:50px;padding:0 40px 0 14px;appearance:none;-webkit-appearance:none;cursor:pointer;
   background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 5.2 7 9l4-3.8" stroke="%230B0D0C" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>'),
     linear-gradient(180deg,rgba(255,255,255,.58),rgba(255,255,255,.44));
   background-repeat:no-repeat,no-repeat;background-position:right 14px center,0 0}
-.kontakt-form select:invalid{color:#232624}
-/* natywna lista rozwijana rysuje się poza szkłem — tam wracamy do jasnego tła */
-.kontakt-form option{color:#0B0D0C;background:#fff}
-.kontakt-form .pw-btn{padding-right:40px}
-.kontakt-form input:hover,.kontakt-form textarea:hover,.kontakt-form .pw-btn:hover{
+.kt-pole select:invalid{color:#232624}   /* placeholder w kolorze podpowiedzi */
+.kt-pole option{color:#0B0D0C;background:#fff}
+.kt-pole input:hover,.kt-pole textarea:hover,.kt-pole .pw-btn:hover{
   background:linear-gradient(180deg,rgba(255,255,255,.78),rgba(255,255,255,.64))}
-.kontakt-form select:hover{background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 5.2 7 9l4-3.8" stroke="%230B0D0C" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>'),
+.kt-pole select:hover{background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 5.2 7 9l4-3.8" stroke="%230B0D0C" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>'),
     linear-gradient(180deg,rgba(255,255,255,.78),rgba(255,255,255,.64))}
 /* pole robi się BIAŁE tylko na czas wypełniania — po wyjściu wraca do szkła */
-.kontakt-form input:focus,.kontakt-form textarea:focus,.kontakt-form select:focus,
-.kontakt-form .pw-btn:focus,.kontakt-form .pw.otwarta .pw-btn{
+.kt-pole input:focus,.kt-pole textarea:focus,.kt-pole select:focus,
+.kt-pole .pw-btn:focus,.kt-pole .pw.otwarta .pw-btn{
   background:#fff;box-shadow:inset 0 2px 5px -2px rgba(0,0,0,.22)}
-.kontakt-form select:focus{background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 5.2 7 9l4-3.8" stroke="%230B0D0C" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>'),
+.kt-pole select:focus{background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 5.2 7 9l4-3.8" stroke="%230B0D0C" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>'),
     linear-gradient(180deg,#fff,#fff)}
-.kontakt-form input:focus-visible,.kontakt-form textarea:focus-visible,
-.kontakt-form select:focus-visible{outline:2px solid rgba(255,255,255,.85);outline-offset:2px}
-.kontakt-form input:user-invalid,.kontakt-form textarea:user-invalid{
+.kt-pole input:focus-visible,.kt-pole textarea:focus-visible,.kt-pole select:focus-visible,
+.kt-pole .pw-btn:focus-visible{outline:2px solid rgba(255,255,255,.85);outline-offset:2px}
+.kt-pole input:user-invalid,.kt-pole textarea:user-invalid{
   box-shadow:inset 0 2px 5px -2px rgba(0,0,0,.35),inset 0 0 0 2px #C1121F}
-.kontakt-zgoda{display:flex;align-items:flex-start;gap:10px;margin-top:2px;
-  font-size:12.5px;line-height:1.5;color:rgba(255,255,255,.9)}
-/* własny kwadracik: szklana studzienka jak pola, po zaznaczeniu pełna biel
-   z ciemną fajką — natywny `accent-color` daje na szkle płaską białą płytkę */
-.kontakt-zgoda input{appearance:none;-webkit-appearance:none;flex:none;
+.kt-zgoda{display:flex;align-items:flex-start;gap:10px;margin-top:18px;
+  font-size:13px;line-height:1.55;color:rgba(255,255,255,.9)}
+/* własny kwadracik: ta sama materia co pola; natywny `accent-color` daje na
+   szkle płaską białą płytkę */
+.kt-zgoda input{appearance:none;-webkit-appearance:none;flex:none;
   width:20px;height:20px;margin:1px 0 0;padding:0;border:0;border-radius:7px;cursor:pointer;
-  background:linear-gradient(180deg,rgba(255,255,255,.66),rgba(255,255,255,.52));
+  background:linear-gradient(180deg,rgba(255,255,255,.58),rgba(255,255,255,.44));
   box-shadow:inset 0 2px 5px -2px rgba(0,0,0,.35);
   transition:background-color .25s var(--ease),box-shadow .25s var(--ease)}
-.kontakt-zgoda input:hover{background:linear-gradient(180deg,rgba(255,255,255,.78),rgba(255,255,255,.64))}
-.kontakt-zgoda input:checked{background:#fff url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2.4 6.3 4.7 8.6 9.6 3.7" stroke="%230B0D0C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>') center/12px no-repeat;
+.kt-zgoda input:hover{background:linear-gradient(180deg,rgba(255,255,255,.78),rgba(255,255,255,.64))}
+.kt-zgoda input:checked{background:#fff url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2.4 6.3 4.7 8.6 9.6 3.7" stroke="%230B0D0C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>') center/12px no-repeat;
   box-shadow:none}
-.kontakt-zgoda input:focus-visible{outline:2px solid rgba(255,255,255,.85);outline-offset:2px}
-.kontakt-form .btn{margin-top:4px;justify-content:center;width:100%}
+.kt-zgoda input:focus-visible{outline:2px solid rgba(255,255,255,.85);outline-offset:2px}
+.kt-forma .btn{width:100%;justify-content:center;gap:10px;margin-top:20px;height:50px}
+/* na szkle przycisk musi być jedyną pełną powierzchnią — inaczej ginie */
+.kt-forma .btn-pelny{background:#fff;color:#000}
+.kt-forma .btn-pelny:hover{background:#E9E9E6}
 /* bez rozmycia tła (starsza przeglądarka, wyłączona przezroczystość) szkło
    zostaje samą półprzezroczystą bielą i tekst ginie — wtedy pełne wypełnienie */
 @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
-  .kontakt-form{background-color:rgba(6,13,10,.92)}
+  .kt-forma{background-color:rgba(6,13,10,.92)}
 }
-.form-nota{margin:0;font-size:12.5px;line-height:1.45;color:#FFB4B4}
-.form-nota:empty{display:none}
-/* --- wjazd modułu ---------------------------------------------------------
-   Ruch jedzie na `translate`, nie na `transform`: dzięki temu hover pastylki
-   (`transform:translateY(-1px)`) nie dziedziczy opóźnienia wjazdu i działa od
-   razu. Stan początkowy siedzi pod `.anim`, którą dokłada skrypt odsłaniania —
-   bez JS-u nic się nie chowa i dane kontaktowe są widoczne zawsze. */
-.anim .kontakt-lead,.anim .kontakt-dane div,.anim .kontakt-form,
-.anim .kontakt-form>*{opacity:0;translate:0 18px;
-  transition:opacity .55s var(--ease) var(--o,0ms),translate .7s var(--ease) var(--o,0ms)}
-.anim .kontakt-form{translate:0 26px;scale:.985;
-  transition:opacity .6s var(--ease) var(--o,0ms),translate .8s var(--ease) var(--o,0ms),
-             scale .8s var(--ease) var(--o,0ms)}
-.anim .kontakt-form>*{translate:0 12px}
-.anim .kontakt.pokaz :is(.kontakt-lead,.kontakt-dane div,.kontakt-form,.kontakt-form>*){
-  opacity:1;translate:none;scale:1}
-.kontakt-lead{--o:60ms}
-.kontakt-dane div:nth-child(1){--o:150ms}
-.kontakt-dane div:nth-child(2){--o:220ms}
-.kontakt-dane div:nth-child(3){--o:290ms}
-.kontakt-dane div:nth-child(4){--o:360ms}
-.kontakt-form{--o:120ms}
-.kontakt-form>:nth-child(1){--o:300ms}
-.kontakt-form>:nth-child(2){--o:350ms}
-.kontakt-form>:nth-child(3){--o:400ms}
-.kontakt-form>:nth-child(4){--o:450ms}
-.kontakt-form>:nth-child(5){--o:500ms}
-.kontakt-form>:nth-child(6){--o:550ms}
-.kontakt-form>:nth-child(7){--o:600ms}
-.kontakt-form>:nth-child(8){--o:650ms}
-.kontakt-form>:nth-child(9){--o:700ms}
-@media(prefers-reduced-motion:reduce){
-  .anim :is(.kontakt-lead,.kontakt-dane div,.kontakt-form,.kontakt-form>*){
-    opacity:1;translate:none;scale:1;transition:none}
-}
-@media(max-width:900px){
-  .kontakt-in{grid-template-columns:1fr}
+.kt-nota{margin:12px 0 0;font-size:13px;line-height:1.5;color:rgba(255,255,255,.8)}
+.kt-nota:empty{display:none}
+@media(max-width:960px){
+  .kt-grid{grid-template-columns:1fr;gap:26px}
+  .kt-pigulki{max-width:none}
 }
 </style>
 </head>
@@ -1681,67 +1653,87 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
   </div>
 </section>
 
-<section class="kontakt" id="kontakt">
-  <img class="kontakt-tlo" src="img/kontakt-tlo.webp" alt="" aria-hidden="true">
-  <div class="kontakt-in">
-    <div class="kontakt-lewo">
-      <h2 class="reveal" data-reveal>Zacznij od rozmowy z koordynatorem</h2>
-      <p class="kontakt-lead">Piętnaście minut wystarczy, żeby ustalić, czego potrzebujesz
-        i ile to zajmie. Bez skierowania i bez kolejki.</p>
-      <dl class="kontakt-dane">
-        <div><dt>Telefon</dt><dd><a href="tel:+48223182000">22 318 20 00</a></dd></div>
-        <div><dt>E-mail</dt><dd><a href="mailto:info@championshealth.pl">info@championshealth.pl</a></dd></div>
-        <div><dt>Godziny</dt><dd>Pon.–pt. 8:00–20:00</dd></div>
-        <div><dt>Adres</dt><dd>Legionistów 3, Książenice</dd></div>
-      </dl>
+<section class="kt-sek" id="kontakt">
+  <img class="kt-tlo" src="img/kontakt-tlo.webp" alt="" aria-hidden="true">
+  <div class="wrap kt-grid">
+    <div>
+      <h2 class="kt-h" data-rv>Zacznij od rozmowy z koordynatorem</h2>
+      <p class="kt-lead" data-rv>Piętnaście minut wystarczy, żeby ustalić, czego potrzebujesz.
+        Bez skierowania i bez kolejki.</p>
+      <div class="kt-pigulki" data-rv>
+        <a class="kt-pig" href="tel:+48223182000"><span>Telefon</span><b>22 318 20 00</b></a>
+        <a class="kt-pig" href="mailto:info@championshealth.pl"><span>E-mail</span><b>info@championshealth.pl</b></a>
+        <span class="kt-pig"><span>Godziny</span><b>Pon.–pt. 8:00–20:00</b></span>
+        <span class="kt-pig"><span>Adres</span><b>Legionistów 3, Książenice</b></span>
+      </div>
     </div>
-
-    <form class="kontakt-form" id="formularz" data-forma novalidate>
-      <p class="form-tytul">Umów wizytę</p>
-      <div class="kontakt-pole">
+    <form class="kt-forma" data-forma novalidate data-rv>
+      <h3>Umów wizytę</h3>
+      <p class="kt-pod">Oddzwonimy tego samego dnia roboczego.</p>
+      <div class="kt-pole">
         <label for="kt-imie">Imię i nazwisko</label>
         <input id="kt-imie" name="imie" type="text" autocomplete="name" required>
       </div>
-      <div class="kontakt-pole">
+      <div class="kt-pole">
         <label for="kt-tel">Telefon</label>
         <input id="kt-tel" name="tel" type="tel" autocomplete="tel" required>
       </div>
-      <div class="kontakt-pole">
+      <div class="kt-pole">
         <label for="kt-mail">E-mail</label>
         <input id="kt-mail" name="email" type="email" autocomplete="email" required>
       </div>
-      <div class="kontakt-pole">
+      <div class="kt-pole">
         <label for="kt-temat">Temat zgłoszenia</label>
         <select id="kt-temat" name="temat" required>
-          <option value="" selected disabled>Wybierz temat zgłoszenia</option>
-          <option>Konsultacja ortopedyczna</option>
-          <option>Fizjoterapia i rehabilitacja</option>
+          <option value="" selected disabled hidden>Wybierz temat zgłoszenia</option>
           <option>Medycyna sportowa</option>
+          <option>Ortopedia</option>
+          <option>Fizjoterapia i rehabilitacja</option>
           <option>Dietetyka i suplementacja</option>
+          <option>Trening merytoryczny</option>
+          <option>Edukacja i szkolenie</option>
           <option>Inny temat</option>
         </select>
       </div>
-      <div class="kontakt-pole">
+      <div class="kt-pole">
         <label for="kt-spec">Preferowany specjalista</label>
         <select id="kt-spec" name="specjalista" required>
-          <option value="" selected disabled>Preferowany specjalista</option>
+          <option value="" selected disabled hidden>Preferowany specjalista</option>
           <option>Bez preferencji</option>
-          <option>Lekarz ortopeda</option>
-          <option>Fizjoterapeuta</option>
-          <option>Dietetyk</option>
+          <optgroup label="Lekarze">
+            <option>Filip Latawiec</option>
+            <option>Mateusz Dłutowski</option>
+            <option>Szymon Gałczyński</option>
+            <option>Piotr Modzelewski</option>
+            <option>Marcin Tusiński</option>
+          </optgroup>
+          <optgroup label="Fizjoterapeuci">
+            <option>Dominika Daros</option>
+            <option>Przemysław Domański</option>
+            <option>Łukasz Gembarzewski</option>
+            <option>Jakub Grodzki</option>
+            <option>Sandra Heronimek</option>
+            <option>Daniel Komar</option>
+            <option>Giovanni Mangano</option>
+            <option>Dominik Ofat</option>
+            <option>Kamil Pasoń</option>
+          </optgroup>
         </select>
       </div>
-      <div class="kontakt-pole">
+      <div class="kt-pole">
         <label for="kt-tresc">Wiadomość</label>
         <textarea id="kt-tresc" name="tresc" rows="3"></textarea>
       </div>
-      <label class="kontakt-zgoda">
+      <label class="kt-zgoda">
         <input id="kt-rodo" type="checkbox" required>
         <span>Wysyłając formularz wyrażam zgodę na przetwarzanie moich danych osobowych
           przez Champions Health zgodnie z Polityką Prywatności.</span>
       </label>
-      <button class="btn btn-w" type="submit">Wyślij zgłoszenie</button>
-      <p class="form-nota" data-nota role="status" aria-live="polite"></p>
+      <button class="btn btn-pelny" type="submit">Wyślij zgłoszenie
+        <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
+          <path d="M3 10 10 3M4.6 3H10v5.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg></button>
+      <p class="kt-nota" data-nota role="status" aria-live="polite"></p>
     </form>
   </div>
 </section>
@@ -1822,34 +1814,6 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
 
 
 <script>
-// --- formularz kontaktowy: walidacja po stronie przeglądarki ---------------
-// Nie ma jeszcze dokąd wysyłać — pilnujemy tylko, żeby nie dało się wysłać
-// pustego zgłoszenia i żeby komunikat trafiał do czytnika (role="status").
-(() => {
-  const form = document.querySelector('[data-form]');
-  if (!form) return;
-  const nota = form.querySelector('[data-form-nota]');
-  const bazowy = nota.textContent;
-  form.addEventListener('submit', e => {
-    e.preventDefault();
-    if (!form.checkValidity()) {
-      nota.classList.remove('ok');
-      nota.textContent = 'Uzupełnij imię, telefon i poprawny adres e-mail.';
-      form.querySelector(':invalid')?.focus();
-      return;
-    }
-    nota.classList.add('ok');
-    nota.textContent = 'Dziękujemy - to wersja demonstracyjna, zgłoszenie nie zostało wysłane.';
-  });
-  form.addEventListener('input', () => {
-    if (nota.textContent !== bazowy) { nota.classList.remove('ok'); nota.textContent = bazowy; }
-  });
-
-  // self-check: pola wymagane muszą mieć etykietę
-  for (const pole of form.querySelectorAll('input,textarea'))
-    console.assert(pole.closest('label'), 'formularz: pole bez etykiety - ' + pole.name);
-})();
-
 // --- nawigacja: chowa się po zejściu z banera, niżej wraca doczepiona -------
 (() => {
   const nav = document.querySelector('.nav');
