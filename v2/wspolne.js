@@ -161,7 +161,7 @@ body.mnu-otwarte .fab{opacity:0;pointer-events:none}
       <a class="uw-opcja" href="tel:${TELEFON}"><i>${IKONA.tel}</i>
         <span><b>Zadzwoń</b><span>${TELEFON_ETYKIETA} · pon.–pt. 8:00–20:00</span></span></a>
       <a class="uw-opcja" href="${doFormularza}" data-uw-pisz><i>${IKONA.mail}</i>
-        <span><b>Napisz do nas</b><span>Formularz — oddzwonimy tego samego dnia</span></span></a>
+        <span><b>Napisz do nas</b><span>Formularz - oddzwonimy tego samego dnia</span></span></a>
     </div>
   </div>`;
   document.body.appendChild(okno);
