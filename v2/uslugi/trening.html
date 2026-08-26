@@ -7,7 +7,7 @@
 <meta name="description" content="Motoryka, siła i profilaktyka urazów pod okiem trenerów przygotowania. Testy wydolnościowe i plan na cały sezon.">
 <link rel="icon" href="../img/logo_LCH.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Inter:opsz,wght@14..32,400..700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75,700;100,700&family=Inter:opsz,wght@14..32,400..700&display=swap" rel="stylesheet">
 <style>
 
 :root{
@@ -396,7 +396,7 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
       <a href="../kontakt.html">Kontakt</a>
     </div>
     <div class="nav-prawo">
-<a class="cta" href="#kontakt">Umów wizytę</a>
+<a data-uw class="cta" href="#kontakt">Umów wizytę</a>
 <a class="brand" href="../index.html" aria-label="Champions Health - strona główna">
         <img src="../img/logo_LCH.svg" alt="Legia Medical">
       </a>
@@ -407,13 +407,13 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
 <main>
 
 <header class="pg-hero">
-  <img class="pg-tlo" src="../img/c5-trening.webp" alt="" style="object-position:50% 45%">
+  <img class="pg-tlo" src="../img/c5-trening.webp" alt="" width="1820" height="1024" fetchpriority="high" style="object-position:50% 45%">
   <div class="wrap pg-tresc">
     <h1 class="reveal" data-reveal>Trening merytoryczny</h1>
     <div class="pg-dol">
     <p class="pg-lead" data-rv>Motoryka, siła i profilaktyka urazów pod okiem trenerów przygotowania. Testy wydolnościowe i plan na cały sezon.</p>
     <div class="pg-akcje" data-rv>
-      <a class="btn btn-pelny" href="#kontakt">Umów wizytę
+      <a data-uw class="btn btn-pelny" href="#kontakt">Umów wizytę
         <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
           <path d="M3 10 10 3M4.6 3H10v5.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
         </svg></a>
@@ -456,7 +456,7 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
 </section>
 
 <section class="kt-sek" id="kontakt">
-  <img class="kt-tlo" src="../img/kontakt-tlo.webp" alt="" aria-hidden="true">
+  <img class="kt-tlo" src="../img/kontakt-tlo.webp" alt="" aria-hidden="true" loading="lazy" decoding="async">
   <div class="wrap kt-grid">
     <div>
       <h2 class="kt-h" data-rv>Zacznij od rozmowy z koordynatorem</h2>
@@ -640,25 +640,6 @@ if (matchMedia('(prefers-reduced-motion:reduce)').matches) {
     () => pas.scrollBy({ left: krok(), behavior: jak }));
 }
 
-(() => {
-  const forma = document.querySelector('[data-forma]');
-  if (!forma) return;
-  const nota = forma.querySelector('[data-nota]');
-  forma.addEventListener('submit', e => {
-    e.preventDefault();
-    if (!forma.checkValidity()) {
-      const zle = forma.querySelector(':invalid');
-      zle.focus();
-      const etykieta = forma.querySelector(`label[for="${zle.id}"]`);
-      nota.textContent = zle.id === 'kt-rodo'
-        ? 'Zaznacz zgodę na przetwarzanie danych.'
-        : 'Uzupełnij zaznaczone pole: ' + (etykieta ? etykieta.textContent.toLowerCase() : '') + '.';
-      return;
-    }
-    nota.textContent = 'Formularz demonstracyjny - wysyłka zostanie podpięta po stronie kliniki. '
-      + 'Na razie zadzwoń: 22 318 20 00.';
-  });
-})();
 </script>
 <script src="../wspolne.js" defer></script>
 </body>

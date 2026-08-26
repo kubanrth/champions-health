@@ -7,7 +7,7 @@
 <meta name="description" content="Umów wizytę w Champions Health: telefon 22 318 20 00, Legionistów 3 w Książenicach, formularz kontaktowy.">
 <link rel="icon" href="img/logo_LCH.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Inter:opsz,wght@14..32,400..700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75,700;100,700&family=Inter:opsz,wght@14..32,400..700&display=swap" rel="stylesheet">
 <style>
 
 :root{
@@ -459,7 +459,7 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
       <a href="kontakt.html" aria-current="page">Kontakt</a>
     </div>
     <div class="nav-prawo">
-<a class="cta" href="#formularz">Umów wizytę</a>
+<a data-uw class="cta" href="#formularz">Umów wizytę</a>
 <a class="brand" href="index.html" aria-label="Champions Health - strona główna">
         <img src="img/logo_LCH.svg" alt="Legia Medical">
       </a>
@@ -520,7 +520,7 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
 </section>
 
 <section class="kt-sek" id="formularz">
-  <img class="kt-tlo" src="img/kontakt-tlo.webp" alt="" aria-hidden="true">
+  <img class="kt-tlo" src="img/kontakt-tlo.webp" alt="" aria-hidden="true" loading="lazy" decoding="async">
   <div class="wrap kt-grid">
     <div>
       <h1 data-rv>Zacznij od rozmowy z koordynatorem</h1>
@@ -672,21 +672,6 @@ if (matchMedia('(prefers-reduced-motion:reduce)').matches) {
   rv.forEach(e => io.observe(e));
 }
 
-const forma = document.querySelector('[data-forma]');
-const nota = forma.querySelector('[data-nota]');
-forma.addEventListener('submit', e => {
-  e.preventDefault();
-  if (!forma.checkValidity()) {
-    const zle = forma.querySelector(':invalid');
-    zle.focus();
-    nota.textContent = zle.id === 'kt-rodo'
-      ? 'Zaznacz zgodę na przetwarzanie danych.'
-      : 'Uzupełnij zaznaczone pole: ' +
-        forma.querySelector(`label[for="${zle.id}"]`).textContent.toLowerCase() + '.';
-    return;
-  }
-  nota.textContent = 'Formularz demonstracyjny - wysyłka zostanie podpięta po stronie kliniki. Na razie zadzwoń: 22 318 20 00.';
-});
 </script>
 <script src="wspolne.js" defer></script>
 </body>

@@ -34,6 +34,7 @@
 .pw-natywna{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);
   clip-path:inset(50%);white-space:nowrap}
 .pw-btn{width:100%;text-align:left;font:inherit;cursor:pointer;position:relative}
+.pw-btn.pw-blad{box-shadow:inset 0 2px 5px -2px rgba(0,0,0,.35),inset 0 0 0 2px #C1121F}
 .pw-btn.pw-pusta{color:#232624}
 .pw-btn::after{content:"";position:absolute;top:50%;right:16px;width:9px;height:9px;
   margin-top:-3px;border-right:1.6px solid currentColor;border-bottom:1.6px solid currentColor;
@@ -147,7 +148,8 @@ body.mnu-otwarte .fab{opacity:0;pointer-events:none}
     strzalka: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg>',
   };
 
-  const doFormularza = (location.pathname.includes('/uslugi/') ? '../' : '') + 'kontakt.html#formularz';
+  const PREFIX = location.pathname.includes('/uslugi/') ? '../' : '';
+  const doFormularza = PREFIX + 'kontakt.html#formularz';
 
   const okno = document.createElement('dialog');
   okno.className = 'uw';
@@ -172,7 +174,7 @@ body.mnu-otwarte .fab{opacity:0;pointer-events:none}
 
   const podepnijUW = zakres => {
     for (const a of zakres.querySelectorAll('a'))
-      if (a.textContent.trim() === 'Umów wizytę')
+      if (a.hasAttribute('data-uw'))
         a.addEventListener('click', e => { e.preventDefault(); okno.showModal(); });
   };
   podepnijUW(document);
@@ -188,16 +190,14 @@ body.mnu-otwarte .fab{opacity:0;pointer-events:none}
       przycisk.innerHTML = 'Menu<i aria-hidden="true"></i>';
       pasek.appendChild(przycisk);
 
-      const logo = document.querySelector('.nav .brand img:not([aria-hidden])')
-        || document.querySelector('.nav .brand img');
       const szuflada = document.createElement('div');
       szuflada.className = 'mnu';
       szuflada.hidden = false;
       szuflada.innerHTML = '<div class="mnu-gora">'
-        + '<img src="' + (logo ? logo.getAttribute('src') : '') + '" alt="Legia Medical">'
+        + '<img src="' + PREFIX + 'img/logo_LCH_na-ciemnym.svg" alt="Legia Medical">'
         + '<button type="button" class="mnu-btn" data-mnu-x>Zamknij<i aria-hidden="true"></i></button>'
         + '</div><nav class="mnu-lista"></nav>'
-        + '<a class="btn-uw" href="#">Umów wizytę<i>' + IKONA.strzalka + '</i></a>'
+        + '<a class="btn-uw" href="' + doFormularza + '" data-uw>Umów wizytę<i>' + IKONA.strzalka + '</i></a>'
         + '<div class="mnu-stopka">'
         + '<a href="tel:' + TELEFON + '">' + TELEFON_ETYKIETA + '</a>'
         + '<a href="mailto:info@championshealth.pl">info@championshealth.pl</a>'
@@ -447,3 +447,30 @@ body.mnu-otwarte .fab{opacity:0;pointer-events:none}
     odswiez();
   }
 })();
+
+{
+  const forma = document.querySelector('[data-forma]');
+  if (forma) {
+    const nota = forma.querySelector('[data-nota]');
+    forma.addEventListener('submit', e => {
+      e.preventDefault();
+      if (!forma.checkValidity()) {
+        const zle = forma.querySelector(':invalid');
+        const btn = zle.classList.contains('pw-natywna') && zle.parentElement.querySelector('.pw-btn');
+        if (btn) btn.classList.add('pw-blad');
+        (btn || zle).focus();
+        const etykieta = zle.id && forma.querySelector(`label[for="${zle.id}"]`);
+        nota.textContent = zle.id === 'kt-rodo'
+          ? 'Zaznacz zgodę na przetwarzanie danych.'
+          : 'Uzupełnij zaznaczone pole: ' + (etykieta ? etykieta.textContent.toLowerCase() : '') + '.';
+        return;
+      }
+      nota.textContent = 'Formularz demonstracyjny - wysyłka zostanie podpięta po stronie kliniki. '
+        + 'Na razie zadzwoń: 22 318 20 00.';
+    });
+    forma.addEventListener('change', e => {
+      const btn = e.target.parentElement && e.target.parentElement.querySelector('.pw-btn');
+      if (btn && e.target.checkValidity()) btn.classList.remove('pw-blad');
+    });
+  }
+}

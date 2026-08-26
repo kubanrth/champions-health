@@ -31,6 +31,10 @@ Vercel, projekt statyczny. `vercel.json` robi redirect z `/` na `/v2/` i dokład
 Uwaga: jest tam też `X-Robots-Tag: noindex` - na czas prac strona nie jest indeksowana.
 Przy przejściu na docelową domenę trzeba tę linijkę usunąć.
 
+CSP w `vercel.json` przepuszcza tylko własną domenę, Google Fonts i mapę Google. Jak podepniecie
+wysyłkę formularza do zewnętrznego serwisu albo zdjęcia z innego CDN-u, trzeba dopisać ten host
+do `form-action` / `connect-src` / `img-src`, inaczej przeglądarka to zablokuje.
+
 ## Co zostało do zrobienia po stronie kliniki
 
 - formularz "Umów wizytę" ma walidację, ale nigdzie nie wysyła - trzeba podpiąć backend / CRM
