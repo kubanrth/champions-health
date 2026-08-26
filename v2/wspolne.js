@@ -114,6 +114,36 @@
 .fab:active{transform:translateX(-50%) scale(.97)}
 body.mnu-otwarte{overflow:hidden}
 body.mnu-otwarte .fab{opacity:0;pointer-events:none}
+/* --- uklad paska (zyczenie klienta): menu na srodku okna, po prawej przycisk
+   „Umow wizyte" i logo przy samej krawedzi. Siatka 1fr auto 1fr trzyma menu
+   dokladnie na srodku niezaleznie od szerokosci prawej grupy. */
+/* pasek na cala szerokosc: przy --nav-w 1100px logo konczylo sie 170 px przed
+   krawedzia okna, a ma byc przy samej krawedzi.
+   (W tym bloku nie ma odwrotnych apostrofow - to wnetrze szablonu JS.) */
+.nav-in{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:20px;
+  width:100%;max-width:none}
+.nav .menu{grid-column:2;justify-self:center;margin:0}
+.nav-prawo{grid-column:3;justify-self:end;display:flex;align-items:center;gap:16px}
+.nav .cta{margin-left:0}
+.nav .brand{margin-right:0}
+.nav .brand img{height:44px}
+/* Miedzy 760 a 1080 px menu i prawa grupa nie miesza sie w rownych polowkach
+   (siatka 1fr auto 1fr wymusza symetrie) - logo wystawalo o 7-17 px poza kadr.
+   Ponizej progu wszystko sciesniamy, zeby srodkowanie menu dalo sie utrzymac. */
+@media(max-width:1180px){.nav .brand img{height:38px}}
+@media(max-width:1080px){
+  .nav-in{gap:14px}
+  .nav .menu{gap:18px}
+  .nav .cta{padding:0 14px}
+  .nav-prawo{gap:12px}
+  .nav .brand img{height:32px}
+}
+@media(max-width:760px){
+  /* na telefonie wracamy do: logo z lewej, „Menu" z prawej */
+  .nav-in{display:flex}
+  .nav-prawo{margin-right:auto}
+}
+
 /* pasek chowa sie przy scrollu w dol, wraca przy scrollu w gore - inaczej
    przy stalym pasku naglowki sekcji zostaja przyciete tuz pod nim */
 .nav.schowana{transform:translateY(-100%)}
