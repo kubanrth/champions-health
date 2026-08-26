@@ -1,65 +1,42 @@
-# Legia Medical (Champions Health) — strona internetowa
+# Legia Medical - strona www
 
-Klinika medycyny sportowej i rehabilitacji przy Legii Warszawa.
-Docelowy adres: `medical.legia.com`. Podgląd: https://champions-health.vercel.app
+Statyczna strona kliniki (HTML/CSS/JS, bez frameworków i bez builda).
+Podgląd: https://champions-health.vercel.app - docelowo medical.legia.com.
 
-## Co to jest
+## Struktura
 
-Statyczna strona: HTML + CSS + JavaScript, bez frameworków, bez zależności i bez
-kroku budowania. Każda podstrona to jeden plik `.html` ze stylami w środku;
-wspólne zachowania (nawigacja, menu mobilne, pop-up „Umów wizytę", listy wyboru,
-odsłanianie tekstu) są w `v2/wspolne.js`.
+Wszystko siedzi w `v2/`. Każda podstrona to osobny plik html ze stylami w środku,
+wspólne rzeczy (nawigacja, menu na telefonie, popup "Umów wizytę", listy wyboru w formularzu)
+są w `wspolne.js`.
 
-```
-v2/
-  index.html                 strona główna
-  uslugi.html                zakres opieki (lista usług)
-  uslugi/
-    medycyna-sportowa.html   ┐
-    ortopedia.html           │
-    fizjoterapia.html        │ podstrony usług
-    dietetyka.html           │
-    trening.html             │
-    edukacja.html            ┘
-  zespol.html                zespół
-  blog.html                  lista wpisów
-  wpis.html                  przykładowy wpis
-  kontakt.html               kontakt: mapa, dojazd, formularz
-  wspolne.js                 wspólny skrypt
-  img/                       zdjęcia i logo (WebP + SVG)
-vercel.json                  przekierowanie / → /v2/ i nagłówki HTTP
-```
+- `index.html` - strona główna
+- `uslugi.html` + `uslugi/*.html` - zakres opieki i 6 podstron usług
+- `zespol.html`
+- `blog.html`, `wpis.html` - lista wpisów i przykładowy wpis
+- `kontakt.html` - mapa, dojazd, formularz
+- `img/` - zdjęcia (webp) i logo (svg)
 
-Fonty ładowane z Google Fonts (Inter, Archivo, Mulish) i Fontshare — bez plików lokalnych.
+Fonty ciągną się z Google Fonts i Fontshare, nie ma ich w repo.
 
-## Uruchomienie lokalnie
+## Uruchomienie
 
-Dowolny serwer plików statycznych, np.:
+Wystarczy dowolny serwer statyczny, np. `python3 -m http.server 8000` w katalogu repo
+i wejść na http://localhost:8000/v2/
 
-```
-python3 -m http.server 8000
-```
+## Deploy
 
-i otworzyć `http://localhost:8000/v2/`.
+Vercel, projekt statyczny. `vercel.json` robi redirect z `/` na `/v2/` i dokłada nagłówki
+(CSP, X-Frame-Options itd.).
 
-## Wdrożenie
+Uwaga: jest tam też `X-Robots-Tag: noindex` - na czas prac strona nie jest indeksowana.
+Przy przejściu na docelową domenę trzeba tę linijkę usunąć.
 
-Strona jest hostowana na Vercel jako projekt statyczny (bez build stepa).
-`vercel.json` ustawia przekierowanie z `/` na `/v2/` oraz nagłówki bezpieczeństwa
-(CSP, `X-Frame-Options`, `Referrer-Policy`, `Permissions-Policy`, `nosniff`).
+## Co zostało do zrobienia po stronie kliniki
 
-**Przed publikacją pod docelową domeną** usunąć nagłówek `X-Robots-Tag: noindex, nofollow`
-z `vercel.json` — na czas prac blokuje indeksowanie przez wyszukiwarki.
-
-## Do uzupełnienia po stronie kliniki
-
-- **Formularz „Umów wizytę"** ma walidację w przeglądarce, ale nie wysyła danych —
-  wysyłkę trzeba podpiąć do własnego backendu / CRM (pola: `imie`, `tel`, `email`,
-  `temat`, `specjalista`, `tresc`, zgoda `kt-rodo`).
-- **Ceny, liczby i czasy** (np. czas do diagnostyki) są poglądowe — do potwierdzenia.
-- **Zdjęcia zespołu** — do podmiany na sesję zdjęciową; zdjęcia hero i kart usług
-  są ilustracyjne (wygenerowane) i można je zastąpić własnymi.
-- **Polityka prywatności** — zgoda w formularzu odwołuje się do dokumentu, którego
-  strona jeszcze nie zawiera; dodać podstronę i link.
-- **Nazwa** — logo pokazuje „Legia Medical", a tytuły stron, stopka, adres e-mail
-  i treści mówią „Champions Health"; przy zmianie nazwy przejść przez teksty.
+- formularz "Umów wizytę" ma walidację, ale nigdzie nie wysyła - trzeba podpiąć backend / CRM
+  (pola: imie, tel, email, temat, specjalista, tresc + checkbox zgody)
+- ceny, liczby i czasy w treści są przykładowe, do potwierdzenia
+- zdjęcia zespołu i zdjęcia na hero / kartach usług są ilustracyjne, do podmiany na własne
+- zgoda w formularzu odsyła do polityki prywatności, której jeszcze nie ma - dodać podstronę i link
+- logo mówi "Legia Medical", a tytuły, stopka i mail dalej "Champions Health" - przy zmianie nazwy
+  przejść po tekstach
