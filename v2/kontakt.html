@@ -47,15 +47,15 @@ p{margin:0}
    pigułka 37, linki 16 / odstęp 30, podkreślenie rosnące od lewej).
    Na jasnej podstronie nawigacja stoi NA STAŁE w stanie „przypięta"
    z home: białe tło + blur + ciemne linki + odwrócone białe logo. -------- */
-.nav{--nav-w:1100px;--pill-h:37px;--link:16px;--gap:30px;--pill:#262626;--pill-hover:#333;
-  position:fixed;top:0;left:0;right:0;z-index:300;padding:12px 24px;
+.nav{--nav-w:1100px;--pill-h:40px;--link:16px;--gap:30px;--pill:#262626;--pill-hover:#333;
+  position:fixed;top:0;left:0;right:0;z-index:300;padding:18px 24px;
   background:rgba(255,255,255,.9);
   -webkit-backdrop-filter:blur(14px) saturate(1.4);backdrop-filter:blur(14px) saturate(1.4);
   box-shadow:0 1px 0 rgba(10,10,10,.09)}
 .nav-in{width:var(--nav-w);max-width:100%;margin:0 auto;height:var(--pill-h);
   display:flex;align-items:center}
 .brand{flex:none;display:flex;align-items:center;margin-right:21px}
-.brand img{height:24px;width:auto}   /* na jasnym tle oryginał, bez odwracania barw */
+.brand img{height:36px;width:auto}   /* na jasnym tle oryginał, bez odwracania barw */
 .menu{display:flex;align-items:center;gap:var(--gap);min-width:0;overflow-x:auto;scrollbar-width:none}
 .menu::-webkit-scrollbar{display:none}
 .menu a{position:relative;font-size:var(--link);font-weight:500;letter-spacing:-.01em;white-space:nowrap;
@@ -71,7 +71,7 @@ p{margin:0}
   transition:background-color .35s var(--ease),transform .35s var(--ease)}
 .nav .cta:hover{background:var(--pill-hover);transform:translateY(-1px)}
 .nav .cta:active{transform:translateY(0)}
-section[id]{scroll-margin-top:90px}
+section[id]{scroll-margin-top:104px}
 :where(a,button):focus-visible{outline:2px solid var(--ink);outline-offset:3px;border-radius:6px}
 
 /* --- pigułki home --------------------------------------------------------- */
@@ -89,7 +89,7 @@ section[id]{scroll-margin-top:90px}
 /* --- hero: zdjęcie na pełny ekran, tekst do lewej na scrimie (układ
    podstron produktowych Revoluta, materiał jak hero na home) -------------- */
 .pg-hero{position:relative;display:flex;flex-direction:column;
-  min-height:calc(100svh - 64px);color:#fff;overflow:hidden}
+  min-height:calc(100svh - 76px);color:#fff;overflow:hidden}
 .pg-tlo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 /* scrim: cięższy po lewej pod tekstem + dolny pod listwę faktów */
 .pg-hero::before{content:"";position:absolute;inset:0;background:
@@ -365,7 +365,7 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
 @media(max-width:760px){
   .nav{--nav-w:100%;--gap:20px;--link:15px;padding-inline:20px}
   .brand{margin-right:16px}
-  .brand img{height:22px}
+  .brand img{height:30px}
   .nav .cta{padding:0 14px}
 }
 @media(max-width:600px){.tm-grid{grid-template-columns:1fr}}
@@ -491,7 +491,7 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
   /* Po zmianie kolejności (mapa przed formularzem) to jest PIERWSZA sekcja
      strony, a pasek nawigacji jest `fixed` — bez zapasu nagłówek chował się
      pod nim (na 390 px o 13 px). */
-  padding-top:calc(clamp(48px,6.5vw,88px) + 64px)}
+  padding-top:calc(clamp(48px,6.5vw,88px) + 76px)}
 .dojazd h2{max-width:14ch;font-size:clamp(1.9rem,3.4vw,2.9rem);text-wrap:balance}
 .dojazd .lead2{margin:14px 0 0;max-width:52ch;font-size:17px;line-height:1.6;color:var(--tekst)}
 .dojazd-grid{display:grid;grid-template-columns:1.25fr .75fr;gap:clamp(20px,3vw,44px);

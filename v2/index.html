@@ -27,8 +27,8 @@
    ========================================================================== */
 :root{
   --nav-w:1100px;        /* 1440 − 2×170 */
-  --nav-pad:12px;
-  --pill-h:37px;
+  --nav-pad:18px;
+  --pill-h:40px;
   --link:16px;
   --gap:30px;
   --ink:#000;
@@ -70,7 +70,7 @@ a{color:inherit;text-decoration:none}
 .nav-in{width:var(--nav-w);max-width:100%;margin:0 auto;height:var(--pill-h);
   display:flex;align-items:center}
 .brand{flex:none;display:flex;align-items:center;margin-right:21px}
-.brand img{height:24px;width:auto}
+.brand img{height:36px;width:auto}
 .menu{display:flex;align-items:center;gap:var(--gap);min-width:0;overflow-x:auto;scrollbar-width:none}
 .menu::-webkit-scrollbar{display:none}
 .menu a{position:relative;font-size:var(--link);font-weight:500;letter-spacing:-.01em;white-space:nowrap;
@@ -576,7 +576,7 @@ a{color:inherit;text-decoration:none}
 @media(max-width:760px){
   :root{--gap:20px;--link:15px}
   .brand{margin-right:16px}
-  .brand img{height:22px}
+  .brand img{height:30px}
   .menu{margin-right:10px;
         -webkit-mask-image:linear-gradient(90deg,#000 0,#000 62%,transparent 96%);
         mask-image:linear-gradient(90deg,#000 0,#000 62%,transparent 96%)}

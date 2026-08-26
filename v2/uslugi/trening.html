@@ -46,15 +46,15 @@ p{margin:0}
 .wrap{max-width:var(--tresc);margin:0 auto;padding-inline:var(--bok)}
 
 /* --- nawigacja: przypięty stan nawigacji home ----------------------------- */
-.nav{--nav-w:1100px;--pill-h:37px;--link:16px;--gap:30px;--pill:#262626;--pill-hover:#333;
-  position:sticky;top:0;z-index:300;padding:12px 24px;
+.nav{--nav-w:1100px;--pill-h:40px;--link:16px;--gap:30px;--pill:#262626;--pill-hover:#333;
+  position:sticky;top:0;z-index:300;padding:18px 24px;
   background:rgba(255,255,255,.9);
   -webkit-backdrop-filter:blur(14px) saturate(1.4);backdrop-filter:blur(14px) saturate(1.4);
   box-shadow:0 1px 0 rgba(10,10,10,.09)}
 .nav-in{width:var(--nav-w);max-width:100%;margin:0 auto;height:var(--pill-h);
   display:flex;align-items:center}
 .brand{flex:none;display:flex;align-items:center;margin-right:21px}
-.brand img{height:24px;width:auto}   /* na jasnym tle oryginał, bez odwracania barw */
+.brand img{height:36px;width:auto}   /* na jasnym tle oryginał, bez odwracania barw */
 .menu{display:flex;align-items:center;gap:var(--gap);min-width:0;overflow-x:auto;scrollbar-width:none}
 .menu::-webkit-scrollbar{display:none}
 .menu a{position:relative;font-size:var(--link);font-weight:500;letter-spacing:-.01em;white-space:nowrap;
@@ -74,7 +74,7 @@ p{margin:0}
 @media(max-width:760px){
   .nav{--nav-w:100%;--gap:20px;--link:15px;padding-inline:20px}
   .brand{margin-right:16px}
-  .brand img{height:22px}
+  .brand img{height:30px}
   .nav .cta{padding:0 14px}
 }
 :where(a,button):focus-visible{outline:2px solid var(--ink);outline-offset:3px;border-radius:6px}
