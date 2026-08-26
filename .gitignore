@@ -1,27 +1,3 @@
 .DS_Store
 .vercel
 node_modules/
-
-# materiał roboczy — repo jest publiczne, a tu są zdjęcia klienta,
-# nasz odrzucony prototyp i wewnętrzna ocena obecnej strony
-brief/
-research/
-_kadry-zapas/
-
-# nieużywane kadry robocze — zostają lokalnie, nie zaśmiecają publicznego repo
-v2/img/hero-athlete-wide.png
-v2/img/hero-athlete.png
-v2/img/hero-sprint-banner.png
-v2/img/hero-sprint-blur.png
-v2/img/hero-sprint.png
-v2/img/hero-sprint2.png
-v2/img/sprint-blur.png
-v2/img/gen-base.png
-v2/img/gen-kit.png
-v2/img/gen-wide.png
-v2/img/sprint-sharp-old.png
-v2/img/hero-legia.png
-v2/img/ring-banner.png
-v2/img/ring-reka.png
-v2/img/sprint-poprzedni.png
-propozycje/

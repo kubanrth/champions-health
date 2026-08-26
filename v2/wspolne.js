@@ -1,10 +1,4 @@
-/* Wspólne zachowania wszystkich podstron:
-   1) pop-up „Umów wizytę" — wybór: zadzwonić czy napisać,
-   2) listy wyboru w stylu strony — natywny <select> zostaje pod spodem, więc
-      bez JS-u formularz dalej działa, a walidacja i wysyłka nic nie wiedzą
-      o podmianie.
-   Jeden plik zamiast kopii w siedmiu stronach; style wstrzykuje sam, żeby
-   dokładanie go do kolejnej strony było jednym <script>. */
+
 (() => {
   const TELEFON = '+48223182000';
   const TELEFON_ETYKIETA = '22 318 20 00';
@@ -36,12 +30,6 @@
 .uw-zamknij:hover{background:rgba(11,13,12,.12)}
 .uw-zamknij:focus-visible{outline:2px solid #0B0D0C;outline-offset:2px}
 
-/* --- lista wyboru --------------------------------------------------------- */
-/* Lista jedzie do body i jest position:fixed. Powod: pola formularza maja
-   backdrop-filter, ktory wypycha je na wlasna warstwe kompozytowa i wtedy
-   maluja sie NAD lista, choc ta ma wyzszy z-index. Wyjscie poza formularz
-   omija cala te uklada warstw.
-   UWAGA: w tym bloku nie ma odwrotnych apostrofow - to wnetrze szablonu JS. */
 .pw{position:relative}
 .pw-natywna{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);
   clip-path:inset(50%);white-space:nowrap}
@@ -62,11 +50,7 @@
 .pw-lista li.wskazana:not([aria-selected="true"]){background:#EDEDEA}
 .pw-lista li[data-grupa]{padding:12px 14px 4px;font-size:11px;font-weight:500;letter-spacing:.07em;
   text-transform:uppercase;color:rgba(11,13,12,.5);cursor:default}
-/* --- mobile: przycisk Menu w pasku, szuflada i plywajaca pastylka CTA ------
-   UWAGA: w tym bloku nie ma odwrotnych apostrofow - to wnetrze szablonu JS. */
-/* Napis „Menu" ma byc czarny (zyczenie klienta). Nad ciemnym zdjeciem hero czarny
-   tekst bez podkladu ma ~1,5:1, wiec siedzi na jasnej pastylce - tej samej, co
-   reszta przyciskow na stronie. Na jasnych podstronach wyglada tak samo. */
+
 .mnu-btn{display:none;align-items:center;gap:10px;height:40px;padding:0 16px;border:0;
   margin-left:auto;border-radius:999px;
   background:#F1F1F1;color:#0B0D0C;font:inherit;font-size:16px;font-weight:500;cursor:pointer;
@@ -91,10 +75,7 @@
 .mnu .btn-uw i{width:44px;height:44px;border-radius:50%;background:#0B0D0C;color:#fff;
   display:grid;place-items:center}
 .mnu .btn-uw svg{width:17px;height:17px}
-/* Pastylka startuje na calą szerokosc kadru, a po pierwszym scrollu zsuwa sie
-   symetrycznie do wlasnej szerokosci (--fab-waska liczy JS z zawartosci).
-   Zwezanie idzie na width, bo scaleX sciskaloby napis razem z tlem.
-   (Bez odwrotnych apostrofow - to wnetrze szablonu JS.) */
+
 .fab{position:fixed;z-index:250;left:50%;
   bottom:calc(14px + env(safe-area-inset-bottom) + var(--pasek-dolny,0px));
   transform:translateX(-50%);display:none;align-items:center;justify-content:space-between;
@@ -105,7 +86,7 @@
   transition:width .55s cubic-bezier(.22,.8,.25,1),transform .35s cubic-bezier(.22,.8,.25,1),
     opacity .3s cubic-bezier(.22,.8,.25,1)}
 .fab.zwezona{width:var(--fab-waska,auto)}
-/* na jasnych sekcjach pastylka odwraca kolory, zeby nie zlewala sie z tlem */
+
 .fab.ciemna{background:#0B0D0C;color:#fff;box-shadow:0 18px 40px -18px rgba(0,0,0,.4)}
 .fab.ciemna i{background:#fff;color:#0B0D0C}
 .fab i{width:44px;height:44px;flex:none;border-radius:50%;background:#0B0D0C;color:#fff;
@@ -114,28 +95,17 @@
 .fab:active{transform:translateX(-50%) scale(.97)}
 body.mnu-otwarte{overflow:hidden}
 body.mnu-otwarte .fab{opacity:0;pointer-events:none}
-/* --- uklad paska (zyczenie klienta): menu na srodku okna, po prawej przycisk
-   „Umow wizyte" i logo przy samej krawedzi. Siatka 1fr auto 1fr trzyma menu
-   dokladnie na srodku niezaleznie od szerokosci prawej grupy. */
-/* pasek na cala szerokosc: przy --nav-w 1100px logo konczylo sie 170 px przed
-   krawedzia okna, a ma byc przy samej krawedzi.
-   (W tym bloku nie ma odwrotnych apostrofow - to wnetrze szablonu JS.) */
+
 .nav-in{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:20px;
   width:100%;max-width:none}
-/* wszystkie trzy w PIERWSZYM wierszu: bez grid-row logo trafialo pod menu,
-   bo w kolejnosci DOM idzie po elemencie z kolumny 2 (algorytm rzadki) */
+
 .nav .menu{grid-column:2;grid-row:1;justify-self:center;margin:0}
-/* display:contents rozpuszcza opakowanie, wiec przycisk i logo staja sie
-   bezposrednimi polami siatki i moga usiasc po przeciwnych stronach paska
-   bez ruszania markupu na siedmiu stronach.
-   (Zadnych odwrotnych apostrofow w tym bloku - to wnetrze szablonu JS.) */
+
 .nav-prawo{display:contents}
 .nav .brand{grid-column:1;grid-row:1;justify-self:start;margin-right:0}
 .nav .cta{grid-column:3;grid-row:1;justify-self:end;margin-left:0}
 .nav .brand img{height:44px}
-/* Miedzy 760 a 1080 px menu i prawa grupa nie miesza sie w rownych polowkach
-   (siatka 1fr auto 1fr wymusza symetrie) - logo wystawalo o 7-17 px poza kadr.
-   Ponizej progu wszystko sciesniamy, zeby srodkowanie menu dalo sie utrzymac. */
+
 @media(max-width:1180px){.nav .brand img{height:38px}}
 @media(max-width:1080px){
   .nav-in{gap:14px}
@@ -144,23 +114,20 @@ body.mnu-otwarte .fab{opacity:0;pointer-events:none}
   .nav .brand img{height:32px}
 }
 @media(max-width:760px){
-  /* na telefonie: logo z lewej, „Menu" z prawej */
+
   .nav-in{display:flex}
   .nav .brand{margin-right:auto}
 }
 
-/* pasek chowa sie przy scrollu w dol, wraca przy scrollu w gore - inaczej
-   przy stalym pasku naglowki sekcji zostaja przyciete tuz pod nim */
 .nav.schowana{transform:translateY(-100%)}
 @media(max-width:760px){
   .mnu-btn{display:inline-flex}
   .nav .menu,.nav .cta{display:none}
   .fab{display:inline-flex}
-  /* miejsce pod plywajaca pastylke, zeby nie zaslaniala ostatniego wiersza */
+
   footer.site{padding-bottom:calc(94px + env(safe-area-inset-bottom))}
 }
 
-/* --- odsłanianie tekstu znak po znaku (te same wartosci co na glownej) ---- */
 .reveal .word{display:inline-block;white-space:nowrap;overflow:hidden;vertical-align:bottom;
   padding-bottom:.16em;margin-bottom:-.16em}
 .reveal .char{display:inline-block;transform:translateY(115%);
@@ -180,9 +147,6 @@ body.mnu-otwarte .fab{opacity:0;pointer-events:none}
     strzalka: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg>',
   };
 
-  // --- 1) pop-up ------------------------------------------------------------
-  // „Napisz do nas" ZAWSZE prowadzi na podstronę kontaktu, nawet jeśli bieżąca
-  // strona ma własny formularz niżej (decyzja klienta: przenieść, nie przewijać).
   const doFormularza = (location.pathname.includes('/uslugi/') ? '../' : '') + 'kontakt.html#formularz';
 
   const okno = document.createElement('dialog');
@@ -202,12 +166,10 @@ body.mnu-otwarte .fab{opacity:0;pointer-events:none}
   document.body.appendChild(okno);
 
   okno.querySelector('.uw-zamknij').addEventListener('click', () => okno.close());
-  // kliknięcie w tło (poza kartą) zamyka — `dialog` sam tego nie robi
+
   okno.addEventListener('click', e => { if (e.target === okno) okno.close(); });
   okno.querySelector('[data-uw-pisz]').addEventListener('click', () => okno.close());
 
-  // podpinamy po treści, nie po klasie — „Umów wizytę" jest i w pasku, i na
-  // kartach, i w heroju. Funkcja, bo elementy mobilne powstają dopiero niżej.
   const podepnijUW = zakres => {
     for (const a of zakres.querySelectorAll('a'))
       if (a.textContent.trim() === 'Umów wizytę')
@@ -215,9 +177,6 @@ body.mnu-otwarte .fab{opacity:0;pointer-events:none}
   };
   podepnijUW(document);
 
-  // --- 1b) mobile: Menu w pasku + pływająca pastylka ------------------------
-  // Budowane z JS-u, bo ten sam pasek jest w siedmiu plikach. Linki bierzemy
-  // z istniejącego `.menu`, więc szuflada nie może się rozjechać z nawigacją.
   {
     const pasek = document.querySelector('.nav-in');
     const menu = document.querySelector('.nav .menu');
@@ -252,10 +211,9 @@ body.mnu-otwarte .fab{opacity:0;pointer-events:none}
       fab.href = '#';
       fab.innerHTML = 'Umów wizytę<i>' + IKONA.strzalka + '</i>';
       document.body.appendChild(fab);
-      podepnijUW(szuflada);                 // CTA w szufladzie
+      podepnijUW(szuflada);
       fab.addEventListener('click', e => { e.preventDefault(); okno.showModal(); });
 
-      // szerokość docelowa mierzona z zawartości, bo w CSS-ie jej nie da się zapisać
       const zmierzFab = () => {
         fab.style.transition = 'none';
         fab.style.width = 'auto';
@@ -267,9 +225,7 @@ body.mnu-otwarte .fab{opacity:0;pointer-events:none}
       };
       zmierzFab();
       addEventListener('resize', zmierzFab);
-      // Kolory pastylki zalezne od tego, co pod nia lezy. Sekcje ze zdjeciem nie
-      // maja wlasnego tla (jest w <img>), wiec ida z listy; reszte rozstrzyga
-      // pierwszy nieprzezroczysty `background-color` w gore drzewa.
+
       const CIEMNE = '.hero,.pg-hero,.kt-sek,.etapy,.kontakt,.kont,footer.site';
       const kolorFab = () => {
         const r = fab.getBoundingClientRect();
@@ -288,9 +244,7 @@ body.mnu-otwarte .fab{opacity:0;pointer-events:none}
         const jasne = !rgb || (.2126 * rgb[0] + .7152 * rgb[1] + .0722 * rgb[2]) / 255 > .55;
         fab.classList.toggle('ciemna', jasne);
       };
-      // Pasek adresu przeglądarki na telefonie potrafi zasłonić dolną część
-      // okna układu — `position:fixed` tego nie widzi i pastylka chowa się pod
-      // nim. `visualViewport` mówi, ile realnie widać; różnicę oddajemy w CSS.
+
       const vv = window.visualViewport;
       if (vv) {
         const zasloniete = () => fab.style.setProperty('--pasek-dolny',
@@ -300,11 +254,7 @@ body.mnu-otwarte .fab{opacity:0;pointer-events:none}
         zasloniete();
       }
       let raf = null;
-      // Pasek na podstronach stoi na stale i przycinal naglowki sekcji tuz pod
-      // soba. Strona glowna ma wlasna logike (data-nav-auto) - tam nie ruszamy.
-      // UWAGA: `pasek` jest już zajęte wyżej (`.nav-in`) — ta sama nazwa w tym
-      // bloku wywalała cały skrypt („Cannot access 'pasek' before initialization"),
-      // razem z szufladą i pastylką.
+
       const pasekNav = document.querySelector('.nav');
       if (pasekNav && !pasekNav.hasAttribute('data-nav-auto')) {
         pasekNav.style.transition = 'transform .35s cubic-bezier(.22,.8,.25,1)';
@@ -313,8 +263,7 @@ body.mnu-otwarte .fab{opacity:0;pointer-events:none}
           if (!matchMedia('(max-width:760px)').matches) { pasekNav.classList.remove('schowana'); return; }
           if (document.body.classList.contains('mnu-otwarte')) return;
           const y = scrollY;
-          // `ostatni` przesuwamy TYLKO przy ruchu ponad próg — inaczej drobne
-          // drgnięcie w górę po serii małych kroków w dół odwracało kierunek
+
           if (Math.abs(y - ostatni) > 6) {
             pasekNav.classList.toggle('schowana', y > ostatni && y > 140);
             ostatni = y;
@@ -328,7 +277,7 @@ body.mnu-otwarte .fab{opacity:0;pointer-events:none}
       };
       addEventListener('scroll', stanFab, { passive: true });
       stanFab();
-      setTimeout(kolorFab, 400);            // po ułożeniu się strony
+      setTimeout(kolorFab, 400);
 
       const przelacz = stan => {
         szuflada.classList.toggle('otwarte', stan);
@@ -342,16 +291,12 @@ body.mnu-otwarte .fab{opacity:0;pointer-events:none}
     }
   }
 
-  // --- 2) odsłanianie tekstu znak po znaku ----------------------------------
-  // Zmierzone na myhealthprac.com: znak jedzie translateY(100%) → 0, czas 0,33 s,
-  // rozjazd 16 ms. Strona główna ma własną, starszą kopię tego kodu w <script>,
-  // dlatego pomijamy elementy już podzielone — inaczej podzieliłoby je dwa razy.
   {
     const bezRuchu = matchMedia('(prefers-reduced-motion:reduce)').matches;
     for (const el of document.querySelectorAll('[data-reveal]')) {
       if (el.querySelector('.word')) continue;
       const tekst = el.textContent.trim();
-      el.setAttribute('aria-label', tekst);       // czytnik czyta zdanie, nie litery
+      el.setAttribute('aria-label', tekst);
       if (bezRuchu) continue;
       const frag = document.createDocumentFragment();
       let i = 0;
@@ -376,12 +321,10 @@ body.mnu-otwarte .fab{opacity:0;pointer-events:none}
         el.classList.add('pokaz');
         o.disconnect();
       }, { threshold: .4 }).observe(el);
-      console.assert(el.getAttribute('aria-label').replace(/\s+/g, '')
-                  === el.textContent.replace(/\s+/g, ''), 'odsłanianie zmieniło treść');
+
     }
   }
 
-  // --- 3) listy wyboru ------------------------------------------------------
   for (const [nr, sel] of [...document.querySelectorAll('select')].entries()) {
     const opcje = [...sel.querySelectorAll('option')];
     const box = document.createElement('div');
@@ -411,7 +354,7 @@ body.mnu-otwarte .fab{opacity:0;pointer-events:none}
 
     const pozycje = [];
     for (const o of opcje) {
-      if (o.disabled) continue;               // podpowiedź „Wybierz…" siedzi na przycisku
+      if (o.disabled) continue;
       if (o.parentElement.tagName === 'OPTGROUP' && o === o.parentElement.firstElementChild) {
         const g = document.createElement('li');
         g.textContent = o.parentElement.label;
@@ -429,15 +372,14 @@ body.mnu-otwarte .fab{opacity:0;pointer-events:none}
     }
 
     box.append(btn);
-    document.body.appendChild(lista);         // patrz komentarz przy .pw-lista
+    document.body.appendChild(lista);
 
     let wskazana = Math.max(0, pozycje.findIndex(p => p.o.selected));
     const odswiez = () => {
       const wybrana = pozycje.find(p => p.o.selected);
       btn.textContent = wybrana ? wybrana.o.textContent : opcje[0].textContent;
       for (const p of pozycje) p.li.setAttribute('aria-selected', String(p.o.selected));
-      // podpowiedź ciemniejsza niż zwykły placeholder: na szarym polu 2F3230
-      // dawało 4,2:1, a to jedyna etykieta listy, dopóki nic nie wybrano
+
       btn.classList.toggle('pw-pusta', !wybrana);
     };
     const wskaz = i => {
@@ -446,7 +388,7 @@ body.mnu-otwarte .fab{opacity:0;pointer-events:none}
       lista.setAttribute('aria-activedescendant', pozycje[wskazana].li.id);
       pozycje[wskazana].li.scrollIntoView({ block: 'nearest' });
     };
-    const ustaw = () => {                    // lista siedzi w body, wiec sama liczy pozycje
+    const ustaw = () => {
       const r = btn.getBoundingClientRect();
       const wysokosc = lista.offsetHeight || 240;
       const podSpodem = innerHeight - r.bottom - 16;
@@ -469,7 +411,7 @@ body.mnu-otwarte .fab{opacity:0;pointer-events:none}
       lista.classList.remove('otwarta');
       btn.setAttribute('aria-expanded', 'false');
     };
-    // lista nie jest juz dzieckiem .pw, wiec klasa musi trafic i na nia
+
     const obserwuj = new MutationObserver(() =>
       lista.classList.toggle('otwarta', box.classList.contains('otwarta')));
     obserwuj.observe(box, { attributes: true, attributeFilter: ['class'] });

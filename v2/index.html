@@ -11,22 +11,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Inter:opsz,wght@14..32,400..700&family=Mulish:wght@400;500&display=swap" rel="stylesheet">
 <style>
-/* ==========================================================================
-   Champions Health v2 — nawigacja 1:1 z komponentu Framer "Modernic Nav Bar"
-   (Sketchbase). Wymiary zmierzone z pikseli modernic.framer.website przy 1440 px:
 
-     tło paska    #000000 (pełna czerń, nie przezroczystość)
-     krawędzie    170 px z lewej i z prawej → treść 1100 px, wyśrodkowana
-     logo         24×24, wyrównane w pionie do środka pigułki
-     logo → link  21 px
-     linki        16 px, odstęp 30 px
-     pigułka      95×37, promień pełny, tło #262626, biały tekst, padding 16 px
-     pion         pigułka 12 px od góry paska → pasek 61 px
-
-   Zamiast „Start now" jedno działanie: Umów wizytę.
-   ========================================================================== */
 :root{
-  --nav-w:1100px;        /* 1440 − 2×170 */
+  --nav-w:1100px;
   --nav-pad:18px;
   --pill-h:40px;
   --link:16px;
@@ -39,20 +26,15 @@
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{margin:0;background:var(--ink);color:#fff;
-  /* Revolut składa Aeonik Pro (CoType, licencja komercyjna) i ładuje z niego TYLKO
-     Medium 500 — stąd ich jednowagowy rytm. Aeonika nie wolno nam wystawić, więc
-     bierzemy Inter: ten sam neogrotesk, darmowy, u nich zapasowy w tym samym stacku. */
+
   font-family:Inter,"General Sans",system-ui,sans-serif;font-size:16px;line-height:1.6;
   font-optical-sizing:auto;
-  /* Scale VF = krój Legii (Dalton Maag, licencja); Archivo to darmowy zamiennik o tej samej budowie */
+
   --legia:"Scale VF",Archivo,Inter,system-ui,sans-serif;
   -webkit-font-smoothing:antialiased;overflow-x:hidden}
 img{display:block;max-width:100%}
 a{color:inherit;text-decoration:none}
 
-/* --- nawigacja ---------------------------------------------------------- */
-/* Nad warstwą hero (z-index 200). Na banerze przezroczysta, po zejściu z niego
-   chowa się do góry, a niżej wraca doczepiona z jasnym tłem. */
 .nav{position:fixed;top:0;left:0;right:0;z-index:300;background:transparent;padding:var(--nav-pad) 24px;
   transition:transform .45s var(--ease),background-color .35s var(--ease),box-shadow .35s var(--ease)}
 .nav.schowana{transform:translateY(-100%)}
@@ -62,8 +44,7 @@ a{color:inherit;text-decoration:none}
 .nav.przypieta .menu a{color:#0A0A0A}
 .nav.przypieta .menu a::after{background:#0A0A0A}
 .nav.przypieta .menu a:focus-visible{outline-color:#0A0A0A}
-/* invert(1) psuł barwy marki (złota gwiazdka na niebiesko, paski na cyjan
-   i róż) — na jasnym pasku pokazujemy po prostu oryginał */
+
 .brand img.na-jasnym{display:none}
 .nav.przypieta .brand img.na-ciemnym{display:none}
 .nav.przypieta .brand img.na-jasnym{display:block}
@@ -80,10 +61,7 @@ a{color:inherit;text-decoration:none}
 .menu a:hover{opacity:.78}
 .menu a:hover::after{transform:scaleX(1)}
 .menu a:focus-visible{outline:2px solid #fff;outline-offset:4px;border-radius:3px}
-/* Nad banerem pasek jest przezroczysty, a zdjęcie prawie czarne — ciemna
-   pastylka miała względem niego 1,63:1 i po prostu znikała. Nad banerem idzie
-   więc jasna (jak główny przycisk w heroju), a na przypiętym białym pasku
-   wraca ciemna. */
+
 .cta{margin-left:auto;flex:none;height:var(--pill-h);padding:0 16px;border-radius:999px;
   background:#F1F1F1;color:#1F1F1F;font-size:var(--link);font-weight:500;letter-spacing:-.01em;
   display:inline-flex;align-items:center;white-space:nowrap;
@@ -95,11 +73,6 @@ a{color:inherit;text-decoration:none}
 .cta:active{transform:translateY(0)}
 .cta:focus-visible{outline:2px solid #fff;outline-offset:3px}
 
-/* --- zespół: przewijana lista + wizytówka ---------------------------------
-   Układ jak w inspiracji (poziomy pas kart wychodzący poza siatkę), ale karta
-   własna: kadr portretu, rola, nazwisko, specjalizacja. Przewijanie natywne
-   (scroll-snap), strzałki tylko je popychają — dzięki temu działa bezwładność
-   na dotyku i klawiatura bez dodatkowego kodu.                             */
 .tm{background:#fff;color:#0A0A0A}
 .tm .eyebrow,.tm .lead{color:var(--muted-d)}
 .tm-head{max-width:none;margin:0;padding:0 clamp(24px,3.4vw,52px)}
@@ -108,18 +81,13 @@ a{color:inherit;text-decoration:none}
 .tm-head .lead{margin-top:1.4rem;max-width:56ch;
   font-size:clamp(1.08rem,1.5vw,1.45rem);line-height:1.45}
 
-/* strzałki na krawędziach pasa — to samo szkło co w sliderze „Zakresu opieki" */
-
 .tm-track{margin-top:clamp(2rem,4vw,3rem);overflow:hidden}
-/* 1:1 z myhealthprac.com: taśma płynie sama (~80 px/s, bez pauzy na hover),
-   pętla = dwie kopie zestawu i zawijanie transformu. Strzałki tylko
-   popychają przesunięcie — taśma płynie dalej. */
+
 .tm-belt{display:flex;gap:14px;width:max-content;will-change:transform}
 .tm-set{display:flex;gap:14px;flex:none}
 .tm-static .tm-track{overflow-x:auto;scrollbar-width:none;
   padding-inline:max(24px,calc((100% - var(--wrap)) / 2 + 24px))}
 
-/* karta: portret na całej powierzchni, napisy na zdjęciu (jak w inspiracji) */
 .tm-card{position:relative;flex:none;width:clamp(320px,32vw,461px);aspect-ratio:461/605;
   padding:0;border:0;border-radius:14px;overflow:hidden;background:none;color:#fff;
   font:inherit;text-align:left;cursor:pointer;transition:transform .45s var(--ease)}
@@ -145,7 +113,6 @@ a{color:inherit;text-decoration:none}
 .tm-wiecej::after{content:"→";transition:transform .35s var(--ease)}
 .tm-card:hover .tm-wiecej::after{transform:translateX(4px)}
 
-/* wizytówka */
 .wiz{width:min(920px,calc(100vw - 32px));max-height:calc(100svh - 32px);padding:0;border:0;
   border-radius:24px;background:#111;color:#fff;overflow:hidden}
 .wiz::backdrop{background:rgba(0,0,0,.72);backdrop-filter:blur(6px)}
@@ -179,21 +146,12 @@ a{color:inherit;text-decoration:none}
   .tm-track{scroll-behavior:auto}
 }
 
-/* --- sygnatura: autoryzacja Legii ----------------------------------------
-   Białe tło ciągnie się z sekcji kart wyżej, więc zamiast zmiany koloru
-   oddziela ją włos linii. Całość w jednej linii: logo · kreska · zdanie.
-   Rozmiar pisma na vw, żeby zdanie nie łamało się przy żadnej szerokości;
-   poniżej 760 px linia i tak nie ma prawa się zmieścić — wtedy układ
-   przechodzi na dwa wiersze.                                             */
 .claim{background:#fff;color:#0A0A0A}
 .claim .claim-in{width:100%;max-width:none;display:flex;align-items:center;justify-content:flex-start;
   gap:clamp(18px,2.4vw,40px);
-  /* pas jest jedną linijką — 4,5–8 rem góra/dół robiło z niego pustą stronę */
+
   padding:clamp(2.2rem,4.4vw,3.9rem) clamp(24px,3.4vw,52px)}
-/* Odstęp wokół pasa to w większości padding SĄSIADÓW (2 × 144 px), nie samego
-   pasa — samo skrócenie `.claim-in` niewiele dawało. Przycinamy tylko te dwie
-   krawędzie, które go dotykają; reszta rytmu strony bez zmian. */
-/* `.sec` stoi niżej w arkuszu i przy równej wadze wygrywa — stąd `.sec.tm` */
+
 .sec.tm{padding-bottom:clamp(3rem,5.4vw,4.8rem)}
 .sec.blog{padding-top:clamp(3rem,5.4vw,4.8rem)}
 .claim-logo{flex:none;height:min(3.4vw,60px);width:auto}
@@ -201,13 +159,11 @@ a{color:inherit;text-decoration:none}
 .claim-txt{margin:0;white-space:nowrap;font-size:min(3.78vw,4.8rem);
   line-height:1.1;letter-spacing:-.022em;font-weight:500}
 
-/* maska na słowie, znak wyjeżdża spod niej */
 .reveal .word{display:inline-block;white-space:nowrap;overflow:hidden;vertical-align:bottom;
   padding-bottom:.16em;margin-bottom:-.16em}
 .reveal .char{display:inline-block;transform:translateY(115%);
   transition:transform .33s cubic-bezier(.25,.46,.45,.94) calc(var(--i) * 16ms)}
 .reveal.pokaz .char{transform:none}
-
 
 @media(max-width:760px){
   .claim .claim-in{flex-wrap:wrap;gap:14px}
@@ -219,7 +175,6 @@ a{color:inherit;text-decoration:none}
   .reveal .char{transform:none;transition:none;opacity:1}
 }
 
-/* maska na słowie, znak wyjeżdża spod niej */
 .reveal .word{display:inline-block;white-space:nowrap;overflow:hidden;vertical-align:bottom;
   padding-bottom:.16em;margin-bottom:-.16em}
 .reveal .char{display:inline-block;transform:translateY(115%);
@@ -229,12 +184,6 @@ a{color:inherit;text-decoration:none}
   .reveal .char{transform:none;transition:none}
 }
 
-/* --- etapy opieki (wzór: myhealthprac.com #personal-professional) ---------
-   Zmierzone u nich: wiersz z `border-top:1px dashed` i `padding:32px`,
-   kółko ikony 70 px z obwódką rgba(241,241,241,.45), tytuł 23,76/500,
-   lista punktów w osobnej kolumnie. Tło = rozmyte zdjęcie, tekst #F1F1F1. */
-/* wjazd jak w inspiracji: sekcja rośnie ze skali .9 do 1, wiązana ze scrollem
-   (u nich liniowo, nie tweenem). Rama daje jasne tło, na którym widać wzrost. */
 .etapy-ramka{background:#fff}
 .etapy{position:relative;overflow:hidden;background:#0A1A10;color:#F1F1F1;isolation:isolate;
   border-radius:8px;transform:scale(var(--s,.9));transform-origin:50% 50%;will-change:transform}
@@ -243,16 +192,11 @@ a{color:inherit;text-decoration:none}
   object-fit:cover;object-position:50% 50%}
 .etapy::after{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
   background:linear-gradient(180deg,rgba(6,14,9,.86) 0%,rgba(6,14,9,.66) 38%,rgba(6,14,9,.8) 100%)}
-/* Herb jako motyw tła: sam plik to szkło — wnętrze jest przezroczyste, widać
-   tylko krawędzie (białe światła i czarne cienie). Leży NAD przyciemnieniem,
-   inaczej ginie. Płynie po skosie razem ze scrollem: `--h` liczy JS od +1
-   (sekcja jeszcze pod ekranem) do -1 (już nad nim). */
+
 .etapy-herb{position:absolute;z-index:1;left:50%;top:50%;pointer-events:none;
   width:min(230vh,2300px);aspect-ratio:1;opacity:.34;
   background:url(img/herb-glass.webp) center/contain no-repeat;
-  /* przejazd LICZY SIĘ PRZED obrotem — inaczej skos herbu przekręcałby też
-     kierunek lotu. `--h` = +1 nad sekcją (herb w prawym górnym rogu),
-     −1 pod nią (lewy dolny) */
+
   transform:translate3d(-50%,-50%,0)
             translate3d(calc(var(--h,0) * 26vw),calc(var(--h,0) * -28vh),0)
             rotate(-12deg);
@@ -277,7 +221,6 @@ a{color:inherit;text-decoration:none}
 .etap-tytul{margin:0;max-width:44ch;font-size:clamp(20px,1.85vw,26.5px);line-height:1.34;
   font-weight:500;letter-spacing:-.015em}
 
-/* wejście wierszy przy dojechaniu sekcji — kolejno, z dołu */
 .etap{opacity:0;transform:translateY(24px);
   transition:opacity .7s var(--ease) calc(var(--i) * 140ms),
              transform .8s var(--ease) calc(var(--i) * 140ms)}
@@ -294,28 +237,13 @@ a{color:inherit;text-decoration:none}
   .etap{transition:none;opacity:1;transform:none}
 }
 
-/* --- hero: STAWY ----------------------------------------------------------
-   Ostry kadr biegnącego zawodnika. Na stawach siedzą małe kwadraciki;
-   najechanie rozsuwa kwadrat w kartę z opisem stawu. Karta otwiera się
-   zawsze do wnętrza kadru — kierunek ustala JS po pozycji stawu.         */
 .hero{--cw:280px;--przerwa:28px;
-  /* karty skalują się wysokością okna, żeby rząd mieścił się też na niskim ekranie */
+
   position:absolute;inset:0;z-index:200;overflow:hidden}
 .hero.oddane{opacity:0;pointer-events:none;transition:opacity .35s var(--rev) .95s}
-/* bez własnego tła — kurczące się zdjęcie ma odsłaniać talię kart pod spodem */
 
-/* --- zwinięcie hero w kartę ------------------------------------------------
-   Zmierzone na revolut.com: próg ~65 px scrolla odpala JEDEN tween w czasie
-   (nie animację wiązaną ze scrollem), krzywa cubic-bezier(.35,0,0,1),
-   karta 1,08 s, obraz 1 s — karta dochodzi chwilę po obrazie, żeby ruch się
-   osadził. U nas zdjęcie jest poziome, a karta pionowa, więc zamiast
-   kontra-skalowania animujemy geometrię kadru: `object-fit:cover` sam
-   przekadrowuje, a `object-position` prowadzi zawodnika do środka karty.  */
 .hero{--rev:cubic-bezier(.35,0,0,1)}
-/* Poza banerem hero jest przezroczyste, więc przy rozwijaniu prześwitywała
-   biała sekcja kart — przy szybkim powrocie w górę wyglądało to jak biały
-   pasek u góry. Ciemna podkładka gaśnie przy zwijaniu (żeby odsłonić karty)
-   i wraca przy rozwijaniu, zanim baner zdąży urosnąć. */
+
 .hero::before{content:"";position:absolute;inset:0;z-index:0;background:#070C09;
   transition:opacity .5s var(--rev)}
 .hero.morphed::before{opacity:0}
@@ -325,9 +253,7 @@ a{color:inherit;text-decoration:none}
   transition:left 1.08s var(--rev),top 1.08s var(--rev),width 1.08s var(--rev),
              height 1.08s var(--rev),transform 1.08s var(--rev),
              border-radius 1.08s var(--rev),box-shadow 1.08s var(--rev)}
-/* Doklejenie banera do kafelka przy ruchu paska musi być NATYCHMIASTOWE.
-   Z przejściem baner przejeżdżał pół ekranu i przy powrocie w górę wlatywał
-   z lewej strony (a w luce prześwitywało białe tło). */
+
 .morph.bez-przejscia,.morph.bez-przejscia>img{transition:none}
 .hero.morphed .morph{box-shadow:0 2px 4px rgba(0,0,0,.08),0 26px 50px -28px rgba(0,0,0,.45)}
 .morph>img{width:100%;height:100%;object-fit:cover;object-position:50% 50%;
@@ -336,7 +262,6 @@ a{color:inherit;text-decoration:none}
   transform:var(--mt);border-radius:28px}
 .hero.morphed .morph>img{object-position:38% 40%}
 
-/* podpis w morfie = 1:1 układ karty z „Zakresu opieki", żeby przekazanie było niewidoczne */
 .morph-in{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;align-items:flex-start;
   padding:clamp(24px,3vw,38px);text-align:left;opacity:0;transition:opacity .45s var(--rev) .45s}
 .hero.morphed .morph-in{opacity:1}
@@ -352,28 +277,23 @@ a{color:inherit;text-decoration:none}
 .hero.morphed::after{opacity:0}
 .jt{transition:opacity .45s var(--rev)}
 
-/* punkt na stawie — zwykła biała kropka */
 .jt{position:absolute;z-index:4;width:13px;height:13px;margin:-6.5px 0 0 -6.5px;padding:0;
   border:0;background:none;cursor:pointer;color:inherit;font:inherit;text-align:left;
   opacity:0;transition:opacity .35s var(--rev)}
-/* czwarta kropka zjeżdża z barku na łokieć — stąd przejście na pozycji */
+
 .jt.wedruje{transition:opacity .35s var(--rev),left .5s var(--rev),top .5s var(--rev)}
 .hero.wjazd .jt{opacity:1}
-/* na barku stoi w czasie wjazdu wędrujący znacznik — własny punkt zapala się
-   dopiero wtedy, gdy tamten z niego zjedzie */
+
 .hero.wjazd .j-bark{opacity:0;pointer-events:none}
 .hero.bezkreski .j-bark{opacity:1;pointer-events:auto}
-/* Zwijanie hero w kartę: kropki gasną NATYCHMIAST. Wcześniej ta reguła stała
-   przed `.hero.wjazd .jt{opacity:1}` i przy równej wadze przegrywała — kropki
-   wisiały nad gotową już kartą. */
+
 .hero.morphed .jt,.hero.morphed .j-bark{opacity:0;pointer-events:none;
   transition:opacity .12s linear}
 .jt-dot{position:absolute;inset:0;border-radius:50%;background:#fff;
   box-shadow:0 0 0 1px rgba(6,14,10,.35),0 0 18px rgba(255,255,255,.5);
   transform:scale(.2);transition:transform .5s cubic-bezier(.2,1.4,.4,1)}
 .hero.wjazd .jt.zapalony .jt-dot{transform:none}
-/* Puls: osobny pierścień w ::after, żeby nie ruszać `transform` samej kropki —
-   on jest zajęty przez zapalanie i powiększenie po najechaniu. */
+
 .jt-dot::after{content:"";position:absolute;inset:0;border-radius:50%;
   border:1px solid rgba(255,255,255,.9);opacity:0}
 .hero.wjazd .jt.zapalony .jt-dot::after{animation:jt-puls 2.8s var(--ease) infinite}
@@ -390,7 +310,6 @@ a{color:inherit;text-decoration:none}
 .jt:hover .jt-dot,.jt:focus-visible .jt-dot,.jt.on .jt-dot{transform:scale(1.35)}
 .jt:focus-visible{outline:2px solid #fff;outline-offset:7px;border-radius:50%}
 
-/* kreska wędrująca po stawach przy starcie strony */
 .jt-tor{position:absolute;inset:0;z-index:3;pointer-events:none;overflow:visible}
 .jt-tor{transition:opacity .7s var(--rev)}
 .hero.bezkreski .jt-tor{opacity:0}
@@ -400,22 +319,18 @@ a{color:inherit;text-decoration:none}
 .jt:hover .jt-dot,.jt:focus-visible .jt-dot,.jt.on .jt-dot{background:#fff}
 .jt:focus-visible{outline:2px solid #fff;outline-offset:6px;border-radius:4px}
 
-/* Zamiast kart: po najechaniu z kropki wysuwa się kreska, nad nią wjeżdża nazwa
-   stawu, a pod nią opis. Ten sam język, co wjazd nagłówka na starcie strony. */
-/* sama kropka ma 13 px — powiększamy cel wskaźnika, nie punkt */
 .jt::before{content:"";position:absolute;inset:-13px;border-radius:50%}
 .jt-wys{position:absolute;top:calc(6.5px + var(--dy,0px));left:6.5px;
   width:calc(var(--wys,clamp(200px,21vw,290px)) + var(--odsun,0px));pointer-events:none}
-/* pionowy odcinek odnośnika — używa go tylko bark, który musi wyjść nad ramię */
+
 .jt-pion{position:absolute;left:6.5px;bottom:6.5px;width:1px;
   height:calc(0px - var(--dy,0px));background:rgba(255,255,255,.9);
   box-shadow:0 0 8px rgba(255,255,255,.4);
   transform:scaleY(0);transform-origin:bottom center;transition:transform .3s var(--rev)}
 .jt.pion-dol .jt-pion{top:6.5px;bottom:auto;height:var(--dy,0px);transform-origin:top center}
 .jt:hover .jt-pion,.jt:focus-visible .jt-pion,.jt.on .jt-pion{transform:scaleY(1)}
-/* po wejściu na punkt można przejechać myszą na tekst — opis nie ucieknie */
-.jt:hover .jt-wys{pointer-events:auto}
 
+.jt:hover .jt-wys{pointer-events:auto}
 
 .jt.w-lewo .jt-wys{left:auto;right:6.5px;text-align:right}
 
@@ -425,9 +340,6 @@ a{color:inherit;text-decoration:none}
   transition:transform .5s var(--rev)}
 .jt.w-lewo .jt-kreska{left:0;right:13px;transform-origin:right center}
 
-/* nazwa nad kreską, opis pod kreską — oba wynurzają się z niej */
-/* tekst siedzi na KOŃCU kreski — dzięki temu trafia w ciemne miejsce zdjęcia
-   i nie potrzebuje żadnej podkładki pod spodem */
 .jt-nazwa,.jt-opis{position:absolute;left:calc(15px + var(--odsun,0px));right:0;overflow:hidden}
 .jt.w-lewo .jt-nazwa,.jt.w-lewo .jt-opis{left:0;right:calc(15px + var(--odsun,0px))}
 .jt-nazwa{bottom:9px}
@@ -437,7 +349,6 @@ a{color:inherit;text-decoration:none}
 .jt-nazwa i{transform:translateY(105%)}
 .jt-opis i{transform:translateY(-105%);opacity:0}
 
-/* krój jak w reszcie strony — bez osobnego, wąskiego fontu */
 .jt-nazwa i{font-size:clamp(17px,1.35vw,21px);font-weight:600;letter-spacing:-.02em;
   line-height:1.15;color:#fff;text-shadow:0 1px 10px rgba(4,10,14,.92),0 0 2px rgba(4,10,14,.8)}
 .jt-opis i{padding-top:3px;font-size:clamp(13px,1.02vw,15px);line-height:1.5;
@@ -449,7 +360,7 @@ a{color:inherit;text-decoration:none}
 .jt:hover .jt-opis i,.jt:focus-visible .jt-opis i,.jt.on .jt-opis i{transform:none;opacity:1}
 .jt:hover .jt-nazwa i,.jt:focus-visible .jt-nazwa i,.jt.on .jt-nazwa i{transition-delay:.16s}
 .jt:hover .jt-opis i,.jt:focus-visible .jt-opis i,.jt.on .jt-opis i{transition-delay:.24s}
-.jt.ma-pion .jt-kreska{left:0;right:0}         /* dobija do pionu — linie się łączą */
+.jt.ma-pion .jt-kreska{left:0;right:0}
 .jt.ma-pion:hover .jt-kreska,.jt.ma-pion.on .jt-kreska{transition-delay:.22s}
 .jt.ma-pion:hover .jt-nazwa i,.jt.ma-pion.on .jt-nazwa i{transition-delay:.4s}
 .jt.ma-pion:hover .jt-opis i,.jt.ma-pion.on .jt-opis i{transition-delay:.48s}
@@ -459,44 +370,32 @@ a{color:inherit;text-decoration:none}
   .hero,.hero-copy h1,.hero::after,.deal-label{transition:none}
 }
 
-/* treść hero — nagłówek nad poziomym odcinkiem kreski, dosunięty do lewej */
-/* Nagłówek leży w ciemnym polu zdjęcia (od 44% szerokości, dolna krawędź na 24%
-   wysokości kadru) — dlatego czyta się bez żadnego przyciemnienia. Ramka sięga
-   od miejsca lądowania aż po kreskę i przycina, więc tekst WYJEŻDŻA Z LINII.
-   --kx/--kt/--kh liczy JS tym samym przelicznikiem `cover` co pozycje kropek. */
 .hero-copy{position:absolute;z-index:4;right:clamp(24px,3.4vw,52px);
   left:var(--kx,50%);top:var(--kt,20%);pointer-events:none;text-align:right}
 
-
-/* dłuższy wiersz („z boiska, nie z podręczników") musi zmieścić się w ciemnej
-   kolumnie nad dłonią — to on wyznacza górny stopień pisma */
 .hero-copy h1{margin:0 0 0 auto;font-size:clamp(1.8rem,4.05vw,4.2rem);line-height:1.06;
   letter-spacing:-.028em;font-weight:500}
-/* każdy wiersz wynurza się z własnej maski, drugi ćwierć taktu później */
+
 .hero-copy h1 .w{display:block;overflow:hidden}
 .hero-copy h1 .w i{display:block;font-style:normal;transform:translateY(106%);
   transition:transform .85s var(--rev)}
 .hero.tekst .hero-copy h1 .w i{transform:none}
 .hero.tekst .hero-copy h1 .w+.w i{transition-delay:.1s}
-/* nagłówek nie tylko wyjeżdża, ale i gaśnie — inaczej przez pół sekundy krzyżuje
-   się z nagłówkiem sekcji kart, która właśnie się odsłania */
+
 .hero.morphed .hero-copy h1 .w i{transform:translateY(-106%);transition-duration:.42s}
 .hero.morphed .hero-copy{opacity:0;transition:opacity .24s var(--rev)}
 
-/* drugi blok: mniejsze zdanie + duży przycisk (wzór: myhealthprac.com) */
 .hero-dol{position:absolute;z-index:4;right:clamp(24px,3.4vw,52px);
   bottom:clamp(2rem,6svh,4.4rem);width:min(30rem,58%);text-align:right;
   opacity:0;transform:translateY(22px);
   transition:opacity .7s var(--rev) .25s,transform .9s var(--rev) .25s}
 .hero.tekst .hero-dol{opacity:1;transform:none}
-/* Przy zwijaniu tekst musi zniknąć SZYBCIEJ, niż karta dolatuje (0,42 s),
-   inaczej zdanie z heroju wisi na gotowym kafelku i nakłada się na jego opis.
-   Domyślne przejście ma 0,25 s zwłoki — w tę stronę jest niepotrzebna. */
+
 .hero.morphed .hero-dol{opacity:0;transform:translateY(-24px);
   transition:opacity .26s var(--rev),transform .34s var(--rev)}
 .hero-dol p{margin:0 0 1.35rem;font-size:clamp(1.15rem,1.72vw,1.6rem);line-height:1.34;
   font-weight:500;letter-spacing:-.022em;color:rgba(255,255,255,.95)}
-/* pastylka 1:1 z referencji: 52 px wysokości, padding 4/4/4/20, koło 46 px */
+
 .pigulka{display:inline-flex;align-items:center;gap:18px;height:52px;padding:4px 4px 4px 22px;
   border-radius:999px;background:#F1F1F1;color:#1F1F1F;
   font-size:15px;font-weight:500;letter-spacing:-.01em;
@@ -509,23 +408,15 @@ a{color:inherit;text-decoration:none}
 .pigulka:hover .pigulka-kolo svg{transform:translate(14px,-14px)}
 
 @media(max-width:900px){
-  /* przy tym przybliżeniu ciemne pole wypada poza kadr — nagłówek idzie
-     w ciemny pas nad sylwetką: wciąż nad linią i wciąż bez przyciemnienia */
+
   .hero-copy{left:24px;right:24px;top:clamp(78px,11svh,120px);height:auto;overflow:visible}
-  .hero-copy h1 .w{display:inline}     /* tu tekst łamie się sam, do szerokości kadru */
+  .hero-copy h1 .w{display:inline}
   .hero-copy h1{transform:translateY(40px)}
 }
 @media(max-width:760px){
-  /* Wzór: myhealthprac.com na telefonie — tytuł do lewej u góry, zdanie przy
-     dole. Pastylka hero znika, bo tę samą akcję trzyma pływający przycisk
-     (inaczej na jednym ekranie były dwa identyczne CTA, jedno na drugim). */
-  /* na wąskim kadrze `cover` ucinał zawodnika przy lewej krawędzi — okno
-     przesunięte w lewo pokazuje całą sylwetkę. Kosztem jest jasna koszulka
-     dokładnie pod nagłówkiem: bez kurtyny u góry tytuł miał 1,16:1. */
+
   .morph>img{object-position:34% 50%}
-  /* UWAGA: `.hero::after` niesie już kurtynę OD DOŁU (pod zdanie i pastylkę).
-     Trzeba powtórzyć obie warstwy — samo dopisanie górnej skasowałoby dolną
-     i zdanie spadło z 6,8:1 na 1,1:1. */
+
   .hero::after{background:
     linear-gradient(to bottom,rgba(4,9,6,.88) 0%,rgba(4,9,6,.72) 24%,
       rgba(4,9,6,.34) 44%,rgba(4,9,6,0) 62%),
@@ -543,7 +434,7 @@ a{color:inherit;text-decoration:none}
   .hero{--cw:min(280px,64vw)}
 }
 @media(max-width:760px){
-  .jt,.jt-tor{display:none}  /* przy tym kadrze sylwetka jest zbyt przycięta */
+  .jt,.jt-tor{display:none}
 }
 @media(max-width:1180px){
   :root{--nav-w:100%;--link-gap:22px}
@@ -561,8 +452,7 @@ a{color:inherit;text-decoration:none}
   .hs{--lab-w:210px}
 }
 @media(max-width:640px){
-  /* jeden znacznik zamiast trzech — przy tej szerokości etykiety zaczynają
-     przecinać rozrzucone słowa i cała kompozycja się zamula */
+
   .m-eks{display:none}
   .m-sila{--ax:77;--ay:55}
   .dots-h span{font-size:clamp(1.5rem,7.4vw,2.2rem)}
@@ -583,29 +473,14 @@ a{color:inherit;text-decoration:none}
   .cta{padding:0 14px}
 }
 
-/* ==========================================================================
-   Sekcja „Zakres opieki" — ROZDANIE
-   Punkt wyjścia: sekcja kart z revolut.com (etykieta-pigułka nad rzędem,
-   środkowa karta większa od bocznych o ~11% i wysunięta wyżej — zmierzone:
-   402×567 boczna, 446×630 środkowa). Sama animacja jest nasza: u Revoluta
-   karty stoją statycznie, u nas są rozdawane z talii i przesuwają się przez
-   punkt uwagi w miarę scrollowania.
-
-   Mechanika, jeden parametr `p` (0–1) liczony ze scrolla:
-     p 0 → 0,30   talia rozkłada się w łuk (skala, obrót i rozsunięcie)
-     p 0,30 → 1   łuk dryfuje w bok, każda karta przechodzi przez środek
-   Pozycje liczone z FORMUŁY, nie z pomiaru — pomiar w trakcie animacji
-   zwraca wartości pośrednie (nauczka z poprzednich sekcji).
-   ========================================================================== */
 .deal{position:relative;background:#fff}
 .deal-stage{position:sticky;top:0;height:100svh;overflow:hidden;
-  /* zapas u góry na nawigację — nagłówek sekcji nie może pod nią wjechać */
+
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   padding-top:calc(var(--pill-h) / 2);padding-bottom:clamp(.5rem,2svh,1.6rem)}
-/* zapas u góry na doczepioną nawigację */
+
 .claim,.ring,.tm{scroll-margin-top:72px}
-/* nagłówek sekcji 1:1 z Revoluta („Your salary, reimagined"): duży wyśrodkowany
-   tytuł, wyśrodkowany akapit, ciemna pigułka CTA — nad talią kart */
+
 .deal-head{position:relative;z-index:3;margin:0 0 clamp(16px,3svh,34px);padding:0 24px;
   text-align:center;
   opacity:0;transform:scale(.86) translateY(42px);
@@ -623,9 +498,7 @@ a{color:inherit;text-decoration:none}
   .card-txt{font-size:13px}
 }
 .deal{--rev:cubic-bezier(.35,0,0,1);--dcw:min(78vw,1040px);--dch:clamp(400px,64svh,640px)}
-/* poziomy slider: tor na transformie, pionowy scroll przesuwa go w lewo;
-   padding-inline centruje pierwszą i ostatnią kartę w kadrze */
-/* scena centruje dzieci — szerszy od niej tor startowałby przesunięty o połowę nadmiaru */
+
 .deal-track{display:flex;gap:clamp(16px,2vw,28px);width:max-content;align-self:flex-start;
   padding-inline:calc((100vw - var(--dcw)) / 2);will-change:transform}
 .card{position:relative;flex:none;width:var(--dcw);height:var(--dch);border-radius:28px;overflow:hidden;
@@ -636,13 +509,10 @@ a{color:inherit;text-decoration:none}
   background:linear-gradient(to bottom,rgba(8,14,10,.86) 0%,rgba(8,14,10,.6) 34%,rgba(8,14,10,.28) 56%,rgba(8,14,10,.92) 88%,rgba(8,14,10,.96) 100%)}
 .card-in{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;align-items:flex-start;
   padding:clamp(24px,3vw,38px);text-align:left}
-/* Po usunięciu podpisu tytuł startuje od górnej krawędzi i bierze jego miejsce.
-   Karta morfu MUSI mieć ten sam stopień — inaczej przy przekazaniu kadru napis
-   przeskakuje z domyślnych 18,72 px na docelowy. */
+
 .card-in h3,.morph-in h3{margin:0;max-width:14ch;font-size:clamp(34px,3.9vw,52px);line-height:1.04;
   font-weight:500;letter-spacing:-.028em;text-wrap:balance}
-/* tekst bezpośrednio na karcie — bez białego prostokąta; czytelność
-   trzyma mocniejszy dół gradientu karty (mierzony do AA) */
+
 .card-txt{margin-top:auto;max-width:54ch;padding-top:14px;
   border-top:1px solid rgba(255,255,255,.28);
   font-size:15.5px;line-height:1.6;text-align:left;color:rgba(255,255,255,.92);
@@ -656,8 +526,7 @@ a{color:inherit;text-decoration:none}
 .card.focus .card-cta,.morph-in .card-cta{opacity:1;transform:none}
 .card-cta:hover{background:#E9E9E6}
 .card-cta:focus-visible{outline:2px solid #fff;outline-offset:3px}
-/* druga droga z karty: pełny zakres usługi na własnej podstronie.
-   Szkło zamiast bieli, żeby „Umów wizytę" zostało jedynym pełnym akcentem. */
+
 .card-akcje{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:16px}
 .card-akcje .card-cta{margin-top:0}
 .card-link{display:inline-flex;align-items:center;gap:8px;height:44px;padding:0 18px;
@@ -673,7 +542,7 @@ a{color:inherit;text-decoration:none}
 .card-link svg{transition:transform .3s var(--ease)}
 .card-link:hover svg{transform:translate(3px,-3px)}
 .card{cursor:pointer}
-/* brakujące zdjęcie — świadomie widoczne, nie zapychamy stockiem */
+
 .card.nofoto{background:
   repeating-linear-gradient(45deg,#1a1a1a 0 14px,#151515 14px 28px)}
 .card .badge{align-self:center;margin-bottom:10px;padding:5px 10px;border-radius:8px;
@@ -686,20 +555,14 @@ a{color:inherit;text-decoration:none}
 }
 @media(max-width:760px){
   .deal{--dcw:88vw;--dch:min(58svh,420px)}
-  /* Pływająca pastylka zajmuje dolne ~70 px, więc bez tego zapasu talia stała
-     optycznie za nisko: nad nagłówkiem była pusta biel, a pod kartą przycisk. */
+
   .deal-stage{padding-bottom:calc(86px + env(safe-area-inset-bottom))}
-  /* morf MUSI mieć ten sam padding co karta — inaczej przy przekazaniu kadru
-     tytuł przeskakiwał o 9 px w bok, a opis o 80 px w pionie */
+
   .card-in,.morph-in{padding:18px 15px}
   .card-in h3,.morph-in h3{font-size:21px}
   .card-txt{font-size:12.5px}
 }
 
-
-/* --- siatka kropek jako motyw przewodni ciemnych sekcji -------------------
-   Ten sam raster co w heroju (196 px), żeby kropki czytały się jako jeden
-   system, a nie ozdoba pojedynczej sekcji. Na kremie kropki są ciemne. */
 .dotted{position:relative}
 .dotted>*{position:relative;z-index:1}
 .dotted::before{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;opacity:.4;
@@ -708,7 +571,6 @@ a{color:inherit;text-decoration:none}
 .sec.light.dotted::before{opacity:.28;
   background-image:radial-gradient(circle,rgba(10,10,10,.85) 1.4px,transparent 2.2px)}
 
-/* --- wspólne dla dalszych sekcji ---------------------------------------- */
 :root{--cream:#F4F3EF;--muted-d:#5E625F;--wrap:1100px;--sec-y:clamp(5rem,10vw,9rem)}
 .wrap{width:var(--wrap);max-width:100%;margin:0 auto;padding:0 24px}
 .sec{padding:var(--sec-y) 0}
@@ -724,14 +586,6 @@ h2{margin:0;font-size:clamp(2.1rem,4.6vw,3.6rem);line-height:1.05;letter-spacing
   transition-delay:var(--d,0ms)}
 .rv.in{opacity:1;transform:none}
 
-/* --- pasek dowodu ------------------------------------------------------- */
-
-/* --- ścieżka pacjenta --------------------------------------------------- */
-
-/* --- zespół ------------------------------------------------------------- */
-
-/* --- FAQ ---------------------------------------------------------------- */
-/* --- blog ---------------------------------------------------------------- */
 .blog{background:#fff;color:#0A0A0A;padding-bottom:clamp(2.6rem,4vw,4rem)}
 .blog-head{padding:0 clamp(24px,3.4vw,52px)}
 .blog-head h2{max-width:none;font-size:clamp(2.4rem,6vw,5.4rem);line-height:1.0;
@@ -751,8 +605,6 @@ h2{margin:0;font-size:clamp(2.1rem,4.6vw,3.6rem);line-height:1.05;letter-spacing
 .post:hover h3 a{background-size:100% 1px}
 .post p{margin:10px 0 0;max-width:36ch;font-size:15px;line-height:22px;color:var(--muted-d)}
 
-/* FAQ 1:1 z revolut.com/esim: wyśrodkowany nagłówek 51,79/500, wiersze
-   1000 px z pytaniem 24/500 i kółkiem +/− po prawej, włosowa linia pod spodem */
 .faq-sec{background:#fff;color:#0A0A0A;padding-top:clamp(2.6rem,4vw,4rem)}
 .faq-head{text-align:center}
 .faq-head h2{margin:0 auto;max-width:none;font-size:clamp(2.1rem,3.6vw,3.24rem);
@@ -776,7 +628,6 @@ h2{margin:0;font-size:clamp(2.1rem,4.6vw,3.6rem);line-height:1.05;letter-spacing
 .a p{margin:0;padding:0 60px 26px 0;font-size:15px;line-height:22px;color:var(--muted-d);max-width:92ch}
 .faq-stopka{margin:2.2rem auto 0;max-width:1000px;font-size:15px;line-height:22px;color:var(--muted-d)}
 
-/* --- CTA + stopka ------------------------------------------------------- */
 .end h2{max-width:14ch}
 .end .row{display:flex;flex-wrap:wrap;gap:10px;margin-top:2rem}
 .btn{height:48px;padding:0 22px;border-radius:999px;display:inline-flex;align-items:center;font-size:16px;
@@ -785,12 +636,9 @@ h2{margin:0;font-size:clamp(2.1rem,4.6vw,3.6rem);line-height:1.05;letter-spacing
 .btn-w:hover{transform:translateY(-2px);background:#E9E9E6}
 .btn-o{border:1px solid rgba(255,255,255,.32);color:#fff}
 .btn-o:hover{transform:translateY(-2px);background:rgba(255,255,255,.08)}
-/* Stopka: pas marki + trzy kolumny linków, pod nimi przerywana kreska i wiersz
-   prawny. Układ i przerywana kreska zdjęte z myhealthprac.com; ich skala (label
-   12,24 px, link 11,52 px przy body 14) przeliczona na naszą (body 16). */
+
 footer.site{border-top:1px solid rgba(255,255,255,.10);padding:76px 0 26px}
-/* kontener stopki taki sam jak na podstronach (1180 px) — na głównej `.wrap`
-   ma 1100 px i stopka wychodziła węższa niż w reszcie serwisu */
+
 footer.site .wrap{width:1180px;max-width:100%;padding-inline:clamp(24px,4vw,58px)}
 .ft-siatka{display:grid;gap:clamp(28px,4vw,64px);
   grid-template-columns:minmax(230px,1.5fr) 1fr 1fr 1.15fr}
@@ -810,8 +658,7 @@ footer.site .wrap{width:1180px;max-width:100%;padding-inline:clamp(24px,4vw,58px
 .ft-dol a:hover{color:#fff;text-decoration:underline;text-underline-offset:4px}
 footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-radius:3px}
 @media(max-width:900px){
-  /* dwie kolumny: „Zakres opieki" (6 pozycji) zajmuje dwa wiersze, więc „Kontakt"
-     wchodzi pod „Klinikę" zamiast zostawiać pustą komórkę po prawej */
+
   .ft-siatka{grid-template-columns:1fr 1fr;gap:34px 30px;align-items:start}
   .ft-marka{grid-column:1/-1}
   .ft-marka p{max-width:46ch}
@@ -831,40 +678,31 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
 
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 
-/* --- kontakt: JEDNA sekcja na wszystkich stronach (2026-08-26) ------------
-   Układ z kontakt.html (wąska lewa kolumna, pigułki w słupku, szkło 580 px),
-   tło i gradient z index.html (ciemniejszy, 100deg .94→.32). Zmiana tutaj =
-   zmiana we wszystkich plikach: skrypt /tmp/ujednolic.mjs, źródło kontakt.html. */
 .kt-sek{position:relative;display:flex;align-items:center;isolation:isolate;
   min-height:calc(100svh - 76px);padding:clamp(28px,4.6vw,64px) 0;overflow:hidden}
 .kt-tlo{position:absolute;inset:0;z-index:0;width:100%;height:100%;object-fit:cover;object-position:50% 42%}
 .kt-sek::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
   background:linear-gradient(100deg,rgba(5,12,9,.94) 0%,rgba(5,12,9,.88) 34%,
              rgba(5,12,9,.6) 62%,rgba(5,12,9,.32) 100%)}
-/* ten sam kontener na każdej stronie — index ma inny .wrap */
+
 .kt-sek .wrap{width:auto;max-width:1180px;margin:0 auto;padding-inline:clamp(20px,4vw,64px)}
 .kt-grid{position:relative;z-index:2;width:100%;display:grid;
   grid-template-columns:1fr minmax(440px,580px);gap:clamp(24px,3.6vw,64px);
   align-items:center;color:#fff}
 .kt-grid h1,.kt-grid .kt-h{margin:0;max-width:12.5ch;letter-spacing:-.028em;font-size:clamp(2.3rem,4.4vw,3.75rem);line-height:1.04}
 .kt-lead{margin:16px 0 0;max-width:42ch;font-size:18px;line-height:24px;color:rgba(255,255,255,.85)}
-/* Liquid glass — ten sam materiał co w sekcji kontaktu na stronie głównej:
-   przepuszcza i rozmywa zdjęcie, świetlna krawędź u góry, miękki cień.
-   Hierarchię robi GRUBOŚĆ szkła, nie kolor: tafla formularza przyciemnia tło
-   filtrem (zdjęcie prześwituje kolorem), pola je rozjaśniają, więc świecą
-   jaśniej niż tafla i nie wyglądają jak dziury. */
+
 .kt-pigulki{display:flex;flex-wrap:wrap;gap:12px;margin:clamp(24px,3vw,40px) 0 0;max-width:560px}
-/* pastylki zostają białe — pełna biel trzyma kontrast niezależnie od tego, co
-   akurat świeci na zdjęciu, i odcina blok danych od szkła formularza */
+
 .kt-pig{display:inline-flex;align-items:center;gap:10px;height:48px;padding:0 20px;
   border-radius:999px;white-space:nowrap;color:var(--ink);background:#fff;
   box-shadow:0 14px 30px -18px rgba(0,0,0,.55)}
 .kt-pig span{font-size:11px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;
-  color:rgba(11,13,12,.72)}   /* 11 px wersalikami — var(--tekst2) dawało 4,37:1 */
+  color:rgba(11,13,12,.72)}
 .kt-pig b{font-size:15px;font-weight:500}
 a.kt-pig{transition:background-color .3s var(--ease),transform .3s var(--ease)}
 a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
-/* karta formularza */
+
 .kt-forma{color:#fff;border-radius:28px;padding:clamp(24px,2.6vw,36px);
   background:linear-gradient(155deg,rgba(255,255,255,.1),rgba(255,255,255,.03));
   -webkit-backdrop-filter:blur(30px) saturate(1.9) brightness(.33);
@@ -875,10 +713,7 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
 .kt-pole{margin-top:16px}
 .kt-pole label{display:block;margin-bottom:6px;font-size:13.5px;font-weight:500;
   color:rgba(255,255,255,.9)}
-/* Pola: jasne szklane studzienki z ciemnym tekstem, bez ramki. Białe litery
-   wymagają ciemnego pola, a widoczna granica bez obwódki — jasnego; przy jednym
-   kadrze obie rzeczy naraz się nie mieszczą, więc wnętrze ma odwrotną polaryzację
-   niż tafla. Granicę robi kontrast wypełnienia (7,2:1), nie kreska. */
+
 .kt-pole input,.kt-pole textarea,.kt-pole select,.kt-pole .pw-btn{width:100%;font:inherit;font-size:15px;
   color:#0B0D0C;border:0;border-radius:14px;
   background:linear-gradient(180deg,rgba(255,255,255,.58),rgba(255,255,255,.44));
@@ -888,9 +723,7 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
 .kt-pole input{height:50px;padding:0 14px}
 .kt-pole textarea{min-height:96px;padding:12px 14px;resize:vertical}
 .kt-pole input::placeholder,.kt-pole textarea::placeholder{color:#232624}
-/* Chrome wstawia przy autouzupełnianiu własne, lawendowe tło i samego
-   `background` nie respektuje — nadpisujemy je cieniem wewnętrznym w kolorze
-   zmierzonym z wyrenderowanego pola */
+
 .kt-pole input:-webkit-autofill,
 .kt-pole input:-webkit-autofill:hover,
 .kt-pole input:-webkit-autofill:focus{
@@ -901,13 +734,13 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
   background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 5.2 7 9l4-3.8" stroke="%230B0D0C" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>'),
     linear-gradient(180deg,rgba(255,255,255,.58),rgba(255,255,255,.44));
   background-repeat:no-repeat,no-repeat;background-position:right 14px center,0 0}
-.kt-pole select:invalid{color:#232624}   /* placeholder w kolorze podpowiedzi */
+.kt-pole select:invalid{color:#232624}
 .kt-pole option{color:#0B0D0C;background:#fff}
 .kt-pole input:hover,.kt-pole textarea:hover,.kt-pole .pw-btn:hover{
   background:linear-gradient(180deg,rgba(255,255,255,.78),rgba(255,255,255,.64))}
 .kt-pole select:hover{background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 5.2 7 9l4-3.8" stroke="%230B0D0C" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>'),
     linear-gradient(180deg,rgba(255,255,255,.78),rgba(255,255,255,.64))}
-/* pole robi się BIAŁE tylko na czas wypełniania — po wyjściu wraca do szkła */
+
 .kt-pole input:focus,.kt-pole textarea:focus,.kt-pole select:focus,
 .kt-pole .pw-btn:focus,.kt-pole .pw.otwarta .pw-btn{
   background:#fff;box-shadow:inset 0 2px 5px -2px rgba(0,0,0,.22)}
@@ -919,8 +752,7 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
   box-shadow:inset 0 2px 5px -2px rgba(0,0,0,.35),inset 0 0 0 2px #C1121F}
 .kt-zgoda{display:flex;align-items:flex-start;gap:10px;margin-top:18px;
   font-size:13px;line-height:1.55;color:rgba(255,255,255,.9)}
-/* własny kwadracik: ta sama materia co pola; natywny `accent-color` daje na
-   szkle płaską białą płytkę */
+
 .kt-zgoda input{appearance:none;-webkit-appearance:none;flex:none;
   width:20px;height:20px;margin:1px 0 0;padding:0;border:0;border-radius:7px;cursor:pointer;
   background:linear-gradient(180deg,rgba(255,255,255,.58),rgba(255,255,255,.44));
@@ -931,11 +763,10 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
   box-shadow:none}
 .kt-zgoda input:focus-visible{outline:2px solid rgba(255,255,255,.85);outline-offset:2px}
 .kt-forma .btn{width:100%;justify-content:center;gap:10px;margin-top:20px;height:50px}
-/* na szkle przycisk musi być jedyną pełną powierzchnią — inaczej ginie */
+
 .kt-forma .btn-pelny{background:#fff;color:#000}
 .kt-forma .btn-pelny:hover{background:#E9E9E6}
-/* bez rozmycia tła (starsza przeglądarka, wyłączona przezroczystość) szkło
-   zostaje samą półprzezroczystą bielą i tekst ginie — wtedy pełne wypełnienie */
+
 @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
   .kt-forma{background-color:rgba(6,13,10,.92)}
 }
@@ -948,10 +779,6 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
 </style>
 </head>
 <body>
-
-
-
-
 
     <nav class="nav" data-nav-auto>
   <div class="nav-in">
@@ -983,8 +810,7 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
           <div class="card-akcje"><a class="card-cta" href="#kontakt">Umów wizytę</a><a class="card-link" href="uslugi/medycyna-sportowa.html">Zakres opieki<svg width="12" height="12" viewBox="0 0 13 13" fill="none" aria-hidden="true"><path d="M3 10 10 3M4.6 3H10v5.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
     </div>
     </div>
-  
-  
+
     <button class="jt j-bark" data-jt data-dy="-15.6" data-kier="lewo" data-ix="38.2" data-iy="30.8" aria-label="Staw ramienny: Stabilność łopatki decyduje o tym, ile wytrzyma sam staw - od niej zaczynamy ocenę barku.">
       <span class="jt-dot"></span>
       <span class="jt-pion" aria-hidden="true"></span>
@@ -1031,7 +857,7 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
         <span class="jt-opis"><i>Zbyt małe zgięcie grzbietowe zmienia mechanikę kolana i podnosi ryzyko urazu.</i></span>
       </span>
     </button>
-  
+
     <div class="hero-copy" data-kopia>
     <h1><span class="w"><i>Kontuzje, które znamy</i></span>
         <span class="w"><i>z boiska, nie z podręczników</i></span></h1>
@@ -1107,13 +933,7 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
   </div>
 </section>
 
-
 <script>
-// --- „Zakres opieki": poziomy slider napędzany scrollem ---------------------
-// Pionowy scroll przesuwa tor dużych poziomych kart w lewo (widok jedzie
-// w prawo). Po ostatniej karcie sekcja się domyka i strona płynie dalej.
-// Dwa parametry, oba z FORMUŁY: we (0–1) — wjazd kart tweenem w czasie,
-// odpalany razem ze zwinięciem hero; p (0–1) — pozycja slidera ze scrolla.
 (() => {
   const sec = document.querySelector('.deal');
   const track = document.querySelector('[data-track]');
@@ -1123,13 +943,12 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
   const N = cards.length;
   const reduce = matchMedia('(prefers-reduced-motion:reduce)');
 
-  const HERO = 0;        // „Medycyna sportowa" — w nią zwija się hero, więc wchodzi pierwsza
-  const WSTEP = 0.6;     // ekran na zwinięcie, zanim slider ruszy
-  const KROK = 0.055;    // rozjazd wjazdu kart, liczony od karty hero
-  const CZAS = 1080;     // ten sam czas co morf hero
+  const HERO = 0;
+  const WSTEP = 0.6;
+  const KROK = 0.055;
+  const CZAS = 1080;
   sec.style.height = `${100 + WSTEP * 100 + N * 56}svh`;
 
-  // cubic-bezier(.35,0,0,1) — krzywa zdjęta z revolut.com, ta sama co w CSS
   const rev = x => {
     let lo = 0, hi = 1, t = x;
     for (let i = 0; i < 24; i++) {
@@ -1141,32 +960,17 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
   };
 
   let we = 0, raf = null, tw = null;
-  // Dopóki hero leci do karty 01, slider musi stać — inaczej przy szybkim
-  // scrollu tor odjeżdża i morf ląduje obok albo na karcie 02.
-  // Cel wyliczony ze scrolla. Taśma NIE skacze do niego — dochodzi z limitem
-  // prędkości (patrz `pokazany`), więc gwałtowny scroll przewija karty płynnie
-  // zamiast teleportować o kilka pozycji.
-  // --- blokada na czas zwijania hero --------------------------------------
-  // Zwijanie trwa 1080 ms. Bez blokady mocny rzut przesuwa pasek w trakcie
-  // animacji i baner ląduje tam, gdzie stoi już drugi kafelek. Na czas
-  // zwijania (i tak długo, jak trwa rozpęd) pasek stoi na zerze, a strona jest
-  // przypinana do miejsca postoju karty 01. `behavior:'instant'` jest tu
-  // obowiązkowe — strona ma `scroll-behavior:smooth`, więc zwykłe `scrollTo`
-  // animowałoby korektę przez kilkanaście klatek i te klatki biłyby się
-  // z rozpędem (to była przyczyna drgania kart).
+
   let trzymaj = false, trzymajY = 0, morfDo = 0, koniecDo = 0,
       ostatniRuch = 0, wlasny = false, pomijaj = 0;
   const przypnij = () => { wlasny = true;
     window.scrollTo({ top: trzymajY, behavior: 'instant' }); };
   sec.__pomijaj = ms => { pomijaj = performance.now() + ms; trzymaj = false; };
-  // Blokujemy tylko ruch z palca. End/PageDown, linki kotwicowe i `scrollTo`
-  // nie generują `wheel`/`touchmove`, więc idą bez przeszkód.
+
   let gestOd = 0;
   const znacz = () => {
     const t = performance.now();
-    // Przerwa dłuższa niż 150 ms oznacza NOWY gest, a nie rozpęd poprzedniego —
-    // blokada ma go puścić od razu. Bez tego drugie podejście do scrolla było
-    // zjadane i wyglądało to jak zawieszenie na kafelku 01.
+
     if (trzymaj && t - gestOd > 150) { trzymaj = false; kick(); }
     gestOd = t;
   };
@@ -1174,14 +978,12 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
   addEventListener('touchmove', znacz, { passive: true });
   sec.__trzymaj = () => {
     const t = performance.now();
-    if (t < pomijaj || t - gestOd > 250) return;  // skok celowy albo klawiatura
+    if (t < pomijaj || t - gestOd > 250) return;
     trzymajY = Math.round(sec.offsetTop + window.innerHeight * WSTEP * 0.5);
     trzymaj = true;
-    // Trzymamy tylko na czas LOTU banera, nie całej krzywej. Przy
-    // cubic-bezier(.35,0,0,1) po ~70% czasu karta jest praktycznie na miejscu,
-    // więc dalsze blokowanie tylko dłuży postój na kafelku 01.
+
     morfDo = performance.now() + CZAS * 0.7;
-    koniecDo = performance.now() + 1400;          // twardy limit postoju
+    koniecDo = performance.now() + 1400;
     ostatniRuch = performance.now();
     przypnij(); kick();
   };
@@ -1190,39 +992,32 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
     if (!trzymaj) return;
     if (wlasny) { wlasny = false; return; }
     ostatniRuch = performance.now();
-    // Blokada dotyczy WYŁĄCZNIE jazdy w dół — to przejście hero → kafelek 01.
-    // Ruch w górę zwalnia ją natychmiast, żeby dało się swobodnie zawrócić.
+
     if (window.scrollY < trzymajY - 4) { trzymaj = false; kick(); return; }
     if (window.scrollY > trzymajY + 1) { przypnij(); kick(); }
   }, { passive: true });
   setInterval(() => {
     if (!trzymaj) return;
     const t = performance.now();
-    // puszczamy dopiero, gdy zwijanie się skończyło I ruch ustał
+
     if (t > morfDo && t - ostatniRuch > 120) { trzymaj = false; kick(); }
-    else if (t > koniecDo) { trzymaj = false; kick(); }        // bezpiecznik
+    else if (t > koniecDo) { trzymaj = false; kick(); }
   }, 60);
 
   const postep = () => {
-    if (trzymaj) return 0;                   // zwijanie hero — pasek stoi na karcie 01
+    if (trzymaj) return 0;
     const r = sec.getBoundingClientRect();
     const wstep = window.innerHeight * WSTEP;
     const span = sec.offsetHeight - window.innerHeight - wstep;
     return span > 0 ? Math.min(1, Math.max(0, (-r.top - wstep) / span)) : 0;
   };
 
-  // Taśma idzie WPROST za scrollem — bez dławienia, kotwic i wykrywania gestów.
-  // Każda z tych warstw biła się z użytkownikiem: albo blokowała ruch w drugą
-  // stronę, albo korygowała pozycję i karty drgały. Przewijasz w dół — pasek
-  // jedzie w prawo, tyle.
   const draw = () => {
     raf = null;
     const p = postep();
     const maxX = Math.max(0, track.scrollWidth - stage.clientWidth);
     track.style.transform = `translate3d(${(-p * maxX).toFixed(1)}px,0,0)`;
-    // Cel banera był liczony raz, w chwili zwinięcia. Gdy pasek ruszył
-    // w trakcie lotu (np. po wygaśnięciu blokady przy bardzo długim rozpędzie),
-    // baner lądował obok. Teraz cel podąża za kafelkiem 01.
+
     if (sec.__odswiezCel) sec.__odswiezCel();
     const focus = p * (N - 1);
     const rozjazd = 1 - (N - 1) * KROK;
@@ -1236,9 +1031,6 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
   };
   const kick = () => { if (raf === null) raf = requestAnimationFrame(draw); };
 
-  // podczas zamrożenia rysujemy dalej, żeby po jego końcu taśma ruszyła bez zwłoki
-
-  // wjazd kart: tween w czasie, odpalany i cofany razem ze zwinięciem hero
   sec.__rozloz = cel => {
     const od = we, t0 = performance.now();
     if (tw) cancelAnimationFrame(tw);
@@ -1251,35 +1043,22 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
     tw = requestAnimationFrame(krok);
   };
 
-  // skok do karty i: strzałki i klik przewijają stronę do offsetu, z którego
-  // formuła sama wyliczy pozycję slidera — scroll zostaje jedynym źródłem prawdy
   const doKarty = i => {
     i = Math.max(0, Math.min(N - 1, i));
     const wstep = window.innerHeight * WSTEP;
     const span = sec.offsetHeight - window.innerHeight - wstep;
     const top = sec.getBoundingClientRect().top + scrollY + wstep + (i / (N - 1)) * span;
-    sec.__pomijaj(1400);                    // skok celowy — blokada zwijania nie przeszkadza
+    sec.__pomijaj(1400);
     window.scrollTo({ top: Math.ceil(top) + 1, behavior: 'smooth' });
   };
   cards.forEach((c, i) => c.addEventListener('click', e => {
-    if (!e.target.closest('a')) doKarty(i);   // link na karcie ma nawigować, nie przewijać
+    if (!e.target.closest('a')) doKarty(i);
   }));
   sec.__doKarty = doKarty;
 
-
-  // (chip z rotacją usunięty 2026-08-22 — tekst leży wprost na karcie)
-
-  // geometria karty HERO przy p = 0 — hero zwija się dokładnie w nią.
-  // offsetLeft/offsetTop, nie getBoundingClientRect: transformy wjazdu kart
-  // nie ruszają layoutu, więc pomiar nie zależy od fazy animacji
-  // Geometria karty HERO w pozycji SPOCZYNKOWEJ (p = 0), liczona z offsetów —
-  // NIE z getBoundingClientRect toru, bo ten zawiera bieżące przesunięcie
-  // slidera. Przy szybkim scrollu rect wędruje w lewo i hero leciało za nim.
   sec.__cel = () => {
     const c0 = cards[HERO];
-    // offsetLeft nie zawiera przesunięcia paska, więc dokładamy je jawnie.
-    // Bez tego pasek trzeba było zamrażać na czas zwijania, a po odmrożeniu
-    // doganiał scroll jednym skokiem.
+
     const przesuw = new DOMMatrix(getComputedStyle(track).transform).e;
     return {
       x: track.offsetLeft + c0.offsetLeft + przesuw,
@@ -1301,11 +1080,6 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
     draw();
   }
 
-  // self-check: dokładnie jedna karta może być w fokusie
-  if (!reduce.matches) addEventListener('scroll', () => {
-    console.assert(track.querySelectorAll('.focus').length <= 1,
-      'slider: więcej niż jedna karta w fokusie');
-  }, { passive: true, once: true });
 })();
 </script>
 
@@ -1667,7 +1441,7 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
         <span class="kt-pig"><span>Adres</span><b>Legionistów 3, Książenice</b></span>
       </div>
     </div>
-    <form class="kt-forma" data-forma novalidate data-rv>
+    <form method="post" class="kt-forma" data-forma novalidate data-rv>
       <h3>Umów wizytę</h3>
       <p class="kt-pod">Oddzwonimy tego samego dnia roboczego.</p>
       <div class="kt-pole">
@@ -1787,9 +1561,7 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
   </div>
 </footer>
 
-
 <script>
-// --- FAQ + wjazd sekcji --------------------------------------------------
 (() => {
   const io = new IntersectionObserver(es => {
     for (const e of es) if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
@@ -1804,22 +1576,15 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
     it.querySelector('.q').setAttribute('aria-expanded', open ? 'true' : 'false');
   }));
 
-  // self-check: każdy przycisk FAQ musi sterować istniejącym blokiem
-  for (const b of document.querySelectorAll('.q'))
-    console.assert(document.getElementById(b.getAttribute('aria-controls')),
-      'FAQ: aria-controls wskazuje na nieistniejący blok');
 })();
 </script>
 
-
-
 <script>
-// --- nawigacja: chowa się po zejściu z banera, niżej wraca doczepiona -------
 (() => {
   const nav = document.querySelector('.nav');
   if (!nav) return;
-  const SCHOWAJ = 65;                       // ten sam próg co zwinięcie hero
-  // pasek wraca dopiero, gdy talia dojeżdża do ostatniej karty — nie w jej środku
+  const SCHOWAJ = 65;
+
   const POKAZ = () => { const d = document.querySelector('.deal');
     return d ? d.offsetTop + d.offsetHeight - innerHeight * 1.15 : innerHeight * 1.1; };
   let stan = '';
@@ -1836,12 +1601,6 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
   licz();
 })();
 
-// --- hero → karta „Medycyna sportowa" -------------------------------------
-// Zmierzone na revolut.com: przejście NIE jest wiązane ze scrollem. Próg ~65 px
-// odpala jeden tween w czasie (karta 1,08 s, obraz 1 s, cubic-bezier(.35,0,0,1)),
-// który gra do końca niezależnie od dalszego przewijania i cofa się po powrocie.
-// Hero zwija się w kartę 02 „Zakresu opieki" i oddaje jej miejsce — dlatego cel
-// bierzemy z formuły talii, a nie z pomiaru karty w trakcie animacji.
 (() => {
   const hero = document.querySelector('.hero');
   const sec = document.querySelector('.deal');
@@ -1865,57 +1624,45 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
   const sprawdz = () => {
     const teraz = scrollY > PROG;
     if (teraz === zwiniete) return;
-    if (teraz && !ustawCel()) return;          // bez celu nie zwijamy — lepiej pełny kadr niż skok
+    if (teraz && !ustawCel()) return;
     zwiniete = teraz;
     if (teraz) czasZwiniecia = performance.now();
-    if (!teraz && hero.__zeruj) hero.__zeruj();     // kropki gasną razem z rozwinięciem
+    if (!teraz && hero.__zeruj) hero.__zeruj();
     hero.classList.toggle('morphed', teraz);
     hero.classList.toggle('oddane', teraz);
     sec.classList.toggle('rozwiniete', teraz);
-    if (sec.__rozloz) sec.__rozloz(teraz ? 1 : 0);  // karty wjeżdżają w tym samym ruchu
-    if (teraz && hero.__karuzelaStop) hero.__karuzelaStop();   // poza kadrem nic nie migoce
-    if (teraz) { if (sec.__trzymaj) sec.__trzymaj(); }   // baner ma trafić w kartę 01
+    if (sec.__rozloz) sec.__rozloz(teraz ? 1 : 0);
+    if (teraz && hero.__karuzelaStop) hero.__karuzelaStop();
+    if (teraz) { if (sec.__trzymaj) sec.__trzymaj(); }
     else if (sec.__pusc) sec.__pusc();
 
-    // powrót na samą górę = wjazd gra od nowa (po tym, jak kadr wróci na miejsce)
     if (!teraz && hero.__odtworz) setTimeout(() => { if (scrollY <= PROG) hero.__odtworz(); }, 220);
   };
   sec.__odswiezCel = () => {
     if (!zwiniete) return;
     const c = sec.__cel && sec.__cel();
     if (!c) return;
-    // KLUCZOWE: gdy cel się nie zmienił, nie wolno tknąć `transition` —
-    // w trakcie zwijania pasek stoi, a `draw()` leci co klatkę, więc bez tego
-    // warunku klasa `bez-przejscia` kasowała całą animację pomniejszania.
+
     if (`${c.x}|${c.y}|${c.w}|${c.h}` === ostatniCel) return;
-    // W TRAKCIE LOTU banera nie wolno ruszać `transition` — inaczej zwijanie
-    // zamienia się w przeskok. Cel aktualizujemy wtedy normalnie, z animacją;
-    // natychmiastowe doklejanie do kafelka włącza się dopiero po locie.
+
     if (performance.now() - czasZwiniecia < 1080) { ustawCel(); return; }
     const el = hero.querySelector('.morph');
     if (!el) return;
     el.classList.add('bez-przejscia');
     ustawCel();
-    void el.offsetWidth;              // wymuszamy zastosowanie bez animacji
+    void el.offsetWidth;
     el.classList.remove('bez-przejscia');
   };
   addEventListener('scroll', sprawdz, { passive: true });
   addEventListener('resize', () => { if (zwiniete) ustawCel(); });
   sprawdz();
 
-  // self-check: cel musi trafiać w tę samą kartę, którą pokazuje morf
   addEventListener('load', () => {
     const c = sec.__cel && sec.__cel();
-    console.assert(c && c.w > 0 && c.h > 0, 'hero: brak geometrii karty docelowej');
+
   }, { once: true });
 })();
 
-// --- zespół: marquee + wizytówka -------------------------------------------
-// Funkcjonalność 1:1 z panelu myhealthprac.com (zmierzone): nieskończone
-// marquee ~80 px/s w lewo, BEZ pauzy na hover, bez draga, bez sprzężenia ze
-// scrollem; pętla = dwie kopie zestawu (.marquee_track u nich). U nas ekstra:
-// strzałki (życzenie klienta) popychają przesunięcie, karty otwierają
-// wizytówkę. prefers-reduced-motion: taśma stoi, wraca natywne przewijanie.
 (() => {
   const sekcja = document.querySelector('.tm');
   const tasma = document.querySelector('[data-tm-belt]');
@@ -1923,9 +1670,8 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
   const okno = document.querySelector('[data-wiz]');
   if (!tasma || !okno) return;
   const reduce = matchMedia('(prefers-reduced-motion:reduce)').matches;
-  const TEMPO = 80;                                 // px/s, zmierzone na referencji
+  const TEMPO = 80;
 
-  // druga kopia zestawu domyka pętlę; dla czytników i Taba to duplikat — znika
   const klon = zestaw.cloneNode(true);
   klon.setAttribute('aria-hidden', 'true');
   klon.querySelectorAll('button').forEach(e => e.tabIndex = -1);
@@ -1933,13 +1679,13 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
 
   const karty = [...tasma.querySelectorAll('[data-tm]')];
   const GAP = parseFloat(getComputedStyle(tasma).gap) || 16;
-  const obieg = () => zestaw.offsetWidth + GAP;     // dystans zawinięcia
+  const obieg = () => zestaw.offsetWidth + GAP;
 
   let x = 0, pch = 0, cel = 0, ost = null, raf = null;
   const tick = ts => {
     if (ost !== null && !reduce) {
       x -= TEMPO * (ts - ost) / 1000;
-      // strzałka: dosuwamy pchnięcie do celu tą samą krzywą co reszta strony
+
       pch += (cel - pch) * 0.14;
       const o = obieg(), w = (x + pch) % o;
       tasma.style.transform = `translate3d(${(w > 0 ? w - o : w).toFixed(2)}px,0,0)`;
@@ -1955,7 +1701,7 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
     const pas = document.querySelector('[data-tm-track]');
   } else {
     raf = requestAnimationFrame(tick);
-    // karta w tył = taśma jedzie w prawo, więc pchnięcie dodatnie
+
     const skok = () => karty[0].getBoundingClientRect().width + GAP;
     document.addEventListener('visibilitychange', () => { ost = null; });
   }
@@ -1980,16 +1726,10 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
   okno.addEventListener('close', () => wrocDo?.focus());
   okno.querySelector('[data-wiz-cta]').addEventListener('click', () => okno.close());
 
-  // furtka dla testu: podgląd i przestawienie pozycji taśmy
   sekcja.__mq = { x: () => x + pch, skok: v => { x = v; cel = pch = 0; } };
 
-  // self-check: każda osoba musi mieć komplet pól wizytówki
-  for (const k of karty.slice(0, karty.length / 2))
-    console.assert(k.dataset.imie && k.dataset.spec && k.dataset.opis && k.dataset.dosw,
-      'zespół: niepełna wizytówka - ' + (k.dataset.imie || k.className));
 })();
 
-// --- herb płynący po skosie w sekcji etapów -------------------------------
 (() => {
   const sek = document.querySelector('.etapy');
   const herb = sek?.querySelector('.etapy-herb');
@@ -1998,8 +1738,8 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
   const licz = () => {
     raf = null;
     const r = sek.getBoundingClientRect();
-    if (r.bottom < -200 || r.top > innerHeight + 200) return;   // poza kadrem nie liczymy
-    // środek sekcji względem środka ekranu, znormalizowany do [-1, 1]
+    if (r.bottom < -200 || r.top > innerHeight + 200) return;
+
     const p = (r.top + r.height / 2 - innerHeight / 2) / ((innerHeight + r.height) / 2);
     herb.style.setProperty('--h', Math.max(-1, Math.min(1, p)).toFixed(3));
   };
@@ -2009,19 +1749,15 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
   licz();
 })();
 
-// --- odsłanianie tekstu znak po znaku -------------------------------------
-// Zmierzone na myhealthprac.com (tam GSAP + SplitType): znak jedzie
-// translateY(100%) → 0, czas 0,33 s, rozjazd 16 ms, krzywa power2.out.
-// Dzielenie robimy sami — dwie biblioteki dla jednego nagłówka to przesada.
 (() => {
   const cele = [...document.querySelectorAll('[data-reveal]')];
   if (!cele.length) return;
-  document.documentElement.classList.add('anim');   // bez JS-u nic nie chowamy
+  document.documentElement.classList.add('anim');
   const bezRuchu = matchMedia('(prefers-reduced-motion:reduce)').matches;
 
   for (const el of cele) {
     const tekst = el.textContent.trim();
-    el.setAttribute('aria-label', tekst);        // czytnik ma przeczytać zdanie, nie litery
+    el.setAttribute('aria-label', tekst);
     if (bezRuchu) continue;
     const frag = document.createDocumentFragment();
     let i = 0;
@@ -2050,25 +1786,14 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
     }, { threshold: 0.4 }).observe(el);
   }
 
-  // self-check: podział nie może zgubić ani dołożyć znaku
-  for (const el of cele)
-    console.assert(el.getAttribute('aria-label').replace(/\s+/g, '')
-                === el.textContent.replace(/\s+/g, ''),
-      'odsłanianie: podział zmienił treść');
 })();
 
-// --- etapy opieki ----------------------------------------------------------
-// Wzór: myhealthprac.com #personal-professional. Statyczna lista wierszy
-// (kółko + „kiedy" + tytuł + punkty), wchodząca kolejno przy dojechaniu sekcji.
 (() => {
   const sec = document.querySelector('.etapy');
   if (!sec) return;
   const etapy = [...sec.querySelectorAll('.etap')];
   etapy.forEach((el, i) => el.style.setProperty('--i', i));
 
-  // wjazd sekcji: skala .9 → 1 wiązana ze scrollem.
-  // Zmierzone na myhealthprac.com: pełna skala, gdy góra sekcji jest na 15%
-  // wysokości okna; .9 gdy dopiero wchodzi od dołu. Liniowo, bez tweena.
   let raf = null;
   const skala = () => {
     raf = null;
@@ -2090,23 +1815,13 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
     o.disconnect();
   }, { threshold: 0.25 }).observe(sec);
 
-  // self-check: każdy etap ma nazwę, opis i ikonę (punkty wypadły 2026-08-24)
-  for (const el of etapy)
-    console.assert(el.querySelector('.etap-kiedy')?.textContent.trim()
-                && el.querySelector('.etap-tytul')?.textContent.trim().length > 20
-                && el.querySelector('.etap-ikona svg'),
-      'etap bez kompletu treści: ' + (el.querySelector('.etap-kiedy')?.textContent || ''));
 })();
 
-// --- hero: stawy ----------------------------------------------------------
-// Kwadraciki siedzą na stawach zawodnika i rozsuwają się w kartę z opisem.
-// Pozycje podane w % ZDJĘCIA, nie kadru: object-fit:cover przycina inaczej
-// przy każdej proporcji okna, więc procenty kadru zjechałyby z ciała.
 (() => {
   const hero = document.querySelector('.hero');
   if (!hero) return;
   const joints = [...hero.querySelectorAll('[data-jt]')];
-  const IW = 1820, IH = 1024;                 // wymiary sprint-sharp.webp
+  const IW = 1820, IH = 1024;
 
   const place = () => {
     const H = hero.getBoundingClientRect();
@@ -2115,13 +1830,10 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
     joints.forEach(j => {
       const doc = j.classList.contains('wedruje') ? ['ix2', 'iy2'] : ['ix', 'iy'];
       const x = ox + w * (+j.dataset[doc[0]]) / 100, y = oy + h * (+j.dataset[doc[1]]) / 100;
-      j.hidden = false;                       // ukryty element nie ma wymiarów — mierzymy odsłonięty
+      j.hidden = false;
       j.style.left = x.toFixed(1) + 'px';
       j.style.top  = y.toFixed(1) + 'px';
-      // Kierunek wysuwki: bark ma wychodzić w lewo, ale przy wąskim kadrze
-      // tam się nie mieści — wtedy wygrywa strona, w której tekst zostaje w kadrze.
-      // odsunięcie tekstu wzdłuż kreski i podniesienie odnośnika — w % obrazu,
-      // żeby trzymały się tego samego miejsca zdjęcia przy każdym kadrze
+
       j.style.setProperty('--odsun', (w * (+j.dataset.odsun || 0) / 100).toFixed(1) + 'px');
       j.style.setProperty('--dy', (h * (+j.dataset.dy || 0) / 100).toFixed(1) + 'px');
       j.classList.toggle('ma-pion', !!(+j.dataset.dy));
@@ -2130,24 +1842,19 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
       const lewoOk = x - wys - 24 > 0, prawoOk = x + wys + 24 < H.width;
       j.classList.toggle('w-lewo',
         j.dataset.kier === 'lewo' ? (lewoOk || !prawoOk) : (!prawoOk && lewoOk));
-      // wąski kadr wycina część sylwetki — nie pokazujemy znacznika stawu, którego nie widać
+
       j.hidden = x < 24 || x > H.width - 24 || y < 88 || y > H.height - 24;
     });
-    // Ciemne pole zdjęcia: od 48% szerokości w prawo jest czarne aż do 35,5%
-    // wysokości, gdzie zaczyna się jego dłoń. Nagłówek siada tuż nad nią (34,5%).
-    // Kreska biegnie niżej, na łokciu (47%), i to z niej tekst wyjeżdża — ramka
-    // musi więc sięgać od jednego do drugiego.
+
     const kopia = hero.querySelector('.hero-copy'), naglowek = kopia.querySelector('h1');
     if (H.width > 900) {
-      // ciemne pole nad dłonią zaczyna się od 48% szerokości kadru
+
       hero.style.setProperty('--kx', (ox + w * 0.48).toFixed(1) + 'px');
       const nawFloor = (document.querySelector('.nav')?.getBoundingClientRect().bottom || 0) + 18;
-      // Dół tekstu tuż nad dłonią (34,5%), ale górny — dłuższy — wiersz nie może
-      // zejść poniżej 27% wysokości: tam ciemne pole zwęża się z 36% do 48%
-      // szerokości i długi wiersz wjechałby na sylwetkę.
-      let dol = oy + h * 0.345;                        // tuż nad jego dłonią
+
+      let dol = oy + h * 0.345;
       let gora = dol - naglowek.offsetHeight;
-      if (gora < nawFloor) gora = nawFloor;            // krótkie okno: nie wchodzimy pod nawigację
+      if (gora < nawFloor) gora = nawFloor;
       kopia.style.setProperty('--kt', gora.toFixed(1) + 'px');
     } else {
       kopia.style.removeProperty('--kt');
@@ -2155,17 +1862,13 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
   };
   place();
 
-  // --- wjazd: kreska wędruje po stawach, zapalając kolejne punkty ----------
-  // Ścieżka: kostka → kolano → biodro → BARK (tam siada czwarta kropka), potem
-  // czoło schodzi na ŁOKIEĆ — i kropka zjeżdża razem z nim — a na koniec linia
-  // ucieka poza prawą krawędź, a nad nią wyjeżdża nagłówek.
   const tor = hero.querySelector('[data-tor] path');
   const KOLEJ = ['j-skok', 'j-kolano', 'j-biodro', 'j-lokiec'];
 
-  let bieg = 0;                                   // token przerywa poprzednie odtworzenie
+  let bieg = 0;
 
   const wjazd = () => {
-    place();                       // krój już wczytany — wysokość nagłówka jest ostateczna
+    place();
     const moj = ++bieg;
     const H = hero.getBoundingClientRect();
     const pkt = KOLEJ.map(c => {
@@ -2189,9 +1892,6 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
       return bieg2;
     });
 
-    // Kreska to krótka smuga: ogon goni głowę, więc widać SKOK od kropki do kropki,
-    // a nie rosnącą łamaną. Dopiero na ostatnim odcinku ogon staje na łokciu
-    // i linia się ROZCIĄGA — nagłówek czeka, aż przykryje swoją szerokość.
     const SMUGA = 116;
     const rysuj = (glowa, ogon) => {
       tor.style.strokeDasharray = Math.max(0, glowa - ogon).toFixed(1) + ' ' + (dl + 600);
@@ -2204,17 +1904,17 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
     const celTekstu = progi[4] + Math.max(60, prawaTekstu - lokiec.x);
 
     const etapy = [
-      { do: progi[1], czas: 125, pauza: 40, kotwica: false },  // kostka → kolano
-      { do: progi[2], czas: 125, pauza: 40, kotwica: false },  // → biodro
-      { do: progi[3], czas: 130, pauza: 90, kotwica: false },  // → bark
-      { do: progi[4], czas: 300, pauza: 0,  kotwica: false },  // bark → łokieć
-      { do: progi[5], czas: 720, pauza: 0,  kotwica: true },   // rozciąganie w prawo
+      { do: progi[1], czas: 125, pauza: 40, kotwica: false },
+      { do: progi[2], czas: 125, pauza: 40, kotwica: false },
+      { do: progi[3], czas: 130, pauza: 90, kotwica: false },
+      { do: progi[4], czas: 300, pauza: 0,  kotwica: false },
+      { do: progi[5], czas: 720, pauza: 0,  kotwica: true },
     ];
 
     pkt[0].el.classList.add('zapalony');
     let etap = 0, t0 = null, od = 0;
     const krok = ts => {
-      if (moj !== bieg) return;                    // ktoś odpalił animację od nowa
+      if (moj !== bieg) return;
       if (t0 === null) t0 = ts;
       const e = etapy[etap];
       const u = Math.min(1, (ts - t0) / e.czas);
@@ -2226,7 +1926,7 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
       if (u < 1) return requestAnimationFrame(krok);
       od = e.do;
       if (etap < 3 && pkt[etap + 1]) pkt[etap + 1].el.classList.add('zapalony');
-      if (etap === 2) {                            // smuga doszła do barku → kropka rusza w dół
+      if (etap === 2) {
         ost.classList.add('wedruje');
         requestAnimationFrame(() => {
           ost.style.left = lokiec.x.toFixed(1) + 'px';
@@ -2237,17 +1937,14 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
       if (etap < etapy.length) return setTimeout(() => requestAnimationFrame(krok), e.pauza);
       setTimeout(() => {
         if (moj !== bieg) return;
-        hero.classList.add('bezkreski');                          // kropki zostają same
-        hero.querySelector('.j-bark').classList.add('zapalony');  // bark wraca
+        hero.classList.add('bezkreski');
+        hero.querySelector('.j-bark').classList.add('zapalony');
         setTimeout(() => hero.__karuzelaStart && hero.__karuzelaStart(), 900);
       }, 120);
     };
     requestAnimationFrame(krok);
   };
 
-  // Powrót scrollem na górę odtwarza wjazd. Zerowanie musi pójść w TEJ SAMEJ
-  // klatce, w której znika klasa `morphed` — inaczej między jednym a drugim
-  // widać przez moment komplet zapalonych kropek.
   hero.__zeruj = () => {
     if (matchMedia('(prefers-reduced-motion:reduce)').matches) return;
     bieg++;
@@ -2260,10 +1957,7 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
     place();
     tor.style.strokeDasharray = '0 9999';
   };
-  // Na telefonie kropki i kreska są schowane (`.jt,.jt-tor{display:none}`), więc
-  // czekanie na ich animację tylko opóźniało tekst — a to on jest największym
-  // elementem pierwszego kadru: LCP siedziało na 2,7–3,2 s. Bez kropek tekst
-  // wchodzi od razu (własną animacją maski), a nie po przejeździe kreski.
+
   const bezKropek = () => matchMedia('(max-width:760px)').matches;
   const odRazu = () => {
     hero.classList.add('wjazd', 'tekst', 'bezkreski');
@@ -2280,9 +1974,9 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
   };
 
   if (matchMedia('(prefers-reduced-motion:reduce)').matches || bezKropek()) {
-    odRazu();   // ustawia i kropki, i ciemne pole pod nagłówkiem
+    odRazu();
   } else {
-    // czekamy na krój i obraz — inaczej pozycje stawów jeszcze się przesuną
+
     Promise.all([document.fonts?.ready,
       document.readyState === 'complete' ? null : new Promise(r => addEventListener('load', r, { once: true }))])
       .then(() => setTimeout(wjazd, 260));
@@ -2290,11 +1984,6 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
 
   addEventListener('resize', place);
 
-  // dotyk (i klawiatura przez Enter): karta przełączana kliknięciem, jedna naraz
-  // --- karuzela opisów ------------------------------------------------------
-  // Po wjeździe jeden ze stawów sam pokazuje swój opis i co 15 s przechodzi
-  // na kolejny. Wskaźnik ma pierwszeństwo: najechanie wstrzymuje karuzelę,
-  // a kliknięcie wyłącza ją do końca (użytkownik przejął sterowanie).
   const KARUZELA = 15000;
   const kolejnosc = ['j-skok', 'j-kolano', 'j-biodro', 'j-lokiec', 'j-bark']
     .map(k => hero.querySelector('.' + k)).filter(Boolean);
@@ -2303,7 +1992,7 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
   const zgasAuto = () => joints.forEach(j => j.classList.remove('on'));
   const nastepny = () => {
     if (wylaczona || hero.classList.contains('morphed')) return;
-    if (joints.some(j => j.matches(':hover'))) return;      // czytają — nie przerywamy
+    if (joints.some(j => j.matches(':hover'))) return;
     zgasAuto();
     kolejnosc[ktory % kolejnosc.length]?.classList.add('on');
     ktory++;
@@ -2318,10 +2007,10 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
   hero.__karuzelaStart = () => { ktory = 0; wylaczona = false; startKaruzeli(); };
 
   joints.forEach(j => {
-    // najechanie: chowamy podpowiedź automatu, żeby nie było dwóch naraz
+
     j.addEventListener('mouseenter', () => { if (!wylaczona) zgasAuto(); });
     j.addEventListener('click', () => {
-      wylaczona = true;                       // od teraz decyduje użytkownik
+      wylaczona = true;
       clearInterval(zegar); zegar = null;
       const otwarta = j.classList.contains('on');
       joints.forEach(o => o.classList.remove('on'));
@@ -2329,17 +2018,10 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
     });
   });
 
-  // self-check: każdy kwadracik musi mieć komplet opisu
-  for (const j of joints)
-    console.assert(j.querySelector('.jt-nazwa i')?.textContent.trim()
-                && j.querySelector('.jt-opis i')?.textContent.trim()
-                && j.getAttribute('aria-label')?.trim(),
-      'staw bez pełnego opisu: ' + j.className);
 })();
 </script>
 
 <script>
-// nowy formularz kontaktowy — walidacja w przeglądarce, wysyłka do podpięcia
 (() => {
   const forma = document.querySelector('[data-forma]');
   if (!forma) return;

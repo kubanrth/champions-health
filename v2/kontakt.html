@@ -8,24 +8,14 @@
 <link rel="icon" href="img/logo_LCH.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Inter:opsz,wght@14..32,400..700&display=swap" rel="stylesheet">
-<!-- Styl bazowy = kopia stylu z zespol.html. Formularz demonstracyjny:
-     walidacja w przeglądarce, wysyłka do podpięcia po stronie klienta. -->
 <style>
-/* ==========================================================================
-   Podstrona usługi w języku podstron PRODUKTOWYCH Revoluta, spójna z home
-   (Inter 500, tracking −.028em, krzywa .35/0/0/1, pigułki #262626 i biała).
-   Kompozycja: wyśrodkowany nagłówek → pełnowymiarowa karta ze zdjęciem
-   (anatomia kart „Zakresu opieki" w skali strony) → kafle na szarym
-   wypełnieniu bez obrysów (sygnatura tile'ów Revoluta) → wielka linia
-   nad prozą → ciemny pas kontaktu (jak sekcja kontaktu na home).
-   Szkło zostaje tylko na ciemnym zdjęciu — tam, gdzie jest na home.
-   ========================================================================== */
+
 :root{
   --ink:#0B0D0C;
   --tekst:rgba(11,13,12,.72);
   --tekst2:rgba(11,13,12,.6);
   --kres:rgba(11,13,12,.1);
-  --plyta:#F5F5F3;            /* szare wypełnienie kafli — tile Revoluta */
+  --plyta:#F5F5F3;
   --ease:cubic-bezier(.22,.8,.25,1);
   --rev:cubic-bezier(.35,0,0,1);
   --tresc:1180px;
@@ -43,10 +33,6 @@ h1,h2,h3{margin:0;font-weight:500;letter-spacing:-.028em;line-height:1.05}
 p{margin:0}
 .wrap{max-width:var(--tresc);margin:0 auto;padding-inline:var(--bok)}
 
-/* --- nawigacja 1:1 ze strony głównej (Modernic Nav Bar: treść 1100,
-   pigułka 37, linki 16 / odstęp 30, podkreślenie rosnące od lewej).
-   Na jasnej podstronie nawigacja stoi NA STAŁE w stanie „przypięta"
-   z home: białe tło + blur + ciemne linki + odwrócone białe logo. -------- */
 .nav{--nav-w:1100px;--pill-h:40px;--link:16px;--gap:30px;--pill:#262626;--pill-hover:#333;
   position:fixed;top:0;left:0;right:0;z-index:300;padding:18px 24px;
   background:rgba(255,255,255,.9);
@@ -55,7 +41,7 @@ p{margin:0}
 .nav-in{width:var(--nav-w);max-width:100%;margin:0 auto;height:var(--pill-h);
   display:flex;align-items:center}
 .brand{flex:none;display:flex;align-items:center;margin-right:21px}
-.brand img{height:36px;width:auto}   /* na jasnym tle oryginał, bez odwracania barw */
+.brand img{height:36px;width:auto}
 .menu{display:flex;align-items:center;gap:var(--gap);min-width:0;overflow-x:auto;scrollbar-width:none}
 .menu::-webkit-scrollbar{display:none}
 .menu a{position:relative;font-size:var(--link);font-weight:500;letter-spacing:-.01em;white-space:nowrap;
@@ -74,7 +60,6 @@ p{margin:0}
 section[id]{scroll-margin-top:104px}
 :where(a,button):focus-visible{outline:2px solid var(--ink);outline-offset:3px;border-radius:6px}
 
-/* --- pigułki home --------------------------------------------------------- */
 .btn{display:inline-flex;align-items:center;gap:10px;height:48px;padding:0 22px;border-radius:999px;
   font-size:15px;font-weight:500;white-space:nowrap;
   transition:background-color .3s var(--ease),transform .3s var(--ease),border-color .3s var(--ease)}
@@ -86,25 +71,22 @@ section[id]{scroll-margin-top:104px}
 .btn svg{transition:transform .3s var(--ease)}
 .btn:hover svg{transform:translate(3px,-3px)}
 
-/* --- hero: zdjęcie na pełny ekran, tekst do lewej na scrimie (układ
-   podstron produktowych Revoluta, materiał jak hero na home) -------------- */
 .pg-hero{position:relative;display:flex;flex-direction:column;
   min-height:calc(100svh - 76px);color:#fff;overflow:hidden}
 .pg-tlo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-/* scrim: cięższy po lewej pod tekstem + dolny pod listwę faktów */
+
 .pg-hero::before{content:"";position:absolute;inset:0;background:
   linear-gradient(100deg,rgba(5,9,7,.86) 0%,rgba(5,9,7,.62) 44%,
                   rgba(5,9,7,.26) 72%,rgba(5,9,7,.1) 100%),
   linear-gradient(to top,rgba(5,9,7,.72),transparent 32%)}
-/* .wrap ma margin:0 auto — w kolumnowym flexie poziome auto-marginesy
-   WYŁĄCZAJĄ stretch i pudełko kurczy się do treści. Stąd jawne width:100%. */
+
 .pg-tresc{position:relative;z-index:2;width:100%;margin-block:auto;
   padding-block:clamp(40px,6vw,72px)}
 .pg-hero h1{margin:0;max-width:14ch;font-size:clamp(2.6rem,5.4vw,4.6rem);line-height:1.02}
 .pg-lead{margin:18px 0 0;max-width:46ch;font-size:18px;line-height:24px;
   color:rgba(255,255,255,.86)}
 .pg-akcje{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
-/* pigułki na zdjęciu: biała pełna + szklany ghost — jak w pasie kontaktu */
+
 .pg-hero .btn-pelny{background:#fff;color:#000}
 .pg-hero .btn-pelny:hover{background:#E9E9E6}
 .pg-hero .btn-ghost{background:rgba(255,255,255,.12);color:#fff;
@@ -121,16 +103,10 @@ section[id]{scroll-margin-top:104px}
   color:rgba(255,255,255,.78)}
 .fakty dd{margin:5px 0 0;font-size:15px;line-height:1.35;color:#fff}
 
-/* --- wspólna szpica sekcji ------------------------------------------------ */
 .sek{padding:clamp(48px,6.5vw,88px) 0;border-top:1px solid var(--kres)}
 .sek-head{max-width:660px}
 .sek-head h2{font-size:clamp(1.9rem,3.4vw,2.9rem);text-wrap:balance}
 
-/* --- zakres: układ wg myhealthprac (sekcja „Designed for You", zmierzona
-   z DOM przy 1440: tło #F1F1F1, lewa kolumna nagłówek+sub, prawa kolumna
-   wierszy ikona 32px → tytuł 18/500/−.288 → opis 13,7/18,5 na 363px,
-   rytm ~124px, BEZ pudełek i BEZ linii — kontrast niesie samo powietrze).
-   W roli ikon numery krojem Legii, jak na home. --------------------------- */
 .zakres{background:var(--plyta)}
 .zakres-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(32px,5vw,88px);
   align-items:start}
@@ -143,7 +119,6 @@ section[id]{scroll-margin-top:104px}
 .kafel h3{font-size:18.5px;letter-spacing:-.018em;line-height:1.3}
 .kafel p{margin-top:8px;font-size:14.5px;line-height:1.6;color:var(--tekst)}
 
-/* --- wielka linia + proza + „dla kogo" ------------------------------------ */
 .claim-line{max-width:22ch;font-size:clamp(1.9rem,3.8vw,3.2rem);line-height:1.15;
   letter-spacing:-.025em;font-weight:500;text-wrap:balance}
 .opis-grid{display:grid;grid-template-columns:1fr 360px;gap:clamp(28px,4vw,64px);
@@ -156,7 +131,6 @@ section[id]{scroll-margin-top:104px}
   color:var(--tekst);border-top:1px solid var(--kres)}
 .dla-kogo li:first-child{border-top:0}
 
-/* --- pas kontaktu: ciemne zdjęcie + szkło (jak kontakt na home) ----------- */
 .kont{position:relative;margin:clamp(48px,6.5vw,88px) auto 0;max-width:calc(var(--tresc) - 2px);
   border-radius:28px;overflow:hidden}
 .kont>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 42%}
@@ -184,9 +158,6 @@ section[id]{scroll-margin-top:104px}
 .kont .btn-ghost:hover{background:rgba(255,255,255,.2);border-color:rgba(255,255,255,.5)}
 .kont :where(a,button):focus-visible{outline-color:#fff}
 
-/* --- pozostałe usługi: pas kart w anatomii slidera „Zakresu opieki" z home.
-   Zamiast scroll-jackingu (to podstrona, nie scena) natywny poziomy scroll
-   ze snapem + szklane strzałki jak przy zespole na home. ------------------- */
 .inne-pas{position:relative;margin-top:32px}
 .inne{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x proximity;
   margin-inline:calc(50% - 50vw);padding:4px calc(50vw - 50% + var(--bok)) 10px;
@@ -198,7 +169,7 @@ section[id]{scroll-margin-top:104px}
   color:#fff;transition:transform .45s var(--ease),box-shadow .45s var(--ease)}
 .inna:hover{transform:translateY(-4px);box-shadow:0 30px 56px -32px rgba(11,13,12,.55)}
 .inna>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-/* ten sam gradient co karty talii na home */
+
 .inna::after{content:"";position:absolute;inset:0;
   background:linear-gradient(to bottom,rgba(8,14,10,.86) 0%,rgba(8,14,10,.6) 34%,
              rgba(8,14,10,.28) 56%,rgba(8,14,10,.92) 88%,rgba(8,14,10,.96) 100%)}
@@ -207,7 +178,7 @@ section[id]{scroll-margin-top:104px}
 .inna b{position:relative;z-index:2;margin-top:6px;max-width:14ch;
   font-size:clamp(20px,2vw,26px);font-weight:500;letter-spacing:-.022em;line-height:1.1;
   text-wrap:balance}
-/* szklane strzałki — jak przy pasie zespołu na home */
+
 .pas-strzalka{position:absolute;top:50%;transform:translateY(-50%);z-index:3;
   width:48px;height:48px;border-radius:50%;border:0;cursor:pointer;color:#fff;
   background:rgba(255,255,255,.28);
@@ -218,8 +189,6 @@ section[id]{scroll-margin-top:104px}
 .pas-strzalka.w-lewo{left:calc(-1 * clamp(8px,1vw,14px))}
 .pas-strzalka.w-prawo{right:calc(-1 * clamp(8px,1vw,14px))}
 
-/* --- stopka --------------------------------------------------------------- */
-/* pełna stopka — ta sama co na pozostałych podstronach */
 footer.site{background:#070B09;color:#fff;border-top:0;padding:76px 0 26px}
 .ft-siatka{display:grid;gap:clamp(28px,4vw,64px);
   grid-template-columns:minmax(230px,1.5fr) 1fr 1fr 1.15fr}
@@ -250,12 +219,10 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
   .ft-kol ul{gap:10px}
 }
 
-/* --- wjazd ---------------------------------------------------------------- */
 [data-rv]{opacity:0;transform:translateY(22px);
   transition:opacity .8s var(--rev),transform .8s var(--rev)}
 [data-rv].in{opacity:1;transform:none}
 
-/* --- węższe ekrany -------------------------------------------------------- */
 @media(max-width:1080px){
   .opis-grid,.kont-in{grid-template-columns:1fr}
   .zakres-grid{grid-template-columns:1fr;gap:36px}
@@ -265,7 +232,7 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
 @media(max-width:720px){
   .nav-menu{display:none}
   .kafel{grid-template-columns:36px 1fr;gap:14px}
-  /* fakty w jednej kolumnie, dalej na zdjęciu — dolny scrim je trzyma */
+
   .fakty{grid-template-columns:1fr}
   .fakty div{padding:9px 2px;border-left:0;border-top:1px solid rgba(255,255,255,.24);
     display:flex;align-items:baseline;gap:10px}
@@ -281,17 +248,6 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
   [data-rv]{opacity:1;transform:none}
 }
 
-/* --- zespół 1:1 z komponentu Framer „Team Member Pro" (Design Foundry),
-   zmierzone z teammemberpro.framer.website przy 1440:
-     tło #F1F1EE · siatka 4 kolumny, margines i odstęp 20 px
-     karta zdjęcia 335×376, radius 20 · podpis: nazwisko 16/500 #101410
-     — włosowa linia — rola 14/400 #6C716B
-     hover: nakładka #0F0F0F radius 20, tekst 22/31,9 #F4F4F0 wchodzi
-     SŁOWO PO SŁOWIE, meta na dole nad linią rgba(244,244,240,.22),
-     zdjęcie skaluje się 1,05
-   U nas: inicjały krojem Legii zamiast zdjęć (realni lekarze — fotografii
-   nie wolno podmienić stockiem), w nakładce zamiast cytatu realne fakty
-   z materiałów klienta albo jawne „w przygotowaniu". ---------------------- */
 .tm-head{padding:calc(61px + clamp(44px,6vw,76px)) 0 clamp(28px,4vw,48px);text-align:center}
 .tm-head h1{margin:0 auto;max-width:18ch;font-size:clamp(2.4rem,4.6vw,3.75rem);
   line-height:1.05;text-wrap:balance}
@@ -311,18 +267,10 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
 .tm-karta:hover .tm-kadr>b,.tm-karta.on .tm-kadr>b{transform:scale(1.05)}
 .tm-kadr>span{position:absolute;bottom:13px;z-index:1;font-size:10.5px;font-weight:500;
   letter-spacing:.07em;text-transform:uppercase;color:rgba(255,255,255,.45)}
-/* nakładka hover — anatomia 1:1, wjazd słowo po słowie */
-/* nakładka = przezroczysta kieszeń przycinająca; ciemny panel WJEŻDŻA od dołu
-   spod krawędzi karty (sam transform — bez malowania klatka po klatce),
-   krzywą Revoluta. Słowa startują dopiero, gdy panel jest już prawie na
-   miejscu (bazowe 160 ms), a przy zjeździe gasną bez opóźnień — razem z nim. */
+
 .tm-nakladka{position:absolute;inset:0;z-index:2;border-radius:20px;overflow:hidden;
   pointer-events:none}
-/* CHOREOGRAFIA (życzenie klienta): wejście = najpierw znika podpis, POTEM
-   wjeżdża panel, na końcu słowa; zjazd = panel spada od razu, podpis wraca
-   dopiero, gdy panel jest już na dole. Sekwencję robi transition-delay
-   zależny od stanu: w spoczynku (= przy zjeździe) panel ma delay 0, podpis
-   .38s; w stanie hover odwrotnie — podpis 0, panel .22s. */
+
 .tm-panel{display:flex;flex-direction:column;height:100%;padding:18px;
   border-radius:20px;background:#0F0F0F;
   transform:translateY(103%);transition:transform .5s var(--rev) 0s}
@@ -330,13 +278,12 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
 .tm-karta:focus-visible .tm-nakladka{pointer-events:auto}
 .tm-karta:hover .tm-panel,.tm-karta.on .tm-panel,
 .tm-karta:focus-visible .tm-panel{transform:none;transition:transform .65s var(--rev) .22s}
-/* pigułka na panelu — biała, jak na ciemnych powierzchniach home */
+
 .tm-panel .btn{align-self:flex-start;height:42px;padding:0 18px;margin:auto 0 12px;
   background:#fff;color:#000}
 .tm-panel .btn:hover{background:#E9E9E6}
 .tm-panel .btn:focus-visible{outline-color:#fff}
-/* podpis rozsuwa się na boki: nazwisko w lewo, rola w prawo, linia zwija się
-   do środka — lustrzany ruch do wjazdu panelu */
+
 .tm-pods b{transition:opacity .35s var(--rev) .38s,transform .35s var(--rev) .38s}
 .tm-pods i{transform-origin:center;transition:transform .4s var(--rev) .38s}
 .tm-pods span{transition:opacity .35s var(--rev) .38s,transform .35s var(--rev) .38s}
@@ -354,7 +301,7 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
   transition-delay:calc(.5s + var(--i)*26ms)}
 .tm-meta{padding-top:12px;border-top:1px solid rgba(244,244,240,.22);
   font-size:13.5px;color:rgba(244,244,240,.65)}
-/* podpis: nazwisko — linia — rola */
+
 .tm-pods{display:flex;align-items:baseline;gap:12px;margin-top:14px;padding-inline:2px}
 .tm-pods b{font-size:16px;font-weight:500;letter-spacing:0;color:#101410;white-space:nowrap}
 .tm-pods i{flex:1;height:1px;min-width:24px;align-self:center;background:rgba(16,20,16,.16)}
@@ -373,40 +320,31 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
   .tm-cytat span,.tm-kadr>b,.tm-panel,.tm-pods b,.tm-pods i,.tm-pods span{transition:none}
 }
 
-/* --- kontakt: JEDNA sekcja na wszystkich stronach (2026-08-26) ------------
-   Układ z kontakt.html (wąska lewa kolumna, pigułki w słupku, szkło 580 px),
-   tło i gradient z index.html (ciemniejszy, 100deg .94→.32). Zmiana tutaj =
-   zmiana we wszystkich plikach: skrypt /tmp/ujednolic.mjs, źródło kontakt.html. */
 .kt-sek{position:relative;display:flex;align-items:center;isolation:isolate;
   min-height:calc(100svh - 76px);padding:clamp(28px,4.6vw,64px) 0;overflow:hidden}
 .kt-tlo{position:absolute;inset:0;z-index:0;width:100%;height:100%;object-fit:cover;object-position:50% 42%}
 .kt-sek::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
   background:linear-gradient(100deg,rgba(5,12,9,.94) 0%,rgba(5,12,9,.88) 34%,
              rgba(5,12,9,.6) 62%,rgba(5,12,9,.32) 100%)}
-/* ten sam kontener na każdej stronie — index ma inny .wrap */
+
 .kt-sek .wrap{width:auto;max-width:1180px;margin:0 auto;padding-inline:clamp(20px,4vw,64px)}
 .kt-grid{position:relative;z-index:2;width:100%;display:grid;
   grid-template-columns:1fr minmax(440px,580px);gap:clamp(24px,3.6vw,64px);
   align-items:center;color:#fff}
 .kt-grid h1,.kt-grid .kt-h{margin:0;max-width:12.5ch;letter-spacing:-.028em;font-size:clamp(2.3rem,4.4vw,3.75rem);line-height:1.04}
 .kt-lead{margin:16px 0 0;max-width:42ch;font-size:18px;line-height:24px;color:rgba(255,255,255,.85)}
-/* Liquid glass — ten sam materiał co w sekcji kontaktu na stronie głównej:
-   przepuszcza i rozmywa zdjęcie, świetlna krawędź u góry, miękki cień.
-   Hierarchię robi GRUBOŚĆ szkła, nie kolor: tafla formularza przyciemnia tło
-   filtrem (zdjęcie prześwituje kolorem), pola je rozjaśniają, więc świecą
-   jaśniej niż tafla i nie wyglądają jak dziury. */
+
 .kt-pigulki{display:flex;flex-wrap:wrap;gap:12px;margin:clamp(24px,3vw,40px) 0 0;max-width:560px}
-/* pastylki zostają białe — pełna biel trzyma kontrast niezależnie od tego, co
-   akurat świeci na zdjęciu, i odcina blok danych od szkła formularza */
+
 .kt-pig{display:inline-flex;align-items:center;gap:10px;height:48px;padding:0 20px;
   border-radius:999px;white-space:nowrap;color:var(--ink);background:#fff;
   box-shadow:0 14px 30px -18px rgba(0,0,0,.55)}
 .kt-pig span{font-size:11px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;
-  color:rgba(11,13,12,.72)}   /* 11 px wersalikami — var(--tekst2) dawało 4,37:1 */
+  color:rgba(11,13,12,.72)}
 .kt-pig b{font-size:15px;font-weight:500}
 a.kt-pig{transition:background-color .3s var(--ease),transform .3s var(--ease)}
 a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
-/* karta formularza */
+
 .kt-forma{color:#fff;border-radius:28px;padding:clamp(24px,2.6vw,36px);
   background:linear-gradient(155deg,rgba(255,255,255,.1),rgba(255,255,255,.03));
   -webkit-backdrop-filter:blur(30px) saturate(1.9) brightness(.33);
@@ -417,10 +355,7 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
 .kt-pole{margin-top:16px}
 .kt-pole label{display:block;margin-bottom:6px;font-size:13.5px;font-weight:500;
   color:rgba(255,255,255,.9)}
-/* Pola: jasne szklane studzienki z ciemnym tekstem, bez ramki. Białe litery
-   wymagają ciemnego pola, a widoczna granica bez obwódki — jasnego; przy jednym
-   kadrze obie rzeczy naraz się nie mieszczą, więc wnętrze ma odwrotną polaryzację
-   niż tafla. Granicę robi kontrast wypełnienia (7,2:1), nie kreska. */
+
 .kt-pole input,.kt-pole textarea,.kt-pole select,.kt-pole .pw-btn{width:100%;font:inherit;font-size:15px;
   color:#0B0D0C;border:0;border-radius:14px;
   background:linear-gradient(180deg,rgba(255,255,255,.58),rgba(255,255,255,.44));
@@ -430,9 +365,7 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
 .kt-pole input{height:50px;padding:0 14px}
 .kt-pole textarea{min-height:96px;padding:12px 14px;resize:vertical}
 .kt-pole input::placeholder,.kt-pole textarea::placeholder{color:#232624}
-/* Chrome wstawia przy autouzupełnianiu własne, lawendowe tło i samego
-   `background` nie respektuje — nadpisujemy je cieniem wewnętrznym w kolorze
-   zmierzonym z wyrenderowanego pola */
+
 .kt-pole input:-webkit-autofill,
 .kt-pole input:-webkit-autofill:hover,
 .kt-pole input:-webkit-autofill:focus{
@@ -443,13 +376,13 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
   background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 5.2 7 9l4-3.8" stroke="%230B0D0C" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>'),
     linear-gradient(180deg,rgba(255,255,255,.58),rgba(255,255,255,.44));
   background-repeat:no-repeat,no-repeat;background-position:right 14px center,0 0}
-.kt-pole select:invalid{color:#232624}   /* placeholder w kolorze podpowiedzi */
+.kt-pole select:invalid{color:#232624}
 .kt-pole option{color:#0B0D0C;background:#fff}
 .kt-pole input:hover,.kt-pole textarea:hover,.kt-pole .pw-btn:hover{
   background:linear-gradient(180deg,rgba(255,255,255,.78),rgba(255,255,255,.64))}
 .kt-pole select:hover{background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 5.2 7 9l4-3.8" stroke="%230B0D0C" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>'),
     linear-gradient(180deg,rgba(255,255,255,.78),rgba(255,255,255,.64))}
-/* pole robi się BIAŁE tylko na czas wypełniania — po wyjściu wraca do szkła */
+
 .kt-pole input:focus,.kt-pole textarea:focus,.kt-pole select:focus,
 .kt-pole .pw-btn:focus,.kt-pole .pw.otwarta .pw-btn{
   background:#fff;box-shadow:inset 0 2px 5px -2px rgba(0,0,0,.22)}
@@ -461,8 +394,7 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
   box-shadow:inset 0 2px 5px -2px rgba(0,0,0,.35),inset 0 0 0 2px #C1121F}
 .kt-zgoda{display:flex;align-items:flex-start;gap:10px;margin-top:18px;
   font-size:13px;line-height:1.55;color:rgba(255,255,255,.9)}
-/* własny kwadracik: ta sama materia co pola; natywny `accent-color` daje na
-   szkle płaską białą płytkę */
+
 .kt-zgoda input{appearance:none;-webkit-appearance:none;flex:none;
   width:20px;height:20px;margin:1px 0 0;padding:0;border:0;border-radius:7px;cursor:pointer;
   background:linear-gradient(180deg,rgba(255,255,255,.58),rgba(255,255,255,.44));
@@ -473,11 +405,10 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
   box-shadow:none}
 .kt-zgoda input:focus-visible{outline:2px solid rgba(255,255,255,.85);outline-offset:2px}
 .kt-forma .btn{width:100%;justify-content:center;gap:10px;margin-top:20px;height:50px}
-/* na szkle przycisk musi być jedyną pełną powierzchnią — inaczej ginie */
+
 .kt-forma .btn-pelny{background:#fff;color:#000}
 .kt-forma .btn-pelny:hover{background:#E9E9E6}
-/* bez rozmycia tła (starsza przeglądarka, wyłączona przezroczystość) szkło
-   zostaje samą półprzezroczystą bielą i tekst ginie — wtedy pełne wypełnienie */
+
 @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
   .kt-forma{background-color:rgba(6,13,10,.92)}
 }
@@ -487,14 +418,9 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
   .kt-grid{grid-template-columns:1fr;gap:26px}
   .kt-pigulki{max-width:none}
 }
-/* --- mapa + dojazd: karta mapy w promieniu 28 jak reszta kart; mapa
-   w odcieniach szarości, kolor wraca na hover — neutralna, nie „googlowa".
-   Wskazówki dojazdu bez zmyślonych linii i minut: konkrety, które są pewne,
-   plus akcje prowadzące do nawigacji. ------------------------------------- */
+
 .dojazd{padding:clamp(48px,6.5vw,88px) 0;
-  /* Po zmianie kolejności (mapa przed formularzem) to jest PIERWSZA sekcja
-     strony, a pasek nawigacji jest `fixed` — bez zapasu nagłówek chował się
-     pod nim (na 390 px o 13 px). */
+
   padding-top:calc(clamp(48px,6.5vw,88px) + 76px)}
 .dojazd h2{max-width:14ch;font-size:clamp(1.9rem,3.4vw,2.9rem);text-wrap:balance}
 .dojazd .lead2{margin:14px 0 0;max-width:52ch;font-size:17px;line-height:1.6;color:var(--tekst)}
@@ -512,7 +438,7 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
 .wsk p{margin:6px 0 0;font-size:14.5px;line-height:1.6;color:var(--tekst)}
 .wsk-akcje{display:flex;flex-wrap:wrap;gap:10px;margin-top:auto;padding-top:18px}
 .wsk-akcje .btn{height:44px}
-/* druga para: telefon i mail — o nie prosił klient obok mapy */
+
 .wsk-kontakt{margin-top:12px}
 .wsk-kontakt .btn{gap:9px}
 @media(max-width:960px){
@@ -551,7 +477,8 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
     <div class="dojazd-grid">
       <div class="mapa" data-rv>
         <iframe title="Mapa dojazdu do Champions Health - Legia Training Center, ul. Legionistów 3, Książenice"
-          loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen
+          loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen
+          sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
           src="https://maps.google.com/maps?q=Legia%20Training%20Center%2C%20Legionist%C3%B3w%203%2C%20Ksi%C4%85%C5%BCenice&z=14&hl=pl&output=embed"></iframe>
       </div>
       <div class="wskazowki" data-rv>
@@ -606,7 +533,7 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
         <span class="kt-pig"><span>Adres</span><b>Legionistów 3, Książenice</b></span>
       </div>
     </div>
-    <form class="kt-forma" data-forma novalidate data-rv>
+    <form method="post" class="kt-forma" data-forma novalidate data-rv>
       <h2>Umów wizytę</h2>
       <p class="kt-pod">Oddzwonimy tego samego dnia roboczego.</p>
       <div class="kt-pole">
@@ -677,8 +604,6 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
   </div>
 </section>
 
-
-
 </main>
 
 <footer class="site">
@@ -747,7 +672,6 @@ if (matchMedia('(prefers-reduced-motion:reduce)').matches) {
   rv.forEach(e => io.observe(e));
 }
 
-// walidacja w przeglądarce; wysyłka do podpięcia po stronie klienta
 const forma = document.querySelector('[data-forma]');
 const nota = forma.querySelector('[data-nota]');
 forma.addEventListener('submit', e => {

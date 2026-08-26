@@ -8,26 +8,14 @@
 <link rel="icon" href="../img/logo_LCH.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Inter:opsz,wght@14..32,400..700&display=swap" rel="stylesheet">
-<!-- PLIK GENEROWANY - nie edytuj ręcznie.
-     Źródła: uslugi/szablon.html + uslugi/dane.json, przebudowa: node uslugi/gen.mjs
-     UWAGA: opisy usług to copy marketingowe. Przed publikacją musi je zatwierdzić
-     zespół medyczny klienta - to treść na stronie placówki, nie hasło reklamowe. -->
 <style>
-/* ==========================================================================
-   Podstrona usługi w języku podstron PRODUKTOWYCH Revoluta, spójna z home
-   (Inter 500, tracking −.028em, krzywa .35/0/0/1, pigułki #262626 i biała).
-   Kompozycja: wyśrodkowany nagłówek → pełnowymiarowa karta ze zdjęciem
-   (anatomia kart „Zakresu opieki" w skali strony) → kafle na szarym
-   wypełnieniu bez obrysów (sygnatura tile'ów Revoluta) → wielka linia
-   nad prozą → ciemny pas kontaktu (jak sekcja kontaktu na home).
-   Szkło zostaje tylko na ciemnym zdjęciu — tam, gdzie jest na home.
-   ========================================================================== */
+
 :root{
   --ink:#0B0D0C;
   --tekst:rgba(11,13,12,.72);
   --tekst2:rgba(11,13,12,.6);
   --kres:rgba(11,13,12,.1);
-  --plyta:#F5F5F3;            /* szare wypełnienie kafli — tile Revoluta */
+  --plyta:#F5F5F3;
   --ease:cubic-bezier(.22,.8,.25,1);
   --rev:cubic-bezier(.35,0,0,1);
   --tresc:1180px;
@@ -45,7 +33,6 @@ h1,h2,h3{margin:0;font-weight:500;letter-spacing:-.028em;line-height:1.05}
 p{margin:0}
 .wrap{max-width:var(--tresc);margin:0 auto;padding-inline:var(--bok)}
 
-/* --- nawigacja: przypięty stan nawigacji home ----------------------------- */
 .nav{--nav-w:1100px;--pill-h:40px;--link:16px;--gap:30px;--pill:#262626;--pill-hover:#333;
   position:sticky;top:0;z-index:300;padding:18px 24px;
   background:rgba(255,255,255,.9);
@@ -54,7 +41,7 @@ p{margin:0}
 .nav-in{width:var(--nav-w);max-width:100%;margin:0 auto;height:var(--pill-h);
   display:flex;align-items:center}
 .brand{flex:none;display:flex;align-items:center;margin-right:21px}
-.brand img{height:36px;width:auto}   /* na jasnym tle oryginał, bez odwracania barw */
+.brand img{height:36px;width:auto}
 .menu{display:flex;align-items:center;gap:var(--gap);min-width:0;overflow-x:auto;scrollbar-width:none}
 .menu::-webkit-scrollbar{display:none}
 .menu a{position:relative;font-size:var(--link);font-weight:500;letter-spacing:-.01em;white-space:nowrap;
@@ -70,7 +57,7 @@ p{margin:0}
   transition:background-color .35s var(--ease),transform .35s var(--ease)}
 .nav .cta:hover{background:var(--pill-hover);transform:translateY(-1px)}
 .nav .cta:active{transform:translateY(0)}
-/* wąskie ekrany: ten sam skrót co na pozostałych stronach */
+
 @media(max-width:760px){
   .nav{--nav-w:100%;--gap:20px;--link:15px;padding-inline:20px}
   .brand{margin-right:16px}
@@ -79,7 +66,6 @@ p{margin:0}
 }
 :where(a,button):focus-visible{outline:2px solid var(--ink);outline-offset:3px;border-radius:6px}
 
-/* --- pigułki home --------------------------------------------------------- */
 .btn{display:inline-flex;align-items:center;gap:10px;height:48px;padding:0 22px;border-radius:999px;
   font-size:15px;font-weight:500;white-space:nowrap;
   transition:background-color .3s var(--ease),transform .3s var(--ease),border-color .3s var(--ease)}
@@ -91,37 +77,27 @@ p{margin:0}
 .btn svg{transition:transform .3s var(--ease)}
 .btn:hover svg{transform:translate(3px,-3px)}
 
-/* --- hero: zdjęcie na pełny ekran, tekst do lewej na scrimie (układ
-   podstron produktowych Revoluta, materiał jak hero na home) -------------- */
-/* Kadr przycięty od góry: przy 100svh na wysokim ekranie zostawał pas pustego
-   zdjęcia nad tekstem. Teraz blok tekstu zajmuje ~3/4 wysokości. */
 .pg-hero{position:relative;display:flex;flex-direction:column;
   min-height:min(calc(100svh - 64px),820px);color:#fff;overflow:hidden}
 .pg-tlo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-/* Scrim: cięższy po lewej pod tekstem, dolny osadza zdjęcie na sekcji niżej.
-   `z-index:1` jest OBOWIĄZKOWE: `::before` jest generowane jako pierwsze dziecko,
-   więc bez niego zdjęcie (późniejsze w kolejności) maluje się NA przyciemnieniu
-   i cały scrim nic nie robi. */
+
 .pg-hero::before{content:"";position:absolute;inset:0;z-index:1;background:
   radial-gradient(125% 95% at 0% 0%,rgba(5,9,7,.95) 0%,rgba(5,9,7,.78) 40%,rgba(5,9,7,0) 76%),
   radial-gradient(115% 90% at 100% 100%,rgba(5,9,7,.95) 0%,rgba(5,9,7,.8) 38%,rgba(5,9,7,0) 78%),
   linear-gradient(to top,rgba(5,9,7,.6),rgba(5,9,7,.24) 45%,rgba(5,9,7,.42) 100%)}
-/* .wrap ma margin:0 auto — w kolumnowym flexie poziome auto-marginesy
-   WYŁĄCZAJĄ stretch i pudełko kurczy się do treści. Stąd jawne width:100%. */
-/* Dwa narożniki (wzór: myhealthprac.com): tytuł w górnym lewym, opis z pigułkami
-   w dolnym prawym. Kadr zostaje pusty po przekątnej, więc zdjęcie ma czym oddychać. */
+
 .pg-tresc{position:relative;z-index:2;width:100%;flex:1;display:flex;
   flex-direction:column;justify-content:space-between;gap:clamp(40px,7vw,90px);
   padding-block:clamp(48px,7vw,96px)}
 .pg-dol{align-self:flex-end;max-width:min(46ch,100%);text-align:left}
 .pg-hero h1{margin:0;max-width:15ch;font-size:clamp(3rem,6.6vw,6rem);
   line-height:1;letter-spacing:-.03em}
-/* lead tym samym krojem i wagą co tytuł, tylko mniejszy — nie „drobny druk" */
+
 .pg-lead{margin:0;max-width:34ch;
   font-size:clamp(20px,2vw,31px);line-height:1.28;letter-spacing:-.018em;font-weight:500;
   color:rgba(255,255,255,.92);text-wrap:pretty}
 .pg-akcje{display:flex;flex-wrap:wrap;gap:12px;margin-top:clamp(28px,3.4vw,44px)}
-/* pigułki na zdjęciu: biała pełna + szklany ghost — jak w pasie kontaktu */
+
 .pg-hero .btn-pelny{background:#fff;color:#000}
 .pg-hero .btn-pelny:hover{background:#E9E9E6}
 .pg-hero .btn-ghost{background:rgba(255,255,255,.12);color:#fff;
@@ -130,21 +106,14 @@ p{margin:0}
 .pg-hero .btn-ghost:hover{background:rgba(255,255,255,.2);border-color:rgba(255,255,255,.5)}
 .pg-hero :where(a,button):focus-visible{outline-color:#fff}
 
-/* --- wspólna szpica sekcji ------------------------------------------------ */
 .sek{padding:clamp(48px,6.5vw,88px) 0;border-top:1px solid var(--kres)}
 .sek-head{max-width:660px}
 .sek-head h2{font-size:clamp(1.9rem,3.4vw,2.9rem);text-wrap:balance}
 
-/* --- zakres: układ wg myhealthprac (sekcja „Designed for You", zmierzona
-   z DOM przy 1440: tło #F1F1F1, lewa kolumna nagłówek+sub, prawa kolumna
-   wierszy ikona 32px → tytuł 18/500/−.288 → opis 13,7/18,5 na 363px,
-   rytm ~124px, BEZ pudełek i BEZ linii — kontrast niesie samo powietrze).
-   W roli ikon numery krojem Legii, jak na home. --------------------------- */
 .zakres{background:var(--plyta)}
 .zakres-grid{display:grid;grid-template-columns:1fr 1.05fr;gap:clamp(32px,5vw,88px);
   align-items:start}
-/* Lewa kolumna stoi, prawa przewija się obok (wzór: myhealthprac.com).
-   `top` musi minąć przyklejony pasek nawigacji, inaczej nagłówek pod nim ginie. */
+
 .zakres-head{position:sticky;top:clamp(84px,11vh,104px)}
 .zakres-head h2{max-width:12ch;font-size:clamp(2.2rem,4.2vw,3.6rem);text-wrap:balance}
 .zakres-head p{margin-top:18px;max-width:40ch;font-size:15px;line-height:1.6;color:var(--tekst)}
@@ -154,7 +123,6 @@ p{margin:0}
 .kafel h3{font-size:clamp(20px,1.5vw,23px);letter-spacing:-.018em;line-height:1.28}
 .kafel p{margin-top:9px;font-size:clamp(15px,1.05vw,16.5px);line-height:1.6;color:var(--tekst)}
 
-/* --- wielka linia + proza + „dla kogo" ------------------------------------ */
 .claim-line{max-width:22ch;font-size:clamp(1.9rem,3.8vw,3.2rem);line-height:1.15;
   letter-spacing:-.025em;font-weight:500;text-wrap:balance}
 .opis-grid{display:grid;grid-template-columns:1fr 360px;gap:clamp(28px,4vw,64px);
@@ -163,12 +131,11 @@ p{margin:0}
 .proza p+p{margin-top:1.15em}
 .dla-kogo h3{font-size:17px;letter-spacing:-.012em}
 .dla-kogo ul{margin:18px 0 0;padding:0;list-style:none;display:grid;gap:clamp(20px,2.4vw,30px)}
-/* wiersz z ikoną zamiast kreskowanych podziałów (wzór: myhealthprac.com) */
+
 .dla-kogo li{display:grid;grid-template-columns:34px 1fr;gap:16px;align-items:start;
   font-size:15.5px;line-height:1.5;color:var(--ink);letter-spacing:-.005em}
 .dla-kogo li .kafel-ikona{width:30px;height:30px;margin-top:-2px;color:var(--ink)}
 
-/* --- pas kontaktu: ciemne zdjęcie + szkło (jak kontakt na home) ----------- */
 .kont{position:relative;margin:clamp(48px,6.5vw,88px) auto 0;max-width:calc(var(--tresc) - 2px);
   border-radius:28px;overflow:hidden}
 .kont>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 42%}
@@ -196,21 +163,11 @@ p{margin:0}
 .kont .btn-ghost:hover{background:rgba(255,255,255,.2);border-color:rgba(255,255,255,.5)}
 .kont :where(a,button):focus-visible{outline-color:#fff}
 
-/* --- pozostałe usługi: pas kart w anatomii slidera „Zakresu opieki" z home.
-   Zamiast scroll-jackingu (to podstrona, nie scena) natywny poziomy scroll
-   ze snapem + szklane strzałki jak przy zespole na home. ------------------- */
 .inne-pas{position:relative;margin-top:32px}
-/* Pas ma sięgać prawej krawędzi okna, ale pierwsza karta ma stać równo
-   z nagłówkiem. Wypuszczanie go w OBIE strony (ujemny margines + padding
-   kompensujący) nie działa: przy `scroll-snap-align:start` przeglądarka dosuwa
-   kartę do początku scrollportu i ten lewy padding pomija — nie pomaga też
-   `scroll-padding`. Dlatego pas wychodzi poza kadr WYŁĄCZNIE w prawo: lewa
-   krawędź zostaje na kontenerze, więc nie ma czego pomijać. */
+
 .inne{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x proximity;
   margin-inline:calc(50% - 50vw);
-  /* Margines po obu stronach + wygaszenie krawędzi maską, żeby karty nie były
-     ucinane nożem. `scroll-padding-inline` jest konieczne: bez niego snap dosuwa
-     kartę do samego brzegu scrollportu i pomija ten padding. */
+
   --zapas:clamp(20px,3.2vw,56px);
   padding:4px var(--zapas) 10px;
   scroll-padding-inline:var(--zapas);
@@ -221,27 +178,22 @@ p{margin:0}
   scrollbar-width:none}
 .inne::-webkit-scrollbar{display:none}
 .inne::-webkit-scrollbar{display:none}
-/* Stała szerokość 460 px sprawiała, że przy 2560 px pięć kart nie wypełniało
-   ekranu i pas kończył się 196 px przed krawędzią — szerokość idzie za oknem. */
+
 .inna{position:relative;flex:none;width:clamp(280px,30vw,560px);aspect-ratio:16/10;
   border-radius:28px;overflow:hidden;scroll-snap-align:start;background:#151515;
   display:flex;flex-direction:column;align-items:flex-start;padding:clamp(20px,2.4vw,28px);
   color:#fff;transition:transform .45s var(--ease)}
-/* bez cienia pod kartą — ciemna plama odklejała kafel od pasa (uwaga klienta);
-   zostaje samo uniesienie */
+
 .inna:hover{transform:translateY(-4px)}
 .inna>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-/* Poprzednia wersja przyciemniała CAŁĄ kartę (.86 u góry, .96 u dołu) i to
-   ona robiła z fotografii czarne plamy. Bez niczego tytuły miały jednak
-   1,02–1,16:1 — biały tekst na jasnym zdjęciu. Zostaje więc wąski cień tylko
-   pod tytułem, wygaszony do zera w połowie wysokości; dół karty czysty. */
+
 .inna::after{content:"";position:absolute;inset:0 0 auto;height:62%;
   background:linear-gradient(to bottom,rgba(6,12,8,.78) 0%,rgba(6,12,8,.72) 46%,
              rgba(6,12,8,.34) 72%,rgba(6,12,8,0) 100%)}
 .inna b{position:relative;z-index:2;max-width:14ch;
   font-size:clamp(20px,2vw,26px);font-weight:500;letter-spacing:-.022em;line-height:1.1;
   text-wrap:balance;text-shadow:0 1px 14px rgba(6,12,8,.85),0 0 3px rgba(6,12,8,.7)}
-/* pastylka w dolnym lewym rogu — ten sam wzór co główny przycisk w heroju */
+
 .inna-pill{position:relative;z-index:2;margin-top:auto;display:inline-flex;align-items:center;
   gap:12px;height:40px;padding:0 5px 0 16px;border-radius:999px;
   background:#F1F1F1;color:#1F1F1F;font-size:14px;font-weight:500;letter-spacing:-.01em;
@@ -251,7 +203,7 @@ p{margin:0}
   display:grid;place-items:center;overflow:hidden}
 .inna-pill svg{width:14px;height:14px;transition:transform .4s var(--ease)}
 .inna:hover .inna-pill svg{transform:translate(11px,-11px)}
-/* szklane strzałki — jak przy pasie zespołu na home */
+
 .pas-strzalka{position:absolute;top:50%;transform:translateY(-50%);z-index:3;
   width:48px;height:48px;border-radius:50%;border:0;cursor:pointer;color:#fff;
   background:rgba(255,255,255,.28);
@@ -260,15 +212,11 @@ p{margin:0}
   display:grid;place-items:center;transition:background-color .3s var(--ease)}
 .pas-strzalka:hover{background:rgba(255,255,255,.45)}
 .pas-strzalka.w-lewo{left:calc(50% - 50vw + 8px)}
-/* `.inne-pas` kończy się na kontenerze, więc `right:8px` stawiało strzałkę
-   w środku ekranu (przy 2560 px aż 766 px od brzegu). Przesuwamy ją tam,
-   gdzie realnie kończy się pas — na krawędź okna. */
+
 .pas-strzalka.w-prawo{right:calc(50% - 50vw + 8px)}
-/* na dotyku pas przewija się palcem, a strzałki lądowały na tytule karty */
+
 @media(max-width:760px){.pas-strzalka{display:none}}
 
-/* --- stopka --------------------------------------------------------------- */
-/* --- stopka: ta sama co na stronie głównej ------------------------------- */
 footer.site{background:#070B09;color:#fff;border-top:0;padding:76px 0 26px}
 .ft-siatka{display:grid;gap:clamp(28px,4vw,64px);
   grid-template-columns:minmax(230px,1.5fr) 1fr 1fr 1.15fr}
@@ -300,34 +248,29 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
   .ft-kol ul{gap:10px}
 }
 
-/* --- wjazd ---------------------------------------------------------------- */
 [data-rv]{opacity:0;transform:translateY(22px);
   transition:opacity .8s var(--rev),transform .8s var(--rev)}
 [data-rv].in{opacity:1;transform:none}
 
-/* --- węższe ekrany -------------------------------------------------------- */
 @media(max-width:1080px){
   .opis-grid,.kont-in{grid-template-columns:1fr}
   .zakres-grid{grid-template-columns:1fr;gap:36px}
-  .zakres-head{position:static}   /* przypięcie ma sens tylko przy dwóch kolumnach */
+  .zakres-head{position:static}
   .inne{grid-template-columns:repeat(3,1fr)}
   .pg-kadr>img{aspect-ratio:16/9}
 }
-/* Pływająca pastylka „Umów wizytę" (wspolne.js) pokazuje się od 760 px w dół —
-   ta sama akcja w heroju byłaby drugim, identycznym przyciskiem na jednym
-   ekranie. Zostaje „Zadzwoń", bo to inna droga kontaktu. */
+
 @media(max-width:760px){
   .pg-akcje .btn-pelny{display:none}
   .pg-akcje .btn-ghost{width:100%;justify-content:center}
 }
 @media(max-width:720px){
   .nav-menu{display:none}
-  /* na telefonie dwa narożniki nie mają sensu — jedna kolumna, wszystko do lewej */
+
   .pg-dol{align-self:stretch;max-width:none}
-  /* zapas u dołu na pływającą pastylkę „Umów wizytę" (wspolne.js) */
+
   .pg-tresc{gap:clamp(28px,7vw,48px);padding-bottom:calc(94px + env(safe-area-inset-bottom))}
-  /* na wąskim ekranie tekst zajmuje całą szerokość, więc skośny scrim nic nie
-     daje — wtedy równomierna kurtyna pionowa */
+
   .pg-hero::before{background:
     linear-gradient(180deg,rgba(5,9,7,.62) 0%,rgba(5,9,7,.74) 42%,rgba(5,9,7,.84) 100%)}
   .kafel{grid-template-columns:40px 1fr;gap:16px}
@@ -342,41 +285,31 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
   [data-rv]{opacity:1;transform:none}
 }
 
-
-/* --- kontakt: JEDNA sekcja na wszystkich stronach (2026-08-26) ------------
-   Układ z kontakt.html (wąska lewa kolumna, pigułki w słupku, szkło 580 px),
-   tło i gradient z index.html (ciemniejszy, 100deg .94→.32). Zmiana tutaj =
-   zmiana we wszystkich plikach: skrypt /tmp/ujednolic.mjs, źródło kontakt.html. */
 .kt-sek{position:relative;display:flex;align-items:center;isolation:isolate;
   min-height:calc(100svh - 76px);padding:clamp(28px,4.6vw,64px) 0;overflow:hidden}
 .kt-tlo{position:absolute;inset:0;z-index:0;width:100%;height:100%;object-fit:cover;object-position:50% 42%}
 .kt-sek::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
   background:linear-gradient(100deg,rgba(5,12,9,.94) 0%,rgba(5,12,9,.88) 34%,
              rgba(5,12,9,.6) 62%,rgba(5,12,9,.32) 100%)}
-/* ten sam kontener na każdej stronie — index ma inny .wrap */
+
 .kt-sek .wrap{width:auto;max-width:1180px;margin:0 auto;padding-inline:clamp(20px,4vw,64px)}
 .kt-grid{position:relative;z-index:2;width:100%;display:grid;
   grid-template-columns:1fr minmax(440px,580px);gap:clamp(24px,3.6vw,64px);
   align-items:center;color:#fff}
 .kt-grid h1,.kt-grid .kt-h{margin:0;max-width:12.5ch;letter-spacing:-.028em;font-size:clamp(2.3rem,4.4vw,3.75rem);line-height:1.04}
 .kt-lead{margin:16px 0 0;max-width:42ch;font-size:18px;line-height:24px;color:rgba(255,255,255,.85)}
-/* Liquid glass — ten sam materiał co w sekcji kontaktu na stronie głównej:
-   przepuszcza i rozmywa zdjęcie, świetlna krawędź u góry, miękki cień.
-   Hierarchię robi GRUBOŚĆ szkła, nie kolor: tafla formularza przyciemnia tło
-   filtrem (zdjęcie prześwituje kolorem), pola je rozjaśniają, więc świecą
-   jaśniej niż tafla i nie wyglądają jak dziury. */
+
 .kt-pigulki{display:flex;flex-wrap:wrap;gap:12px;margin:clamp(24px,3vw,40px) 0 0;max-width:560px}
-/* pastylki zostają białe — pełna biel trzyma kontrast niezależnie od tego, co
-   akurat świeci na zdjęciu, i odcina blok danych od szkła formularza */
+
 .kt-pig{display:inline-flex;align-items:center;gap:10px;height:48px;padding:0 20px;
   border-radius:999px;white-space:nowrap;color:var(--ink);background:#fff;
   box-shadow:0 14px 30px -18px rgba(0,0,0,.55)}
 .kt-pig span{font-size:11px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;
-  color:rgba(11,13,12,.72)}   /* 11 px wersalikami — var(--tekst2) dawało 4,37:1 */
+  color:rgba(11,13,12,.72)}
 .kt-pig b{font-size:15px;font-weight:500}
 a.kt-pig{transition:background-color .3s var(--ease),transform .3s var(--ease)}
 a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
-/* karta formularza */
+
 .kt-forma{color:#fff;border-radius:28px;padding:clamp(24px,2.6vw,36px);
   background:linear-gradient(155deg,rgba(255,255,255,.1),rgba(255,255,255,.03));
   -webkit-backdrop-filter:blur(30px) saturate(1.9) brightness(.33);
@@ -387,10 +320,7 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
 .kt-pole{margin-top:16px}
 .kt-pole label{display:block;margin-bottom:6px;font-size:13.5px;font-weight:500;
   color:rgba(255,255,255,.9)}
-/* Pola: jasne szklane studzienki z ciemnym tekstem, bez ramki. Białe litery
-   wymagają ciemnego pola, a widoczna granica bez obwódki — jasnego; przy jednym
-   kadrze obie rzeczy naraz się nie mieszczą, więc wnętrze ma odwrotną polaryzację
-   niż tafla. Granicę robi kontrast wypełnienia (7,2:1), nie kreska. */
+
 .kt-pole input,.kt-pole textarea,.kt-pole select,.kt-pole .pw-btn{width:100%;font:inherit;font-size:15px;
   color:#0B0D0C;border:0;border-radius:14px;
   background:linear-gradient(180deg,rgba(255,255,255,.58),rgba(255,255,255,.44));
@@ -400,9 +330,7 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
 .kt-pole input{height:50px;padding:0 14px}
 .kt-pole textarea{min-height:96px;padding:12px 14px;resize:vertical}
 .kt-pole input::placeholder,.kt-pole textarea::placeholder{color:#232624}
-/* Chrome wstawia przy autouzupełnianiu własne, lawendowe tło i samego
-   `background` nie respektuje — nadpisujemy je cieniem wewnętrznym w kolorze
-   zmierzonym z wyrenderowanego pola */
+
 .kt-pole input:-webkit-autofill,
 .kt-pole input:-webkit-autofill:hover,
 .kt-pole input:-webkit-autofill:focus{
@@ -413,13 +341,13 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
   background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 5.2 7 9l4-3.8" stroke="%230B0D0C" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>'),
     linear-gradient(180deg,rgba(255,255,255,.58),rgba(255,255,255,.44));
   background-repeat:no-repeat,no-repeat;background-position:right 14px center,0 0}
-.kt-pole select:invalid{color:#232624}   /* placeholder w kolorze podpowiedzi */
+.kt-pole select:invalid{color:#232624}
 .kt-pole option{color:#0B0D0C;background:#fff}
 .kt-pole input:hover,.kt-pole textarea:hover,.kt-pole .pw-btn:hover{
   background:linear-gradient(180deg,rgba(255,255,255,.78),rgba(255,255,255,.64))}
 .kt-pole select:hover{background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 5.2 7 9l4-3.8" stroke="%230B0D0C" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>'),
     linear-gradient(180deg,rgba(255,255,255,.78),rgba(255,255,255,.64))}
-/* pole robi się BIAŁE tylko na czas wypełniania — po wyjściu wraca do szkła */
+
 .kt-pole input:focus,.kt-pole textarea:focus,.kt-pole select:focus,
 .kt-pole .pw-btn:focus,.kt-pole .pw.otwarta .pw-btn{
   background:#fff;box-shadow:inset 0 2px 5px -2px rgba(0,0,0,.22)}
@@ -431,8 +359,7 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
   box-shadow:inset 0 2px 5px -2px rgba(0,0,0,.35),inset 0 0 0 2px #C1121F}
 .kt-zgoda{display:flex;align-items:flex-start;gap:10px;margin-top:18px;
   font-size:13px;line-height:1.55;color:rgba(255,255,255,.9)}
-/* własny kwadracik: ta sama materia co pola; natywny `accent-color` daje na
-   szkle płaską białą płytkę */
+
 .kt-zgoda input{appearance:none;-webkit-appearance:none;flex:none;
   width:20px;height:20px;margin:1px 0 0;padding:0;border:0;border-radius:7px;cursor:pointer;
   background:linear-gradient(180deg,rgba(255,255,255,.58),rgba(255,255,255,.44));
@@ -443,11 +370,10 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
   box-shadow:none}
 .kt-zgoda input:focus-visible{outline:2px solid rgba(255,255,255,.85);outline-offset:2px}
 .kt-forma .btn{width:100%;justify-content:center;gap:10px;margin-top:20px;height:50px}
-/* na szkle przycisk musi być jedyną pełną powierzchnią — inaczej ginie */
+
 .kt-forma .btn-pelny{background:#fff;color:#000}
 .kt-forma .btn-pelny:hover{background:#E9E9E6}
-/* bez rozmycia tła (starsza przeglądarka, wyłączona przezroczystość) szkło
-   zostaje samą półprzezroczystą bielą i tekst ginie — wtedy pełne wypełnienie */
+
 @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
   .kt-forma{background-color:rgba(6,13,10,.92)}
 }
@@ -543,7 +469,7 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
         <span class="kt-pig"><span>Adres</span><b>Legionistów 3, Książenice</b></span>
       </div>
     </div>
-    <form class="kt-forma" data-forma novalidate data-rv>
+    <form method="post" class="kt-forma" data-forma novalidate data-rv>
       <h3>Umów wizytę</h3>
       <p class="kt-pod">Oddzwonimy tego samego dnia roboczego.</p>
       <div class="kt-pole">
@@ -687,7 +613,6 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
 </footer>
 
 <script>
-// wjazd sekcji — jedyny skrypt na podstronie
 const rv = document.querySelectorAll('[data-rv]');
 if (matchMedia('(prefers-reduced-motion:reduce)').matches) {
   rv.forEach(e => e.classList.add('in'));
@@ -695,7 +620,7 @@ if (matchMedia('(prefers-reduced-motion:reduce)').matches) {
   const io = new IntersectionObserver((wpisy, o) => {
     wpisy.forEach(w => {
       if (!w.isIntersecting) return;
-      // kaskada w obrębie jednego rodzica, żeby elementy nie wjeżdżały jednocześnie
+
       const r = [...w.target.parentElement.querySelectorAll('[data-rv]')].indexOf(w.target);
       w.target.style.transitionDelay = Math.min(r, 4) * 70 + 'ms';
       w.target.classList.add('in');
@@ -705,7 +630,6 @@ if (matchMedia('(prefers-reduced-motion:reduce)').matches) {
   rv.forEach(e => io.observe(e));
 }
 
-// pas „Pozostałe zakresy": strzałki przewijają o jedną kartę
 {
   const pas = document.querySelector('[data-pas]');
   const krok = () => pas.querySelector('.inna').getBoundingClientRect().width + 16;
@@ -716,7 +640,6 @@ if (matchMedia('(prefers-reduced-motion:reduce)').matches) {
     () => pas.scrollBy({ left: krok(), behavior: jak }));
 }
 
-// formularz kontaktowy — walidacja w przeglądarce, wysyłka do podpięcia (1:1 z home)
 (() => {
   const forma = document.querySelector('[data-forma]');
   if (!forma) return;
