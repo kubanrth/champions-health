@@ -391,10 +391,10 @@ footer.site span:last-child{margin-left:auto}
    Układ z kontakt.html (wąska lewa kolumna, pigułki w słupku, szkło 580 px),
    tło i gradient z index.html (ciemniejszy, 100deg .94→.32). Zmiana tutaj =
    zmiana we wszystkich plikach: skrypt /tmp/ujednolic.mjs, źródło kontakt.html. */
-.kt-sek{position:relative;display:flex;align-items:center;
+.kt-sek{position:relative;display:flex;align-items:center;isolation:isolate;
   min-height:calc(100svh - 76px);padding:clamp(28px,4.6vw,64px) 0;overflow:hidden}
-.kt-tlo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 42%}
-.kt-sek::before{content:"";position:absolute;inset:0;pointer-events:none;
+.kt-tlo{position:absolute;inset:0;z-index:0;width:100%;height:100%;object-fit:cover;object-position:50% 42%}
+.kt-sek::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
   background:linear-gradient(100deg,rgba(5,12,9,.94) 0%,rgba(5,12,9,.88) 34%,
              rgba(5,12,9,.6) 62%,rgba(5,12,9,.32) 100%)}
 /* ten sam kontener na każdej stronie — index ma inny .wrap */
