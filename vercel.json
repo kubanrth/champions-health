@@ -1,5 +1,13 @@
 {
   "redirects": [
     { "source": "/", "destination": "/v2/", "permanent": false }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Robots-Tag", "value": "noindex, nofollow" }
+      ]
+    }
   ]
 }
