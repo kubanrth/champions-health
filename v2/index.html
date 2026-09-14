@@ -1057,6 +1057,30 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
   }));
   sec.__doKarty = doKarty;
 
+  // przeciąganie palcem lewo-prawo po talii: dx przeliczane na scroll strony
+  // (scroll zostaje jedynym źródłem prawdy — focus/morph/strzałki bez zmian)
+  let tX = 0, tY = 0, os = null;
+  stage.addEventListener('touchstart', e => {
+    tX = e.touches[0].clientX; tY = e.touches[0].clientY; os = null;
+  }, { passive: true });
+  stage.addEventListener('touchmove', e => {
+    if (reduce.matches) return;
+    const dx = e.touches[0].clientX - tX, dy = e.touches[0].clientY - tY;
+    if (!os) {
+      if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
+      os = Math.abs(dx) > Math.abs(dy) && we > 0.5 ? 'x' : 'y';
+    }
+    if (os !== 'x') return;
+    e.preventDefault();
+    tX = e.touches[0].clientX; tY = e.touches[0].clientY;
+    const wstep = window.innerHeight * WSTEP;
+    const span = sec.offsetHeight - window.innerHeight - wstep;
+    const maxX = Math.max(1, track.scrollWidth - stage.clientWidth);
+    const base = sec.offsetTop + wstep;
+    const cel = Math.max(base, Math.min(base + span, window.scrollY - dx * span / maxX));
+    window.scrollTo({ top: cel, behavior: 'instant' });
+  }, { passive: false });
+
   sec.__cel = () => {
     const c0 = cards[HERO];
 
