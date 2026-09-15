@@ -1066,6 +1066,10 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
     track.style.transform = `translate3d(${(-p * maxX).toFixed(1)}px,0,0)`;
 
     if (!nad && sec.__odswiezCel) sec.__odswiezCel();
+    // w trakcie gestu ruszamy WYŁĄCZNIE taśmą (czyste przesunięcie gotowych tekstur) —
+    // pisanie transform/opacity do 6 warstw kart co klatkę (120 Hz) to inwalidacyjny
+    // churn, przy którym WebKit gubi klatki na biało; efekty siadają przy utrwaleniu
+    if (nad) return;
     const focus = p * (N - 1);
     const rozjazd = 1 - (N - 1) * KROK;
     cards.forEach((c, i) => {
@@ -1073,9 +1077,7 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
       const t = Math.min(1, Math.abs(i - focus) / 1.1);
       c.style.opacity = (w * (1 - 0.22 * t)).toFixed(3);
       c.style.transform = `translate3d(${(52 * (1 - w)).toFixed(1)}px,0,0) scale(${(0.97 + 0.03 * (1 - t)).toFixed(3)})`;
-      // w trakcie gestu NIE przełączamy .focus — start tranzycji tekstów zmienia
-      // drzewo warstw Safari i daje białą klatkę; focus siada przy utrwaleniu
-      if (!nad) c.classList.toggle('focus', Math.abs(i - focus) < 0.5 && w > 0.9);
+      c.classList.toggle('focus', Math.abs(i - focus) < 0.5 && w > 0.9);
     });
   };
   const kick = () => { if (raf === null) raf = requestAnimationFrame(draw); };
