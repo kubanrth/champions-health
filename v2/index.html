@@ -139,7 +139,7 @@ a{color:inherit;text-decoration:none}
   .wiz-foto{aspect-ratio:16/10}
   .wiz{max-height:calc(100svh - 24px);overflow-y:auto}
 }
-@media(prefers-reduced-motion:reduce){
+@media(prefers-reduced-motion:reduce){.deal-stage{touch-action:auto}
   .tm-card,.tm-wiecej::after{transition:none}
   .tm-track{scroll-behavior:auto}
 }
@@ -484,7 +484,10 @@ a{color:inherit;text-decoration:none}
 }
 
 .deal{position:relative;background:#fff}
-.deal-stage{position:sticky;top:0;height:100svh;overflow:hidden;touch-action:pan-y pinch-zoom;
+.deal-stage{position:sticky;top:0;height:100svh;overflow:hidden;
+  /* pan-y tylko gdy działa nasz własny poziomy gest; w reduced-motion talia
+     scrolluje natywnie w poziomie i pan-y by to zablokował */
+  touch-action:pan-y pinch-zoom;
 
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   padding-top:calc(var(--pill-h) / 2);padding-bottom:clamp(.5rem,2svh,1.6rem)}
