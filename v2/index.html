@@ -263,6 +263,18 @@ a{color:inherit;text-decoration:none}
 .morph-in{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;align-items:flex-start;
   padding:clamp(24px,3vw,38px);text-align:left;opacity:0;transition:opacity .45s var(--rev) .45s}
 .hero.morphed .morph-in{opacity:1}
+/* mobile: w trakcie morfu teksty hero znikają OD RAZU, a ciemna podkładka trzyma
+   do lądowania banera — bez tego tekst hero i tekst sekcji nakładają się na sobie;
+   przy rozwijaniu podkładka i tekst karty wracają/znikają natychmiast */
+@media (max-width:760px){
+  .hero.morphed .hero-copy{transition:none;opacity:0}
+  .hero.morphed .hero-copy h1 .w i{transition:none}
+  .hero.morphed .hero-dol{transition:none;opacity:0;transform:none}
+  .hero::before{transition:opacity .12s linear}
+  .hero.morphed::before{transition:opacity .4s var(--rev) .55s}
+  .morph-in{transition:opacity .18s var(--rev)}
+  .hero.morphed .morph-in{transition:opacity .45s var(--rev) .45s}
+}
 .morph-in .card-txt{opacity:1;transform:none}
 .morph::after{content:"";position:absolute;inset:0;z-index:1;opacity:0;
   background:linear-gradient(to bottom,rgba(8,14,10,.86) 0%,rgba(8,14,10,.6) 34%,rgba(8,14,10,.28) 56%,rgba(8,14,10,.92) 88%,rgba(8,14,10,.96) 100%);
@@ -1119,16 +1131,16 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
     // swobodna bezwładność jak w natywnym scrollu — bez dosnapu, staje gdzie wygaśnie
     const [t0, x0] = probki[0], [t1, x1] = probki[probki.length - 1];
     let v = t1 > t0 ? (x1 - x0) / (t1 - t0) : 0;   // px palca / ms
-    if (Math.abs(v) < 0.05) return;
+    if (Math.abs(v) < 0.03) return;
     // fizyka w czasie, nie w klatkach — na 120 Hz (ProMotion) zanik per klatkę
-    // wygaszałby lot 2× szybciej niż na 60 Hz
+    // wygaszałby lot 2× szybciej niż na 60 Hz. 0.998/ms = UIScrollView „normal"
     let ost = performance.now();
     const krok = () => {
       const t = performance.now(), dt = Math.min(50, t - ost); ost = t;
-      v *= Math.pow(0.9975, dt);
+      v *= Math.pow(0.998, dt);
       const cel = Math.max(baza, Math.min(kres, window.scrollY - v * dt * wsp));
       window.scrollTo({ top: cel, behavior: 'instant' }); kick();
-      if (Math.abs(v) < 0.02 || cel === baza || cel === kres) { fling = 0; return; }
+      if (Math.abs(v) < 0.015 || cel === baza || cel === kres) { fling = 0; return; }
       fling = requestAnimationFrame(krok);
     };
     fling = requestAnimationFrame(krok);
@@ -1703,7 +1715,9 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
   };
 
   const sprawdz = () => {
-    const teraz = scrollY > PROG;
+    // histereza: zwija przy PROG, rozwija dopiero przy powrocie pod sam szczyt —
+    // bez niej ruch góra-dół wokół progu przełącza pełnoekranowy morf (skakanie)
+    const teraz = zwiniete ? scrollY > 6 : scrollY > PROG;
     if (teraz === zwiniete) return;
     if (teraz && !ustawCel()) return;
     zwiniete = teraz;
