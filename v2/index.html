@@ -960,20 +960,28 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
   let we = 0, raf = null, tw = null;
 
   let trzymaj = false, trzymajY = 0, morfDo = 0, koniecDo = 0,
-      ostatniRuch = 0, wlasny = false, pomijaj = 0;
+      ostatniRuch = 0, wlasny = false, pomijaj = 0, dotykGestu = false;
   const przypnij = () => { wlasny = true;
     window.scrollTo({ top: trzymajY, behavior: 'instant' }); };
+  // przy dotyku nie walczymy z natywnym momentum (nie da się go anulować):
+  // taśma stoi zamrożona, a strona dostaje JEDNĄ cichą korektę przy zwolnieniu —
+  // wewnątrz sticky spanu korekta scrollY jest niewidoczna
+  const zwolnij = koryguj => {
+    if (!trzymaj) return; trzymaj = false;
+    if (koryguj && dotykGestu && Math.abs(window.scrollY - trzymajY) > 2) przypnij();
+    kick();
+  };
   sec.__pomijaj = ms => { pomijaj = performance.now() + ms; trzymaj = false; };
 
   let gestOd = 0;
-  const znacz = () => {
+  const znacz = dotyk => {
     const t = performance.now();
 
-    if (trzymaj && t - gestOd > 150) { trzymaj = false; kick(); }
-    gestOd = t;
+    if (trzymaj && t - gestOd > 150) zwolnij(true);
+    gestOd = t; dotykGestu = dotyk;
   };
-  addEventListener('wheel', znacz, { passive: true });
-  addEventListener('touchmove', znacz, { passive: true });
+  addEventListener('wheel', () => znacz(false), { passive: true });
+  addEventListener('touchmove', () => znacz(true), { passive: true });
   sec.__trzymaj = () => {
     const t = performance.now();
     if (t < pomijaj || t - gestOd > 250) return;
@@ -983,7 +991,8 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
     morfDo = performance.now() + CZAS * 0.7;
     koniecDo = performance.now() + 1400;
     ostatniRuch = performance.now();
-    przypnij(); kick(); pilnuj();
+    if (!dotykGestu) przypnij();
+    kick(); pilnuj();
   };
   sec.__pusc = () => { trzymaj = false; };
   addEventListener('scroll', () => {
@@ -992,7 +1001,7 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
     ostatniRuch = performance.now();
 
     if (window.scrollY < trzymajY - 4) { trzymaj = false; kick(); return; }
-    if (window.scrollY > trzymajY + 1) { przypnij(); kick(); }
+    if (!dotykGestu && window.scrollY > trzymajY + 1) { przypnij(); kick(); }
   }, { passive: true });
   let pilnujId = 0;
   const pilnuj = () => {
@@ -1000,8 +1009,8 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
     pilnujId = setInterval(() => {
       if (!trzymaj) { clearInterval(pilnujId); return; }
       const t = performance.now();
-      if (t > morfDo && t - ostatniRuch > 120) { trzymaj = false; kick(); }
-      else if (t > koniecDo) { trzymaj = false; kick(); }
+      if (t > morfDo && t - ostatniRuch > 120) zwolnij(true);
+      else if (t > koniecDo) zwolnij(true);
     }, 60);
   };
 
@@ -1061,12 +1070,12 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
   // (scroll zostaje jedynym źródłem prawdy — focus/morph/strzałki bez zmian).
   // Rysowanie od razu po scrollTo (zdarzenie scroll na mobile bywa asynchroniczne),
   // po puszczeniu bezwładność + dosnap do najbliższej karty.
-  let tX = 0, tY = 0, os = null, vx = 0, tRuch = 0, fling = 0, wsp = 1, baza = 0, kres = 0;
+  let tX = 0, tY = 0, os = null, fling = 0, wsp = 1, baza = 0, kres = 0, probki = [];
   const stopFling = () => { if (fling) { cancelAnimationFrame(fling); fling = 0; } };
   stage.addEventListener('touchstart', e => {
     stopFling();
     tX = e.touches[0].clientX; tY = e.touches[0].clientY;
-    os = null; vx = 0; tRuch = performance.now();
+    os = null; probki = [[performance.now(), tX]];
   }, { passive: true });
   stage.addEventListener('touchmove', e => {
     if (reduce.matches) return;
@@ -1084,9 +1093,11 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
     }
     if (os !== 'x') return;
     e.preventDefault();
+    // prędkość z okna 120 ms — ostatnia próbka przed oderwaniem palca bywa zerowa
     const t = performance.now();
-    vx = 0.8 * (dx / Math.max(1, t - tRuch)) + 0.2 * vx;
-    tRuch = t; tX = x; tY = y;
+    probki.push([t, x]);
+    while (probki.length > 2 && probki[0][0] < t - 120) probki.shift();
+    tX = x; tY = y;
     window.scrollTo({ top: Math.max(baza, Math.min(kres, window.scrollY - dx * wsp)),
       behavior: 'instant' });
     kick();
@@ -1095,13 +1106,14 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
     if (os !== 'x') return;
     os = null;
     // swobodna bezwładność jak w natywnym scrollu — bez dosnapu, staje gdzie wygaśnie
-    let v = vx * 16;
-    if (Math.abs(v) < 1) return;
+    const [t0, x0] = probki[0], [t1, x1] = probki[probki.length - 1];
+    let v = t1 > t0 ? (x1 - x0) / (t1 - t0) * 16.7 : 0;
+    if (Math.abs(v) < 0.8) return;
     const krok = () => {
-      v *= 0.96;
+      v *= 0.965;
       const cel = Math.max(baza, Math.min(kres, window.scrollY - v * wsp));
       window.scrollTo({ top: cel, behavior: 'instant' }); kick();
-      if (Math.abs(v) < 0.5 || cel === baza || cel === kres) { fling = 0; return; }
+      if (Math.abs(v) < 0.3 || cel === baza || cel === kres) { fling = 0; return; }
       fling = requestAnimationFrame(krok);
     };
     fling = requestAnimationFrame(krok);
