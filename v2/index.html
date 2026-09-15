@@ -960,7 +960,7 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
   let we = 0, raf = null, tw = null;
 
   let trzymaj = false, trzymajY = 0, morfDo = 0, koniecDo = 0,
-      ostatniRuch = 0, wlasny = false, pomijaj = 0, dotykGestu = false;
+      ostatniRuch = 0, wlasny = false, pomijaj = 0, dotykGestu = false, szczyt = 0;
   const przypnij = () => { wlasny = true;
     window.scrollTo({ top: trzymajY, behavior: 'instant' }); };
   // przy dotyku nie walczymy z natywnym momentum (nie da się go anulować):
@@ -984,13 +984,17 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
   addEventListener('touchmove', () => znacz(true), { passive: true });
   sec.__trzymaj = () => {
     const t = performance.now();
-    if (t < pomijaj || t - gestOd > 250) return;
+    // przy flicku na iOS palec odrywa się PRZED progiem 65 px i próg przecina samo
+    // momentum (bez zdarzeń dotyku) — dla dotyku okno gestu musi objąć ten lot
+    const okno = dotykGestu ? 1600 : 250;
+    if (t < pomijaj || t - gestOd > okno) return;
     trzymajY = Math.round(sec.offsetTop + window.innerHeight * WSTEP * 0.5);
     trzymaj = true;
 
     morfDo = performance.now() + CZAS * 0.7;
     koniecDo = performance.now() + 1400;
     ostatniRuch = performance.now();
+    szczyt = window.scrollY;
     if (!dotykGestu) przypnij();
     kick(); pilnuj();
   };
@@ -1000,8 +1004,15 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
     if (wlasny) { wlasny = false; return; }
     ostatniRuch = performance.now();
 
+    if (dotykGestu) {
+      // bez pinowania strona startuje z ~66 px, więc zawrócenie mierzymy od szczytu —
+      // porównanie z trzymajY (punkt przypięcia wheel) zabijało blokadę pierwszym eventem
+      if (window.scrollY < szczyt - 4) { trzymaj = false; kick(); return; }
+      szczyt = Math.max(szczyt, window.scrollY);
+      return;
+    }
     if (window.scrollY < trzymajY - 4) { trzymaj = false; kick(); return; }
-    if (!dotykGestu && window.scrollY > trzymajY + 1) { przypnij(); kick(); }
+    if (window.scrollY > trzymajY + 1) { przypnij(); kick(); }
   }, { passive: true });
   let pilnujId = 0;
   const pilnuj = () => {
