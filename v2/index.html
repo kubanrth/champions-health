@@ -277,6 +277,11 @@ a{color:inherit;text-decoration:none}
   .hero::before{transition:opacity .3s var(--rev) .7s}
   .morph-in{transition:opacity .18s var(--rev)}
   .hero.morphed .morph-in{transition:opacity .45s var(--rev) .45s}
+  /* Safari: backdrop-filter nad ruchomą talią wymusza ciągłe przechwytywanie tła
+     i daje białe mignięcia — na dotyku solidne tło zamiast szkła */
+  .card-link{-webkit-backdrop-filter:none;backdrop-filter:none;background:rgba(28,34,30,.6)}
+  /* stała kompozycja tekstów kart = brak przebudowy drzewa warstw przy .focus */
+  .card-txt,.card-cta,.card-link{will-change:opacity,transform}
 }
 .morph-in .card-txt{opacity:1;transform:none}
 .morph::after{content:"";position:absolute;inset:0;z-index:1;opacity:0;
@@ -1068,7 +1073,9 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
       const t = Math.min(1, Math.abs(i - focus) / 1.1);
       c.style.opacity = (w * (1 - 0.22 * t)).toFixed(3);
       c.style.transform = `translate3d(${(52 * (1 - w)).toFixed(1)}px,0,0) scale(${(0.97 + 0.03 * (1 - t)).toFixed(3)})`;
-      c.classList.toggle('focus', Math.abs(i - focus) < 0.5 && w > 0.9);
+      // w trakcie gestu NIE przełączamy .focus — start tranzycji tekstów zmienia
+      // drzewo warstw Safari i daje białą klatkę; focus siada przy utrwaleniu
+      if (!nad) c.classList.toggle('focus', Math.abs(i - focus) < 0.5 && w > 0.9);
     });
   };
   const kick = () => { if (raf === null) raf = requestAnimationFrame(draw); };
