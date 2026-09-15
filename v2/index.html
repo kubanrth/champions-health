@@ -280,8 +280,9 @@ a{color:inherit;text-decoration:none}
   /* Safari: backdrop-filter nad ruchomą talią wymusza ciągłe przechwytywanie tła
      i daje białe mignięcia — na dotyku solidne tło zamiast szkła */
   .card-link{-webkit-backdrop-filter:none;backdrop-filter:none;background:rgba(28,34,30,.6)}
-  /* stała kompozycja tekstów kart = brak przebudowy drzewa warstw przy .focus */
-  .card-txt,.card-cta,.card-link{will-change:opacity,transform}
+  /* otwarcie karty bez tranzycji: start animacji w zagnieżdżonych, przyciętych
+     radiusem warstwach dawał flash w klatce zatrzymania talii */
+  .card.focus .card-txt,.card.focus .card-cta,.card.focus .card-link{transition:none}
 }
 .morph-in .card-txt{opacity:1;transform:none}
 .morph::after{content:"";position:absolute;inset:0;z-index:1;opacity:0;
@@ -1076,10 +1077,11 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
     track.style.transform = `translate3d(${(-p * maxX).toFixed(1)}px,0,0)`;
 
     if (!nad && sec.__odswiezCel) sec.__odswiezCel();
-    // w trakcie gestu ruszamy WYŁĄCZNIE taśmą (czyste przesunięcie gotowych tekstur) —
+    // w trakcie RUCHU gestu ruszamy WYŁĄCZNIE taśmą (czyste przesunięcie tekstur) —
     // pisanie transform/opacity do 6 warstw kart co klatkę (120 Hz) to inwalidacyjny
-    // churn, przy którym WebKit gubi klatki na biało; efekty siadają przy utrwaleniu
-    if (nad) return;
+    // churn, przy którym WebKit gubi klatki na biało; efekty siadają po zatrzymaniu
+    // (nadp może być jeszcze aktywny — scroll dosynchronizowuje się 80 ms później)
+    if (nad && (os === 'x' || fling)) return;
     const focus = p * (N - 1);
     const rozjazd = 1 - (N - 1) * KROK;
     cards.forEach((c, i) => {
@@ -1136,15 +1138,23 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
     petla = requestAnimationFrame(plyn);
   };
   // koniec gestu: JEDNA cicha synchronizacja scrolla (w sticky spanie niewidoczna) —
-  // dalej scroll znów jest jedynym źródłem prawdy
-  const utrwal = () => {
+  // dalej scroll znów jest jedynym źródłem prawdy. Domyślnie odroczona 80 ms,
+  // żeby skok scrollY (przeliczenie sticky) nie trafiał w klatkę otwarcia karty
+  const utrwal = natychmiast => {
     if (nadp === null) return;
-    wlasny = true;
-    window.scrollTo({ top: Math.round(baza + nadp * spanG), behavior: 'instant' });
-    nadp = null; kick();
+    const cel = Math.round(baza + nadp * spanG);
+    const syn = () => {
+      if (nadp === null) return;
+      wlasny = true;
+      window.scrollTo({ top: cel, behavior: 'instant' });
+      nadp = null; kick();
+    };
+    if (natychmiast) { syn(); return; }
+    kick();
+    setTimeout(syn, 80);
   };
   stage.addEventListener('touchstart', e => {
-    stopFling(); utrwal();
+    stopFling(); utrwal(true);
     tX = e.touches[0].clientX; tY = e.touches[0].clientY;
     os = null; probki = [[performance.now(), tX]];
   }, { passive: true });
