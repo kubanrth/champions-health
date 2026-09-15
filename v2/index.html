@@ -1109,8 +1109,20 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
   // (scroll zostaje jedynym źródłem prawdy — focus/morph/strzałki bez zmian).
   // Rysowanie od razu po scrollTo (zdarzenie scroll na mobile bywa asynchroniczne),
   // po puszczeniu bezwładność + dosnap do najbliższej karty.
-  let tX = 0, tY = 0, os = null, fling = 0, baza = 0, spanG = 1, probki = [];
+  let tX = 0, tY = 0, os = null, fling = 0, baza = 0, spanG = 1, probki = [],
+      celP = 0, petla = 0, ostP = 0;
   const stopFling = () => { if (fling) { cancelAnimationFrame(fling); fling = 0; } };
+  // palec raportuje 60 Hz, ekran ProMotion rysuje 120 Hz — bez własnej pętli taśma
+  // rusza się co DRUGĄ klatkę i na 120 Hz widać to jako brak płynności.
+  // Pętla renderuje w tempie ekranu i wygładza pozycję palca (τ = 22 ms)
+  const plyn = () => {
+    if (os !== 'x') { petla = 0; return; }
+    const t = performance.now(), dt = Math.min(50, t - ostP); ostP = t;
+    nadp += (celP - nadp) * (1 - Math.exp(-dt / 22));
+    if (Math.abs(celP - nadp) < 0.0004) nadp = celP;
+    draw();
+    petla = requestAnimationFrame(plyn);
+  };
   // koniec gestu: JEDNA cicha synchronizacja scrolla (w sticky spanie niewidoczna) —
   // dalej scroll znów jest jedynym źródłem prawdy
   const utrwal = () => {
@@ -1136,7 +1148,9 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
         spanG = Math.max(1, sec.offsetHeight - window.innerHeight - wstep);
         baza = sec.offsetTop + wstep;
         maxG = Math.max(1, track.scrollWidth - stage.clientWidth);
-        nadp = postep();
+        nadp = celP = postep();
+        ostP = performance.now();
+        if (!petla) petla = requestAnimationFrame(plyn);
       }
     }
     if (os !== 'x') return;
@@ -1146,12 +1160,12 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
     probki.push([t, x]);
     while (probki.length > 2 && probki[0][0] < t - 120) probki.shift();
     tX = x; tY = y;
-    nadp = Math.min(1, Math.max(0, nadp - dx / maxG));
-    kick();
+    celP = Math.min(1, Math.max(0, celP - dx / maxG));
   }, { passive: false });
   const puszczono = () => {
     if (os !== 'x') return;
     os = null;
+    if (petla) { cancelAnimationFrame(petla); petla = 0; }
     // swobodna bezwładność jak w natywnym scrollu — bez dosnapu, staje gdzie wygaśnie
     const [t0, x0] = probki[0], [t1, x1] = probki[probki.length - 1];
     let v = t1 > t0 ? (x1 - x0) / (t1 - t0) : 0;   // px palca / ms
