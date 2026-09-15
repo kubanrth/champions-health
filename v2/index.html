@@ -1764,12 +1764,21 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
     return true;
   };
 
+  let celBrudny = false;
   const sprawdz = () => {
     // histereza: zwija przy PROG, rozwija dopiero przy powrocie pod sam szczyt —
     // bez niej ruch góra-dół wokół progu przełącza pełnoekranowy morf (skakanie)
     const teraz = zwiniete ? scrollY > 6 : scrollY > PROG;
     if (teraz === zwiniete) return;
     if (teraz && !ustawCel()) return;
+    // odroczony rebase celu (patrz __odswiezCel) — morph musi startować z kafelka,
+    // ale doklejamy go dopiero TERAZ, tuż przed rozwinięciem, nie przy każdym stopie
+    if (!teraz && celBrudny) {
+      const el = hero.querySelector('.morph');
+      if (el) { el.classList.add('bez-przejscia'); ustawCel();
+        void el.offsetWidth; el.classList.remove('bez-przejscia'); }
+      celBrudny = false;
+    }
     zwiniete = teraz;
     if (teraz) czasZwiniecia = performance.now();
     if (!teraz && hero.__zeruj) hero.__zeruj();
@@ -1785,18 +1794,15 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
   };
   sec.__odswiezCel = () => {
     if (!zwiniete) return;
+    // po oddaniu banera karcie (>1080 ms) morph jest niewidoczny — rebase celu
+    // (z wymuszonym reflow!) przy każdym stopie talii dawał biały flash w Safari;
+    // odraczamy go do chwili tuż przed rozwinięciem (sprawdz, gałąź !teraz)
+    if (performance.now() - czasZwiniecia >= 1080) { celBrudny = true; return; }
     const c = sec.__cel && sec.__cel();
     if (!c) return;
 
     if (`${c.x}|${c.y}|${c.w}|${c.h}` === ostatniCel) return;
-
-    if (performance.now() - czasZwiniecia < 1080) { ustawCel(); return; }
-    const el = hero.querySelector('.morph');
-    if (!el) return;
-    el.classList.add('bez-przejscia');
     ustawCel();
-    void el.offsetWidth;
-    el.classList.remove('bez-przejscia');
   };
   addEventListener('scroll', sprawdz, { passive: true });
   addEventListener('resize', () => { if (zwiniete) ustawCel(); });
