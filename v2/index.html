@@ -266,6 +266,7 @@ a{color:inherit;text-decoration:none}
 /* mobile: w trakcie morfu teksty hero znikają OD RAZU, a ciemna podkładka trzyma
    do lądowania banera — bez tego tekst hero i tekst sekcji nakładają się na sobie;
    przy rozwijaniu podkładka i tekst karty wracają/znikają natychmiast */
+.deal-kropki{display:none}
 @media (max-width:760px){
   .hero.morphed .hero-copy{transition:none;opacity:0}
   .hero.morphed .hero-copy h1 .w i{transition:none}
@@ -283,6 +284,20 @@ a{color:inherit;text-decoration:none}
   /* otwarcie karty bez tranzycji: start animacji w zagnieżdżonych, przyciętych
      radiusem warstwach dawał flash w klatce zatrzymania talii */
   .card.focus .card-txt,.card.focus .card-cta,.card.focus .card-link{transition:none}
+  /* tryb Revolut mobile: zwijanie hero → karta ZOSTAJE, ale scena nie jest sticky
+     (strona scrolluje swobodnie w trakcie), a talia to natywna karuzela ze snapem */
+  .deal .deal-stage{position:relative;height:auto;overflow:visible;touch-action:auto;padding:96px 0 20px}
+  .hero{height:100svh}
+  .deal .deal-track{align-self:stretch;width:auto;max-width:100%;overflow-x:auto;overflow-y:hidden;
+    transform:none!important;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;
+    scrollbar-width:none;padding-bottom:6px}
+  .deal .deal-track::-webkit-scrollbar{display:none}
+  .deal .card{scroll-snap-align:center;opacity:1!important;transform:none!important}
+  .card .card-txt,.card .card-cta,.card .card-link{opacity:1;transform:none}
+  .deal-kropki{display:flex;gap:10px;justify-content:center;margin-top:14px}
+  .deal-kropki button{width:8px;height:8px;padding:0;border:0;border-radius:50%;
+    background:#C9C9C6;transition:background-color .25s var(--ease),transform .25s var(--ease)}
+  .deal-kropki button.on{background:#0A0A0A;transform:scale(1.25)}
 }
 .morph-in .card-txt{opacity:1;transform:none}
 .morph::after{content:"";position:absolute;inset:0;z-index:1;opacity:0;
@@ -952,6 +967,7 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
         </div>
       </article>
     </div>
+    <div class="deal-kropki" data-kropki aria-hidden="true"></div>
   </div>
 </section>
 
@@ -964,6 +980,9 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
   const cards = [...track.querySelectorAll('[data-card]')];
   const N = cards.length;
   const reduce = matchMedia('(prefers-reduced-motion:reduce)');
+  // decyzja klienta 2026-09-15: na telefonie ZERO własnej mechaniki — natywna
+  // karuzela jak na revolut.com mobile; animowana talia zostaje tylko na desktopie
+  const statyczny = reduce.matches || matchMedia('(max-width:760px)').matches;
 
   const HERO = 0;
   const WSTEP = 0.6;
@@ -1159,7 +1178,7 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
     os = null; probki = [[performance.now(), tX]];
   }, { passive: true });
   stage.addEventListener('touchmove', e => {
-    if (reduce.matches) return;
+    if (statyczny) return;
     const x = e.touches[0].clientX, y = e.touches[0].clientY;
     const dx = x - tX, dy = y - tY;
     if (!os) {
@@ -1219,10 +1238,27 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
     };
   };
 
-  if (reduce.matches) {
+  if (statyczny) {
     sec.style.height = 'auto';
-    stage.style.cssText += ';position:static;height:auto;overflow-x:auto;padding-bottom:32px';
+    if (reduce.matches) stage.style.cssText += ';position:static;height:auto;overflow-x:auto;padding-bottom:32px';
     cards.forEach(c => { c.style.opacity = '1'; c.classList.add('focus'); });
+    // kropki paginacji (Revolut mobile): aktywna = karta najbliżej środka kadru
+    const kropki = sec.querySelector('[data-kropki]');
+    if (kropki) {
+      const dots = cards.map((c, i) => { const b = document.createElement('button');
+        b.type = 'button'; b.setAttribute('aria-label', `Karta ${i + 1} z ${N}`);
+        b.addEventListener('click', () => c.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' }));
+        kropki.appendChild(b); return b; });
+      let rafK = 0;
+      const zaznacz = () => { rafK = 0;
+        const sr = track.getBoundingClientRect(), mid = sr.left + sr.width / 2;
+        let best = 0, bd = 1e9;
+        cards.forEach((c, i) => { const r = c.getBoundingClientRect();
+          const d = Math.abs(r.left + r.width / 2 - mid); if (d < bd) { bd = d; best = i; } });
+        dots.forEach((d, i) => d.classList.toggle('on', i === best)); };
+      track.addEventListener('scroll', () => { if (!rafK) rafK = requestAnimationFrame(zaznacz); }, { passive: true });
+      zaznacz();
+    }
     sec.__rozloz = () => {};
     sec.__trzymaj = () => {};
     sec.__doKarty = i => cards[Math.max(0, Math.min(N - 1, i))]
@@ -1783,6 +1819,7 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
     if (teraz && !ustawCel()) return;
     // odroczony rebase celu (patrz __odswiezCel) — morph musi startować z kafelka,
     // ale doklejamy go dopiero TERAZ, tuż przed rozwinięciem, nie przy każdym stopie
+    if (!teraz) { const tr = sec.querySelector('[data-track]'); if (tr && tr.scrollLeft) tr.scrollLeft = 0; }
     if (!teraz && celBrudny) {
       const el = hero.querySelector('.morph');
       if (el) { el.classList.add('bez-przejscia'); ustawCel();
