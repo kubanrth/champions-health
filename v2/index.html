@@ -1107,13 +1107,17 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
     os = null;
     // swobodna bezwładność jak w natywnym scrollu — bez dosnapu, staje gdzie wygaśnie
     const [t0, x0] = probki[0], [t1, x1] = probki[probki.length - 1];
-    let v = t1 > t0 ? (x1 - x0) / (t1 - t0) * 16.7 : 0;
-    if (Math.abs(v) < 0.8) return;
+    let v = t1 > t0 ? (x1 - x0) / (t1 - t0) : 0;   // px palca / ms
+    if (Math.abs(v) < 0.05) return;
+    // fizyka w czasie, nie w klatkach — na 120 Hz (ProMotion) zanik per klatkę
+    // wygaszałby lot 2× szybciej niż na 60 Hz
+    let ost = performance.now();
     const krok = () => {
-      v *= 0.965;
-      const cel = Math.max(baza, Math.min(kres, window.scrollY - v * wsp));
+      const t = performance.now(), dt = Math.min(50, t - ost); ost = t;
+      v *= Math.pow(0.9975, dt);
+      const cel = Math.max(baza, Math.min(kres, window.scrollY - v * dt * wsp));
       window.scrollTo({ top: cel, behavior: 'instant' }); kick();
-      if (Math.abs(v) < 0.3 || cel === baza || cel === kres) { fling = 0; return; }
+      if (Math.abs(v) < 0.02 || cel === baza || cel === kres) { fling = 0; return; }
       fling = requestAnimationFrame(krok);
     };
     fling = requestAnimationFrame(krok);
