@@ -1094,14 +1094,14 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
   const puszczono = () => {
     if (os !== 'x') return;
     os = null;
-    const snap = () => doKarty(Math.round(postep() * (N - 1)));
+    // swobodna bezwładność jak w natywnym scrollu — bez dosnapu, staje gdzie wygaśnie
     let v = vx * 16;
-    if (Math.abs(v) < 2) { snap(); return; }
+    if (Math.abs(v) < 1) return;
     const krok = () => {
-      v *= 0.94;
+      v *= 0.96;
       const cel = Math.max(baza, Math.min(kres, window.scrollY - v * wsp));
       window.scrollTo({ top: cel, behavior: 'instant' }); kick();
-      if (Math.abs(v) < 2 || cel === baza || cel === kres) { fling = 0; snap(); return; }
+      if (Math.abs(v) < 0.5 || cel === baza || cel === kres) { fling = 0; return; }
       fling = requestAnimationFrame(krok);
     };
     fling = requestAnimationFrame(krok);
