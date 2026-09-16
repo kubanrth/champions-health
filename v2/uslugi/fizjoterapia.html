@@ -383,6 +383,15 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
   .kt-grid{grid-template-columns:1fr;gap:26px}
   .kt-pigulki{max-width:none}
 }
+
+/* cennik (2026-09-16, wg DOCX klienta) */
+.cennik{list-style:none;margin:0;padding:0;border-top:1px solid var(--kres)}
+.cennik li{display:flex;justify-content:space-between;align-items:baseline;gap:24px;
+  padding:18px 0;border-bottom:1px solid var(--kres)}
+.cennik .c-n{font-size:clamp(16px,1.15vw,18px);letter-spacing:-.012em;line-height:1.35}
+.cennik .c-n small{display:block;margin-top:4px;font-size:14px;color:var(--tekst)}
+.cennik .c-c{flex:none;font-size:clamp(17px,1.25vw,20px);font-weight:500;letter-spacing:-.02em;
+  font-variant-numeric:tabular-nums;white-space:nowrap}
 </style>
 </head>
 <body id="gora">
@@ -437,6 +446,19 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
       <article class="kafel" data-rv><svg class="kafel-ikona" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.2 12a8.2 8.2 0 1 1-2.6-6"/><path d="M20.4 3.6v4.6h-4.6"/></svg><div><h3>Możliwość kontynuowania procesu poprzez trening medyczny i motoryczny</h3></div></article></div>
   </div>
 </section>
+<section class="sek cennik-sek" id="cennik">
+  <div class="wrap zakres-grid">
+    <div class="zakres-head" data-rv>
+      <h2>Cennik</h2>
+      <p>Ceny konsultacji i zabiegów w tym zakresie. Umów wizytę telefonicznie lub przez formularz.</p>
+    </div>
+    <ul class="cennik" data-rv>
+      <li><span class="c-n">Konsultacja fizjoterapeutyczna pierwszorazowa</span><span class="c-c">250 zł</span></li>
+      <li><span class="c-n">Konsultacja fizjoterapeutyczna kolejna</span><span class="c-c">220 zł</span></li>
+    </ul>
+  </div>
+</section>
+
 
 <section class="sek">
   <div class="wrap">
