@@ -89,6 +89,7 @@
 .fab.zwezona{width:var(--fab-waska,auto)}
 
 .fab.ciemna{background:#0B0D0C;color:#fff;box-shadow:0 18px 40px -18px rgba(0,0,0,.4)}
+@media(max-width:760px){.fab,.fab.ciemna{box-shadow:none}}
 .fab.ciemna i{background:#fff;color:#0B0D0C}
 .fab i{width:44px;height:44px;flex:none;border-radius:50%;background:#0B0D0C;color:#fff;
   display:grid;place-items:center}

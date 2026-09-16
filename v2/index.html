@@ -291,22 +291,22 @@ a{color:inherit;text-decoration:none}
   /* decyzja 2026-09-16: na mobile ZERO pomniejszania — hero to zwykły pełnoekranowy
      baner w przepływie, scena bez sticky; karty bez cienia, snap „proximity"
      (mandatory blokował flick na jednej karcie i hamował sztywno) */
-  .hero{position:relative;inset:auto;height:100svh}
-  .deal .deal-stage{position:relative;height:auto;overflow:visible;touch-action:auto;padding:28px 0 16px}
+  .hero{position:relative;inset:auto;width:100%;align-self:stretch;height:100svh}
+  .deal .deal-stage{position:relative;height:auto;overflow:visible;touch-action:auto;padding:0 0 16px}
   .deal .card{box-shadow:none}
   /* nagłówek sekcji odsłaniała klasa .rozwiniete (ze zwijania) — na mobile widoczny od razu */
   .deal .deal-head{opacity:1;transform:none}
   /* wszystko musi się zmieścić w przypiętych 100svh (Safari z paskami ≈ 750 px):
      wysokość karty z dostępnego miejsca, nagłówek ciaśniejszy */
   .deal.deal{--dch:clamp(340px,calc(100svh - 330px),560px)}
-  .deal .deal-head{margin-bottom:16px}
+  .deal .deal-head{margin:28px 0 16px}
   .deal .deal-head h2{font-size:clamp(1.55rem,6.6vw,2rem)}
   .deal .deal-head p{margin-top:.6rem;font-size:15px;line-height:21px}
   .deal .deal-track{align-self:stretch;width:auto;max-width:100%;overflow-x:auto;overflow-y:hidden;
-    transform:none!important;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch;
+    transform:none!important;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;
     scrollbar-width:none;padding-bottom:6px}
   .deal .deal-track::-webkit-scrollbar{display:none}
-  .deal .card{scroll-snap-align:center;opacity:1!important;transform:none!important}
+  .deal .card{scroll-snap-align:center;scroll-snap-stop:always;transform-origin:50% 50%}
   .card .card-txt,.card .card-cta,.card .card-link{opacity:1;transform:none}
   .deal-kropki{display:flex;gap:10px;justify-content:center;margin-top:14px}
   .deal-kropki button{width:8px;height:8px;padding:0;border:0;border-radius:50%;
@@ -1266,7 +1266,20 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
         cards.forEach((c, i) => { const r = c.getBoundingClientRect();
           const d = Math.abs(r.left + r.width / 2 - mid); if (d < bd) { bd = d; best = i; } });
         dots.forEach((d, i) => d.classList.toggle('on', i === best)); };
-      track.addEventListener('scroll', () => { if (!rafK) rafK = requestAnimationFrame(zaznacz); }, { passive: true });
+      // efekt ruchu: karta w środku pełna, sąsiedzi lekko mniejsi i przygaszeni —
+      // liczone z natywnego scrolla (pozycje kart zcache'owane, zero odczytów layoutu w pętli)
+      let poz = [], szer = 1, tw = 1;
+      const zmierz = () => { szer = track.clientWidth; tw = cards[0].offsetWidth || 1;
+        poz = cards.map(c => c.offsetLeft + c.offsetWidth / 2); };
+      const efekt = () => {
+        const mid = track.scrollLeft + szer / 2;
+        cards.forEach((c, i) => { const d = Math.min(1, Math.abs(poz[i] - mid) / tw);
+          c.style.transform = `scale(${(1 - 0.06 * d).toFixed(3)})`;
+          c.style.opacity = (1 - 0.35 * d).toFixed(3); });
+      };
+      zmierz(); efekt();
+      addEventListener('resize', () => { zmierz(); efekt(); });
+      track.addEventListener('scroll', () => { efekt(); if (!rafK) rafK = requestAnimationFrame(zaznacz); }, { passive: true });
       zaznacz();
     }
     sec.__rozloz = () => {};
@@ -2247,6 +2260,6 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
 })();
 </script>
 
-<script src="wspolne.js" defer></script>
+<script src="wspolne.js?v=2" defer></script>
 </body>
 </html>
