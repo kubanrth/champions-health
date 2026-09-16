@@ -4,6 +4,21 @@
       "source": "/",
       "destination": "/v2/",
       "permanent": false
+    },
+    {
+      "source": "/v2/blog.html",
+      "destination": "/v2/",
+      "permanent": false
+    },
+    {
+      "source": "/v2/wpis.html",
+      "destination": "/v2/",
+      "permanent": false
+    },
+    {
+      "source": "/v2/uslugi/edukacja.html",
+      "destination": "/v2/uslugi/szkolenia.html",
+      "permanent": true
     }
   ],
   "headers": [

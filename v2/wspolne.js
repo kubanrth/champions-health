@@ -1,7 +1,7 @@
 
 (() => {
-  const TELEFON = '+48223182000';
-  const TELEFON_ETYKIETA = '22 318 20 00';
+  const TELEFON = '+48519520961';
+  const TELEFON_ETYKIETA = '519 520 961';
 
   const styl = document.createElement('style');
   styl.textContent = `
@@ -106,14 +106,14 @@ body.mnu-otwarte .fab{opacity:0;pointer-events:none}
 .nav-prawo{display:contents}
 .nav .brand{grid-column:1;grid-row:1;justify-self:start;margin-right:0}
 .nav .cta{grid-column:3;grid-row:1;justify-self:end;margin-left:0}
-.nav .brand img{height:44px}
+.nav .brand img{height:58px}
 
-@media(max-width:1180px){.nav .brand img{height:38px}}
+@media(max-width:1180px){.nav .brand img{height:50px}}
 @media(max-width:1080px){
   .nav-in{gap:14px}
   .nav .menu{gap:18px}
   .nav .cta{padding:0 14px}
-  .nav .brand img{height:32px}
+  .nav .brand img{height:42px}
 }
 @media(max-width:760px){
 
@@ -201,7 +201,7 @@ body.mnu-otwarte .fab{opacity:0;pointer-events:none}
         + '<a class="btn-uw" href="' + doFormularza + '" data-uw>Umów wizytę<i>' + IKONA.strzalka + '</i></a>'
         + '<div class="mnu-stopka">'
         + '<a href="tel:' + TELEFON + '">' + TELEFON_ETYKIETA + '</a>'
-        + '<a href="mailto:info@championshealth.pl">info@championshealth.pl</a>'
+        + '<a href="mailto:info@legiamedical.pl">info@legiamedical.pl</a>'
         + '<span>Legionistów 3, Książenice · pon.–pt. 8:00–20:00</span></div>';
       for (const a of menu.querySelectorAll('a'))
         szuflada.querySelector('.mnu-lista').appendChild(a.cloneNode(true));
@@ -467,7 +467,7 @@ body.mnu-otwarte .fab{opacity:0;pointer-events:none}
         return;
       }
       nota.textContent = 'Formularz demonstracyjny - wysyłka zostanie podpięta po stronie kliniki. '
-        + 'Na razie zadzwoń: 22 318 20 00.';
+        + 'Na razie zadzwoń: 519 520 961.';
     });
     forma.addEventListener('change', e => {
       const btn = e.target.parentElement && e.target.parentElement.querySelector('.pw-btn');

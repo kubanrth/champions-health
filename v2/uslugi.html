@@ -410,6 +410,16 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
 .deal-stage{padding-top:76px}
 
 .card{color:#fff}
+
+/* 2026-09-16: strona usług = zwykła siatka kart, bez scrollowanej talii */
+.deal .deal-stage{position:relative;height:auto;overflow:visible;padding:96px 0 32px;display:block}
+.deal .deal-head{opacity:1;transform:none;margin:0 auto 32px}
+.deal .deal-track{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;width:auto;
+  max-width:1240px;margin:0 auto;padding:0 24px;transform:none!important;will-change:auto}
+.deal .card{width:auto;height:clamp(360px,42vw,520px);opacity:1!important;transform:none!important;box-shadow:none}
+.deal .card .card-txt,.deal .card .card-cta,.deal .card .card-link{opacity:1;transform:none}
+@media(max-width:760px){.deal .deal-track{grid-template-columns:1fr;padding:0 16px;gap:16px}
+  .deal .card{height:clamp(420px,110vw,520px)}}
 </style>
 </head>
 <body>
@@ -419,7 +429,6 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
     <div class="menu">
       <a href="uslugi.html" aria-current="page">Usługi</a>
       <a href="zespol.html">Zespół</a>
-      <a href="blog.html">Blog</a>
       <a href="kontakt.html">Kontakt</a>
     </div>
     <div class="nav-prawo">
@@ -442,51 +451,67 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
     </div>
     <div class="deal-track" data-track>
       <article class="card" data-card>
-        <img src="img/sprint-sharp.webp" alt="Medycyna sportowa" style="object-position:38% 40%">
-        <div class="card-in">
-          <h3>Medycyna sportowa</h3>
-          <span class="card-txt">Badania kwalifikacyjne, prowadzenie przez cały sezon i decyzje o powrocie do gry - te same standardy, którymi prowadzimy pierwszą drużynę.</span>
-          <div class="card-akcje"><a data-uw class="card-cta" href="kontakt.html">Umów wizytę</a><a class="card-link" href="uslugi/medycyna-sportowa.html">Zakres opieki<svg width="12" height="12" viewBox="0 0 13 13" fill="none" aria-hidden="true"><path d="M3 10 10 3M4.6 3H10v5.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
-        </div>
-      </article>
-      <article class="card" data-card>
-        <img src="img/c1-ortopedia.webp" alt="Ortopedia" loading="lazy">
+        <img src="img/c1-ortopedia.webp" alt="Ortopedia" style="object-position:38% 40%">
         <div class="card-in">
           <h3>Ortopedia</h3>
-          <span class="card-txt">Konsultacje ortopedyczne z diagnostyką obrazową na miejscu. USG i RTG bez zewnętrznej rejestracji, decyzja o ścieżce leczenia od razu.</span>
+          <span class="card-txt">Konsultacje ortopedyczne, diagnostyka urazów, zabiegi, koordynacja ścieżki leczenia szpitalnego.</span>
           <div class="card-akcje"><a data-uw class="card-cta" href="kontakt.html">Umów wizytę</a><a class="card-link" href="uslugi/ortopedia.html">Zakres opieki<svg width="12" height="12" viewBox="0 0 13 13" fill="none" aria-hidden="true"><path d="M3 10 10 3M4.6 3H10v5.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
         </div>
       </article>
       <article class="card" data-card>
-        <img src="img/c3-fizjoterapia.webp" alt="Fizjoterapia i rehabilitacja" loading="lazy">
+        <img src="img/c3-fizjoterapia.webp" alt="Fizjoterapia i rehabilitacja" style="object-position:38% 40%">
         <div class="card-in">
           <h3>Fizjoterapia i rehabilitacja</h3>
-          <span class="card-txt">Protokoły powrotu po urazie, którymi na co dzień prowadzimy zawodników. Praca 1:1 i kryteria progresu zamiast kalendarza.</span>
+          <span class="card-txt">Fizjoterapia i rehabilitacja oparta na standardach profesjonalnego sportu – dostępna dla każdego pacjenta.</span>
           <div class="card-akcje"><a data-uw class="card-cta" href="kontakt.html">Umów wizytę</a><a class="card-link" href="uslugi/fizjoterapia.html">Zakres opieki<svg width="12" height="12" viewBox="0 0 13 13" fill="none" aria-hidden="true"><path d="M3 10 10 3M4.6 3H10v5.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
         </div>
       </article>
-            <article class="card" data-card>
-        <img src="img/c4-dietetyka.webp" alt="Dietetyka i suplementacja" loading="lazy">
+      <article class="card" data-card>
+        <img src="img/c2-medycyna.webp" alt="Medycyna sportowa" style="object-position:38% 40%">
+        <div class="card-in">
+          <h3>Medycyna sportowa</h3>
+          <span class="card-txt">Badania okresowe, monitorowanie stanu zdrowia sportowców, orzecznictwo w zakresie zdolności do uprawiania sportu.</span>
+          <div class="card-akcje"><a data-uw class="card-cta" href="kontakt.html">Umów wizytę</a><a class="card-link" href="uslugi/medycyna-sportowa.html">Zakres opieki<svg width="12" height="12" viewBox="0 0 13 13" fill="none" aria-hidden="true"><path d="M3 10 10 3M4.6 3H10v5.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
+        </div>
+      </article>
+      <article class="card" data-card>
+        <img src="img/c4-dietetyka.webp" alt="Dietetyka i suplementacja" style="object-position:38% 40%">
         <div class="card-in">
           <h3>Dietetyka i suplementacja</h3>
-          <span class="card-txt">Analiza składu ciała i plan żywienia pod cel - masa, redukcja, wydolność. Suplementacja tylko tam, gdzie ma sens.</span>
+          <span class="card-txt">Indywidualne wsparcie żywieniowe i plany suplementacyjne dla sportowców profesjonalnych i amatorów, nauka zdrowego odżywiania, dietetyka pediatryczna.</span>
           <div class="card-akcje"><a data-uw class="card-cta" href="kontakt.html">Umów wizytę</a><a class="card-link" href="uslugi/dietetyka.html">Zakres opieki<svg width="12" height="12" viewBox="0 0 13 13" fill="none" aria-hidden="true"><path d="M3 10 10 3M4.6 3H10v5.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
         </div>
       </article>
       <article class="card" data-card>
-        <img src="img/c5-trening.webp" alt="Trening merytoryczny" loading="lazy">
+        <img src="img/c5-trening.webp" alt="Trening motoryczny" style="object-position:38% 40%">
         <div class="card-in">
-          <h3>Trening merytoryczny</h3>
-          <span class="card-txt">Motoryka, siła i profilaktyka urazów pod okiem trenerów przygotowania. Testy wydolnościowe i plan na cały sezon.</span>
+          <h3>Trening motoryczny</h3>
+          <span class="card-txt">Motoryka, siła i profilaktyka urazów. Dochodzenie do pełnej sprawności po kontuzji lub urazie. Indywidualna opieka trenera motorycznego.</span>
           <div class="card-akcje"><a data-uw class="card-cta" href="kontakt.html">Umów wizytę</a><a class="card-link" href="uslugi/trening.html">Zakres opieki<svg width="12" height="12" viewBox="0 0 13 13" fill="none" aria-hidden="true"><path d="M3 10 10 3M4.6 3H10v5.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
         </div>
       </article>
       <article class="card" data-card>
-        <img src="img/c6-edukacja.webp" alt="Edukacja i szkolenie" loading="lazy">
+        <img src="img/c7-sport-profesjonalny.webp" alt="Sport profesjonalny" style="object-position:38% 40%">
         <div class="card-in">
-          <h3>Edukacja i szkolenie</h3>
-          <span class="card-txt">Warsztaty i szkolenia dla klubów oraz trenerów. Wiedza sztabu pierwszej drużyny dostępna dla akademii i amatorów.</span>
-          <div class="card-akcje"><a data-uw class="card-cta" href="kontakt.html">Umów wizytę</a><a class="card-link" href="uslugi/edukacja.html">Zakres opieki<svg width="12" height="12" viewBox="0 0 13 13" fill="none" aria-hidden="true"><path d="M3 10 10 3M4.6 3H10v5.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
+          <h3>Sport profesjonalny</h3>
+          <span class="card-txt">Najwyższej klasy opieka medyczna dla zawodników, stowarzyszeń i klubów – nie tylko piłkarskich.</span>
+          <div class="card-akcje"><a data-uw class="card-cta" href="kontakt.html">Umów wizytę</a><a class="card-link" href="uslugi/sport-profesjonalny.html">Zakres opieki<svg width="12" height="12" viewBox="0 0 13 13" fill="none" aria-hidden="true"><path d="M3 10 10 3M4.6 3H10v5.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
+        </div>
+      </article>
+      <article class="card" data-card>
+        <img src="img/c8-profilaktyka.webp" alt="Profilaktyka" style="object-position:38% 40%">
+        <div class="card-in">
+          <h3>Profilaktyka</h3>
+          <span class="card-txt">Profilaktyka to pierwszy krok do zbudowania zdrowych nawyków, mających na celu zapewnić nam długie życie w zdrowiu.</span>
+          <div class="card-akcje"><a data-uw class="card-cta" href="kontakt.html">Umów wizytę</a><a class="card-link" href="uslugi/profilaktyka.html">Zakres opieki<svg width="12" height="12" viewBox="0 0 13 13" fill="none" aria-hidden="true"><path d="M3 10 10 3M4.6 3H10v5.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
+        </div>
+      </article>
+      <article class="card" data-card>
+        <img src="img/c6-edukacja.webp" alt="Szkolenia" style="object-position:38% 40%">
+        <div class="card-in">
+          <h3>Szkolenia</h3>
+          <span class="card-txt">Szkolenia i warsztaty dla kadry medycznej, trenerów i rodziców, prowadzone przez specjalistów Legia Medical oraz Legia Lab.</span>
+          <div class="card-akcje"><a data-uw class="card-cta" href="kontakt.html">Umów wizytę</a><a class="card-link" href="uslugi/szkolenia.html">Zakres opieki<svg width="12" height="12" viewBox="0 0 13 13" fill="none" aria-hidden="true"><path d="M3 10 10 3M4.6 3H10v5.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
         </div>
       </article>
     </div>
@@ -507,12 +532,14 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
       <nav class="ft-kol ft-uslugi" aria-labelledby="ft-opieka">
         <h3 id="ft-opieka">Zakres opieki</h3>
         <ul>
-          <li><a href="uslugi/medycyna-sportowa.html">Medycyna sportowa</a></li>
           <li><a href="uslugi/ortopedia.html">Ortopedia</a></li>
           <li><a href="uslugi/fizjoterapia.html">Fizjoterapia i rehabilitacja</a></li>
+          <li><a href="uslugi/medycyna-sportowa.html">Medycyna sportowa</a></li>
           <li><a href="uslugi/dietetyka.html">Dietetyka i suplementacja</a></li>
-          <li><a href="uslugi/trening.html">Trening merytoryczny</a></li>
-          <li><a href="uslugi/edukacja.html">Edukacja i szkolenie</a></li>
+          <li><a href="uslugi/trening.html">Trening motoryczny</a></li>
+          <li><a href="uslugi/sport-profesjonalny.html">Sport profesjonalny</a></li>
+          <li><a href="uslugi/profilaktyka.html">Profilaktyka</a></li>
+          <li><a href="uslugi/szkolenia.html">Szkolenia</a></li>
         </ul>
       </nav>
 
@@ -521,16 +548,14 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
         <ul>
           <li><a href="index.html#sciezka">Jak to działa</a></li>
           <li><a href="zespol.html">Zespół</a></li>
-          <li><a href="blog.html">Wiedza</a></li>
-          <li><a href="index.html#faq">Najczęstsze pytania</a></li>
         </ul>
       </nav>
 
       <div class="ft-kol">
         <h3 id="ft-kontakt">Kontakt</h3>
         <ul aria-labelledby="ft-kontakt">
-          <li><a href="tel:+48223182000">22 318 20 00</a></li>
-          <li><a href="mailto:info@championshealth.pl">info@championshealth.pl</a></li>
+          <li><a href="tel:+48519520961">519 520 961</a></li>
+          <li><a href="mailto:info@legiamedical.pl">info@legiamedical.pl</a></li>
           <li class="ft-cicho">Legia Training Center · ul. Legionistów 3, 05-825 Książenice</li>
           <li class="ft-cicho">Pon.–pt. 8:00–20:00</li>
         </ul>
@@ -544,81 +569,6 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
   </div>
 </footer>
 
-<script>
-(() => {
-  const sec = document.querySelector('.deal');
-  const track = document.querySelector('[data-track]');
-  const stage = sec.querySelector('.deal-stage');
-  const cards = [...track.querySelectorAll('[data-card]')];
-  const N = cards.length;
-  const HERO = 0, KROK = 0.055, CZAS = 1080;
-  const reduce = matchMedia('(prefers-reduced-motion:reduce)');
-  sec.style.height = `${100 + N * 56}svh`;
-
-  const rev = x => {
-    let lo = 0, hi = 1, t = x;
-    for (let i = 0; i < 24; i++) {
-      t = (lo + hi) / 2;
-      const xx = 3 * (1 - t) * (1 - t) * t * 0.35 + t * t * t;
-      xx < x ? lo = t : hi = t;
-    }
-    return 3 * (1 - t) * t * t + t * t * t;
-  };
-
-  let we = 0, raf = null;
-  const postep = () => {
-    const r = sec.getBoundingClientRect();
-    const span = sec.offsetHeight - window.innerHeight;
-    return span > 0 ? Math.min(1, Math.max(0, -r.top / span)) : 0;
-  };
-  const draw = () => {
-    raf = null;
-    const p = postep();
-    const maxX = Math.max(0, track.scrollWidth - stage.clientWidth);
-    track.style.transform = `translate3d(${(-p * maxX).toFixed(1)}px,0,0)`;
-    const focus = p * (N - 1);
-    const rozjazd = 1 - (N - 1) * KROK;
-    cards.forEach((c, i) => {
-      const w = Math.min(1, Math.max(0, (we - Math.abs(i - HERO) * KROK) / rozjazd));
-      const t = Math.min(1, Math.abs(i - focus) / 1.1);
-      c.style.opacity = (w * (1 - 0.22 * t)).toFixed(3);
-      c.style.transform = `translate3d(${(52 * (1 - w)).toFixed(1)}px,0,0) scale(${(0.97 + 0.03 * (1 - t)).toFixed(3)})`;
-      c.classList.toggle('focus', Math.abs(i - focus) < 0.5 && w > 0.9);
-    });
-  };
-  const kick = () => { if (raf === null) raf = requestAnimationFrame(draw); };
-
-  const doKarty = i => {
-    i = Math.max(0, Math.min(N - 1, i));
-    const span = sec.offsetHeight - window.innerHeight;
-    const top = sec.getBoundingClientRect().top + scrollY + (i / (N - 1)) * span;
-    window.scrollTo({ top: Math.ceil(top) + 1, behavior: 'smooth' });
-  };
-  cards.forEach((c, i) => c.addEventListener('click', e => {
-    if (!e.target.closest('a')) doKarty(i);
-  }));
-  sec.__doKarty = doKarty;
-
-  if (reduce.matches) {
-    sec.style.height = 'auto';
-    stage.style.cssText += ';position:static;height:auto;overflow-x:auto;padding-bottom:32px';
-    cards.forEach(c => { c.style.opacity = '1'; c.classList.add('focus'); });
-    return;
-  }
-
-  addEventListener('scroll', kick, { passive: true });
-  addEventListener('resize', kick, { passive: true });
-
-  const t0 = performance.now();
-  const wjazd = ts => {
-    const u = Math.min(1, (ts - t0) / CZAS);
-    we = rev(u);
-    draw();
-    if (u < 1) requestAnimationFrame(wjazd);
-  };
-  requestAnimationFrame(wjazd);
-})();
-</script>
 <script src="wspolne.js?v=2" defer></script>
 </body>
 </html>
