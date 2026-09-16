@@ -288,7 +288,14 @@ a{color:inherit;text-decoration:none}
      (strona scrolluje swobodnie w trakcie), a talia to natywna karuzela ze snapem */
   /* scena PRZYKLEJONA na czas zwijania (sekcja = 100svh + krótki rozbieg 50svh),
      karta ląduje na środku ekranu i tam zostaje; potem strona jedzie normalnie */
-  .deal .deal-stage{position:sticky;top:0;height:100svh;overflow:hidden;touch-action:auto;padding:84px 0 16px}
+  /* decyzja 2026-09-16: na mobile ZERO pomniejszania — hero to zwykły pełnoekranowy
+     baner w przepływie, scena bez sticky; karty bez cienia, snap „proximity"
+     (mandatory blokował flick na jednej karcie i hamował sztywno) */
+  .hero{position:relative;inset:auto;height:100svh}
+  .deal .deal-stage{position:relative;height:auto;overflow:visible;touch-action:auto;padding:28px 0 16px}
+  .deal .card{box-shadow:none}
+  /* nagłówek sekcji odsłaniała klasa .rozwiniete (ze zwijania) — na mobile widoczny od razu */
+  .deal .deal-head{opacity:1;transform:none}
   /* wszystko musi się zmieścić w przypiętych 100svh (Safari z paskami ≈ 750 px):
      wysokość karty z dostępnego miejsca, nagłówek ciaśniejszy */
   .deal.deal{--dch:clamp(340px,calc(100svh - 330px),560px)}
@@ -296,7 +303,7 @@ a{color:inherit;text-decoration:none}
   .deal .deal-head h2{font-size:clamp(1.55rem,6.6vw,2rem)}
   .deal .deal-head p{margin-top:.6rem;font-size:15px;line-height:21px}
   .deal .deal-track{align-self:stretch;width:auto;max-width:100%;overflow-x:auto;overflow-y:hidden;
-    transform:none!important;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;
+    transform:none!important;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch;
     scrollbar-width:none;padding-bottom:6px}
   .deal .deal-track::-webkit-scrollbar{display:none}
   .deal .card{scroll-snap-align:center;opacity:1!important;transform:none!important}
@@ -1242,7 +1249,7 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
   };
 
   if (statyczny) {
-    sec.style.height = reduce.matches ? 'auto' : '150svh';
+    sec.style.height = 'auto';
     if (reduce.matches) stage.style.cssText += ';position:static;height:auto;overflow-x:auto;padding-bottom:32px';
     cards.forEach(c => { c.style.opacity = '1'; c.classList.add('focus'); });
     // kropki paginacji (Revolut mobile): aktywna = karta najbliżej środka kadru
@@ -1797,6 +1804,7 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
   const hero = document.querySelector('.hero');
   const sec = document.querySelector('.deal');
   if (!hero || !sec) return;
+  if (matchMedia('(max-width:760px)').matches) return; // mobile: bez pomniejszania (2026-09-16)
   const PROG = 65;
   let zwiniete = null, czasZwiniecia = 0;
 
