@@ -106,14 +106,22 @@ body.mnu-otwarte .fab{opacity:0;pointer-events:none}
 .nav-prawo{display:contents}
 .nav .brand{grid-column:1;grid-row:1;justify-self:start;margin-right:0}
 .nav .cta{grid-column:3;grid-row:1;justify-self:end;margin-left:0}
-.nav .brand img{height:58px}
+/* Pasek ma stałą wysokość (--nav-h), a logo bywa wyższe niż wiersz z pigułką,
+   więc wystawało poza niego i „zjadało" dolny padding: przy 58px zostawało 0px
+   powietrza pod logo, przy 42px aż 16px — stąd różny wygląd nagłówka na różnych
+   szerokościach okna. Padding liczony z rozmiaru logo daje zawsze równy odstęp. */
+.nav{--nav-h:76px;--logo-h:52px;
+  padding-top:calc((var(--nav-h) - var(--logo-h)) / 2);
+  padding-bottom:calc((var(--nav-h) - var(--logo-h)) / 2)}
+.nav-in{height:auto;min-height:var(--pill-h,40px)}
+.nav .brand img{height:var(--logo-h)}
 
-@media(max-width:1180px){.nav .brand img{height:50px}}
+@media(max-width:1180px){.nav{--logo-h:48px}}
 @media(max-width:1080px){
   .nav-in{gap:14px}
   .nav .menu{gap:18px}
   .nav .cta{padding:0 14px}
-  .nav .brand img{height:42px}
+  .nav{--logo-h:44px}
 }
 @media(max-width:760px){
 
