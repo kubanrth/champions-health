@@ -376,6 +376,37 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
   .ft-uslugi{grid-row:auto}
   .ft-kol ul{gap:10px}
 }
+
+/* wizytówka specjalisty (ten sam komponent co na stronie głównej) */
+.wiz{width:min(920px,calc(100vw - 32px));max-height:calc(100svh - 32px);padding:0;border:0;
+  border-radius:24px;background:#111;color:#fff;overflow:hidden}
+.wiz::backdrop{background:rgba(0,0,0,.72);backdrop-filter:blur(6px)}
+.wiz-in{display:grid;grid-template-columns:minmax(0,38%) minmax(0,1fr)}
+.wiz-foto{aspect-ratio:3/4;display:grid;place-items:center;
+  background:linear-gradient(160deg,#1b1b1b,#101010 60%)}
+.wiz-foto .tm-ini{font-size:64px}
+.wiz-txt{padding:clamp(24px,3.4vw,40px);display:flex;flex-direction:column;align-items:flex-start;
+  justify-content:center;gap:10px}
+.wiz-txt h3{margin:0;font-size:clamp(1.5rem,2.6vw,2.1rem);line-height:1.08;
+  letter-spacing:-.028em;font-weight:500}
+/* długi podpis specjalizacji wchodził pod przycisk zamknięcia (prawy górny róg) */
+.wiz-txt .eyebrow{display:block;padding-right:48px}
+.wiz-opis{margin:2px 0 0;font-size:15px;line-height:1.6;color:rgba(255,255,255,.78)}
+.wiz-dosw{margin-top:6px;padding-top:14px;border-top:1px solid rgba(255,255,255,.12);width:100%}
+.wiz-dosw b{display:block;font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+  color:rgba(255,255,255,.45)}
+.wiz-dosw span{display:block;margin-top:5px;font-size:14px;line-height:1.5;color:rgba(255,255,255,.78)}
+.wiz .btn{margin-top:16px}
+.wiz-x{position:absolute;top:12px;right:14px;z-index:2;width:38px;height:38px;border-radius:50%;
+  border:0;background:rgba(0,0,0,.45);color:#fff;font-size:22px;line-height:1;cursor:pointer;
+  transition:background-color .3s var(--ease)}
+.wiz-x:hover{background:rgba(0,0,0,.75)}
+.wiz-x:focus-visible{outline:2px solid #fff;outline-offset:2px}
+@media(max-width:720px){
+  .wiz-in{grid-template-columns:1fr}
+  .wiz-foto{aspect-ratio:16/10}
+  .wiz{max-height:calc(100svh - 24px);overflow-y:auto}
+}
 </style>
 </head>
 <body>
@@ -412,8 +443,8 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
 
 <section class="tm-sek">
   <div class="tm-grid">
-      <div class="tm-karta" data-tm tabindex="0" role="button"
-        aria-label="Filip Latawiec, Dyrektor medyczny kliniki. Lekarz I drużyny Legii Warszawa, dawniej kierownik zespołu medycznego Al Jazira FC." aria-expanded="false">
+      <div class="tm-karta" data-tm tabindex="0" role="button" aria-haspopup="dialog" data-imie="Filip Latawiec" data-spec="Dyrektor medyczny kliniki · Ortopedia, medycyna sportowa" data-opis="Specjalista ortopedii i traumatologii narządu ruchu oraz medycyny sportowej, lekarz I drużyny Legii Warszawa. Wcześniej lekarz I zespołu Legii i Legia Kosz oraz kierownik zespołu medycznego Al Jazira FC w Abu Zabi. Szczególny obszar: staw kolanowy, skokowy, bark i łokieć oraz medycyna regeneracyjna – iniekcje PRP i kwasu hialuronowego pod kontrolą USG." data-dosw="Od 2013 roku licencjonowany lekarz PZPN, związany z reprezentacjami Polski juniorów. Absolwent I Wydziału Lekarskiego WUM, równolegle magister psychologii (psychologia sportu). Stawia na bezpieczny i możliwie szybki powrót do sprawności przy świadomym udziale pacjenta w decyzjach."
+        aria-label="Filip Latawiec, Dyrektor medyczny kliniki. Lekarz I drużyny Legii Warszawa, dawniej kierownik zespołu medycznego Al Jazira FC.">
         <div class="tm-kadr"><b aria-hidden="true">FL</b><span>Zdjęcie w przygotowaniu</span></div>
         <div class="tm-nakladka" aria-hidden="true"><div class="tm-panel">
           <p class="tm-cytat"><span style="--i:0">Lekarz</span> <span style="--i:1">I</span> <span style="--i:2">drużyny</span> <span style="--i:3">Legii</span> <span style="--i:4">Warszawa,</span> <span style="--i:5">dawniej</span> <span style="--i:6">kierownik</span> <span style="--i:7">zespołu</span> <span style="--i:8">medycznego</span> <span style="--i:9">Al</span> <span style="--i:10">Jazira</span> <span style="--i:11">FC.</span></p>
@@ -425,8 +456,8 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
         </div>
         <div class="tm-pods"><b>Filip Latawiec</b><i></i><span>Lekarz</span></div>
       </div>
-      <div class="tm-karta" data-tm tabindex="0" role="button"
-        aria-label="Marcin Tusiński, Ortopeda. Lekarz I zespołu Legii Warszawa. Dokładna diagnostyka, jasne wyjaśnienie problemu i wspólny plan terapii." aria-expanded="false">
+      <div class="tm-karta" data-tm tabindex="0" role="button" aria-haspopup="dialog" data-imie="Marcin Tusiński" data-spec="Ortopeda · Ortopedia i traumatologia, medycyna sportowa" data-opis="Specjalista ortopedii i traumatologii narządu ruchu, lekarz medycyny sportowej w trakcie specjalizacji. Lekarz I zespołu Legii Warszawa – odpowiada za diagnostykę i leczenie urazów zawodników we współpracy z fizjoterapeutami i trenerami." data-dosw="Diagnostyka i leczenie dolegliwości barku, łokcia, nadgarstka, biodra, kolana, stawu skokowego i stopy; USG narządu ruchu oraz iniekcje dostawowe i okołostawowe pod kontrolą USG. Absolwent I Wydziału Lekarskiego WUM, pracuje zgodnie z zasadami evidence-based medicine. Prywatnie piłka nożna i triathlon."
+        aria-label="Marcin Tusiński, Ortopeda. Lekarz I zespołu Legii Warszawa. Dokładna diagnostyka, jasne wyjaśnienie problemu i wspólny plan terapii.">
         <div class="tm-kadr"><b aria-hidden="true">MT</b><span>Zdjęcie w przygotowaniu</span></div>
         <div class="tm-nakladka" aria-hidden="true"><div class="tm-panel">
           <p class="tm-cytat"><span style="--i:0">Lekarz</span> <span style="--i:1">I</span> <span style="--i:2">zespołu</span> <span style="--i:3">Legii</span> <span style="--i:4">Warszawa.</span> <span style="--i:5">Dokładna</span> <span style="--i:6">diagnostyka,</span> <span style="--i:7">jasne</span> <span style="--i:8">wyjaśnienie</span> <span style="--i:9">problemu</span> <span style="--i:10">i</span> <span style="--i:11">wspólny</span> <span style="--i:12">plan</span> <span style="--i:13">terapii.</span></p>
@@ -438,8 +469,8 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
         </div>
         <div class="tm-pods"><b>Marcin Tusiński</b><i></i><span>Lekarz</span></div>
       </div>
-      <div class="tm-karta" data-tm tabindex="0" role="button"
-        aria-label="Piotr Modzelewski, Ortopeda · dr n. med. i n. o zdr.. Lekarz Akademii Legii Warszawa i Legia Ladies. Artroskopia, leczenie zachowawcze i ortobiologia." aria-expanded="false">
+      <div class="tm-karta" data-tm tabindex="0" role="button" aria-haspopup="dialog" data-imie="Piotr Modzelewski" data-spec="Ortopeda · dr n. med. i n. o zdr. · Ortopedia i traumatologia, ortobiologia" data-opis="Specjalista ortopedii i traumatologii narządu ruchu – leczenie operacyjne, w tym małoinwazyjne techniki artroskopowe, oraz zachowawcze. Na co dzień w Klinice Ortopedii i Traumatologii oraz Medycyny Sportowej PIM MSWiA w Warszawie. Lekarz Akademii Piłkarskiej Legii Warszawa i Legia Ladies." data-dosw="Doktor nauk medycznych i nauk o zdrowiu, absolwent WUM. Kompetencje rozwijał m.in. w Wielkiej Brytanii, Holandii, Francji, Włoszech, Norwegii i USA. Główne obszary: staw kolanowy, skokowy i obręcz barkowa, medycyna regeneracyjna i ortobiologia; konsultuje też pacjentów z zaburzeniami hemostazy."
+        aria-label="Piotr Modzelewski, Ortopeda · dr n. med. i n. o zdr.. Lekarz Akademii Legii Warszawa i Legia Ladies. Artroskopia, leczenie zachowawcze i ortobiologia.">
         <div class="tm-kadr"><b aria-hidden="true">PM</b><span>Zdjęcie w przygotowaniu</span></div>
         <div class="tm-nakladka" aria-hidden="true"><div class="tm-panel">
           <p class="tm-cytat"><span style="--i:0">Lekarz</span> <span style="--i:1">Akademii</span> <span style="--i:2">Legii</span> <span style="--i:3">Warszawa</span> <span style="--i:4">i</span> <span style="--i:5">Legia</span> <span style="--i:6">Ladies.</span> <span style="--i:7">Artroskopia,</span> <span style="--i:8">leczenie</span> <span style="--i:9">zachowawcze</span> <span style="--i:10">i</span> <span style="--i:11">ortobiologia.</span></p>
@@ -451,8 +482,8 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
         </div>
         <div class="tm-pods"><b>Piotr Modzelewski</b><i></i><span>Lekarz</span></div>
       </div>
-      <div class="tm-karta" data-tm tabindex="0" role="button"
-        aria-label="Szymon Gałczyński, Medycyna sportowa. Badania sportowo-lekarskie i diagnostyka wydolnościowa. Były reprezentant Polski w kolarstwie górskim." aria-expanded="false">
+      <div class="tm-karta" data-tm tabindex="0" role="button" aria-haspopup="dialog" data-imie="Szymon Gałczyński" data-spec="Medycyna sportowa · Medycyna sportowa, medycyna rodzinna" data-opis="Specjalista medycyny rodzinnej i lekarz medycyny sportowej (specjalizacja w Zakładzie Medycyny Sportowej UM w Łodzi). Uprawnienia do badań sportowo-lekarskich dzieci i młodzieży do 23. roku życia; łączy praktykę kliniczną z diagnostyką wydolnościową." data-dosw="W latach 2016–2018 lekarz kadry Polski parakolarzy. Specjalista ds. badań wydolnościowych w laboratorium DynamoLab UM w Łodzi, członek Polskiego Towarzystwa Ergospirometrii Sportowej, certyfikowany lekarz PTBO. Były reprezentant Polski w kolarstwie górskim."
+        aria-label="Szymon Gałczyński, Medycyna sportowa. Badania sportowo-lekarskie i diagnostyka wydolnościowa. Były reprezentant Polski w kolarstwie górskim.">
         <div class="tm-kadr"><b aria-hidden="true">SG</b><span>Zdjęcie w przygotowaniu</span></div>
         <div class="tm-nakladka" aria-hidden="true"><div class="tm-panel">
           <p class="tm-cytat"><span style="--i:0">Badania</span> <span style="--i:1">sportowo-lekarskie</span> <span style="--i:2">i</span> <span style="--i:3">diagnostyka</span> <span style="--i:4">wydolnościowa.</span> <span style="--i:5">Były</span> <span style="--i:6">reprezentant</span> <span style="--i:7">Polski</span> <span style="--i:8">w</span> <span style="--i:9">kolarstwie</span> <span style="--i:10">górskim.</span></p>
@@ -464,8 +495,8 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
         </div>
         <div class="tm-pods"><b>Szymon Gałczyński</b><i></i><span>Lekarz</span></div>
       </div>
-      <div class="tm-karta" data-tm tabindex="0" role="button"
-        aria-label="Bartosz Kot, Dyrektor ds. fizjoterapii. Ruch jest efektem współpracy całego organizmu, dlatego nie patrzę wyłącznie na miejsce występowania bólu." aria-expanded="false">
+      <div class="tm-karta" data-tm tabindex="0" role="button" aria-haspopup="dialog" data-imie="Bartosz Kot" data-spec="Dyrektor ds. fizjoterapii · Fizjoterapia sportowa, Return to Play" data-opis="Head of Physiotherapy Department I drużyny Legii Warszawa (od 2020) i Lead Sports Physiotherapist reprezentacji Polski U20. Specjalista fizjoterapii – najwyższy poziom kwalifikacji w polskim systemie; certyfikowany trener S&amp;C (NSCA/ASCA), FIFA Diploma in Football Medicine, licencja UEFA B." data-dosw="Ponad 15 lat pracy ze sportowcami, w tym reprezentacja Chin w lekkoatletyce (Asian Games 2018) i Shanghai Research Institute of Sport and Science. Wykładowca AWF Warszawa. Executive MBA in Healthcare (UM Lublin). Metody: Stecco, Mulligan, Maitland, FDM, DNS, PNF, PRI, suche igłowanie, akupunktura, testy funkcjonalne i monitoring obciążeń."
+        aria-label="Bartosz Kot, Dyrektor ds. fizjoterapii. Ruch jest efektem współpracy całego organizmu, dlatego nie patrzę wyłącznie na miejsce występowania bólu.">
         <div class="tm-kadr"><b aria-hidden="true">BK</b><span>Zdjęcie w przygotowaniu</span></div>
         <div class="tm-nakladka" aria-hidden="true"><div class="tm-panel">
           <p class="tm-cytat"><span style="--i:0">Ruch</span> <span style="--i:1">jest</span> <span style="--i:2">efektem</span> <span style="--i:3">współpracy</span> <span style="--i:4">całego</span> <span style="--i:5">organizmu,</span> <span style="--i:6">dlatego</span> <span style="--i:7">nie</span> <span style="--i:8">patrzę</span> <span style="--i:9">wyłącznie</span> <span style="--i:10">na</span> <span style="--i:11">miejsce</span> <span style="--i:12">występowania</span> <span style="--i:13">bólu.</span></p>
@@ -477,8 +508,8 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
         </div>
         <div class="tm-pods"><b>Bartosz Kot</b><i></i><span>Fizjoterapeuta</span></div>
       </div>
-      <div class="tm-karta" data-tm tabindex="0" role="button"
-        aria-label="Giovanni Mangano, Fizjoterapeuta I drużyny. Narząd ruchu leczy się w ruchu." aria-expanded="false">
+      <div class="tm-karta" data-tm tabindex="0" role="button" aria-haspopup="dialog" data-imie="Giovanni Mangano" data-spec="Fizjoterapeuta I drużyny · Terapia manualna, suche igłowanie, trening medyczny" data-opis="Na co dzień pracuje z zawodnikami I drużyny Legii Warszawa – przygotowanie do wysiłku, regeneracja i powrót do pełnej sprawności po urazach. Absolwent fizjoterapii Uniwersytetu w Katanii." data-dosw="Doświadczenie ze struktur Stecco, A.S.P., FIFA, FSI oraz Paris Saint-Germain. Ponad 20 specjalistycznych szkoleń: FRSc, terapia manualna, rehabilitacja ortopedyczna, trening medyczny, fizjoterapia sportowa."
+        aria-label="Giovanni Mangano, Fizjoterapeuta I drużyny. Narząd ruchu leczy się w ruchu.">
         <div class="tm-kadr"><b aria-hidden="true">GM</b><span>Zdjęcie w przygotowaniu</span></div>
         <div class="tm-nakladka" aria-hidden="true"><div class="tm-panel">
           <p class="tm-cytat"><span style="--i:0">Narząd</span> <span style="--i:1">ruchu</span> <span style="--i:2">leczy</span> <span style="--i:3">się</span> <span style="--i:4">w</span> <span style="--i:5">ruchu.</span></p>
@@ -490,8 +521,8 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
         </div>
         <div class="tm-pods"><b>Giovanni Mangano</b><i></i><span>Fizjoterapeuta</span></div>
       </div>
-      <div class="tm-karta" data-tm tabindex="0" role="button"
-        aria-label="Kacper Balcerak, Fizjoterapeuta I drużyny. Rehabilitacja to proces, a nie jedna technika wykonana na pacjencie." aria-expanded="false">
+      <div class="tm-karta" data-tm tabindex="0" role="button" aria-haspopup="dialog" data-imie="Kacper Balcerak" data-spec="Fizjoterapeuta I drużyny · Fizjoterapia sportowa, rehabilitacja ortopedyczna" data-opis="Od 2022 roku fizjoterapeuta pierwszego zespołu Legii Warszawa; wcześniej Akademia Piłkarska Legii (2020–2022) i Kadra Polski Pięcioboju Nowoczesnego (2019–2020). Absolwent AWF Warszawa (magister 2019)." data-dosw="Kursy: Kinetic Control, Return to Play – Muscle and Tendon Injury, manipulacja powięzi, Bram Swinnen – Performance and Rehab, Dynamic Taping, masaż tkanek głębokich, analiza biomechaniczna ruchu, manipulacje HVLA."
+        aria-label="Kacper Balcerak, Fizjoterapeuta I drużyny. Rehabilitacja to proces, a nie jedna technika wykonana na pacjencie.">
         <div class="tm-kadr"><b aria-hidden="true">KB</b><span>Zdjęcie w przygotowaniu</span></div>
         <div class="tm-nakladka" aria-hidden="true"><div class="tm-panel">
           <p class="tm-cytat"><span style="--i:0">Rehabilitacja</span> <span style="--i:1">to</span> <span style="--i:2">proces,</span> <span style="--i:3">a</span> <span style="--i:4">nie</span> <span style="--i:5">jedna</span> <span style="--i:6">technika</span> <span style="--i:7">wykonana</span> <span style="--i:8">na</span> <span style="--i:9">pacjencie.</span></p>
@@ -503,8 +534,8 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
         </div>
         <div class="tm-pods"><b>Kacper Balcerak</b><i></i><span>Fizjoterapeuta</span></div>
       </div>
-      <div class="tm-karta" data-tm tabindex="0" role="button"
-        aria-label="Łukasz Gembarzewski, Fizjoterapeuta I zespołu. Twoja sprawność – moja misja." aria-expanded="false">
+      <div class="tm-karta" data-tm tabindex="0" role="button" aria-haspopup="dialog" data-imie="Łukasz Gembarzewski" data-spec="Fizjoterapeuta I zespołu · Fizjoterapia sportowa, przygotowanie motoryczne" data-opis="Pracuje z zawodnikami I zespołu Legii Warszawa – przygotowanie do wysiłku, regeneracja i powrót po urazach. Wcześniej fizjoterapeuta Hutnika Warszawa. Absolwent AWF Warszawa." data-dosw="FIFA Diploma in Football Medicine, RTS po ACLR, Jordan Strength &amp; Conditioning Evaluation Program. Pracuje ze sportowcami zawodowymi i amatorami oraz z pacjentami po zabiegach ortopedycznych."
+        aria-label="Łukasz Gembarzewski, Fizjoterapeuta I zespołu. Twoja sprawność – moja misja.">
         <div class="tm-kadr"><b aria-hidden="true">ŁG</b><span>Zdjęcie w przygotowaniu</span></div>
         <div class="tm-nakladka" aria-hidden="true"><div class="tm-panel">
           <p class="tm-cytat"><span style="--i:0">Twoja</span> <span style="--i:1">sprawność</span> <span style="--i:2">–</span> <span style="--i:3">moja</span> <span style="--i:4">misja.</span></p>
@@ -516,8 +547,8 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
         </div>
         <div class="tm-pods"><b>Łukasz Gembarzewski</b><i></i><span>Fizjoterapeuta</span></div>
       </div>
-      <div class="tm-karta" data-tm tabindex="0" role="button"
-        aria-label="Dominik Ofat, Fizjoterapeuta. Ból traktuję jako komunikat – dlatego diagnozuję cały organizm." aria-expanded="false">
+      <div class="tm-karta" data-tm tabindex="0" role="button" aria-haspopup="dialog" data-imie="Dominik Ofat" data-spec="Fizjoterapeuta · Fizjoterapia ortopedyczna, staw skroniowo-żuchwowy" data-opis="Pracuje z pacjentami po urazach oraz z problemami ortopedycznymi i dysfunkcjami narządu ruchu; szczególny obszar to diagnostyka i terapia dysfunkcji stawu skroniowo-żuchwowego. Absolwent Akademii Bialskiej im. Jana Pawła II." data-dosw="Kursy: OMT (moduły I–VII), terapia stawów skroniowo-żuchwowych, pinoterapia FRSc, terapia manualna, PNF, kinesiotaping oraz liczne konferencje z zakresu terapii manualnej."
+        aria-label="Dominik Ofat, Fizjoterapeuta. Ból traktuję jako komunikat – dlatego diagnozuję cały organizm.">
         <div class="tm-kadr"><b aria-hidden="true">DO</b><span>Zdjęcie w przygotowaniu</span></div>
         <div class="tm-nakladka" aria-hidden="true"><div class="tm-panel">
           <p class="tm-cytat"><span style="--i:0">Ból</span> <span style="--i:1">traktuję</span> <span style="--i:2">jako</span> <span style="--i:3">komunikat</span> <span style="--i:4">–</span> <span style="--i:5">dlatego</span> <span style="--i:6">diagnozuję</span> <span style="--i:7">cały</span> <span style="--i:8">organizm.</span></p>
@@ -529,8 +560,8 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
         </div>
         <div class="tm-pods"><b>Dominik Ofat</b><i></i><span>Fizjoterapeuta</span></div>
       </div>
-      <div class="tm-karta" data-tm tabindex="0" role="button"
-        aria-label="Marcin Czubak, Fizjoterapeuta Akademii. Nie tylko objawy – przede wszystkim przyczyna problemu i bezpieczny powrót do sprawności." aria-expanded="false">
+      <div class="tm-karta" data-tm tabindex="0" role="button" aria-haspopup="dialog" data-imie="Marcin Czubak" data-spec="Fizjoterapeuta Akademii · Fizjoterapia ortopedyczna i sportowa, tkanki miękkie" data-opis="Od 2023 roku fizjoterapeuta Akademii Legii Warszawa – rehabilitacja, przygotowanie do wysiłku i powrót zawodników do pełnej sprawności. Absolwent Wyższej Szkoły Rehabilitacji w Warszawie (fizjoterapia i masaż)." data-dosw="Techniki masażu, taping elastyczny, INDIBA activ Cell Therapy, suche igłowanie wg FRSc; kursy z terapii skolioz i pierwszej pomocy wg wytycznych ERC. Skupia się na przyczynie problemu i aktywnej rehabilitacji."
+        aria-label="Marcin Czubak, Fizjoterapeuta Akademii. Nie tylko objawy – przede wszystkim przyczyna problemu i bezpieczny powrót do sprawności.">
         <div class="tm-kadr"><b aria-hidden="true">MC</b><span>Zdjęcie w przygotowaniu</span></div>
         <div class="tm-nakladka" aria-hidden="true"><div class="tm-panel">
           <p class="tm-cytat"><span style="--i:0">Nie</span> <span style="--i:1">tylko</span> <span style="--i:2">objawy</span> <span style="--i:3">–</span> <span style="--i:4">przede</span> <span style="--i:5">wszystkim</span> <span style="--i:6">przyczyna</span> <span style="--i:7">problemu</span> <span style="--i:8">i</span> <span style="--i:9">bezpieczny</span> <span style="--i:10">powrót</span> <span style="--i:11">do</span> <span style="--i:12">sprawności.</span></p>
@@ -542,8 +573,8 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
         </div>
         <div class="tm-pods"><b>Marcin Czubak</b><i></i><span>Fizjoterapeuta</span></div>
       </div>
-      <div class="tm-karta" data-tm tabindex="0" role="button"
-        aria-label="Daniel Komar, Fizjoterapeuta Akademii. Pracuj w ciszy, niech sukces zrobi hałas." aria-expanded="false">
+      <div class="tm-karta" data-tm tabindex="0" role="button" aria-haspopup="dialog" data-imie="Daniel Komar" data-spec="Fizjoterapeuta Akademii · Rehabilitacja ortopedyczna i pooperacyjna" data-opis="Od trzech lat fizjoterapeuta Akademii Piłkarskiej Legii Warszawa; prowadzi indywidualną terapię osób aktywnych oraz pacjentów po urazach i zabiegach operacyjnych. Absolwent AWF Warszawa (magister 2022)." data-dosw="Terapia manualna, terapia tkanek miękkich i powięzi, suche igłowanie, kinesiotaping (KT1 &amp; KT2). Szczególny obszar: rehabilitacja pooperacyjna i przygotowanie do bezpiecznego powrotu do sprawności."
+        aria-label="Daniel Komar, Fizjoterapeuta Akademii. Pracuj w ciszy, niech sukces zrobi hałas.">
         <div class="tm-kadr"><b aria-hidden="true">DK</b><span>Zdjęcie w przygotowaniu</span></div>
         <div class="tm-nakladka" aria-hidden="true"><div class="tm-panel">
           <p class="tm-cytat"><span style="--i:0">Pracuj</span> <span style="--i:1">w</span> <span style="--i:2">ciszy,</span> <span style="--i:3">niech</span> <span style="--i:4">sukces</span> <span style="--i:5">zrobi</span> <span style="--i:6">hałas.</span></p>
@@ -555,8 +586,8 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
         </div>
         <div class="tm-pods"><b>Daniel Komar</b><i></i><span>Fizjoterapeuta</span></div>
       </div>
-      <div class="tm-karta" data-tm tabindex="0" role="button"
-        aria-label="Jakub Grodzki, Fizjoterapeuta Akademii. Skuteczna fizjoterapia opiera się na danych, pomiarach i partnerstwie z pacjentem." aria-expanded="false">
+      <div class="tm-karta" data-tm tabindex="0" role="button" aria-haspopup="dialog" data-imie="Jakub Grodzki" data-spec="Fizjoterapeuta Akademii · Return to Sport, diagnostyka funkcjonalna" data-opis="Fizjoterapeuta w strukturach Akademii Legii Warszawa; doświadczenie z piłki nożnej, siatkówki kobiet i rugby oraz własna praktyka gabinetowa. Magister fizjoterapii AWF Warszawa." data-dosw="Obiektywna diagnostyka siły, kontroli motorycznej i asymetrii; programowanie procesu Return to Sport od urazu do pełnych obciążeń. Kursy: IAOM (staw kolanowy), Fizjologika (kręgosłup), VALD – The ACL Continuum i Return to Performance."
+        aria-label="Jakub Grodzki, Fizjoterapeuta Akademii. Skuteczna fizjoterapia opiera się na danych, pomiarach i partnerstwie z pacjentem.">
         <div class="tm-kadr"><b aria-hidden="true">JG</b><span>Zdjęcie w przygotowaniu</span></div>
         <div class="tm-nakladka" aria-hidden="true"><div class="tm-panel">
           <p class="tm-cytat"><span style="--i:0">Skuteczna</span> <span style="--i:1">fizjoterapia</span> <span style="--i:2">opiera</span> <span style="--i:3">się</span> <span style="--i:4">na</span> <span style="--i:5">danych,</span> <span style="--i:6">pomiarach</span> <span style="--i:7">i</span> <span style="--i:8">partnerstwie</span> <span style="--i:9">z</span> <span style="--i:10">pacjentem.</span></p>
@@ -568,8 +599,8 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
         </div>
         <div class="tm-pods"><b>Jakub Grodzki</b><i></i><span>Fizjoterapeuta</span></div>
       </div>
-      <div class="tm-karta" data-tm tabindex="0" role="button"
-        aria-label="Sandra Heronimek, Fizjoterapeutka Akademii. Rehabilitacja to budowanie pewności pacjenta w każdym jego ruchu i poznawanie własnego ciała." aria-expanded="false">
+      <div class="tm-karta" data-tm tabindex="0" role="button" aria-haspopup="dialog" data-imie="Sandra Heronimek" data-spec="Fizjoterapeutka Akademii · Fizjoterapia sportowa, przygotowanie motoryczne" data-opis="Od sierpnia 2024 roku fizjoterapeutka Akademii Piłkarskiej Legii Warszawa – zawodnicy na różnych etapach rozwoju sportowego; szczególne doświadczenie w pracy z dziećmi i młodzieżą. Magister fizjoterapii AWF Warszawa." data-dosw="Terapia powięziowa, masaż i terapia tkanek miękkich, trening medyczny i przygotowanie motoryczne (wytrzymałość, siła, moc). Kursy: IASTM (Med Coach), rozluźnianie mięśniowo-powięziowe i kliniczna praktyka fizjoterapeutyczna (RehaIntegro)."
+        aria-label="Sandra Heronimek, Fizjoterapeutka Akademii. Rehabilitacja to budowanie pewności pacjenta w każdym jego ruchu i poznawanie własnego ciała.">
         <div class="tm-kadr"><b aria-hidden="true">SH</b><span>Zdjęcie w przygotowaniu</span></div>
         <div class="tm-nakladka" aria-hidden="true"><div class="tm-panel">
           <p class="tm-cytat"><span style="--i:0">Rehabilitacja</span> <span style="--i:1">to</span> <span style="--i:2">budowanie</span> <span style="--i:3">pewności</span> <span style="--i:4">pacjenta</span> <span style="--i:5">w</span> <span style="--i:6">każdym</span> <span style="--i:7">jego</span> <span style="--i:8">ruchu</span> <span style="--i:9">i</span> <span style="--i:10">poznawanie</span> <span style="--i:11">własnego</span> <span style="--i:12">ciała.</span></p>
@@ -581,8 +612,8 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
         </div>
         <div class="tm-pods"><b>Sandra Heronimek</b><i></i><span>Fizjoterapeutka</span></div>
       </div>
-      <div class="tm-karta" data-tm tabindex="0" role="button"
-        aria-label="Paweł Krupiński, Fizjoterapeuta. Dokładne badanie, terapia ruchem i edukacja pacjenta – żeby wrócić do sprawności bezpiecznie." aria-expanded="false">
+      <div class="tm-karta" data-tm tabindex="0" role="button" aria-haspopup="dialog" data-imie="Paweł Krupiński" data-spec="Fizjoterapeuta · Fizjoterapia ortopedyczna, trening medyczny, diagnostyka stóp" data-opis="Rehabilitacja po urazach i zabiegach operacyjnych, trening medyczny i przygotowanie do powrotu do aktywności – u dzieci, młodzieży i dorosłych. Diagnostyka funkcjonalna stóp i indywidualne wkładki. Magister fizjoterapii AWF Warszawa." data-dosw="Kursy: Trening Medyczny (Easy Academy, Train Movement vol. 1–3), igłoterapia sucha, USG narządu ruchu, masaż tkanek głębokich (Reha Academy); ASCA Level 1 S&amp;C w trakcie."
+        aria-label="Paweł Krupiński, Fizjoterapeuta. Dokładne badanie, terapia ruchem i edukacja pacjenta – żeby wrócić do sprawności bezpiecznie.">
         <div class="tm-kadr"><b aria-hidden="true">PK</b><span>Zdjęcie w przygotowaniu</span></div>
         <div class="tm-nakladka" aria-hidden="true"><div class="tm-panel">
           <p class="tm-cytat"><span style="--i:0">Dokładne</span> <span style="--i:1">badanie,</span> <span style="--i:2">terapia</span> <span style="--i:3">ruchem</span> <span style="--i:4">i</span> <span style="--i:5">edukacja</span> <span style="--i:6">pacjenta</span> <span style="--i:7">–</span> <span style="--i:8">żeby</span> <span style="--i:9">wrócić</span> <span style="--i:10">do</span> <span style="--i:11">sprawności</span> <span style="--i:12">bezpiecznie.</span></p>
@@ -594,8 +625,8 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
         </div>
         <div class="tm-pods"><b>Paweł Krupiński</b><i></i><span>Fizjoterapeuta</span></div>
       </div>
-      <div class="tm-karta" data-tm tabindex="0" role="button"
-        aria-label="Dominika Daros, Fizjoterapeutka Legia Ladies. Równowaga między wysiłkiem, regeneracją i świadomym ruchem." aria-expanded="false">
+      <div class="tm-karta" data-tm tabindex="0" role="button" aria-haspopup="dialog" data-imie="Dominika Daros" data-spec="Fizjoterapeutka Legia Ladies · Tkanki miękkie, igłoterapia, terapia manualna" data-opis="Fizjoterapeutka Legia Ladies – przygotowanie zawodniczek do wysiłku, regeneracja i powrót do pełnej sprawności po urazach; pracuje też z pacjentami ortopedycznymi i pooperacyjnymi. Absolwentka WUM." data-dosw="Suche igłowanie, akupunktura neurofunkcjonalna, kinesiotaping, terapia manualna (Maitland Concept), IPNFA, TMJ, Biodro piłkarza – FRSc, Return to Sport After ACLR, Deep Tissue Massage."
+        aria-label="Dominika Daros, Fizjoterapeutka Legia Ladies. Równowaga między wysiłkiem, regeneracją i świadomym ruchem.">
         <div class="tm-kadr"><b aria-hidden="true">DD</b><span>Zdjęcie w przygotowaniu</span></div>
         <div class="tm-nakladka" aria-hidden="true"><div class="tm-panel">
           <p class="tm-cytat"><span style="--i:0">Równowaga</span> <span style="--i:1">między</span> <span style="--i:2">wysiłkiem,</span> <span style="--i:3">regeneracją</span> <span style="--i:4">i</span> <span style="--i:5">świadomym</span> <span style="--i:6">ruchem.</span></p>
@@ -607,8 +638,8 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
         </div>
         <div class="tm-pods"><b>Dominika Daros</b><i></i><span>Fizjoterapeutka</span></div>
       </div>
-      <div class="tm-karta" data-tm tabindex="0" role="button"
-        aria-label="Dominika Śledziewska, Fizjoterapeutka Akademii. Ruch jako klucz do trwałej sprawności i bezpiecznego powrotu do zdrowia." aria-expanded="false">
+      <div class="tm-karta" data-tm tabindex="0" role="button" aria-haspopup="dialog" data-imie="Dominika Śledziewska" data-spec="Fizjoterapeutka Akademii · Fizjoterapia ortopedyczna i sportowa" data-opis="Od 2026 roku fizjoterapeutka Akademii Piłkarskiej Legii Warszawa; równolegle (od 2025) Centrum Medyczne Puławska – pacjenci ortopedyczni i osoby aktywne. Magister fizjoterapii AWF w Białej Podlaskiej." data-dosw="Terapia manualna, praca z tkankami miękkimi i elementy treningu medycznego. Kursy: terapia punktów spustowych z akupresurą i igłoterapią, masaż tkanek głębokich i rozluźnianie mięśniowo-powięziowe, Medyczny Trener Personalny."
+        aria-label="Dominika Śledziewska, Fizjoterapeutka Akademii. Ruch jako klucz do trwałej sprawności i bezpiecznego powrotu do zdrowia.">
         <div class="tm-kadr"><b aria-hidden="true">DŚ</b><span>Zdjęcie w przygotowaniu</span></div>
         <div class="tm-nakladka" aria-hidden="true"><div class="tm-panel">
           <p class="tm-cytat"><span style="--i:0">Ruch</span> <span style="--i:1">jako</span> <span style="--i:2">klucz</span> <span style="--i:3">do</span> <span style="--i:4">trwałej</span> <span style="--i:5">sprawności</span> <span style="--i:6">i</span> <span style="--i:7">bezpiecznego</span> <span style="--i:8">powrotu</span> <span style="--i:9">do</span> <span style="--i:10">zdrowia.</span></p>
@@ -624,6 +655,20 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
 </section>
 
 </main>
+
+<dialog class="wiz" data-wiz aria-labelledby="wiz-imie">
+  <button class="wiz-x" data-wiz-x aria-label="Zamknij wizytówkę">×</button>
+  <div class="wiz-in">
+    <div class="wiz-foto"><span class="tm-ini" data-wiz-ini></span></div>
+    <div class="wiz-txt">
+      <span class="eyebrow" data-wiz-spec></span>
+      <h3 id="wiz-imie" data-wiz-imie></h3>
+      <p class="wiz-opis" data-wiz-opis></p>
+      <div class="wiz-dosw"><b>Doświadczenie</b><span data-wiz-dosw></span></div>
+      <a data-uw class="btn btn-w" href="kontakt.html#formularz" data-wiz-cta>Umów wizytę</a>
+    </div>
+  </div>
+</dialog>
 
 <footer class="site">
   <div class="wrap">
@@ -691,21 +736,32 @@ if (matchMedia('(prefers-reduced-motion:reduce)').matches) {
   rv.forEach(e => io.observe(e));
 }
 
+const okno = document.querySelector('[data-wiz]');
+const pola = {
+  imie: okno.querySelector('[data-wiz-imie]'), spec: okno.querySelector('[data-wiz-spec]'),
+  opis: okno.querySelector('[data-wiz-opis]'), dosw: okno.querySelector('[data-wiz-dosw]'),
+  ini: okno.querySelector('[data-wiz-ini]'),
+};
+let wrocDo = null;
+const pokaz = k => {
+  pola.imie.textContent = k.dataset.imie;
+  pola.spec.textContent = k.dataset.spec;
+  pola.opis.textContent = k.dataset.opis;
+  pola.dosw.textContent = k.dataset.dosw;
+  pola.ini.textContent = k.querySelector('.tm-kadr b').textContent;
+  wrocDo = k;
+  okno.showModal();
+};
 document.querySelectorAll('[data-tm]').forEach(k => {
-  const przelacz = () => {
-    const on = k.classList.toggle('on');
-    k.setAttribute('aria-expanded', on);
-    k.querySelector('.tm-nakladka').setAttribute('aria-hidden', !on);
-    k.querySelector('.tm-nakladka .btn').tabIndex = on ? 0 : -1;
-  };
-  k.addEventListener('click', e => {
-    if (e.target.closest('a')) return;
-    przelacz();
-  });
+  k.addEventListener('click', e => { if (!e.target.closest('a')) pokaz(k); });
   k.addEventListener('keydown', e => {
-    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); przelacz(); }
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pokaz(k); }
   });
 });
+okno.querySelector('[data-wiz-x]').addEventListener('click', () => okno.close());
+okno.addEventListener('click', e => { if (e.target === okno) okno.close(); });
+okno.addEventListener('close', () => wrocDo?.focus());
+okno.querySelector('[data-wiz-cta]').addEventListener('click', () => okno.close());
 
 </script>
 <script src="wspolne.js?v=3" defer></script>
