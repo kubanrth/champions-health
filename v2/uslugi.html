@@ -572,6 +572,17 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
   </div>
 </footer>
 
+<script>
+// cały kafelek klikalny (skrypt talii zniknął przy przebudowie na siatkę) —
+// klik poza linkiem/przyciskiem prowadzi tam, gdzie „Zakres opieki"
+(() => {
+  for (const karta of document.querySelectorAll('[data-card]')) {
+    const cel = karta.querySelector('.card-link');
+    if (!cel) continue;
+    karta.addEventListener('click', e => { if (!e.target.closest('a,button')) cel.click(); });
+  }
+})();
+</script>
 <script src="wspolne.js?v=3" defer></script>
 </body>
 </html>

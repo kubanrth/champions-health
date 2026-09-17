@@ -1167,6 +1167,15 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
     tw = requestAnimationFrame(krok);
   };
 
+  // karta najbliżej środka kadru — dla kropek i dla decyzji „klik = przejdź czy wyśrodkuj"
+  const wSrodku = () => {
+    const sr = track.getBoundingClientRect(), mid = sr.left + sr.width / 2;
+    let best = 0, bd = 1e9;
+    cards.forEach((c, i) => { const r = c.getBoundingClientRect();
+      const d = Math.abs(r.left + r.width / 2 - mid); if (d < bd) { bd = d; best = i; } });
+    return best;
+  };
+
   const doKarty = i => {
     i = Math.max(0, Math.min(N - 1, i));
     const wstep = window.innerHeight * WSTEP;
@@ -1176,7 +1185,12 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
     window.scrollTo({ top: Math.ceil(top) + 1, behavior: 'smooth' });
   };
   cards.forEach((c, i) => c.addEventListener('click', e => {
-    if (!e.target.closest('a')) doKarty(i);
+    if (e.target.closest('a,button')) return;
+    const link = c.querySelector('.card-link');
+    // cały kafelek klikalny: ten w centrum prowadzi do usługi, pozostałe najpierw
+    // przyjeżdżają na środek (mechanika talii zostaje bez zmian)
+    if (link && (statyczny ? wSrodku() === i : c.classList.contains('focus'))) link.click();
+    else doKarty(i);
   }));
   sec.__doKarty = doKarty;
 
@@ -1293,10 +1307,7 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
         kropki.appendChild(b); return b; });
       let rafK = 0;
       const zaznacz = () => { rafK = 0;
-        const sr = track.getBoundingClientRect(), mid = sr.left + sr.width / 2;
-        let best = 0, bd = 1e9;
-        cards.forEach((c, i) => { const r = c.getBoundingClientRect();
-          const d = Math.abs(r.left + r.width / 2 - mid); if (d < bd) { bd = d; best = i; } });
+        const best = wSrodku();
         dots.forEach((d, i) => d.classList.toggle('on', i === best)); };
       // efekt ruchu: karta w środku pełna, sąsiedzi lekko mniejsi i przygaszeni —
       // liczone z natywnego scrolla (pozycje kart zcache'owane, zero odczytów layoutu w pętli)
