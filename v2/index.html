@@ -122,6 +122,8 @@ a{color:inherit;text-decoration:none}
   justify-content:center;gap:10px}
 .wiz-txt h3{margin:0;font-size:clamp(1.5rem,2.6vw,2.1rem);line-height:1.08;
   letter-spacing:-.028em;font-weight:500}
+/* długi podpis specjalizacji wchodził pod przycisk zamknięcia (prawy górny róg) */
+.wiz-txt .eyebrow{display:block;padding-right:48px}
 .wiz-opis{margin:2px 0 0;font-size:15px;line-height:1.6;color:rgba(255,255,255,.78)}
 .wiz-dosw{margin-top:6px;padding-top:14px;border-top:1px solid rgba(255,255,255,.12);width:100%}
 .wiz-dosw b{display:block;font-size:11px;letter-spacing:.16em;text-transform:uppercase;
@@ -259,6 +261,13 @@ a{color:inherit;text-decoration:none}
 .hero.morphed .morph{left:var(--mx);top:var(--my);width:var(--mw);height:var(--mh);
   transform:var(--mt);border-radius:28px}
 .hero.morphed .morph>img{object-position:38% 40%}
+/* karta 01 ma inne zdjęcie niż hero — zdjęcie karty wchodzi cross-fadem pod koniec
+   zwijania, żeby przekazanie banerowi karty było niewidoczne (dawniej wspólny kadr) */
+.morph>img.morph-cel{position:absolute;inset:0;z-index:1;opacity:0;transition:opacity .26s var(--rev)}
+/* kadr zdjęcia docelowego musi być taki jak w karcie (50% 50%), a nie prowadzący
+   sprintera (38% 40%) — stąd wyższa specyficzność niż `.hero.morphed .morph>img` */
+.hero .morph>img.morph-cel,.hero.morphed .morph>img.morph-cel{object-position:50% 50%}
+.hero.morphed .morph>img.morph-cel{opacity:1;transition:opacity .36s var(--rev) .58s}
 
 .morph-in{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;align-items:flex-start;
   padding:clamp(24px,3vw,38px);text-align:left;opacity:0;transition:opacity .45s var(--rev) .45s}
@@ -266,6 +275,7 @@ a{color:inherit;text-decoration:none}
 /* mobile: w trakcie morfu teksty hero znikają OD RAZU, a ciemna podkładka trzyma
    do lądowania banera — bez tego tekst hero i tekst sekcji nakładają się na sobie;
    przy rozwijaniu podkładka i tekst karty wracają/znikają natychmiast */
+.deal-kropki{display:none}
 @media (max-width:760px){
   .hero.morphed .hero-copy{transition:none;opacity:0}
   .hero.morphed .hero-copy h1 .w i{transition:none}
@@ -283,8 +293,33 @@ a{color:inherit;text-decoration:none}
   /* otwarcie karty bez tranzycji: start animacji w zagnieżdżonych, przyciętych
      radiusem warstwach dawał flash w klatce zatrzymania talii */
   .card.focus .card-txt,.card.focus .card-cta,.card.focus .card-link{transition:none}
-  /* scena PRZYKLEJONA na czas zwijania (sekcja = 100svh + krótki rozbieg 50svh),
-     karta ląduje na środku ekranu i tam zostaje; potem strona jedzie normalnie */
+  /* mobile: ZERO pomniejszania — hero to zwykły pełnoekranowy baner w przepływie,
+     scena bez sticky, talia = natywna karuzela (desktop zachowuje zwijanie i tor) */
+    /* decyzja 2026-09-16: ZERO pomniejszania na wszystkich szerokościach — hero to zwykły pełnoekranowy
+     baner w przepływie, scena bez sticky; karty bez cienia, snap „proximity"
+     (mandatory blokował flick na jednej karcie i hamował sztywno) */
+  .hero{position:relative;inset:auto;width:100%;align-self:stretch;height:100svh}
+  .deal .deal-stage{position:relative;height:auto;overflow:visible;touch-action:auto;padding:0 0 16px}
+  .deal .card{box-shadow:none}
+  /* nagłówek sekcji odsłaniała klasa .rozwiniete (ze zwijania) — na mobile widoczny od razu */
+  .deal .deal-head{opacity:1;transform:none}
+  /* wszystko musi się zmieścić w przypiętych 100svh (Safari z paskami ≈ 750 px):
+     wysokość karty z dostępnego miejsca, nagłówek ciaśniejszy */
+  .deal.deal{--dch:clamp(340px,calc(100svh - 330px),560px)}
+  .deal .deal-head{margin:28px 0 16px}
+  .deal .deal-head h2{font-size:clamp(1.55rem,6.6vw,2rem)}
+  .deal .deal-head p{margin-top:.6rem;font-size:15px;line-height:21px}
+  .deal .deal-track{align-self:stretch;width:auto;max-width:100%;overflow-x:auto;overflow-y:hidden;
+    transform:none!important;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;
+    scrollbar-width:none;padding-bottom:6px}
+  .deal .deal-track::-webkit-scrollbar{display:none}
+  .deal .card{scroll-snap-align:center;scroll-snap-stop:always;transform-origin:50% 50%}
+  .card .card-txt,.card .card-cta,.card .card-link{opacity:1;transform:none}
+  .deal{--txt-linie:4}
+  .deal-kropki{display:flex;gap:10px;justify-content:center;margin-top:14px}
+  .deal-kropki button{width:8px;height:8px;padding:0;border:0;border-radius:50%;
+    background:#C9C9C6;transition:background-color .25s var(--ease),transform .25s var(--ease)}
+  .deal-kropki button.on{background:#0A0A0A;transform:scale(1.25)}
 }
 .morph-in .card-txt{opacity:1;transform:none}
 .morph::after{content:"";position:absolute;inset:0;z-index:1;opacity:0;
@@ -505,31 +540,6 @@ a{color:inherit;text-decoration:none}
 
 .claim,.ring,.tm{scroll-margin-top:72px}
 
-/* układ statyczny (wszystkie szerokości) — hero w przepływie, talia natywna */
-  /* decyzja 2026-09-16: ZERO pomniejszania na wszystkich szerokościach — hero to zwykły pełnoekranowy
-   baner w przepływie, scena bez sticky; karty bez cienia, snap „proximity"
-   (mandatory blokował flick na jednej karcie i hamował sztywno) */
-.hero{position:relative;inset:auto;width:100%;align-self:stretch;height:100svh}
-.deal .deal-stage{position:relative;height:auto;overflow:visible;touch-action:auto;padding:0 0 16px}
-.deal .card{box-shadow:none}
-/* nagłówek sekcji odsłaniała klasa .rozwiniete (ze zwijania) — na mobile widoczny od razu */
-.deal .deal-head{opacity:1;transform:none}
-/* wszystko musi się zmieścić w przypiętych 100svh (Safari z paskami ≈ 750 px):
-   wysokość karty z dostępnego miejsca, nagłówek ciaśniejszy */
-.deal.deal{--dch:clamp(340px,calc(100svh - 330px),560px)}
-.deal .deal-head{margin:28px 0 16px}
-.deal .deal-head h2{font-size:clamp(1.55rem,6.6vw,2rem)}
-.deal .deal-head p{margin-top:.6rem;font-size:15px;line-height:21px}
-.deal .deal-track{align-self:stretch;width:auto;max-width:100%;overflow-x:auto;overflow-y:hidden;
-  transform:none!important;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;
-  scrollbar-width:none;padding-bottom:6px}
-.deal .deal-track::-webkit-scrollbar{display:none}
-.deal .card{scroll-snap-align:center;scroll-snap-stop:always;transform-origin:50% 50%}
-.card .card-txt,.card .card-cta,.card .card-link{opacity:1;transform:none}
-.deal-kropki{display:flex;gap:10px;justify-content:center;margin-top:14px}
-.deal-kropki button{width:8px;height:8px;padding:0;border:0;border-radius:50%;
-  background:#C9C9C6;transition:background-color .25s var(--ease),transform .25s var(--ease)}
-.deal-kropki button.on{background:#0A0A0A;transform:scale(1.25)}
 
 .deal-head{position:relative;z-index:3;margin:0 0 clamp(16px,3svh,34px);padding:0 24px;
   text-align:center;
@@ -563,7 +573,9 @@ a{color:inherit;text-decoration:none}
 .card-in h3,.morph-in h3{margin:0;max-width:14ch;font-size:clamp(34px,3.9vw,52px);line-height:1.04;
   font-weight:500;letter-spacing:-.028em;text-wrap:balance}
 
-.card-txt{margin-top:auto;max-width:54ch;padding-top:14px;
+/* stała wysokość bloku opisu = kreski nad tekstem stoją na jednym poziomie
+   na wszystkich kartach (opisy mają 2-4 linie zależnie od szerokości) */
+.card-txt{margin-top:auto;max-width:54ch;padding-top:14px;min-height:calc(var(--txt-linie,3) * 1.6em + 14px);
   border-top:1px solid rgba(255,255,255,.28);
   font-size:15.5px;line-height:1.6;text-align:left;color:rgba(255,255,255,.92);
   opacity:0;transform:translateY(8px);
@@ -853,10 +865,11 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
     <svg class="jt-tor" data-tor aria-hidden="true"><path/></svg>
   <div class="morph" data-morph>
       <img src="img/sprint-sharp.webp" alt="Zawodnik Legii Warszawa w pełnym sprincie" width="1820" height="1024" fetchpriority="high">
+      <img class="morph-cel" src="img/c1-ortopedia.webp" alt="" aria-hidden="true" loading="lazy" decoding="async">
       <div class="morph-in">
-      <h3>Medycyna sportowa</h3>
-      <span class="card-txt">Badania kwalifikacyjne, prowadzenie przez cały sezon i decyzje o powrocie do gry - te same standardy, którymi prowadzimy pierwszą drużynę.</span>
-          <div class="card-akcje"><a data-uw class="card-cta" href="#kontakt">Umów wizytę</a><a class="card-link" href="uslugi/medycyna-sportowa.html">Zakres opieki<svg width="12" height="12" viewBox="0 0 13 13" fill="none" aria-hidden="true"><path d="M3 10 10 3M4.6 3H10v5.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
+      <h3>Ortopedia</h3>
+          <span class="card-txt">Konsultacje ortopedyczne, diagnostyka urazów, zabiegi, koordynacja ścieżki leczenia szpitalnego.</span>
+          <div class="card-akcje"><a data-uw class="card-cta" href="#kontakt">Umów wizytę</a><a class="card-link" href="uslugi/ortopedia.html">Zakres opieki<svg width="12" height="12" viewBox="0 0 13 13" fill="none" aria-hidden="true"><path d="M3 10 10 3M4.6 3H10v5.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
     </div>
     </div>
 
@@ -931,7 +944,7 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
     </div>
     <div class="deal-track" data-track>
       <article class="card" data-card>
-        <img src="img/c1-ortopedia.webp" alt="Ortopedia" style="object-position:38% 40%">
+        <img src="img/c1-ortopedia.webp" alt="Ortopedia" loading="lazy" decoding="async">
         <div class="card-in">
           <h3>Ortopedia</h3>
           <span class="card-txt">Konsultacje ortopedyczne, diagnostyka urazów, zabiegi, koordynacja ścieżki leczenia szpitalnego.</span>
@@ -939,7 +952,7 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
         </div>
       </article>
       <article class="card" data-card>
-        <img src="img/c3-fizjoterapia.webp" alt="Fizjoterapia i rehabilitacja" style="object-position:38% 40%">
+        <img src="img/c3-fizjoterapia.webp" alt="Fizjoterapia i rehabilitacja" loading="lazy" decoding="async">
         <div class="card-in">
           <h3>Fizjoterapia i rehabilitacja</h3>
           <span class="card-txt">Fizjoterapia i rehabilitacja oparta na standardach profesjonalnego sportu – dostępna dla każdego pacjenta.</span>
@@ -947,7 +960,7 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
         </div>
       </article>
       <article class="card" data-card>
-        <img src="img/c2-medycyna.webp" alt="Medycyna sportowa" style="object-position:38% 40%">
+        <img src="img/c2-medycyna.webp" alt="Medycyna sportowa" loading="lazy" decoding="async">
         <div class="card-in">
           <h3>Medycyna sportowa</h3>
           <span class="card-txt">Badania okresowe, monitorowanie stanu zdrowia sportowców, orzecznictwo w zakresie zdolności do uprawiania sportu.</span>
@@ -955,7 +968,7 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
         </div>
       </article>
       <article class="card" data-card>
-        <img src="img/c4-dietetyka.webp" alt="Dietetyka i suplementacja" style="object-position:38% 40%">
+        <img src="img/c4-dietetyka.webp" alt="Dietetyka i suplementacja" loading="lazy" decoding="async">
         <div class="card-in">
           <h3>Dietetyka i suplementacja</h3>
           <span class="card-txt">Indywidualne wsparcie żywieniowe i plany suplementacyjne dla sportowców profesjonalnych i amatorów, nauka zdrowego odżywiania, dietetyka pediatryczna.</span>
@@ -963,7 +976,7 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
         </div>
       </article>
       <article class="card" data-card>
-        <img src="img/c5-trening.webp" alt="Trening motoryczny" style="object-position:38% 40%">
+        <img src="img/c5-trening.webp" alt="Trening motoryczny" loading="lazy" decoding="async">
         <div class="card-in">
           <h3>Trening motoryczny</h3>
           <span class="card-txt">Motoryka, siła i profilaktyka urazów. Dochodzenie do pełnej sprawności po kontuzji lub urazie. Indywidualna opieka trenera motorycznego.</span>
@@ -971,7 +984,7 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
         </div>
       </article>
       <article class="card" data-card>
-        <img src="img/c7-sport-profesjonalny.webp" alt="Sport profesjonalny" style="object-position:38% 40%">
+        <img src="img/c7-sport-profesjonalny.webp" alt="Sport profesjonalny" loading="lazy" decoding="async">
         <div class="card-in">
           <h3>Sport profesjonalny</h3>
           <span class="card-txt">Najwyższej klasy opieka medyczna dla zawodników, stowarzyszeń i klubów – nie tylko piłkarskich.</span>
@@ -979,7 +992,7 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
         </div>
       </article>
       <article class="card" data-card>
-        <img src="img/c8-profilaktyka.webp" alt="Profilaktyka" style="object-position:38% 40%">
+        <img src="img/c8-profilaktyka.webp" alt="Profilaktyka" loading="lazy" decoding="async">
         <div class="card-in">
           <h3>Profilaktyka</h3>
           <span class="card-txt">Profilaktyka to pierwszy krok do zbudowania zdrowych nawyków, mających na celu zapewnić nam długie życie w zdrowiu.</span>
@@ -987,7 +1000,7 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
         </div>
       </article>
       <article class="card" data-card>
-        <img src="img/c6-edukacja.webp" alt="Szkolenia" style="object-position:38% 40%">
+        <img src="img/c6-edukacja.webp" alt="Szkolenia" loading="lazy" decoding="async">
         <div class="card-in">
           <h3>Szkolenia</h3>
           <span class="card-txt">Szkolenia i warsztaty dla kadry medycznej, trenerów i rodziców, prowadzone przez specjalistów Legia Medical oraz Legia Lab.</span>
@@ -1010,8 +1023,8 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
   const reduce = matchMedia('(prefers-reduced-motion:reduce)');
   // decyzja klienta 2026-09-15: na telefonie ZERO własnej mechaniki — natywna
   // karuzela jak na revolut.com mobile; animowana talia zostaje tylko na desktopie
-  // 2026-09-16: klient zdjął zwijanie wszędzie — jedna mechanika na wszystkich szerokościach
-  const statyczny = true;
+  // mobile/reduced-motion: natywna karuzela; desktop zachowuje animowaną talię
+  const statyczny = reduce.matches || matchMedia('(max-width:760px)').matches;
 
   const HERO = 0;
   const WSTEP = 0.6;
@@ -1040,7 +1053,7 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
   // wewnątrz sticky spanu korekta scrollY jest niewidoczna
   const zwolnij = koryguj => {
     if (!trzymaj) return; trzymaj = false;
-    if (koryguj && Math.abs(window.scrollY - trzymajY) > 2) {
+    if (koryguj && dotykGestu && Math.abs(window.scrollY - trzymajY) > 2) {
       przypnij();
       // iOS potrafi przegrać scrollTo z resztką momentum — po 90 ms doprawiamy,
       // o ile użytkownik nie zaczął właśnie własnego gestu i nie poszedł w górę
@@ -1074,6 +1087,7 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
     koniecDo = performance.now() + 2500;
     ostatniRuch = performance.now();
     szczyt = window.scrollY;
+    if (!dotykGestu) przypnij();
     kick(); pilnuj();
   };
   sec.__pusc = () => { trzymaj = false; };
@@ -1082,12 +1096,15 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
     if (wlasny) { wlasny = false; return; }
     ostatniRuch = performance.now();
 
-    // ZERO przypinania w trakcie (kółko i dotyk): ciągłe scrollTo podtrzymywało
-    // animację scrolla przeglądarki / walczyło z momentum iOS. Taśma stoi zamrożona,
-    // rozpęd leci w próżnię sticky spanu, korekta idzie raz przy ciszy (zwolnij).
-    // Zawrócenie mierzone od szczytu (strona startuje z ~66 px, nie z trzymajY).
-    if (window.scrollY < szczyt - 4) { trzymaj = false; kick(); return; }
-    szczyt = Math.max(szczyt, window.scrollY);
+    if (dotykGestu) {
+      // bez pinowania strona startuje z ~66 px, więc zawrócenie mierzymy od szczytu —
+      // porównanie z trzymajY (punkt przypięcia wheel) zabijało blokadę pierwszym eventem
+      if (window.scrollY < szczyt - 4) { trzymaj = false; kick(); return; }
+      szczyt = Math.max(szczyt, window.scrollY);
+      return;
+    }
+    if (window.scrollY < trzymajY - 4) { trzymaj = false; kick(); return; }
+    if (window.scrollY > trzymajY + 1) { przypnij(); kick(); }
   }, { passive: true });
   let pilnujId = 0;
   const pilnuj = () => {
@@ -1265,6 +1282,7 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
 
   if (statyczny) {
     sec.style.height = 'auto';
+    if (reduce.matches) stage.style.cssText += ';position:static;height:auto;overflow-x:auto;padding-bottom:32px';
     cards.forEach(c => { c.style.opacity = '1'; c.classList.add('focus'); });
     // kropki paginacji (Revolut mobile): aktywna = karta najbliżej środka kadru
     const kropki = sec.querySelector('[data-kropki]');
@@ -1797,7 +1815,7 @@ a.kt-pig:hover{background:#E9E9E6;transform:translateY(-1px)}
   const hero = document.querySelector('.hero');
   const sec = document.querySelector('.deal');
   if (!hero || !sec) return;
-  return; // 2026-09-16: zwijanie hero → karta usunięte na wszystkich szerokościach
+  if (matchMedia('(max-width:760px)').matches) return; // mobile: bez pomniejszania
   const PROG = 65;
   let zwiniete = null, czasZwiniecia = 0;
 

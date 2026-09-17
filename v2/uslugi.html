@@ -360,7 +360,8 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
 .card-in h3,.morph-in h3{margin:0;max-width:14ch;font-size:clamp(34px,3.9vw,52px);line-height:1.04;
   font-weight:500;letter-spacing:-.028em;text-wrap:balance}
 
-.card-txt{margin-top:auto;max-width:54ch;padding-top:14px;
+/* stała wysokość bloku opisu = kreski nad tekstem na jednym poziomie we wszystkich kartach */
+.card-txt{margin-top:auto;max-width:54ch;padding-top:14px;min-height:calc(var(--txt-linie,3) * 1.6em + 14px);
   border-top:1px solid rgba(255,255,255,.28);
   font-size:15.5px;line-height:1.6;text-align:left;color:rgba(255,255,255,.92);
   opacity:0;transform:translateY(8px);
@@ -418,7 +419,9 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
   max-width:1240px;margin:0 auto;padding:0 24px;transform:none!important;will-change:auto}
 .deal .card{width:auto;height:clamp(360px,42vw,520px);opacity:1!important;transform:none!important;box-shadow:none}
 .deal .card .card-txt,.deal .card .card-cta,.deal .card .card-link{opacity:1;transform:none}
-@media(max-width:760px){.deal .deal-track{grid-template-columns:1fr;padding:0 16px;gap:16px}
+@media(max-width:1200px){.deal{--txt-linie:4}}
+@media(max-width:760px){.deal{--txt-linie:4}
+  .deal .deal-track{grid-template-columns:1fr;padding:0 16px;gap:16px}
   .deal .card{height:clamp(420px,110vw,520px)}}
 </style>
 </head>
@@ -451,7 +454,7 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
     </div>
     <div class="deal-track" data-track>
       <article class="card" data-card>
-        <img src="img/c1-ortopedia.webp" alt="Ortopedia" style="object-position:38% 40%">
+        <img src="img/c1-ortopedia.webp" alt="Ortopedia" loading="lazy" decoding="async">
         <div class="card-in">
           <h3>Ortopedia</h3>
           <span class="card-txt">Konsultacje ortopedyczne, diagnostyka urazów, zabiegi, koordynacja ścieżki leczenia szpitalnego.</span>
@@ -459,7 +462,7 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
         </div>
       </article>
       <article class="card" data-card>
-        <img src="img/c3-fizjoterapia.webp" alt="Fizjoterapia i rehabilitacja" style="object-position:38% 40%">
+        <img src="img/c3-fizjoterapia.webp" alt="Fizjoterapia i rehabilitacja" loading="lazy" decoding="async">
         <div class="card-in">
           <h3>Fizjoterapia i rehabilitacja</h3>
           <span class="card-txt">Fizjoterapia i rehabilitacja oparta na standardach profesjonalnego sportu – dostępna dla każdego pacjenta.</span>
@@ -467,7 +470,7 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
         </div>
       </article>
       <article class="card" data-card>
-        <img src="img/c2-medycyna.webp" alt="Medycyna sportowa" style="object-position:38% 40%">
+        <img src="img/c2-medycyna.webp" alt="Medycyna sportowa" loading="lazy" decoding="async">
         <div class="card-in">
           <h3>Medycyna sportowa</h3>
           <span class="card-txt">Badania okresowe, monitorowanie stanu zdrowia sportowców, orzecznictwo w zakresie zdolności do uprawiania sportu.</span>
@@ -475,7 +478,7 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
         </div>
       </article>
       <article class="card" data-card>
-        <img src="img/c4-dietetyka.webp" alt="Dietetyka i suplementacja" style="object-position:38% 40%">
+        <img src="img/c4-dietetyka.webp" alt="Dietetyka i suplementacja" loading="lazy" decoding="async">
         <div class="card-in">
           <h3>Dietetyka i suplementacja</h3>
           <span class="card-txt">Indywidualne wsparcie żywieniowe i plany suplementacyjne dla sportowców profesjonalnych i amatorów, nauka zdrowego odżywiania, dietetyka pediatryczna.</span>
@@ -483,7 +486,7 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
         </div>
       </article>
       <article class="card" data-card>
-        <img src="img/c5-trening.webp" alt="Trening motoryczny" style="object-position:38% 40%">
+        <img src="img/c5-trening.webp" alt="Trening motoryczny" loading="lazy" decoding="async">
         <div class="card-in">
           <h3>Trening motoryczny</h3>
           <span class="card-txt">Motoryka, siła i profilaktyka urazów. Dochodzenie do pełnej sprawności po kontuzji lub urazie. Indywidualna opieka trenera motorycznego.</span>
@@ -491,7 +494,7 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
         </div>
       </article>
       <article class="card" data-card>
-        <img src="img/c7-sport-profesjonalny.webp" alt="Sport profesjonalny" style="object-position:38% 40%">
+        <img src="img/c7-sport-profesjonalny.webp" alt="Sport profesjonalny" loading="lazy" decoding="async">
         <div class="card-in">
           <h3>Sport profesjonalny</h3>
           <span class="card-txt">Najwyższej klasy opieka medyczna dla zawodników, stowarzyszeń i klubów – nie tylko piłkarskich.</span>
@@ -499,7 +502,7 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
         </div>
       </article>
       <article class="card" data-card>
-        <img src="img/c8-profilaktyka.webp" alt="Profilaktyka" style="object-position:38% 40%">
+        <img src="img/c8-profilaktyka.webp" alt="Profilaktyka" loading="lazy" decoding="async">
         <div class="card-in">
           <h3>Profilaktyka</h3>
           <span class="card-txt">Profilaktyka to pierwszy krok do zbudowania zdrowych nawyków, mających na celu zapewnić nam długie życie w zdrowiu.</span>
@@ -507,7 +510,7 @@ footer.site a:focus-visible{outline:2px solid #fff;outline-offset:3px;border-rad
         </div>
       </article>
       <article class="card" data-card>
-        <img src="img/c6-edukacja.webp" alt="Szkolenia" style="object-position:38% 40%">
+        <img src="img/c6-edukacja.webp" alt="Szkolenia" loading="lazy" decoding="async">
         <div class="card-in">
           <h3>Szkolenia</h3>
           <span class="card-txt">Szkolenia i warsztaty dla kadry medycznej, trenerów i rodziców, prowadzone przez specjalistów Legia Medical oraz Legia Lab.</span>
